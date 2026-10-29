@@ -878,10 +878,16 @@ export default function MentorDashboard() {
             font-weight: 700;
             box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
           }
+          @media (min-width: 901px) {
+            .desktop-signout-btn { display: inline-flex !important; }
+            .mobile-hamburger-btn { display: none !important; }
+          }
           @media (max-width: 900px) {
             .navbar-middle-tabs { display: none !important; }
-            .navbar-desktop-controls { display: none !important; }
             .console-badge-desktop { display: none !important; }
+            .desktop-mentee-select { display: none !important; }
+            .desktop-signout-btn { display: none !important; }
+            .mobile-hamburger-btn { display: grid !important; }
           }
         `}</style>
 
@@ -996,81 +1002,92 @@ export default function MentorDashboard() {
               })}
             </div>
 
-            {/* Right: Actions on Desktop, ONLY Hamburger on Mobile */}
+            {/* Right: Sign Out on Laptop, Hamburger on Mobile */}
             <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
-              <div className="navbar-desktop-controls" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {students.length > 0 && (activeTab === "workspace" || activeTab === "logins") && (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <select
-                      id="mentor-student-select"
-                      value={activeId}
-                      onChange={(e) => setActiveId(e.target.value)}
-                      style={{
-                        height: 36,
-                        padding: "0 10px",
-                        borderRadius: 8,
-                        border: "1.5px solid rgba(255,105,61,0.35)",
-                        background: "#ffffff",
-                        color: "#0f172a",
-                        fontWeight: 700,
-                        fontSize: 12,
-                        cursor: "pointer",
-                        outline: "none",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                      }}
-                      title="Switch Active Mentee"
-                    >
-                      {students.map((s) => (
-                        <option key={s.studentId} value={s.studentId}>
-                          {s.name} ({s.studentId})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+              {/* Mentee Selector (Desktop Only) */}
+              {students.length > 0 && (activeTab === "workspace" || activeTab === "logins") && (
+                <div className="desktop-mentee-select" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <select
+                    id="mentor-student-select"
+                    value={activeId}
+                    onChange={(e) => setActiveId(e.target.value)}
+                    style={{
+                      height: 36,
+                      padding: "0 10px",
+                      borderRadius: 8,
+                      border: "1.5px solid rgba(255,105,61,0.35)",
+                      background: "#ffffff",
+                      color: "#0f172a",
+                      fontWeight: 700,
+                      fontSize: 12,
+                      cursor: "pointer",
+                      outline: "none",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    }}
+                    title="Switch Active Mentee"
+                  >
+                    {students.map((s) => (
+                      <option key={s.studentId} value={s.studentId}>
+                        {s.name} ({s.studentId})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
-                {/* Sync Button */}
-                <button
-                  onClick={refreshData}
-                  disabled={syncing}
-                  title="Sync latest data"
-                  style={{
-                    height: 36,
-                    padding: "0 12px",
-                    borderRadius: 8,
-                    border: "1px solid #e2e8f0",
-                    background: "#ffffff",
-                    color: "#475569",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: syncing ? "not-allowed" : "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                  }}
-                >
-                  <RefreshCw size={13} style={{ animation: syncing ? "admSpin 1s linear infinite" : "none" }} />
-                  <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
-                </button>
-              </div>
+              {/* Laptop Sign Out Button */}
+              <button
+                onClick={signOut}
+                className="desktop-signout-btn"
+                style={{
+                  height: 36,
+                  padding: "0 14px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  color: "#475569",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  transition: "all 0.15s ease",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#475569";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#ffffff";
+                }}
+                title="Sign out of Mentor Console"
+              >
+                <LogOut size={14} />
+                <span>Sign Out</span>
+              </button>
 
-              {/* Hamburger Menu Button */}
+              {/* Mobile Hamburger Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="mobile-hamburger-btn"
                 style={{
                   width: 38,
                   height: 38,
                   borderRadius: 10,
                   border: "1px solid #e2e8f0",
                   background: mobileMenuOpen ? "#f1f5f9" : "#ffffff",
-                  display: "grid",
                   placeItems: "center",
                   cursor: "pointer",
                   color: "#0f172a",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                   transition: "all 0.15s ease",
                 }}
-                title="Open Mentor Navigation"
+                title="Open Navigation"
                 aria-label="Menu"
               >
                 {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}

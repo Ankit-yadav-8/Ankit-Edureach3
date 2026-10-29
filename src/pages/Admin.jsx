@@ -758,10 +758,16 @@ export default function Admin() {
           font-weight: 700;
           box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
         }
+        @media (min-width: 901px) {
+          .desktop-signout-btn { display: inline-flex !important; }
+          .mobile-hamburger-btn { display: none !important; }
+        }
         @media (max-width: 900px) {
           .navbar-middle-tabs { display: none !important; }
-          .navbar-desktop-controls { display: none !important; }
           .console-badge-desktop { display: none !important; }
+          .desktop-admin-search { display: none !important; }
+          .desktop-signout-btn { display: none !important; }
+          .mobile-hamburger-btn { display: grid !important; }
         }
       `}</style>
 
@@ -885,97 +891,83 @@ export default function Admin() {
             })}
           </div>
 
-          {/* Right: Actions on Desktop, ONLY Hamburger on Mobile */}
+          {/* Right: Sign Out on Laptop, Hamburger on Mobile */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
-            <div className="navbar-desktop-controls" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {/* Quick Search on Users & Payments */}
-              {(tab === "users" || tab === "payments") && (
-                <div style={{ position: "relative" }}>
-                  <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
-                  <input
-                    placeholder={tab === "users" ? "Search..." : "Search..."}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={{
-                      height: 34,
-                      paddingLeft: 28,
-                      paddingRight: 8,
-                      borderRadius: 8,
-                      border: "1px solid #e2e8f0",
-                      fontSize: 12,
-                      outline: "none",
-                      width: 140,
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Sync */}
-              <button
-                onClick={refreshActive}
-                disabled={busy}
-                title="Sync latest data"
-                style={{
-                  height: 36,
-                  padding: "0 12px",
-                  borderRadius: 8,
-                  border: "1px solid #e2e8f0",
-                  background: "#ffffff",
-                  color: "#475569",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: busy ? "not-allowed" : "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                <RefreshCw size={13} style={{ animation: busy ? "admSpin 1s linear infinite" : "none" }} />
-                <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
-              </button>
-
-              {/* CSV Export */}
-              {!SELF_CONTAINED_TABS.has(tab) && (
-                <button
-                  onClick={exportActive}
+            {/* Quick Search on Users & Payments (Desktop Only) */}
+            {(tab === "users" || tab === "payments") && (
+              <div className="desktop-admin-search" style={{ position: "relative" }}>
+                <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                <input
+                  placeholder={tab === "users" ? "Search..." : "Search..."}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   style={{
-                    background: ORANGE,
-                    color: "#ffffff",
-                    border: "none",
-                    height: 36,
-                    padding: "0 12px",
+                    height: 34,
+                    paddingLeft: 28,
+                    paddingRight: 8,
                     borderRadius: 8,
-                    fontWeight: 700,
+                    border: "1px solid #e2e8f0",
                     fontSize: 12,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 5,
-                    cursor: "pointer",
-                    boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                    outline: "none",
+                    width: 140,
                   }}
-                >
-                  <Download size={13} /> Export
-                </button>
-              )}
-            </div>
+                />
+              </div>
+            )}
 
-            {/* Hamburger Menu Button */}
+            {/* Laptop Sign Out Button */}
+            <button
+              onClick={logout}
+              className="desktop-signout-btn"
+              style={{
+                height: 36,
+                padding: "0 14px",
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                background: "#ffffff",
+                color: "#475569",
+                fontSize: 12.5,
+                fontWeight: 600,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.15s ease",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#dc2626";
+                e.currentTarget.style.borderColor = "#fca5a5";
+                e.currentTarget.style.background = "#fef2f2";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#475569";
+                e.currentTarget.style.borderColor = "#e2e8f0";
+                e.currentTarget.style.background = "#ffffff";
+              }}
+              title="Sign out of Admin Session"
+            >
+              <LogOut size={14} />
+              <span>Sign Out</span>
+            </button>
+
+            {/* Mobile Hamburger Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="mobile-hamburger-btn"
               style={{
                 width: 38,
                 height: 38,
                 borderRadius: 10,
                 border: "1px solid #e2e8f0",
                 background: sidebarOpen ? "#f1f5f9" : "#ffffff",
-                display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
                 color: "#0f172a",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 transition: "all 0.15s ease",
               }}
-              title="Open Admin Navigation"
+              title="Open Navigation"
               aria-label="Menu"
             >
               {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
