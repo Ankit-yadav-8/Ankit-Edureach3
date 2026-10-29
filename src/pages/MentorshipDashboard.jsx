@@ -43,10 +43,18 @@ const isoDay = (d) => {
 // `iso` is a local YYYY-MM-DD from isoDay - parse its parts as a local date so
 // the label matches the day exactly, never off by one from a UTC re-parse.
 const fmtDay = (iso) => {
-  const [y, m, d] = String(iso).split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+  if (!iso) return "-";
+  const parts = String(iso).split("-").map(Number);
+  if (parts.length < 3 || parts.some(isNaN)) return String(iso);
+  const [y, m, d] = parts;
+  const dt = new Date(y, m - 1, d);
+  return isNaN(dt.getTime()) ? String(iso) : dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
 };
-const fmtFull = (d) => new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+const fmtFull = (d) => {
+  if (!d) return "-";
+  const dt = new Date(d);
+  return isNaN(dt.getTime()) ? "-" : dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+};
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
 const inr = (n) => Number(n || 0).toLocaleString("en-IN");
@@ -112,7 +120,8 @@ const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
    pre-enrolment purge in the body.) */
 
 function streakOf(entries) {
-  const set = new Set(entries.map((e) => e.date));
+  const list = Array.isArray(entries) ? entries.filter((e) => e && e.date) : [];
+  const set = new Set(list.map((e) => e.date));
   let streak = 0;
   const d = new Date();
   if (!set.has(isoDay(d))) d.setDate(d.getDate() - 1);
@@ -142,8 +151,19 @@ export default function MentorshipDashboard() {
   const OTP_OK_KEY = `mdash:otpok:${emailKey}`;
 
   const [otpOk, setOtpOk] = useState(() => {
+    // If the student is already logged in with an authenticated session, allow direct dashboard access
+    if (isLoggedIn) return true;
     try { return sessionStorage.getItem(OTP_OK_KEY) === "1"; } catch { return false; }
   });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (user?.email) {
+        try { sessionStorage.setItem(`mdash:otpok:${user.email.toLowerCase()}`, "1"); } catch {}
+      }
+      setOtpOk(true);
+    }
+  }, [isLoggedIn, user?.email]);
 
   useEffect(() => {
     const prev = document.title;
@@ -169,8 +189,8 @@ export default function MentorshipDashboard() {
   if (!otpOk) {
     return (
       <OtpGate
-        email={user.email}
-        name={user.name}
+        email={user?.email || ""}
+        name={user?.name || ""}
         onVerified={() => { try { sessionStorage.setItem(OTP_OK_KEY, "1"); } catch {} setOtpOk(true); }}
       />
     );
@@ -402,7 +422,7 @@ function DashboardBody({ urlPlan = "" }) {
   const [chapForm, setChapForm] = useState({ subject: "", topic: "", strength: "weak", coverage: "" });
 
   const todayIso = isoDay(new Date());
-  const todayEntry = entries.find((e) => e.date === todayIso);
+  const todayEntry = (Array.isArray(entries) ? entries : []).find((e) => e && e.date === todayIso);
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
@@ -615,18 +635,20 @@ function DashboardBody({ urlPlan = "" }) {
   useEffect(() => { save(TREM_KEY, testRemindSnooze); }, [TREM_KEY, testRemindSnooze]);
   useEffect(() => { save(CHAP_KEY, chapterLog); }, [CHAP_KEY, chapterLog]);
 
-  /* ── derived tracking metrics ── */
-  const sorted = useMemo(() => [...entries].sort((a, b) => a.date.localeCompare(b.date)), [entries]);
+  /* ── derived tracking metrics (with complete null & missing-date safety) ── */
+  const sorted = useMemo(() => {
+    const list = Array.isArray(entries) ? [...entries].filter((e) => e && typeof e === "object") : [];
+    return list.sort((a, b) => String(a?.date || "").localeCompare(String(b?.date || "")));
+  }, [entries]);
 
   // Build a CONTINUOUS run of the last N calendar days rather than the last N
   // *records*. If a day was never logged (student missed an update), it surfaces
   // as a real 0-hour slot instead of being skipped - so the graph never drops a
-  // day, and week totals count the miss as 0h (not "6 days only"). These
-  // placeholders are display-only; we never write them back to `entries`, so a
-  // missed day still correctly breaks the streak in streakOf().
+  // day, and week totals count the miss as 0h (not "6 days only").
   const zeroDay = (iso) => ({ date: iso, hours: 0, subjects: {}, tasksDone: 0, tasksTotal: 0, routine: false, missed: true });
   const lastNDays = (n, offsetDays = 0) => {
-    const byDate = new Map(entries.map((e) => [e.date, e]));
+    const valid = (Array.isArray(entries) ? entries : []).filter((e) => e && e.date);
+    const byDate = new Map(valid.map((e) => [e.date, e]));
     const base = new Date();
     const out = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -639,83 +661,95 @@ function DashboardBody({ urlPlan = "" }) {
   };
   const last7 = useMemo(() => lastNDays(7), [entries]);        // today-6 … today
   const prevWeek = useMemo(() => lastNDays(7, 7), [entries]);  // today-13 … today-7
-  const weekHours = last7.reduce((s, e) => s + Number(e.hours || 0), 0);
-  const prevWeekHours = prevWeek.reduce((s, e) => s + Number(e.hours || 0), 0);
+  const weekHours = last7.reduce((s, e) => s + Number(e?.hours || 0), 0);
+  const prevWeekHours = prevWeek.reduce((s, e) => s + Number(e?.hours || 0), 0);
   const latestTrack = sorted[sorted.length - 1];
-  const tasksLabel = latestTrack ? `${latestTrack.tasksDone} / ${latestTrack.tasksTotal}` : "-";
+  const tasksLabel = latestTrack ? `${latestTrack.tasksDone ?? 0} / ${latestTrack.tasksTotal ?? 0}` : "-";
   const streak = streakOf(sorted);
   const goalPct = Math.min(100, Math.round((weekHours / WEEK_TARGET_HRS) * 100));
-  const maxH = Math.max(1, ...last7.map((e) => Number(e.hours || 0)));
-  const routineDays = last7.filter((e) => e.routine).length;
+  const maxH = Math.max(1, ...last7.map((e) => Number(e?.hours || 0)));
+  const routineDays = last7.filter((e) => e?.routine).length;
   const routinePct = last7.length ? Math.round((routineDays / last7.length) * 100) : 0;
 
   const subjAgg = (es, key) => {
     const m = Object.fromEntries(subjects.map((s) => [s, 0]));
-    es.forEach((e) => subjects.forEach((s) => { m[s] += subVal(e, s)[key]; }));
+    (es || []).forEach((e) => subjects.forEach((s) => { m[s] += (subVal(e, s)?.[key] || 0); }));
     return m;
   };
   const thisWkH = useMemo(() => subjAgg(last7, "h"), [last7, subjects]);
   const lastWkH = useMemo(() => subjAgg(prevWeek, "h"), [prevWeek, subjects]);
   const thisWkT = useMemo(() => subjAgg(last7, "t"), [last7, subjects]);
   const subjectPie = subjects.map((s) => ({ name: shortName(s), value: round1(thisWkH[s]) })).filter((x) => x.value > 0);
-  // Colours must follow the SAME filter as subjectPie (skip 0-hour subjects) so
-  // each donut slice / legend row keeps its subject colour once early-week
-  // subjects drop out.
   const subjectPieColors = subjects.filter((s) => round1(thisWkH[s]) > 0).map(subColor);
   const subjectPieTotal = subjectPie.reduce((sum, x) => sum + x.value, 0);
   const subjectLines = subjects.map((s) => ({ key: keyOf(s), label: shortName(s), color: subColor(s) }));
   const subjectHourTrend = last7.map((e) => {
-    const row = { year: DOW[new Date(e.date).getDay()] };
+    const day = e?.date ? new Date(e.date).getDay() : 0;
+    const row = { year: DOW[isNaN(day) ? 0 : day] || "Day" };
     subjects.forEach((s) => { row[keyOf(s)] = subVal(e, s).h; });
     return row;
   });
   const subjectTaskTrend = last7.map((e) => {
-    const row = { year: DOW[new Date(e.date).getDay()] };
+    const day = e?.date ? new Date(e.date).getDay() : 0;
+    const row = { year: DOW[isNaN(day) ? 0 : day] || "Day" };
     subjects.forEach((s) => { row[keyOf(s)] = subVal(e, s).t; });
     return row;
   });
   const lowestSubject = subjects.length ? subjects.reduce((lo, s) => (thisWkH[s] < thisWkH[lo] ? s : lo), subjects[0]) : null;
 
-  /* ── derived test metrics ── */
-  const testsSorted = useMemo(() => [...tests].sort((a, b) => a.date.localeCompare(b.date)), [tests]);
+  /* ── derived test metrics (safe against missing date, score, total) ── */
+  const testsSorted = useMemo(() => {
+    const list = Array.isArray(tests) ? [...tests].filter((t) => t && typeof t === "object") : [];
+    return list.sort((a, b) => String(a?.date || "").localeCompare(String(b?.date || "")));
+  }, [tests]);
   const latest = testsSorted[testsSorted.length - 1];
   const prev = testsSorted[testsSorted.length - 2];
 
-  // "Have you taken a test lately?" nudge - shows when no test has been logged
-  // in a week (or ever), unless it was already dismissed today.
-  const daysSinceLastTest = latest ? Math.round((new Date(todayIso) - new Date(latest.date)) / 86400000) : Infinity;
+  const daysSinceLastTest = latest && latest.date ? Math.round((new Date(todayIso) - new Date(latest.date)) / 86400000) : Infinity;
   const showTestReminder = daysSinceLastTest >= 7 && testRemindSnooze !== todayIso;
-  // Reset the Yes/No stage once the nudge is gone (e.g. a test was logged) so a
-  // future reminder always starts from the question, not the follow-up.
   useEffect(() => { if (!showTestReminder) setTestAskStage("ask"); }, [showTestReminder]);
   const acc = (t) => {
-    const att = Number(t.correct) + Number(t.wrong);
-    return att ? Math.round((Number(t.correct) / att) * 100) : 0;
+    if (!t) return 0;
+    const c = Number(t.correct ?? 0);
+    const w = Number(t.wrong ?? 0);
+    const att = c + w;
+    return att ? Math.round((c / att) * 100) : 0;
   };
-  const pct = (t) => Math.round((Number(t.scored) / Math.max(1, Number(t.total))) * 100);
-  const improvement = latest && prev && Number(prev.scored) > 0
-    ? Math.round(((Number(latest.scored) - Number(prev.scored)) / Number(prev.scored)) * 100)
+  const pct = (t) => {
+    if (!t) return 0;
+    const scored = Number(t.scored ?? t.score ?? 0);
+    const total = Number(t.total ?? t.maxMarks ?? 1);
+    return Math.round((scored / Math.max(1, total)) * 100);
+  };
+  const improvement = latest && prev && Number(prev.scored ?? prev.score) > 0
+    ? Math.round(((Number(latest.scored ?? latest.score) - Number(prev.scored ?? prev.score)) / Number(prev.scored ?? prev.score)) * 100)
     : null;
-  const scoreTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, you: Number(t.scored), target: Math.round(Number(t.total) * 0.75) }));
-  const accTrend = testsSorted.map((t, i) => ({ year: t.name || `T${i + 1}`, accuracy: acc(t) }));
-  // Keep x-labels short so the silly-mistake bars don't collide (long test
-  // names like "JEE Advanced Paper (P1+P2)" are truncated; angled on render).
+  const scoreTrend = testsSorted.map((t, i) => ({
+    year: t?.name || `T${i + 1}`,
+    you: Number(t?.scored ?? t?.score ?? 0),
+    target: Math.round(Number(t?.total ?? t?.maxMarks ?? 300) * 0.75),
+  }));
+  const accTrend = testsSorted.map((t, i) => ({
+    year: t?.name || `T${i + 1}`,
+    accuracy: acc(t),
+  }));
   const sillyTrend = testsSorted.map((t, i) => {
-    const nm = t.name || `T${i + 1}`;
-    return { name: nm.length > 9 ? `${nm.slice(0, 8)}…` : nm, silly: Number(t.silly || 0) };
+    const nm = String(t?.name || `T${i + 1}`);
+    return { name: nm.length > 9 ? `${nm.slice(0, 8)}…` : nm, silly: Number(t?.silly || 0) };
   });
-  const avgSkipped = testsSorted.length ? Math.round(testsSorted.reduce((s, t) => s + Number(t.skipped || 0), 0) / testsSorted.length) : 0;
-  const latestRankTest = [...testsSorted].reverse().find((t) => t.rank);
+  const avgSkipped = testsSorted.length ? Math.round(testsSorted.reduce((s, t) => s + Number(t?.skipped || 0), 0) / testsSorted.length) : 0;
+  const latestRankTest = [...testsSorted].reverse().find((t) => t?.rank);
 
   /* ── weak-chapter heatmap (tests + open backlog + silly topics) ── */
   const weakRanked = useMemo(() => {
     const freq = {};
     testsSorted.forEach((t) => {
+      if (!t) return;
       (t.weak || []).forEach((c) => { freq[c] = (freq[c] || 0) + 1; });
       if (t.sillyTopic) freq[t.sillyTopic] = (freq[t.sillyTopic] || 0) + 1;
     });
-    backlog.filter((b) => !b.done && b.strength !== "strong").forEach((b) => {
-      if (!b.topic) return;
+    (Array.isArray(backlog) ? backlog : []).filter((b) => b && !b.done && b.strength !== "strong").forEach((b) => {
+      if (!b?.topic) return;
       freq[b.topic] = (freq[b.topic] || 0) + (b.strength === "weak" ? 2 : 1);
     });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
@@ -725,7 +759,7 @@ function DashboardBody({ urlPlan = "" }) {
   /* ── silly-mistake topics ── */
   const sillyTopics = useMemo(() => {
     const freq = {};
-    testsSorted.forEach((t) => { if (t.sillyTopic) freq[t.sillyTopic] = (freq[t.sillyTopic] || 0) + 1; });
+    testsSorted.forEach((t) => { if (t?.sillyTopic) freq[t.sillyTopic] = (freq[t.sillyTopic] || 0) + 1; });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted]);
 
@@ -743,19 +777,19 @@ function DashboardBody({ urlPlan = "" }) {
 
   const timeRanked = useMemo(() => {
     const freq = {};
-    testsSorted.forEach((t) => { if (t.overspent) freq[t.overspent] = (freq[t.overspent] || 0) + 1; });
+    testsSorted.forEach((t) => { if (t?.overspent) freq[t.overspent] = (freq[t.overspent] || 0) + 1; });
     return Object.entries(freq).sort((a, b) => b[1] - a[1]);
   }, [testsSorted]);
 
   // Average minutes ACTUALLY spent per section, from tests where the student
   // logged their per-section time. null ⇒ no timed tests yet.
   const timedTests = useMemo(
-    () => testsSorted.filter((t) => t.times && examSections.some((sec) => Number(t.times[sec]) > 0)),
+    () => testsSorted.filter((t) => t?.times && examSections.some((sec) => Number(t.times[sec]) > 0)),
     [testsSorted, examSections]);
   const avgTimePer = useMemo(() => {
     if (!timedTests.length) return null;
     const m = Object.fromEntries(examSections.map((sec) => [sec, 0]));
-    timedTests.forEach((t) => examSections.forEach((sec) => { m[sec] += Number(t.times?.[sec]) || 0; }));
+    timedTests.forEach((t) => examSections.forEach((sec) => { m[sec] += Number(t?.times?.[sec]) || 0; }));
     examSections.forEach((sec) => { m[sec] = Math.round(m[sec] / timedTests.length); });
     return m;
   }, [timedTests, examSections]);
@@ -771,8 +805,7 @@ function DashboardBody({ urlPlan = "" }) {
     ? [{ key: "you", label: "You (avg)", color: "#06b6d4" }, { key: "target", label: "Target", color: "#22c55e" }]
     : [{ key: "over", label: "Over-spent (tests)", color: "#06b6d4" }];
 
-  /* suggested pacing for the next paper - REAL data: target each section to its
-     ideal time; flag (CAP) the ones where the student's logged average over-runs. */
+  /* suggested pacing for the next paper */
   const pacing = useMemo(() => examSections.map((sec) => {
     const ideal = idealPace[sec];
     const spent = avgTimePer ? avgTimePer[sec] : null;
@@ -783,15 +816,15 @@ function DashboardBody({ urlPlan = "" }) {
   // "Better timings → better paper" - what reclaiming the over-run time buys you.
   const timeInsight = useMemo(() => {
     if (!avgTimePer) return null;
-    const overrun = examSections.reduce((s, sec) => s + Math.max(0, avgTimePer[sec] - idealPace[sec]), 0);
+    const overrun = examSections.reduce((s, sec) => s + Math.max(0, (avgTimePer[sec] || 0) - (idealPace[sec] || 0)), 0);
     const worst = examSections
-      .map((sec) => [sec, avgTimePer[sec] - idealPace[sec]])
+      .map((sec) => [sec, (avgTimePer[sec] || 0) - (idealPace[sec] || 0)])
       .sort((a, b) => b[1] - a[1])[0];
     const minPerQ = isNEET ? 1 : 2; // ~2 min/q (JEE), ~1 min/q (NEET)
     const extraQ = Math.round(overrun / minPerQ);
     const sillyAvg = testsSorted.length
-      ? Math.round(testsSorted.reduce((s, t) => s + Number(t.silly || 0), 0) / testsSorted.length) : 0;
-    const totalSpent = examSections.reduce((s, sec) => s + avgTimePer[sec], 0);
+      ? Math.round(testsSorted.reduce((s, t) => s + Number(t?.silly || 0), 0) / testsSorted.length) : 0;
+    const totalSpent = examSections.reduce((s, sec) => s + (avgTimePer[sec] || 0), 0);
     return { overrun, worst: worst && worst[1] > 0 ? worst[0] : null, extraQ, sillyAvg, totalSpent };
   }, [avgTimePer, examSections, idealPace, isNEET, testsSorted]);
 
@@ -806,11 +839,12 @@ function DashboardBody({ urlPlan = "" }) {
 
   /* ── chapters by strength + weekly coverage (for the parent report) ── */
   const chaptersByStrength = useMemo(() => {
-    const fmt = (c) => `${c.topic} (${shortName(c.subject)})${c.coverage ? ` · ${c.coverage}% covered` : ""}`;
+    const fmt = (c) => `${c?.topic || ""} (${shortName(c?.subject)})${c?.coverage ? ` · ${c.coverage}% covered` : ""}`;
+    const list = Array.isArray(chapterLog) ? chapterLog.filter(Boolean) : [];
     return {
-      weak: chapterLog.filter((c) => c.strength === "weak").map(fmt),
-      medium: chapterLog.filter((c) => c.strength === "medium").map(fmt),
-      strong: chapterLog.filter((c) => c.strength === "strong").map(fmt),
+      weak: list.filter((c) => c?.strength === "weak").map(fmt),
+      medium: list.filter((c) => c?.strength === "medium").map(fmt),
+      strong: list.filter((c) => c?.strength === "strong").map(fmt),
     };
   }, [chapterLog]);
 
@@ -1010,11 +1044,11 @@ function DashboardBody({ urlPlan = "" }) {
   }
   const toggleBacklog = (id) => setBacklog((prev) => prev.map((b) => (b.id === id ? { ...b, done: !b.done } : b)));
   const removeBacklog = (id) => setBacklog((prev) => prev.filter((b) => b.id !== id));
-  const backlogDone = backlog.filter((b) => b.done).length;
-  const backlogPct = backlog.length ? Math.round((backlogDone / backlog.length) * 100) : 0;
+  const backlogDone = (Array.isArray(backlog) ? backlog : []).filter((b) => b && b.done).length;
+  const backlogPct = (Array.isArray(backlog) && backlog.length) ? Math.round((backlogDone / backlog.length) * 100) : 0;
   // target date (back-compat with older items that used planDate) + overdue detection
-  const blDate = (b) => b.targetDate || b.planDate || "";
-  const overdueBacklog = backlog.filter((b) => !b.done && blDate(b) && blDate(b) < todayIso);
+  const blDate = (b) => b?.targetDate || b?.planDate || "";
+  const overdueBacklog = (Array.isArray(backlog) ? backlog : []).filter((b) => b && !b.done && blDate(b) && blDate(b) < todayIso);
   const studyIrregular = streak < 2 || routinePct < 50;
 
   /* ── weekly tasks (add + complete only · no delete) ── */
@@ -1022,10 +1056,10 @@ function DashboardBody({ urlPlan = "" }) {
     e.preventDefault();
     const text = wtInput.trim();
     if (!text) return;
-    setWeeklyTasks((prev) => [...prev, { id: `${Date.now()}`, text, done: false, week: wk, createdAt: todayIso }]);
+    setWeeklyTasks((prev) => [...(Array.isArray(prev) ? prev : []), { id: `${Date.now()}`, text, done: false, week: wk, createdAt: todayIso }]);
     setWtInput("");
   }
-  const toggleWeeklyTask = (id) => setWeeklyTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+  const toggleWeeklyTask = (id) => setWeeklyTasks((prev) => (Array.isArray(prev) ? prev : []).map((t) => (t?.id === id ? { ...t, done: !t.done } : t)));
 
   /* ── chapter strength + weekly coverage (feeds the parent chapter report) ── */
   function addChapter(e) {
@@ -1036,18 +1070,18 @@ function DashboardBody({ urlPlan = "" }) {
     const coverage = Math.max(0, Math.min(100, Number(chapForm.coverage) || 0));
     setChapterLog((prev) => [
       // replace an existing entry for the same subject+topic, else add
-      ...prev.filter((c) => !(c.subject === subject && c.topic.toLowerCase() === topic.toLowerCase())),
+      ...(Array.isArray(prev) ? prev : []).filter((c) => !(c?.subject === subject && String(c?.topic || '').toLowerCase() === topic.toLowerCase())),
       { id: `${Date.now()}`, subject, topic, strength: chapForm.strength, coverage },
     ]);
     setChapForm({ subject: "", topic: "", strength: "weak", coverage: "" });
   }
-  const removeChapter = (id) => setChapterLog((prev) => prev.filter((c) => c.id !== id));
+  const removeChapter = (id) => setChapterLog((prev) => (Array.isArray(prev) ? prev : []).filter((c) => c?.id !== id));
   const saveWeeklyEdit = () => {
     const text = wtEdit.text.trim();
-    if (text) setWeeklyTasks((prev) => prev.map((t) => (t.id === wtEdit.id ? { ...t, text } : t)));
+    if (text) setWeeklyTasks((prev) => (Array.isArray(prev) ? prev : []).map((t) => (t?.id === wtEdit.id ? { ...t, text } : t)));
     setWtEdit({ id: null, text: "" });
   };
-  const weeklyDone = weeklyTasks.filter((t) => t.done).length;
+  const weeklyDone = (Array.isArray(weeklyTasks) ? weeklyTasks : []).filter((t) => t && t.done).length;
 
   /* ── parent report builders + send (daily & weekly) ── */
   const todayTest = tests.find((t) => t.date === todayIso);
@@ -1843,7 +1877,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <>
                   <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={170} angle={-32} />
                   {latest && prev && (
-                    <DeltaPill d={Number(latest.silly) - Number(prev.silly)} lowerIsBetter subtext={`${prev.silly} → ${latest.silly} this test`} />
+                    <DeltaPill d={Number(latest?.silly || 0) - Number(prev?.silly || 0)} lowerIsBetter subtext={`${prev?.silly ?? 0} → ${latest?.silly ?? 0} this test`} />
                   )}
                   {sillyTopics.length > 0 && (
                     <div style={{ marginTop: 12 }}>
