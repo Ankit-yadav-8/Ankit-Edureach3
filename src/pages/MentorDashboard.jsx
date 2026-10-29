@@ -551,6 +551,35 @@ export default function MentorDashboard() {
     setReport({ progress: null, tests: [], tasks: [], updatedAt: null });
   }, []);
 
+  const [syncing, setSyncing] = useState(false);
+  const refreshData = async () => {
+    if (!token || syncing) return;
+    setSyncing(true);
+    try {
+      const { mentor: m } = await apiMentorMe(token);
+      setMentor(m);
+      const { students: list } = await apiMentorStudents(token);
+      setStudents(list);
+      if (activeId) {
+        const [p, t, k] = await Promise.all([
+          apiMentorStudentProgress(token, activeId),
+          apiMentorStudentTests(token, activeId).catch(() => ({ attempts: [] })),
+          apiMentorStudentTasks(token, activeId).catch(() => ({ tasks: [] })),
+        ]);
+        setReport({
+          progress: p.data,
+          tests: t.attempts || [],
+          tasks: k.tasks || [],
+          updatedAt: p.updatedAt,
+        });
+      }
+    } catch (e) {
+      console.error("Refresh error:", e);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   useEffect(() => {
     document.documentElement.classList.add("dashboard-invisible-scrollbar");
     document.body.classList.add("dashboard-invisible-scrollbar");
@@ -780,7 +809,7 @@ export default function MentorDashboard() {
           position: "relative",
         }}
       >
-        <style>{`
+<style>{`
           /* Invisible scrollbar: keeps smooth scrolling effect without visible orange bar */
           html.dashboard-invisible-scrollbar,
           html.dashboard-invisible-scrollbar body,
@@ -800,32 +829,65 @@ export default function MentorDashboard() {
             height: 0 !important;
             background: transparent !important;
           }
+
+          @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
+          @keyframes admSpin { to { transform: rotate(360deg); } }
+          .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
+          .adm-desk-pill {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+          }
+          .adm-desk-pill:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+          }
+          .adm-desk-pill.active {
+            background: #ffffff;
+            color: ${ACCENT};
+            font-weight: 700;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+          }
+          @media (max-width: 900px) {
+            .adm-desk-tab-bar { display: none !important; }
+          }
         `}</style>
+
         {/* ── TOP NAVBAR: Campus Point on left, Hamburger on right ── */}
         <nav
           style={{
             height: 58,
             background: "#ffffff",
-            borderBottom: "1px solid #e2e8f0",
+            borderBottom: "1px solid #f0e9e0",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "0 20px",
+            padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
             position: "sticky",
             top: 0,
             zIndex: 100,
-            boxShadow: "0 1px 3px rgba(15,23,42,0.02)",
+            boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
             flexShrink: 0,
           }}
         >
-          {/* Left: Campus Point Logo + Wordmark */}
+          {/* Left: Campus Point wordmark and logo */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span
               style={{
                 width: 36,
                 height: 36,
                 borderRadius: "50%",
-                background: "#FF693D",
+                background: ACCENT,
                 display: "grid",
                 placeItems: "center",
                 flexShrink: 0,
@@ -849,7 +911,7 @@ export default function MentorDashboard() {
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: 700,
-                fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
+                fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
                 letterSpacing: "-0.01em",
                 color: "#1a1a2e",
                 whiteSpace: "nowrap",
@@ -867,73 +929,96 @@ export default function MentorDashboard() {
                 borderRadius: 6,
                 letterSpacing: 0.5,
                 textTransform: "uppercase",
-                display: "inline-flex",
-                alignItems: "center",
               }}
             >
               Mentor Console
             </span>
           </div>
 
-          {/* Center: Mentee Status */}
-          {activeStudent && (
-            <div
-              className="desktop-only-txt"
+          {/* Center: Active tab breadcrumb & live status */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", fontFamily: SORA }}>
+              {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
+            </span>
+            <span
               style={{
-                display: "flex",
+                fontSize: 10.5,
+                fontWeight: 700,
+                color: "#166534",
+                background: "#f0fdf4",
+                padding: "2px 8px",
+                borderRadius: 12,
+                border: "1px solid #bbf7d0",
+                display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
-                background: "#f8fafc",
-                padding: "4px 12px",
-                borderRadius: 20,
-                border: "1px solid #e2e8f0",
-                fontSize: 12,
+                gap: 4,
               }}
             >
-              <span style={{ color: "#64748b" }}>Mentee:</span>
-              <span style={{ fontWeight: 700, color: "#0f172a" }}>{activeStudent.name}</span>
-              <span style={{ fontSize: 10.5, color: "#94a3b8" }}>({activeStudent.id})</span>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#166534" }}>Live</span>
-            </div>
-          )}
+              Live
+            </span>
+          </div>
 
-          {/* Right: Mentor Profile & Hamburger Button */}
+          {/* Right: Quick Mentee Selector, Sync, and Hamburger Button */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {mentor && (
-              <div
-                className="desktop-only-txt"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
-                  padding: "3px 10px 3px 5px",
-                  borderRadius: 20,
-                }}
-              >
-                <div
-                  style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                    color: "#fff",
-                    display: "grid",
-                    placeItems: "center",
-                    fontSize: 11,
-                    fontWeight: 800,
-                  }}
-                >
-                  {(mentor.name || "M").charAt(0).toUpperCase()}
-                </div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>
-                  {mentor.name?.split(" ")[0]}
+            {students.length > 0 && (activeTab === "workspace" || activeTab === "logins") && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, display: "none" }} className="desktop-sync-txt">
+                  Mentee:
                 </span>
+                <select
+                  id="mentor-student-select"
+                  value={activeId}
+                  onChange={(e) => setActiveId(e.target.value)}
+                  style={{
+                    height: 36,
+                    padding: "0 10px",
+                    borderRadius: 8,
+                    border: "1.5px solid rgba(255,105,61,0.35)",
+                    background: "#ffffff",
+                    color: "#0f172a",
+                    fontWeight: 700,
+                    fontSize: 12,
+                    cursor: "pointer",
+                    outline: "none",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                  }}
+                  title="Switch Active Mentee"
+                >
+                  {students.map((s) => (
+                    <option key={s.studentId} value={s.studentId}>
+                      {s.name} ({s.studentId})
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
 
+            {/* Sync Button */}
+            <button
+              onClick={refreshData}
+              disabled={syncing}
+              title="Sync latest data"
+              style={{
+                height: 36,
+                padding: "0 12px",
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                background: "#ffffff",
+                color: "#475569",
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: syncing ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
+              <RefreshCw size={13} style={{ animation: syncing ? "admSpin 1s linear infinite" : "none" }} />
+              <span style={{ display: "none" }} className="desktop-sync-txt">Sync</span>
+            </button>
+
+            {/* Hamburger Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               style={{
@@ -949,7 +1034,7 @@ export default function MentorDashboard() {
                 boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                 transition: "all 0.15s ease",
               }}
-              title="Open Navigation Menu"
+              title="Open Mentor Navigation"
               aria-label="Menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -957,155 +1042,167 @@ export default function MentorDashboard() {
           </div>
         </nav>
 
-        {/* ── WORKSPACE BODY: Sidebar + Main Area ── */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden", position: "relative" }}>
-        {/* Mobile Navigation Drawer Backdrop */}
+        {/* ── DESKTOP TAB BAR: Fast 1-click tab switching ── */}
+        <div
+          className="adm-desk-tab-bar"
+          style={{
+            background: "#f1f5f9",
+            padding: "4px clamp(1.25rem, 3.5vw, 2.5rem)",
+            borderBottom: "1px solid #e2e8f0",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            overflowX: "auto",
+            flexShrink: 0,
+          }}
+        >
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const active = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`adm-desk-pill ${active ? "active" : ""}`}
+              >
+                <Icon size={14} color={active ? ACCENT : "#64748b"} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── SLIDE-IN DRAWER ON RIGHT (where all things are) ── */}
         {mobileMenuOpen && (
           <div
             onClick={() => setMobileMenuOpen(false)}
             style={{
               position: "fixed",
               inset: 0,
-              zIndex: 998,
-              background: "rgba(15, 23, 42, 0.45)",
+              background: "rgba(15,23,42,0.45)",
               backdropFilter: "blur(4px)",
+              zIndex: 1199,
             }}
           />
         )}
 
-        {/* ── Sleek Modern Sidebar (Desktop & Mobile Drawer) ── */}
         <aside
           style={{
-            width: 270,
+            position: "fixed",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: "min(340px, 88vw)",
             background: "#ffffff",
-            borderRight: "1px solid #e2e8f0",
+            boxShadow: mobileMenuOpen ? "-4px 0 32px rgba(15,23,42,0.18)" : "none",
+            zIndex: 1200,
             display: "flex",
             flexDirection: "column",
-            zIndex: mobileMenuOpen ? 999 : 50,
-            position: mobileMenuOpen ? "fixed" : "relative",
-            top: mobileMenuOpen ? 0 : "auto",
-            right: mobileMenuOpen ? 0 : "auto",
-            left: mobileMenuOpen ? "auto" : 0,
-            bottom: 0,
-            height: mobileMenuOpen ? "100vh" : "100%",
-            flexShrink: 0,
-            overflowY: "auto",
-            transform: mobileMenuOpen ? "translateX(0)" : "translateX(0)",
-            boxShadow: mobileMenuOpen ? "4px 0 24px rgba(0,0,0,0.15)" : "none",
-            transition: "transform 0.25s ease",
+            transform: mobileMenuOpen ? "translateX(0)" : "translateX(100%)",
+            transition: "transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)",
             boxSizing: "border-box",
           }}
-          className={`cp-custom-scroll ${mobileMenuOpen ? "sidebar-mobile-open" : "sidebar-desktop"}`}
+          className="cp-custom-scroll"
         >
-          {/* Sidebar Header / Brand */}
+          {/* Drawer Header */}
           <div
             style={{
-              padding: "20px 20px 18px",
-              borderBottom: "1px solid #f1f5f9",
+              padding: "16px 20px",
+              borderBottom: "1px solid #f0e9e0",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div
+              <span
                 style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 11,
-                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  background: ACCENT,
                   display: "grid",
                   placeItems: "center",
-                  color: "#fff",
-                  fontWeight: 900,
-                  fontSize: 16,
-                  fontFamily: SORA,
-                  boxShadow: "0 6px 16px -4px rgba(255,105,61,0.4)",
+                  boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
                 }}
               >
-                CP
-              </div>
+                <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, lineHeight: 1 }}>
+                  CP
+                </span>
+              </span>
               <div>
-                <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 15, color: "#0f172a", lineHeight: 1.2 }}>
+                <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14, color: "#0f172a", lineHeight: 1.2 }}>
                   Campus Point
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 800, color: ACCENT, letterSpacing: 0.8, textTransform: "uppercase" }}>
+                <div style={{ fontSize: 9.5, fontWeight: 800, color: ACCENT, letterSpacing: 0.6, textTransform: "uppercase" }}>
                   Mentor Console
                 </div>
               </div>
             </div>
 
-            {/* Mobile Close Button */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="mobile-only-btn"
               style={{
                 background: "none",
                 border: "none",
                 color: "#64748b",
                 cursor: "pointer",
-                padding: 4,
+                padding: 6,
+                borderRadius: 8,
               }}
+              title="Close menu"
             >
-              <X size={18} />
+              <X size={19} />
             </button>
           </div>
 
-          {/* Mentor Profile Pill */}
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                background: "#f8fafc",
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid #eef2f7",
-              }}
-            >
-              <div
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 10,
-                  background: `${ACCENT}15`,
-                  color: ACCENT,
-                  display: "grid",
-                  placeItems: "center",
-                  fontWeight: 800,
-                  fontSize: 13,
-                }}
-              >
-                {mentor.name?.charAt(0) || "M"}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {mentor.name}
+          {/* Mentor Profile Card */}
+          {mentor && (
+            <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    background: `${ACCENT}15`,
+                    color: ACCENT,
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 800,
+                    fontSize: 13,
+                  }}
+                >
+                  {mentor.name?.charAt(0) || "M"}
                 </div>
-                <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {mentor.college || mentor.email}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {mentor.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {mentor.college || mentor.email}
+                  </div>
                 </div>
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    fontWeight: 800,
+                    color: "#166534",
+                    background: "#ecfdf5",
+                    padding: "2px 6px",
+                    borderRadius: 6,
+                  }}
+                >
+                  {students.length} mentees
+                </span>
               </div>
-              <span
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 800,
-                  color: "#16a34a",
-                  background: "#ecfdf5",
-                  padding: "2px 6px",
-                  borderRadius: 6,
-                }}
-              >
-                {students.length} mentees
-              </span>
             </div>
-          </div>
+          )}
 
-          {/* Navigation Items */}
+          {/* Navigation Links */}
           <div style={{ padding: "14px 12px", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 6px" }}>
-              Main Navigation
+              Console Navigation
             </div>
 
             {NAV_ITEMS.map((item) => {
@@ -1144,7 +1241,7 @@ export default function MentorDashboard() {
               );
             })}
 
-            {/* Quick Mentee Switcher in Sidebar */}
+            {/* Quick Mentee Switcher in Drawer */}
             <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 10px 8px" }}>
                 <span style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>
@@ -1206,25 +1303,25 @@ export default function MentorDashboard() {
             </div>
           </div>
 
-          {/* Sidebar Footer */}
-          <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9" }}>
+          {/* Drawer Footer / Sign Out */}
+          <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9", background: "#fafafa" }}>
             <button
               onClick={signOut}
               style={{
+                width: "100%",
+                padding: "9px 14px",
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                background: "#ffffff",
+                color: "#64748b",
+                fontSize: 12.5,
+                fontWeight: 600,
+                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 7,
-                width: "100%",
-                padding: "9px 12px",
-                borderRadius: 9,
-                border: "1px solid #e2e8f0",
-                background: "#fff",
-                color: "#64748b",
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: "pointer",
-                transition: "all .15s ease",
+                gap: 8,
+                transition: "all 0.15s ease",
               }}
             >
               <LogOut size={13} /> Sign Out of Console
@@ -1232,155 +1329,20 @@ export default function MentorDashboard() {
           </div>
         </aside>
 
-        {/* ── Main Content Area with Sticky Header ── */}
+        {/* ── MAIN CONTENT AREA (FULL WIDTH) ─────────────────────────── */}
         <div
           className="mentor-main-scroll cp-custom-scroll"
           style={{
             flex: 1,
-            minWidth: 0,
-            height: "100%",
-            overflowY: "auto",
             display: "flex",
             flexDirection: "column",
+            minWidth: 0,
+            overflowY: "auto",
             boxSizing: "border-box",
           }}
         >
-          {/* Top Sticky Navigation Bar */}
-          <header
-            className="mentor-top-header"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 80,
-              background: "#ffffff",
-              borderBottom: "1px solid #e2e8f0",
-              height: 52,
-              padding: "0 20px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 10,
-              boxShadow: "0 1px 4px rgba(0,0,0,0.02)",
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
-              {/* Mobile Menu Hamburger */}
-              <button
-                onClick={() => setMobileMenuOpen(true)}
-                className="mobile-hamburger-btn"
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  border: "1px solid #e2e8f0",
-                  background: "#fff",
-                  display: "grid",
-                  placeItems: "center",
-                  cursor: "pointer",
-                  color: "#0f172a",
-                  flexShrink: 0,
-                }}
-              >
-                <Menu size={18} />
-              </button>
-
-              {/* Breadcrumb with guaranteed nowrap and clean truncation */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontSize: 13,
-                  color: "#64748b",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  minWidth: 0,
-                }}
-              >
-                <span className="breadcrumb-prefix" style={{ whiteSpace: "nowrap" }}>Mentor</span>
-                <span className="breadcrumb-prefix" style={{ color: "#cbd5e1" }}>/</span>
-                <span style={{ fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap" }}>
-                  {NAV_ITEMS.find((n) => n.id === activeTab)?.label}
-                </span>
-                {activeStudent && (activeTab === "workspace" || activeTab === "logins") && (
-                  <span className="breadcrumb-student" style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
-                    <span style={{ color: "#cbd5e1" }}>/</span>
-                    <span style={{ color: ACCENT, fontWeight: 700, whiteSpace: "nowrap" }}>{activeStudent.name}</span>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Right Header Controls */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-              {/* Student Switcher Dropdown */}
-              {students.length > 0 && (
-                <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                  <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, whiteSpace: "nowrap" }} className="desktop-only-txt">
-                    Mentee:
-                  </span>
-                  <select
-                    value={activeId}
-                    onChange={(e) => setActiveId(e.target.value)}
-                    style={{
-                      height: 34,
-                      padding: "0 8px",
-                      borderRadius: 8,
-                      border: "1px solid #e2e8f0",
-                      background: "#fff",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: "#0f172a",
-                      outline: "none",
-                      cursor: "pointer",
-                      maxWidth: 160,
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {students.map((s) => (
-                      <option key={s.studentId} value={s.studentId}>
-                        {s.name} ({s.studentId})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Live Atlas Sync Badge */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: "#16a34a",
-                  background: "#f0fdf4",
-                  padding: "4px 8px",
-                  borderRadius: 6,
-                  border: "1px solid #bbf7d0",
-                }}
-                className="desktop-only-txt"
-              >
-                <span
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: "#16a34a",
-                    boxShadow: "0 0 0 2px rgba(22,163,74,0.2)",
-                  }}
-                />
-                Live
-              </div>
-            </div>
-          </header>
-
           {/* Main Body Content Container */}
-          <main style={{ padding: "24px 28px 80px", flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
+          <main style={{ padding: "28px clamp(1.25rem, 3.5vw, 2.5rem) 80px", flex: 1, maxWidth: 1400, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
             {err && (
               <div
                 style={{
@@ -2032,8 +1994,6 @@ export default function MentorDashboard() {
           </main>
         </div>
 
-        </div>
-
         {/* Chapter Quiz Creator Modal */}
         <ChapterQuizModal
           isOpen={quizOpen}
@@ -2046,29 +2006,6 @@ export default function MentorDashboard() {
         .cp-spin { animation: cp-spin 0.9s linear infinite; }
         @keyframes cp-spin { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) { .cp-spin { animation-duration: 2.4s; } }
-        
-        .mobile-hamburger-btn { display: none; }
-        .mobile-only-btn { display: none; }
-        
-        @media (max-width: 900px) {
-          .mentor-top-header { padding: 0 12px !important; }
-          .mobile-hamburger-btn { display: grid !important; }
-          .mobile-only-btn { display: block !important; }
-          .desktop-only-txt { display: none !important; }
-          .sidebar-desktop {
-            position: fixed !important;
-            right: 0 !important;
-            left: auto !important;
-            transform: translateX(100%) !important;
-          }
-          .sidebar-mobile-open {
-            transform: translateX(0) !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .breadcrumb-prefix { display: none !important; }
-          .breadcrumb-student { display: none !important; }
-        }
       `}</style>
     </>
   );

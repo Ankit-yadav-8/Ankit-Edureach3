@@ -752,7 +752,7 @@ export default function Admin() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 20px",
+          padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
           position: "sticky",
           top: 0,
           zIndex: 100,
@@ -940,7 +940,7 @@ export default function Admin() {
         className="adm-desk-tab-bar"
         style={{
           background: "#f1f5f9",
-          padding: "4px 20px",
+          padding: "4px clamp(1.25rem, 3.5vw, 2.5rem)",
           borderBottom: "1px solid #e2e8f0",
           display: "flex",
           alignItems: "center",
@@ -1190,7 +1190,7 @@ export default function Admin() {
         }}
       >
         {/* Viewport Content */}
-        <main className="adm-content-area" style={{ flex: 1, padding: "28px 32px 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+        <main className="adm-content-area" style={{ flex: 1, padding: "28px clamp(1.25rem, 3.5vw, 2.5rem) 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
           <div className="adm-fade">
             {tab === "overview" ? (
               <AdminOverview adminToken={token} onNavigateTab={switchTab} />
@@ -1445,33 +1445,7 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {/* Payments Metric Strip */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Collected</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            ₹{totalAmount.toLocaleString("en-IN")}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Paid Enrollments</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {payments.length}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Emails Approved</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#16a34a", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {approvedCount}
-          </div>
-        </div>
-        <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 6px rgba(15,23,42,.02)" }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Approval Pending</span>
-          <div style={{ fontSize: 20, fontWeight: 800, color: pendingCount > 0 ? "#ea580c" : "#64748b", marginTop: 2, fontFamily: "Sora, sans-serif" }}>
-            {pendingCount}
-          </div>
-        </div>
-      </div>
+
 
       <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,0.03)" }}>
         {/* Search bar */}
