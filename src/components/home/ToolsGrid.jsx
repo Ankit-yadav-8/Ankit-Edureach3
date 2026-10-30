@@ -167,7 +167,7 @@ function ToolCard({ t, nav }) {
 export default function ToolsGrid() {
   const nav = useNavigate();
   return (
-    <section id="tools" style={{ background: "#FFF7ED", padding: "80px 0" }}>
+    <section id="tools" style={{ background: "var(--base, #FFFFFF)", padding: "80px 0" }}>
       <div className="container" style={{ maxWidth: 1060, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -177,7 +177,7 @@ export default function ToolsGrid() {
             alignItems: "center", 
             gap: 6, 
             background: "var(--base, #FFFFFF)", 
-            color: "#C2410C", 
+            color: "#F47B20", 
             padding: "9px 18px 9px 14px", 
             borderRadius: 999, 
             fontSize: 11, 
@@ -185,7 +185,7 @@ export default function ToolsGrid() {
             letterSpacing: "0.7px",
             marginBottom: 20,
             boxShadow: "none",
-            border: "1px solid rgba(194,65,12,0.25)"
+            border: "1px solid rgba(244,123,32,0.2)"
           }}>
             <Sparkles size={14} /> SMART TOOLS
           </span>
@@ -197,7 +197,7 @@ export default function ToolsGrid() {
             margin: "0 0 16px 0",
             letterSpacing: "-1px"
           }}>
-            Everything you need, <span style={{ color: "#C2410C" }}>in one<br/>toolkit.</span>
+            Everything you need, <span style={{ color: "#FF693D" }}>in one<br/>toolkit.</span>
           </h2>
         </div>
 

@@ -171,8 +171,8 @@ export default function SmartToolsHub() {
             display: "inline-flex", 
             alignItems: "center", 
             gap: 6, 
-            background: "#FFF7ED", 
-            color: "#C2410C", 
+            background: "#fff0eb", 
+            color: "#FF693D", 
             padding: "6px 14px", 
             borderRadius: 50, 
             fontSize: 12, 
@@ -190,7 +190,7 @@ export default function SmartToolsHub() {
             margin: "0 0 16px 0",
             letterSpacing: "-1px"
           }}>
-            Everything you need, <span style={{ color: "#C2410C" }}>in one<br/>toolkit.</span>
+            Everything you need, <span style={{ color: "#FF693D" }}>in one<br/>toolkit.</span>
           </h2>
           <p style={{ 
             color: "#6b7280", 

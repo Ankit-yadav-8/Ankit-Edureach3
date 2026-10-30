@@ -10,10 +10,10 @@ import { Search, Target, Users } from "lucide-react";
    reveal ending in a coral script word. No cards / images.
 ════════════════════════════════════════════════ */
 
-const CORAL    = "#C2410C";
-const CORAL_DK = "#9A3412";
-const INK      = "#1E293B";
-const TEXT_SOFT= "#475569";
+const CORAL    = "#FF5A36";
+const CORAL_DK = "#E0421F";
+const INK      = "#4A4438";
+const TEXT_SOFT= "#8A8272";
 const BASE     = "#FFFFFF";
 const SHADOW_DK = "rgba(0,0,0,0.08)";
 const SHADOW_LT = "#FFFFFF";
