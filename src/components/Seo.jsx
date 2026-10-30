@@ -26,9 +26,9 @@ export const SITE_URL = "https://campuspoint.in";
 export const BRAND = "CampusPoint";
 
 const DEFAULT_TITLE =
-  "CampusPoint - JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Alumni";
+  "CampusPoint - JEE Rank Predictor & IIT NIT IIIT College Reviews | By IIT Roorkee Students";
 const DEFAULT_DESC =
-  "CampusPoint is a student-built platform by IIT Roorkee alumni - get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
+  "CampusPoint is a student-built platform by IIT Roorkee students - get free JEE Main & Advanced rank predictions, compare IIT NIT IIIT cutoffs, read college reviews, shortlist colleges, and track JoSAA / CSAB counselling deadlines.";
 const DEFAULT_IMAGE = `${SITE_URL}/cplogo.svg`;
 
 /** Create or update a <meta> tag, returning a restore fn. */

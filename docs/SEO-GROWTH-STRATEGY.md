@@ -1,7 +1,7 @@
 # CampusPoint — SEO & Digital Growth Strategy
 
 > Domain: **https://campuspoint.in** · Brand: **CampusPoint** (alt: "Campus Point")
-> Positioning: *An IIT Roorkee alumni startup — free JEE/JoSAA/CSAB counselling, rank prediction & college discovery.*
+> Positioning: *An IIT Roorkee students startup — free JEE/JoSAA/CSAB counselling, rank prediction & college discovery.*
 > White-hat only. Last updated: 2026-06-14.
 
 ---
@@ -42,8 +42,8 @@ Pattern: **Title ≤ 60 chars, Meta ≤ 155 chars, one H1, descriptive H2s, FAQ 
 
 | Page | H1 | Title tag |
 |---|---|---|
-| Home | Know Your Rank. Find Your College. | CampusPoint — JEE Rank Predictor & IIT NIT IIIT Reviews \| IIT Roorkee Alumni |
-| About | About CampusPoint — Built by IIT Roorkee Alumni | About CampusPoint — An IIT Roorkee Startup |
+| Home | Know Your Rank. Find Your College. | CampusPoint — JEE Rank Predictor & IIT NIT IIIT Reviews \| IIT Roorkee Students |
+| About | About CampusPoint — Built by IIT Roorkee Students | About CampusPoint — An IIT Roorkee Startup |
 | Contact | Contact CampusPoint | Contact CampusPoint — Counselling Help & Support |
 | College Predictor (`/jee-main`,`/jee-advanced`) | JEE Main/Advanced Rank Predictor | JEE Main Rank Predictor — Percentile to Rank & College Predictor |
 | JoSAA Guide (`/josaa-2026`) | JoSAA 2026 Counselling Guide | JoSAA 2026 Counselling — Schedule, Choice Filling & Cutoffs |
@@ -52,7 +52,7 @@ Pattern: **Title ≤ 60 chars, Meta ≤ 155 chars, one H1, descriptive H2s, FAQ 
 | Branch Comparison (`/compare`) | Compare Branches & Colleges | CSE vs ECE vs Mech — Branch Comparison by Placements |
 | Cut-off Analysis (`/cutoffs`) | JoSAA Cutoffs 2018–2025 | JoSAA Cutoffs 2018–2025 — IIT NIT IIIT Opening & Closing Ranks |
 | Mentorship (`/mentorship`) | 1-on-1 JEE & NEET Mentorship | JEE & NEET Mentorship by IITians — 1-on-1 Guidance |
-| Blogs | CampusPoint Blog | JEE & JoSAA Counselling Blog — Tips by IIT Roorkee Alumni |
+| Blogs | CampusPoint Blog | JEE & JoSAA Counselling Blog — Tips by IIT Roorkee Students |
 | Testimonials | What Students Say | CampusPoint Reviews — Real Student Testimonials |
 | FAQ | Frequently Asked Questions | CampusPoint FAQ — JEE Rank, JoSAA & Counselling |
 | Privacy / Terms | Privacy Policy / Terms | (robots: index, follow — keep thin but present) |
@@ -96,10 +96,10 @@ Universal: **username `campuspoint` everywhere**; bio = positioning line + `camp
 
 ## 4. YouTube growth
 
-**Channel setup:** name "Campus Point", handle `@CampusPoint`, banner with "Free JEE Rank Predictor & Counselling — IIT Roorkee Alumni", link to site + socials, channel keywords: `JEE counselling, JoSAA, CSAB, college predictor, IIT NIT admission, JEE rank predictor`.
+**Channel setup:** name "Campus Point", handle `@CampusPoint`, banner with "Free JEE Rank Predictor & Counselling — IIT Roorkee Students", link to site + socials, channel keywords: `JEE counselling, JoSAA, CSAB, college predictor, IIT NIT admission, JEE rank predictor`.
 
 **Channel description (paste-ready):**
-> Campus Point is a free JEE rank prediction & college-counselling platform built by IIT Roorkee alumni. We make JoSAA & CSAB simple — rank from marks, college shortlists, real cutoffs, branch comparisons & 1-on-1 mentorship. Website: https://campuspoint.in
+> Campus Point is a free JEE rank prediction & college-counselling platform built by IIT Roorkee students. We make JoSAA & CSAB simple — rank from marks, college shortlists, real cutoffs, branch comparisons & 1-on-1 mentorship. Website: https://campuspoint.in
 
 **Playlists:** JoSAA 2026 Masterclass · CSAB Special Round · College Reviews (IIT/NIT/IIIT) · Branch Comparisons · Rank Predictor How-To · Topper Interviews.
 
@@ -209,7 +209,7 @@ JoSAA choice-filling order · CSAB special round guide · percentile-to-rank exp
 | Shiksha | Reviews + Q&A | Cluttered; you win clean UX + accurate predictor |
 | Collegedunia | Cutoff data SEO | You win with founder-led video + community (WhatsApp/Telegram) |
 
-**Edge:** "Built by IIT Roorkee alumni" authenticity + free + a real predictor tool + community. Lean into long-tail counselling questions they neglect.
+**Edge:** "Built by IIT Roorkee students" authenticity + free + a real predictor tool + community. Lean into long-tail counselling questions they neglect.
 
 ---
 

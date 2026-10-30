@@ -303,7 +303,7 @@ export default function Footer() {
                 marginBottom: "1.4rem",
               }}
             >
-              Founded by IIT Roorkee alumni{" "}
+              Founded by IIT Roorkee students{" "}
               <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Ankit Kumar</span>,{" "}
               <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Mayank Singh</span>, and{" "}
               <span style={{ color: "#FF693D", fontWeight: 800, background: "rgba(255, 105, 61,.14)", padding: "0 5px", borderRadius: 5 }}>Saket Kumar</span>{" "}- a

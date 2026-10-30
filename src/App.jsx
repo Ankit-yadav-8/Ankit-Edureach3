@@ -253,6 +253,14 @@ export default function App() {
           <Route path="/how-to-use" element={<HowToUse />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/mentorship/:variant" element={<Mentorship />} />
+          {/* SEO Landing Page Aliases / Keyword Target Routes */}
+          <Route path="/jee-2027-mentorship" element={<Navigate to="/mentorship/jee-2027" replace />} />
+          <Route path="/jee-main-rank-predictor" element={<Navigate to="/jee-main" replace />} />
+          <Route path="/jee-college-predictor" element={<Navigate to="/for-you" replace />} />
+          <Route path="/iit-mentorship" element={<Navigate to="/mentorship/jee-2027" replace />} />
+          <Route path="/neet-2027-mentorship" element={<Navigate to="/mentorship/neet" replace />} />
+          <Route path="/college-comparison" element={<Navigate to="/compare" replace />} />
+          <Route path="/josaa-cutoff" element={<Navigate to="/cutoffs" replace />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={<Dashboard />} />

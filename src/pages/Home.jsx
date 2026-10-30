@@ -107,7 +107,12 @@ export default function Home({ onSearch }) {
 
   return (
     <>
-      <Seo path="/" jsonLd={jsonLd} />
+      <Seo
+        rawTitle="Campus Point – JEE Rank Predictor, College Predictor & IITian Mentorship"
+        description="Discover your expected JEE rank, explore IIT, NIT and IIIT colleges, compare branches and get personalized JEE 2027 mentorship from IITians at Campus Point."
+        path="/"
+        jsonLd={jsonLd}
+      />
 
       {/* ── Hero ── */}
       <Hero onSearch={onSearch} />

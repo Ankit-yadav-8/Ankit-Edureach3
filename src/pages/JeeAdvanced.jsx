@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import Seo from "../components/Seo.jsx";
 import PageHero from "../components/home/PageHero.jsx";
@@ -257,7 +258,7 @@ const COACHING = [
   {
     name: "Vedantu / Unacademy", city: "Online (Pan India)", color: "#15A06E", badge: "💻 Best Online",
     highlights: [
-      "Live interactive classes with top IIT alumni faculty",
+      "Live interactive classes with top IIT students faculty",
       "Affordable vs offline Kota coaching",
       "Recorded lectures, doubt sessions, test series",
       "Unacademy ICONIC / Vedantu VSAT for top batches",

@@ -84,7 +84,7 @@ export default function NeetCollegeDetail() {
 
   return (
     <div className="page">
-      <Seo title={seoTitle} description={seoDesc} path={`/neet-colleges/${college.slug}`} jsonLd={jsonLd}
+      <Seo rawTitle={seoTitle} description={seoDesc} path={`/neet-colleges/${college.slug}`} jsonLd={jsonLd}
         breadcrumbs={[
           { name: "Home", path: "/" },
           { name: "Medical Colleges", path: "/neet-colleges" },

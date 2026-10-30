@@ -109,7 +109,7 @@ export default function Blog() {
   return (
     <div style={{ background: CL.cream, minHeight: "100vh" }}>
       <Seo title="Blog - JEE, counselling & college insights · Campus Point"
-        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection - written by IIT Roorkee alumni at Campus Point."
+        description="Guides and insights on JEE, JoSAA & CSAB counselling, branch choice and college selection - written by IIT Roorkee students at Campus Point."
         path="/blog" />
 
       <section style={{ paddingTop: 128, paddingBottom: 40, position: "relative", overflow: "hidden" }}>
@@ -122,7 +122,7 @@ export default function Blog() {
                 <span style={{ color: CL.coral }}>Decisions, sorted.</span>
               </h1>
               <p style={{ color: CL.body, fontSize: "1.06rem", lineHeight: 1.7, maxWidth: 460 }}>
-                Honest, data-backed guides on counselling, branch choice and college selection - written by IIT Roorkee alumni who've lived the JoSAA chaos.
+                Honest, data-backed guides on counselling, branch choice and college selection - written by IIT Roorkee students who've lived the JoSAA chaos.
               </p>
             </div>
             <HeroPreview />

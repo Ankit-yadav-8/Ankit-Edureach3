@@ -58,7 +58,7 @@ export default function CounsellingPlanner() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="JoSAA Counselling Planner - Build Your Choice-Filling Order"
-        description="Free JoSAA 2026 counselling planner - arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee alumni."
+        description="Free JoSAA 2026 counselling planner - arrange your IIT/NIT/IIIT choice list in the smartest order based on your rank, category and preferences, by IIT Roorkee students."
         path="/planner"
       />
 

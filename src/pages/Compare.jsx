@@ -114,8 +114,8 @@ export default function Compare() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="Compare Colleges - IIT vs NIT vs IIIT with an AI verdict"
-        description="Compare IITs, NITs and IIITs side by side with an AI verdict - JoSAA cutoffs, placements, average package, fees and a scored recommendation on CampusPoint."
+        rawTitle="Compare IIT, NIT & IIIT Colleges 2027 – Placements & Cutoffs | Campus Point"
+        description="Compare IITs, NITs and IIITs side by side. Analyze JoSAA cutoffs, average placement package, fees, NIRF rank & student reviews. Free comparison tool."
         path="/compare"
       />
 

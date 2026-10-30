@@ -623,7 +623,7 @@ export default function AuthModal() {
 
               <div className="visual-copy">
                 <h1>Know your rank.<br/>Find your <span>dream college.</span></h1>
-                <p>Built by IIT Roorkee alumni - rank prediction, college shortlists and mentorship in one place.</p>
+                <p>Built by IIT Roorkee students - rank prediction, college shortlists and mentorship in one place.</p>
               </div>
             </div>
             )}

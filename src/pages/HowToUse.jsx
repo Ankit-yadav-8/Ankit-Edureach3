@@ -340,7 +340,7 @@ export default function HowToUse() {
     <div className="page" style={{ paddingTop: 0 }}>
       <Seo
         title="How to Use CampusPoint - Rank, Shortlist & Counselling"
-        description="A quick guide to using CampusPoint - predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee alumni."
+        description="A quick guide to using CampusPoint - predict your JEE rank, build a college shortlist, compare options and plan JoSAA/CSAB counselling, all free and built by IIT Roorkee students."
         path="/how-to-use"
       />
       {/* ── HERO ── */}

@@ -50,7 +50,7 @@ function Label({ children, dark }) {
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
   const isNeet = p.exam === "NEET";
-  const mentorType = isNeet ? "top Doctors and medical alumni" : "IIT/NIT alumni";
+  const mentorType = isNeet ? "top Doctors and medical alumni" : "IIT/NIT students";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
   const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
@@ -1186,6 +1186,63 @@ function VariantTabs({ variant }) {
     </div>
   );
 }
+/* ── AEO / GEO Definition & E-E-A-T Section ── */
+function AeoDirectAnswer({ variant, exam }) {
+  const isNeet = variant === "neet";
+  const yearText = isNeet ? "NEET 2027" : variant === "jee-2028" ? "JEE 2028" : "JEE 2027";
+  const mentorRole = isNeet ? "top medical college MBBS doctors and toppers" : "IIT Roorkee, IIT Bombay & top IITian students";
+
+  return (
+    <section style={{ background: "#ffffff", padding: "32px 20px 24px", borderBottom: "1px solid #f1f5f9" }}>
+      <div className="mj-wrap" style={{ maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{
+          background: "linear-gradient(135deg, #fffaf5 0%, #ffffff 100%)",
+          border: "1px solid #fed7aa",
+          borderRadius: 18,
+          padding: "24px 28px",
+          boxShadow: "0 4px 20px rgba(255,105,61,0.06)"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+            <span style={{ background: "#FF693D", color: "#fff", fontSize: 11, fontWeight: 800, padding: "3px 10px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Program Overview · AEO Verified
+            </span>
+            <span style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>
+              Updated for {yearText} Session · Guided by IIT Roorkee Students
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#0f172a", margin: "0 0 10px", fontFamily: "'Sora', sans-serif" }}>
+            How Does One-to-One IITian Mentorship Help {yearText} Aspirants?
+          </h2>
+
+          <p style={{ fontSize: "0.95rem", color: "#334155", lineHeight: 1.68, margin: "0 0 14px" }}>
+            <strong>{yearText} Mentorship</strong> at Campus Point is a personalized 1-on-1 preparation system where students receive academic guidance, daily study targets, doubt-solving support, and regular performance analysis directly from {mentorRole}. Mentors design personalized backlog-clearing roadmaps, conduct weekly 1-on-1 video reviews, evaluate CBT test accuracy, and provide 24×7 accountability to ensure consistent percentile growth.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 14, paddingTop: 14, borderTop: "1px solid #ffedd5" }}>
+            <div>
+              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Mentorship Model</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Dedicated 1-on-1 Personal Mentor</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Mentors</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Verified IIT Roorkee & Top Rankers</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Cadence</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Daily Targets + Weekly Video Calls</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Support</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>24×7 WhatsApp Doubt Resolution</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ═══════════════ MENTORS ═══════════════ */
 function TopMentors() {
   const mentors = [
@@ -1193,6 +1250,8 @@ function TopMentors() {
       name: "Saneh",
       college: "IIT Roorkee",
       branch: "Civil Engineering",
+      specialty: "Physics Mechanics & Consistent Routine",
+      badge: "Verified IIT Roorkee Student",
       thought: "Hi, I'm Saneh, currently pursuing Civil Engineering at IIT Roorkee. Consistency is more important than perfection. When I started my JEE preparation, I realized that a dedicated effort every single day is what truly builds the foundation for cracking one of the toughest exams. I've faced the highs and lows of this journey, and I'm here to share my strategies, keep you motivated, and guide you step-by-step toward your dream IIT.",
       img: imgSaneh
     },
@@ -1200,6 +1259,8 @@ function TopMentors() {
       name: "Saket Choudhary",
       college: "IIT Roorkee",
       branch: "BSBE",
+      specialty: "Percentile Jump Strategy & Backlogs",
+      badge: "Verified IIT Roorkee Student",
       thought: "Hi, I'm Saket Choudhary, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. I've been through the same struggles and uncertainty that many aspirants face, and as a mentor, I'm here to help you overcome those challenges and achieve your goals together.",
       img: imgSaket
     },
@@ -1207,6 +1268,8 @@ function TopMentors() {
       name: "Mayank Singh",
       college: "IIT Roorkee",
       branch: "Mechanical Engineering",
+      specialty: "Time Management & Test Analysis",
+      badge: "Verified IIT Roorkee Student",
       thought: "Hi, I am Mayank Singh from iitr mechanical engineering. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. I am all thankful to my mentors and myself. So I'm now here at Campus Point to mentor young minds and pass them what I have earned.",
       img: imgMayank
     }
@@ -1228,8 +1291,13 @@ function TopMentors() {
                 <img src={m.img} alt={m.name} />
               </div>
               <div className="mj-mentor-bx-info">
-                <h3>{m.name}</h3>
-                <span>{m.college} • {m.branch}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                  <h3 style={{ margin: 0 }}>{m.name}</h3>
+                  <span style={{ fontSize: 10, fontWeight: 700, background: "#ecfdf5", color: "#059669", padding: "2px 8px", borderRadius: 999, border: "1px solid #a7f3d0" }}>
+                    ✓ {m.badge}
+                  </span>
+                </div>
+                <span>{m.college} • {m.branch} {m.specialty ? `· ${m.specialty}` : ""}</span>
                 <p>"{m.thought}"</p>
               </div>
             </div>
@@ -1269,12 +1337,25 @@ export default function Mentorship() {
   return (
     <div className="mj">
       <Seo
-        title={`Best ${exam} Mentorship Program by IITians & NITians | CampusPoint`}
-        description={`Join the best ${exam} Mentorship Program. Get a dedicated IIT/NIT alumni mentor, manage daily study schedules, clear backlogs, and crack the exam.`}
+        rawTitle={
+          variant === "jee-2027"
+            ? "JEE 2027 Mentorship by IITians – Daily Targets & Doubt Solving | Campus Point"
+            : variant === "jee-2028"
+            ? "JEE 2028 Mentorship by IITians – Class 11 Foundation & Prep | Campus Point"
+            : "NEET 2027 Mentorship by Top Medical Students & Toppers | Campus Point"
+        }
+        description={
+          variant === "jee-2027"
+            ? "Prepare for JEE 2027 with personalized IITian mentorship, daily study targets, doubt solving and weekly test analysis. Explore the program."
+            : variant === "jee-2028"
+            ? "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls."
+            : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance."
+        }
         path={`/mentorship/${variant}`}
         jsonLd={faqSchema}
       />
       <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
+      <AeoDirectAnswer variant={variant} exam={exam} />
       <Qualifier cfg={cfg} />
       <Method cfg={cfg} />
       {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}

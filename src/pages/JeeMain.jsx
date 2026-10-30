@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import Seo from "../components/Seo.jsx";
 import PageHero from "../components/home/PageHero.jsx";
@@ -204,7 +205,7 @@ const COACHING = [
   {
     name: "Vedantu / Unacademy", city: "Online (Pan India)", color: "#6366F1", badge: "💻 Top Online Platform",
     highlights: [
-      "Live interactive classes with IIT alumni faculty",
+      "Live interactive classes with IIT students faculty",
       "Vedantu VSAT / Unacademy ICONIC for top batches",
       "Doubt-solving sessions, recorded lectures, test series",
       "Best for students who cannot relocate to Kota",
@@ -380,7 +381,7 @@ export default function JeeMain() {
     <div className="page">
       <Seo
         title="JEE Main College Predictor 2026 | Free Rank Predictor & Cutoffs"
-        description="Free JEE Main college predictor and rank predictor. Convert your NTA percentile to rank and see which NITs, IIITs, and GFTIs you can get. Built by IIT Roorkee alumni."
+        description="Free JEE Main college predictor and rank predictor. Convert your NTA percentile to rank and see which NITs, IIITs, and GFTIs you can get. Built by IIT Roorkee students."
         path="/jee-main"
         breadcrumbs={[
           { name: "Home", path: "/" },

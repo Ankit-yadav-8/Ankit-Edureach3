@@ -313,8 +313,8 @@ export default function About() {
   return (
     <div className="page">
       <Seo
-        title="About CampusPoint - Built by IIT Roorkee Alumni"
-        description="CampusPoint is a free student platform built by IIT Roorkee alumni Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
+        title="About CampusPoint - Built by IIT Roorkee Students"
+        description="CampusPoint is a free student platform built by IIT Roorkee students Ankit Kumar, Mayank Singh, and Saket Kumar to help JEE aspirants predict ranks, shortlist colleges and navigate JoSAA counselling."
         path="/about"
       />
       <style>{`

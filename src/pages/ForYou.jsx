@@ -181,8 +181,8 @@ export default function ForYou() {
     <div className="page">
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
-        title="College For You - Personalised IIT NIT IIIT Shortlist by JEE Rank"
-        description="Get a personalised list of IITs, NITs and IIITs you can get with your JEE rank, category, home state and branch preference. Free college shortlist tool based on JoSAA cutoffs."
+        rawTitle="JEE College Predictor 2027 – Find IIT, NIT & IIIT by Rank | Campus Point"
+        description="Predict your admission chances in top IITs, NITs, and IIITs based on your JEE Main or Advanced rank, category, and home state quota. Free JoSAA college shortlist tool."
         path="/for-you"
       />
       {/* ── Hero ── */}

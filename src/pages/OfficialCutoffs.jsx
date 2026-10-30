@@ -109,7 +109,7 @@ export default function OfficialCutoffs() {
       <div className="container"><BackButton style={{ margin: "0 0 2px" }} /></div>
       <Seo
         title="JoSAA Cutoffs 2018–2025 - Official IIT NIT IIIT Opening & Closing Ranks"
-        description="Official JoSAA opening and closing ranks for all IITs, NITs and IIITs from 2018 to 2025 - filter round-wise, category-wise and branch-wise. Free on CampusPoint, built by IIT Roorkee alumni."
+        description="Official JoSAA opening and closing ranks for all IITs, NITs and IIITs from 2018 to 2025 - filter round-wise, category-wise and branch-wise. Free on CampusPoint, built by IIT Roorkee students."
         path="/cutoffs"
       />
       <section style={{ background: "linear-gradient(135deg,#ffffff,#ffffff)", color: "var(--ink)", padding: "44px 0", textAlign: "center" }}>

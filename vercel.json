@@ -5,6 +5,41 @@
       "source": "/jee-analysis",
       "destination": "/jee-strategy",
       "permanent": true
+    },
+    {
+      "source": "/jee-2027-mentorship",
+      "destination": "/mentorship/jee-2027",
+      "permanent": true
+    },
+    {
+      "source": "/jee-main-rank-predictor",
+      "destination": "/jee-main",
+      "permanent": true
+    },
+    {
+      "source": "/jee-college-predictor",
+      "destination": "/for-you",
+      "permanent": true
+    },
+    {
+      "source": "/iit-mentorship",
+      "destination": "/mentorship/jee-2027",
+      "permanent": true
+    },
+    {
+      "source": "/neet-2027-mentorship",
+      "destination": "/mentorship/neet",
+      "permanent": true
+    },
+    {
+      "source": "/college-comparison",
+      "destination": "/compare",
+      "permanent": true
+    },
+    {
+      "source": "/josaa-cutoff",
+      "destination": "/cutoffs",
+      "permanent": true
     }
   ],
   "rewrites": [
