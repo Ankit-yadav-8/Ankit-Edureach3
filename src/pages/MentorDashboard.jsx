@@ -32,17 +32,60 @@ function Login({ onDone }) {
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [failCount, setFailCount] = useState(() => {
+    try {
+      const lockUntil = Number(sessionStorage.getItem("cp:mentorLoginLock") || 0);
+      if (lockUntil > Date.now()) return 5;
+      return Number(sessionStorage.getItem("cp:mentorLoginFails") || 0);
+    } catch { return 0; }
+  });
+  const [lockedUntil, setLockedUntil] = useState(() => {
+    try {
+      const lockUntil = Number(sessionStorage.getItem("cp:mentorLoginLock") || 0);
+      return lockUntil > Date.now() ? lockUntil : 0;
+    } catch { return 0; }
+  });
 
   const submit = async (e) => {
     e.preventDefault();
     setErr("");
+
+    const now = Date.now();
+    if (lockedUntil > now) {
+      const remSec = Math.ceil((lockedUntil - now) / 1000);
+      setErr(`Too many requests. Please wait ${remSec}s and try again.`);
+      return;
+    }
+
     setBusy(true);
     try {
       const { token, mentor } = await apiMentorLogin({ email, password });
       writeToken(token);
+      try {
+        sessionStorage.removeItem("cp:mentorLoginFails");
+        sessionStorage.removeItem("cp:mentorLoginLock");
+      } catch {}
       onDone(token, mentor);
     } catch (e2) {
-      setErr(e2.message || "Invalid mentor credentials. Please check your email and password.");
+      const is429 = e2.status === 429 || /too many/i.test(e2.message || "");
+      if (is429) {
+        const lockTime = Date.now() + 60000;
+        setLockedUntil(lockTime);
+        try { sessionStorage.setItem("cp:mentorLoginLock", String(lockTime)); } catch {}
+        setErr("Too many requests. Please wait a moment and try again.");
+      } else {
+        const nextFails = failCount + 1;
+        setFailCount(nextFails);
+        try { sessionStorage.setItem("cp:mentorLoginFails", String(nextFails)); } catch {}
+        if (nextFails >= 5) {
+          const lockTime = Date.now() + 60000;
+          setLockedUntil(lockTime);
+          try { sessionStorage.setItem("cp:mentorLoginLock", String(lockTime)); } catch {}
+          setErr("Too many requests. Please wait 1 minute and try again.");
+        } else {
+          setErr(e2.message || "Invalid mentor credentials. Please check your email and password.");
+        }
+      }
     } finally {
       setBusy(false);
     }

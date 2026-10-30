@@ -180,12 +180,16 @@ export default function Admin() {
         body: JSON.stringify({ key: k, inbox }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Could not send the code");
       setAdminKey(k);
       setOtpSentTo(data.sentTo || "the admin email");
       if (data.devCode) setDevCode(data.devCode);
       setStep("otp"); setEnteringOtp("");
-    } catch (e) { setErr(e.message); } finally { setBusy(false); }
+    } catch (e) {
+      const msg = e.message || "";
+      setErr(msg.includes("429") || /too many/i.test(msg) || /rate limit/i.test(msg) ? "Too many requests. Please wait a moment and try again." : msg);
+    } finally { setBusy(false); }
   }
 
   // Step 2 - verify key + OTP; on success the server returns a short-lived
@@ -198,10 +202,14 @@ export default function Admin() {
         body: JSON.stringify({ key: adminKey, code, inbox }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid code");
       setDevCode(""); setEnteringOtp(""); setAdminKey("");
       await fetchUsers(data.token);  // stores the token + flips authed on success
-    } catch (e) { setErr(e.message); } finally { setBusy(false); }
+    } catch (e) {
+      const msg = e.message || "";
+      setErr(msg.includes("429") || /too many/i.test(msg) || /rate limit/i.test(msg) ? "Too many requests. Please wait a moment and try again." : msg);
+    } finally { setBusy(false); }
   }
 
   async function downloadCsv() {

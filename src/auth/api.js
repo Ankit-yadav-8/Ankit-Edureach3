@@ -17,7 +17,8 @@ async function req(path, { method = "GET", body, token } = {}) {
     clearTimeout(timeout);
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const err = new Error(data.error || "Something went wrong");
+      const errorMsg = data.error || (res.status === 429 ? "Too many requests. Please wait a moment and try again." : "Something went wrong");
+      const err = new Error(errorMsg);
       err.status = res.status;
       err.data = data;
       throw err;

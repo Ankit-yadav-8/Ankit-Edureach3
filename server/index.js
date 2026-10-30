@@ -145,10 +145,12 @@ app.use(cors({
 const rl = (opts) => rateLimit({
   standardHeaders: true,   // emit RateLimit-* + Retry-After headers
   legacyHeaders: false,
-  message: { error: "Too many requests — please wait a moment and try again." },
+  message: { error: "Too many requests. Please wait a moment and try again." },
   ...opts,
 });
 
+// Dedicated strict rate limiter for login endpoints (10 attempts per 15 min per IP)
+const loginLimiter     = rl({ windowMs: 15 * 60 * 1000, max: 10, message: { error: "Too many requests. Please wait a moment and try again." } });
 // Tight limit on credential/code endpoints to blunt brute-force & abuse.
 const authLimiter      = rl({ windowMs: 15 * 60 * 1000, max: 30 });
 // Strict general gate for admin routes to stop automated scanning
@@ -162,6 +164,8 @@ app.get("/", (_req, res) => res.send("EduReach API ✅"));
 // ── Health-check (used by Render keep-alive & external monitors) ─────────────
 app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 
+app.use("/api/auth/login", loginLimiter);
+app.use("/api/mentor/login", loginLimiter);
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/otp", authLimiter, otpRoutes);
 // Mounted BEFORE /api/admin: Express matches prefixes in order, so the broader

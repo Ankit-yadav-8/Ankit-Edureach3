@@ -113,7 +113,7 @@ router.post("/login", async (req, res) => {
 
     if (mentor.lockedUntil && mentor.lockedUntil > new Date()) {
       const mins = Math.ceil((mentor.lockedUntil - Date.now()) / 60000);
-      return res.status(429).json({ error: `Too many attempts. Try again in ${mins} min.` });
+      return res.status(429).json({ error: `Too many requests. Please wait ${mins} min and try again.` });
     }
 
     const ok = await bcrypt.compare(password, mentor.passwordHash);

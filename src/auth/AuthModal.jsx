@@ -465,18 +465,47 @@ export default function AuthModal() {
         return;
       }
     }
+    const lockUntil = Number(sessionStorage.getItem("cp:authLoginLock") || 0);
+    if (lockUntil > Date.now()) {
+      const remSec = Math.ceil((lockUntil - Date.now()) / 1000);
+      setBanner({ type: "err", text: `Too many requests. Please wait ${remSec}s and try again.` });
+      setShake(true); setTimeout(() => setShake(false), 450);
+      return;
+    }
+
     setFe({}); setBanner({ type: "", text: "" });
     setBusy(true); setSlowNet(false);
     const st = setTimeout(() => setSlowNet(true), 1500);
     try {
       await fn();
+      try {
+        sessionStorage.removeItem("cp:authLoginFails");
+        sessionStorage.removeItem("cp:authLoginLock");
+      } catch {}
     } catch (e) {
       const msg = e.message || "";
-      const friendly = msg.includes("timed out") || msg.includes("AbortError")
-        ? "Server is taking too long. It may be waking up - try again in a few seconds."
-        : msg.includes("fetch") || msg.includes("Failed") || msg.includes("network")
-          ? "No connection. Check your internet and try again."
-          : msg || "Something went wrong.";
+      const is429 = e.status === 429 || /too many/i.test(msg);
+      let friendly;
+      if (is429) {
+        friendly = "Too many requests. Please wait a moment and try again.";
+        try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 60000)); } catch {}
+      } else {
+        let fails = 0;
+        try {
+          fails = Number(sessionStorage.getItem("cp:authLoginFails") || 0) + 1;
+          sessionStorage.setItem("cp:authLoginFails", String(fails));
+        } catch {}
+        if (fails >= 5) {
+          try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 60000)); } catch {}
+          friendly = "Too many requests. Please wait 1 minute and try again.";
+        } else {
+          friendly = msg.includes("timed out") || msg.includes("AbortError")
+            ? "Server is taking too long. It may be waking up - try again in a few seconds."
+            : msg.includes("fetch") || msg.includes("Failed") || msg.includes("network")
+              ? "No connection. Check your internet and try again."
+              : msg || "Something went wrong.";
+        }
+      }
       setBanner({ type: "err", text: friendly });
       setShake(true); setTimeout(() => setShake(false), 450);
     } finally {
