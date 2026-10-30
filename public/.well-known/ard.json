@@ -1,0 +1,91 @@
+{
+  "$schema": "https://agenticresourcediscovery.org/schemas/ard-manifest.json",
+  "version": "1.0.0",
+  "entries": [
+    {
+      "@context": "https://schema.org",
+      "identifier": "urn:air:campuspoint.in:tools:jee-rank-predictor",
+      "displayName": "Campus Point JEE Rank & College Predictor",
+      "type": "application/json",
+      "description": "Predict JEE Main percentile to rank, JEE Advanced IIT admission chances, and JoSAA cutoffs for IITs, NITs, and IIITs.",
+      "tags": [
+        "jee",
+        "college-predictor",
+        "rank-predictor",
+        "josaa",
+        "iit",
+        "nit",
+        "iiit"
+      ],
+      "capabilities": [
+        "rank-prediction",
+        "cutoff-analysis",
+        "college-recommendation"
+      ],
+      "representativeQueries": [
+        "Predict my JEE Main college by rank",
+        "What are the cutoff ranks for IIT Roorkee Computer Science?",
+        "JoSAA round 6 cutoff for NIT Trichy"
+      ],
+      "url": "https://campuspoint.in/jee-main",
+      "version": "1.0.0",
+      "updatedAt": "2026-10-30T12:00:00Z"
+    },
+    {
+      "@context": "https://schema.org",
+      "identifier": "urn:air:campuspoint.in:services:mentorship",
+      "displayName": "Campus Point 1-on-1 IITian Mentorship",
+      "type": "application/json",
+      "description": "Personal 1-on-1 JEE and NEET preparation mentorship guided by IIT Roorkee students, featuring daily study roadmaps, backlog clearance sprints, and CBT mock test analysis.",
+      "tags": [
+        "mentorship",
+        "jee-2027",
+        "iitian-mentor",
+        "neet-mentorship",
+        "study-plan",
+        "backlog-clearance"
+      ],
+      "capabilities": [
+        "personalized-guidance",
+        "doubt-solving",
+        "backlog-clearance",
+        "cbt-analysis"
+      ],
+      "representativeQueries": [
+        "Best 1-on-1 JEE 2027 mentorship program by IITians",
+        "How to manage backlogs in Class 11 for JEE 2027",
+        "Personal IIT student mentor for JEE Advanced preparation"
+      ],
+      "url": "https://campuspoint.in/mentorship/jee-2027",
+      "version": "1.0.0",
+      "updatedAt": "2026-10-30T12:00:00Z"
+    },
+    {
+      "@context": "https://schema.org",
+      "identifier": "urn:air:campuspoint.in:tools:college-compare",
+      "displayName": "Campus Point Engineering College Comparison Engine",
+      "type": "application/json",
+      "description": "Side-by-side comparison of IITs, NITs, IIITs and top engineering institutes across NIRF rankings, highest and average packages, median placements, fees, and JoSAA closing cutoffs.",
+      "tags": [
+        "college-compare",
+        "iit-vs-nit",
+        "engineering-colleges",
+        "placement-stats",
+        "josaa-cutoffs"
+      ],
+      "capabilities": [
+        "college-comparison",
+        "placement-analytics",
+        "cutoff-comparison"
+      ],
+      "representativeQueries": [
+        "Compare IIT Roorkee vs IIT Guwahati CSE",
+        "NIT Trichy vs NIT Surathkal average package",
+        "Top engineering colleges placement comparison"
+      ],
+      "url": "https://campuspoint.in/compare",
+      "version": "1.0.0",
+      "updatedAt": "2026-10-30T12:00:00Z"
+    }
+  ]
+}
