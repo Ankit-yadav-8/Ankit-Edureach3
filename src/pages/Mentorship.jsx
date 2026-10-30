@@ -91,6 +91,9 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
             <button className="mj-btn-glass" onClick={() => scrollTo("enrol")}>
               View Plans
             </button>
+            <button className="mj-btn-glass" onClick={() => scrollTo("talk")} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              Know About Plans <Phone size={16} />
+            </button>
             {/* <Link to="/ai-tutor" className="mj-btn-glass" style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
               <Mic size={18} /> Try AI Tutor
             </Link> */}
@@ -1147,7 +1150,7 @@ function TalkToUs({ exam }) {
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
   };
   return (
-    <section className="mj-section mj-talk">
+    <section id="talk" className="mj-section mj-talk">
       <div className="mj-wrap">
         <Reveal className="mj-parent-card">
           <div className="mj-talk-booklet">
@@ -1353,13 +1356,19 @@ function MentorshipWorkflow({ year }) {
       desc: "In-depth audit of weekly full and chapter tests. Eliminate negative marking, fix silly errors, and systematically increase your accuracy from 65% to 85%+.",
       tag: "Post-Test Review",
     },
+    {
+      num: "06",
+      title: "Final Exam Sprint & JoSAA Admissions Guidance",
+      desc: "Full syllabus speed revision, formula sheets, exam temperament coaching, and end-to-end JoSAA choice-filling guidance to convert your score into the best IIT/NIT branch.",
+      tag: "Exam Sprint & JoSAA",
+    },
   ];
 
   return (
     <section className="mj-section" style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
       <div className="mj-wrap">
         <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 40px" }}>
-          <div className="mj-label">PROVEN 5-STEP GUIDANCE METHODOLOGY</div>
+          <div className="mj-label">PROVEN 6-STEP GUIDANCE METHODOLOGY</div>
           <h2 className="mj-display mj-display-lg">
             How Does <em>IITian Mentorship</em> Work?
           </h2>
@@ -1428,55 +1437,113 @@ function BacklogAndStudyPlan({ year }) {
   return (
     <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
       <div className="mj-wrap">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 36, alignItems: "center" }}>
-          <div>
-            <div className="mj-label">BACKLOG RECOVERY & PLANNING</div>
-            <h2 className="mj-display mj-display-lg" style={{ marginTop: 12 }}>
-              Personalised <em>Study Planning & Backlog Management</em>
-            </h2>
-            <p style={{ fontSize: "1rem", color: "#475569", lineHeight: 1.7, marginTop: 14 }}>
-              A massive backlog is the #1 cause of anxiety and burnout among JEE aspirants. When you try to cover everything at once, panic sets in. Your IITian mentor builds a structured backlog-clearing formula that restores confidence in 3 to 4 weeks.
-            </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32, alignItems: "stretch" }}>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+            <div>
+              <div className="mj-label">BACKLOG RECOVERY & PLANNING</div>
+              <h2 className="mj-display mj-display-lg" style={{ marginTop: 12 }}>
+                Personalised <em>Study Planning & Backlog Management</em>
+              </h2>
+              <p style={{ fontSize: "1rem", color: "#475569", lineHeight: 1.7, marginTop: 14 }}>
+                A massive backlog is the #1 cause of anxiety and burnout among JEE aspirants. When you try to cover everything at once, panic sets in. Your IITian mentor builds a structured backlog-clearing formula that restores confidence in 3 to 4 weeks.
+              </p>
 
-            <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
-              {backlogPhases.map((b, i) => (
-                <div key={i} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 18px" }}>
-                  <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: "0 0 5px" }}>{b.phase}</h4>
-                  <p style={{ fontSize: 12.5, color: "#64748b", margin: 0, lineHeight: 1.55 }}>{b.detail}</p>
-                </div>
-              ))}
+              <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+                {backlogPhases.map((b, i) => (
+                  <div key={i} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "15px 18px" }}>
+                    <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: "0 0 5px" }}>{b.phase}</h4>
+                    <p style={{ fontSize: 12.5, color: "#64748b", margin: 0, lineHeight: 1.55 }}>{b.detail}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)", borderRadius: 20, padding: "28px 24px", color: "#ffffff", boxShadow: "0 12px 36px rgba(15,23,42,0.15)" }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: "1px" }}>
-              Sample Daily Timetable Architecture
-            </span>
-            <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "6px 0 16px", color: "#ffffff" }}>
-              Balanced 8-Hour Daily Routine for JEE {year || "2027"}
-            </h3>
+          {/* Right Side Card: Light mode, matched height, rich information */}
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: 20,
+              padding: "26px 24px",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.04)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: "1px" }}>
+                  Sample Daily Timetable Architecture
+                </span>
+                <span style={{ fontSize: 11, fontWeight: 700, background: "#fff7ed", color: "#c2410c", padding: "3px 10px", borderRadius: 20 }}>
+                  Customized Daily
+                </span>
+              </div>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "4px 0 16px", color: "#0f172a" }}>
+                Balanced 8-Hour Daily Routine for JEE {year || "2027"}
+              </h3>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 12.5 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
-                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>06:30 AM – 08:30 AM</span>
-                <span>Slot 1: High-Focus Physics Problem Solving</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {[
+                  { time: "06:00 AM – 08:30 AM", title: "Slot 1: High-Focus Physics Mechanics & Problem Solving", tag: "Peak Focus", color: "#6366f1", bg: "#f8fafc" },
+                  { time: "09:00 AM – 02:00 PM", title: "School Hours / Coaching Classroom Lectures", tag: "Core Theory", color: "#64748b", bg: "#f8fafc" },
+                  { time: "02:30 PM – 04:00 PM", title: "Slot 2: Dedicated Backlog Clearance Sprint (High-Yield PYQs)", tag: "Backlog Slot", color: "#d97706", bg: "#fef3c7", highlight: true },
+                  { time: "04:30 PM – 07:00 PM", title: "Slot 3: Current Coaching Homework, Modules & DPPs", tag: "Daily DPPs", color: "#2563eb", bg: "#f8fafc" },
+                  { time: "07:30 PM – 09:00 PM", title: "Slot 4: Inorganic / Organic Chemistry Active NCERT Recall", tag: "Revision", color: "#059669", bg: "#f8fafc" },
+                  { time: "09:00 PM – 09:45 PM", title: "Slot 5: Error Log Review & Weak-Topic Formula Drills", tag: "Analysis", color: "#7c3aed", bg: "#f8fafc" },
+                  { time: "09:45 PM – 10:15 PM", title: "Daily Study Streak Log & 1-on-1 Mentor WhatsApp Check-in", tag: "Mentor Call", color: "#ea580c", bg: "#fff7ed", final: true },
+                ].map((s, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "8px 12px",
+                      borderRadius: 9,
+                      background: s.bg,
+                      border: s.final ? "1px solid #fed7aa" : s.highlight ? "1px solid #fde68a" : "1px solid #e2e8f0",
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                      <span style={{ fontSize: 11, fontWeight: 800, color: s.color }}>{s.time}</span>
+                      <span style={{ fontSize: 12.5, fontWeight: s.final ? 700 : 600, color: "#0f172a" }}>{s.title}</span>
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        padding: "3px 8px",
+                        borderRadius: 6,
+                        whiteSpace: "nowrap",
+                        background: s.final ? "#ea580c" : s.highlight ? "#d97706" : "#e2e8f0",
+                        color: s.final || s.highlight ? "#ffffff" : "#475569",
+                      }}
+                    >
+                      {s.tag}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
-                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>02:00 PM – 03:30 PM</span>
-                <span>Slot 2: Dedicated Backlog Sprint (High-Yield PYQs)</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
-                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>04:00 PM – 06:30 PM</span>
-                <span>Slot 3: Current Coaching Homework & DPPs</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
-                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>08:00 PM – 09:30 PM</span>
-                <span>Slot 4: Inorganic / Organic Chemistry NCERT Revision</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,105,61,0.2)", borderRadius: 8, border: "1px solid rgba(255,105,61,0.4)" }}>
-                <span style={{ color: "#FF693D", fontWeight: 700 }}>09:30 PM – 10:00 PM</span>
-                <span style={{ fontWeight: 700 }}>Daily Target Log & Mentor Check-in</span>
-              </div>
+            </div>
+
+            <div
+              style={{
+                marginTop: 16,
+                padding: "12px 14px",
+                background: "#f8fafc",
+                border: "1px dashed #cbd5e1",
+                borderRadius: 10,
+                fontSize: 12,
+                color: "#475569",
+                lineHeight: 1.5,
+              }}
+            >
+              <strong style={{ color: "#0f172a" }}>💡 Mentor Framework:</strong> Backlog clearance never steals time from current coaching topics. An isolated 90-minute daily sprint clears a chapter in 4 days without creating new backlogs.
             </div>
           </div>
         </div>
@@ -1568,8 +1635,6 @@ function ContextualInternalLinks() {
     { title: "JEE Advanced Predictor", url: "/jee-advanced", desc: "Predict your IIT seat eligibility from test marks." },
     { title: "JoSAA College Predictor", url: "/for-you", desc: "Find eligible IITs, NITs & IIITs based on category rank." },
     { title: "Official JoSAA Cutoffs", url: "/cutoffs", desc: "Round-wise opening & closing ranks for 100+ institutes." },
-    { title: "Compare Colleges Tool", url: "/compare", desc: "Compare placements, average packages, and campus life." },
-    { title: "Engineering Branch Guide", url: "/branches", desc: "Explore CSE, ECE, Mech curricula and career scopes." },
   ];
 
   return (
