@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Users, LogOut, Lock, Loader2, ShieldCheck, AlertCircle, Zap,
+  Users, LogOut, PanelLeftClose, PanelLeftOpen, PanelLeft, Lock, Loader2, ShieldCheck, AlertCircle, Zap,
   Activity, BookOpen, Trophy, ClipboardList, CheckCircle2, Menu,
   X, ArrowRight, Eye, EyeOff, Mail, RefreshCw, ChevronRight,
   Sparkles, UserCheck, Flame, Target, Award, Trash2, Plus, Tag, Search,
@@ -534,6 +534,18 @@ export default function MentorDashboard() {
   // Navigation tab: "workspace" | "logins" | "assign" | "matrix"
   const [activeTab, setActiveTab] = useState("workspace");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try { return localStorage.getItem("cp:mentorSidebarCollapsed") === "true"; }
+    catch { return false; }
+  });
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try { localStorage.setItem("cp:mentorSidebarCollapsed", String(next)); } catch {}
+      return next;
+    });
+  }, []);
 
   // Student caseload data
   const [students, setStudents] = useState([]);
@@ -836,7 +848,7 @@ export default function MentorDashboard() {
           .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
 
           .mentor-sidebar {
-            width: 270px;
+            width: ${sidebarCollapsed ? "68px" : "260px"};
             background: #ffffff;
             border-right: 1px solid #e2e8f0;
             display: flex;
@@ -844,18 +856,19 @@ export default function MentorDashboard() {
             height: 100%;
             flex-shrink: 0;
             box-sizing: border-box;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 1050;
+            overflow-x: hidden;
             overflow-y: auto;
           }
 
           .mentor-nav-side-btn {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 11px;
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
             border: 1px solid transparent;
             cursor: pointer;
             text-align: left;
@@ -872,9 +885,9 @@ export default function MentorDashboard() {
           .mentor-nav-side-btn.active {
             background: #fff7ed;
             color: ${ACCENT};
-            border-color: rgba(255, 105, 61, 0.25);
+            border-color: rgba(255, 105, 61, 0.22);
             font-weight: 700;
-            box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
+            box-shadow: 0 1px 3px rgba(255, 105, 61, 0.06);
           }
 
           @media (min-width: 901px) {
@@ -891,8 +904,11 @@ export default function MentorDashboard() {
             .mentor-mobile-close-btn {
               display: none !important;
             }
-            .mentor-sidebar-drawer-header {
-              display: none !important;
+            .desktop-header-sidebar-toggle {
+              display: grid !important;
+            }
+            .desktop-sidebar-toggle-btn {
+              display: grid !important;
             }
           }
 
@@ -903,10 +919,29 @@ export default function MentorDashboard() {
               left: 0 !important;
               bottom: 0 !important;
               height: 100vh !important;
-              width: min(310px, 86vw) !important;
+              width: min(300px, 86vw) !important;
               box-shadow: 4px 0 32px rgba(15,23,42,0.18) !important;
               z-index: 1200 !important;
             }
+            .mentor-sidebar.closed {
+              transform: translateX(-100%) !important;
+            }
+            .mentor-sidebar.open {
+              transform: translateX(0) !important;
+            }
+            .mentor-mobile-hamburger {
+              display: grid !important;
+            }
+            .mentor-mobile-close-btn {
+              display: flex !important;
+            }
+            .desktop-header-sidebar-toggle {
+              display: none !important;
+            }
+            .desktop-sidebar-toggle-btn {
+              display: none !important;
+            }
+          }
             .mentor-sidebar.closed {
               transform: translateX(-100%) !important;
             }
@@ -941,7 +976,8 @@ export default function MentorDashboard() {
             flexShrink: 0,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Mobile Hamburger Drawer Toggle */}
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="mentor-mobile-hamburger"
@@ -958,6 +994,34 @@ export default function MentorDashboard() {
               title="Open Side Panel"
             >
               <Menu size={20} />
+            </button>
+
+            {/* Desktop ChatGPT-style Sidebar Collapse Toggle */}
+            <button
+              onClick={toggleSidebar}
+              className="desktop-header-sidebar-toggle"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                background: sidebarCollapsed ? "#fff7ed" : "#ffffff",
+                color: sidebarCollapsed ? ACCENT : "#64748b",
+                placeItems: "center",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = ACCENT;
+                e.currentTarget.style.borderColor = "rgba(255,105,61,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = sidebarCollapsed ? ACCENT : "#64748b";
+                e.currentTarget.style.borderColor = sidebarCollapsed ? "rgba(255,105,61,0.35)" : "#e2e8f0";
+              }}
+              title={sidebarCollapsed ? "Expand sidebar (Ctrl+[)" : "Collapse sidebar (Ctrl+[)"}
+            >
+              {sidebarCollapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
             </button>
 
             <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
@@ -1060,181 +1124,337 @@ export default function MentorDashboard() {
 
         {/* ── LEFT SIDE PANEL (SIDEBAR) ── */}
         <aside className={`mentor-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
-          {/* Mobile Drawer Header with Close Button */}
+          {/* ── TOP HEADER OF SIDEBAR (ChatGPT Style) ── */}
           <div
-            className="mentor-sidebar-drawer-header"
             style={{
-              height: 54,
-              padding: "0 18px",
-              borderBottom: "1px solid #f1f5f9",
+              height: 56,
+              padding: sidebarCollapsed ? "0" : "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: sidebarCollapsed ? "center" : "space-between",
               flexShrink: 0,
+              borderBottom: "1px solid #f1f5f9",
             }}
           >
-            <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: 0.8, textTransform: "uppercase" }}>
-              Console Menu
-            </div>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="mentor-mobile-close-btn"
-              style={{
-                background: "none",
-                border: "none",
-                color: "#64748b",
-                cursor: "pointer",
-                padding: 6,
-                borderRadius: 8,
-              }}
-              title="Close menu"
-            >
-              <X size={19} />
-            </button>
+            {sidebarCollapsed ? (
+              /* Collapsed: Expand Toggle Button (ChatGPT style) */
+              <button
+                onClick={toggleSidebar}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  border: "none",
+                  background: "transparent",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#fff7ed"; e.currentTarget.style.color = ACCENT; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                title="Expand sidebar"
+              >
+                <PanelLeftOpen size={18} />
+              </button>
+            ) : (
+              /* Expanded: Brand mark + ChatGPT-style Collapse Button */
+              <>
+                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background: ACCENT,
+                      display: "grid",
+                      placeItems: "center",
+                      flexShrink: 0,
+                      boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+                    }}
+                  >
+                    <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, lineHeight: 1 }}>
+                      CP
+                    </span>
+                  </span>
+                  <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13.5, color: "#0f172a" }}>
+                    Campus Point
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <button
+                    onClick={toggleSidebar}
+                    className="desktop-sidebar-toggle-btn"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 6,
+                      border: "none",
+                      background: "transparent",
+                      color: "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#0f172a"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                    title="Collapse sidebar"
+                  >
+                    <PanelLeftClose size={17} />
+                  </button>
+
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="mentor-mobile-close-btn"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#64748b",
+                      cursor: "pointer",
+                      padding: 5,
+                      borderRadius: 6,
+                    }}
+                    title="Close menu"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Mentor Profile Card in Sidebar */}
-          {mentor && (
-            <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc", flexShrink: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* ── MIDDLE: NAVIGATION LIST ── */}
+          {sidebarCollapsed ? (
+            /* Collapsed: Centered icon rail with tooltips (ChatGPT style) */
+            <div style={{ padding: "12px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
+              {NAV_ITEMS.map((item) => {
+                const active = activeTab === item.id;
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    title={item.label}
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 10,
+                      border: active ? "1.5px solid rgba(255,105,61,0.35)" : "1px solid transparent",
+                      background: active ? "#fff7ed" : "transparent",
+                      color: active ? ACCENT : "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "#f8fafc";
+                        e.currentTarget.style.color = "#0f172a";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "#64748b";
+                      }
+                    }}
+                  >
+                    <Icon size={19} color={active ? ACCENT : "currentColor"} />
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            /* Expanded: Full items with labels, icons & Active Mentee Selector */
+            <div style={{ padding: "14px 10px", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 5 }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
+                Console Navigation
+              </div>
+
+              {NAV_ITEMS.map((item) => {
+                const active = activeTab === item.id;
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`mentor-nav-side-btn ${active ? "active" : ""}`}
+                  >
+                    <Icon size={17} color={active ? ACCENT : "#64748b"} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ lineHeight: 1.25 }}>{item.label}</div>
+                    </div>
+                    {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: ACCENT }} />}
+                  </button>
+                );
+              })}
+
+              {/* Active Mentee Selector */}
+              {students.length > 0 && (
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 8px" }}>
+                    Active Mentee
+                  </div>
+                  <select
+                    id="sidebar-mentor-student-select"
+                    value={activeId}
+                    onChange={(e) => setActiveId(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 38,
+                      padding: "0 10px",
+                      borderRadius: 8,
+                      border: "1.5px solid rgba(255,105,61,0.35)",
+                      background: "#ffffff",
+                      color: "#0f172a",
+                      fontWeight: 700,
+                      fontSize: 12,
+                      cursor: "pointer",
+                      outline: "none",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    }}
+                  >
+                    {students.map((s) => (
+                      <option key={s.studentId} value={s.studentId}>
+                        {s.name} ({s.studentId})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── BOTTOM AREA: User Profile & Sign Out (ChatGPT Style in both modes) ── */}
+          {sidebarCollapsed ? (
+            /* Collapsed: Avatar + Sign Out Icon button in the bottom */
+            <div style={{ padding: "12px 0 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+              {mentor && (
                 <div
+                  title={`${mentor.name} (${mentor.college || "Mentor"})`}
                   style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    background: `${ACCENT}15`,
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: `${ACCENT}18`,
                     color: ACCENT,
                     display: "grid",
                     placeItems: "center",
                     fontWeight: 800,
                     fontSize: 13,
                     flexShrink: 0,
+                    border: `1.5px solid ${ACCENT}30`,
+                    cursor: "pointer",
                   }}
                 >
                   {mentor.name?.charAt(0) || "M"}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {mentor.name}
+              )}
+
+              <button
+                onClick={signOut}
+                title="Sign Out of Console"
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#64748b";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            /* Expanded: Mentor Profile Card + Sign Out Button */
+            <div style={{ padding: "12px 14px 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+              {mentor && (
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0" }}>
+                  <div
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: "50%",
+                      background: `${ACCENT}18`,
+                      color: ACCENT,
+                      display: "grid",
+                      placeItems: "center",
+                      fontWeight: 800,
+                      fontSize: 13,
+                      flexShrink: 0,
+                      border: `1.5px solid ${ACCENT}30`,
+                    }}
+                  >
+                    {mentor.name?.charAt(0) || "M"}
                   </div>
-                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {mentor.college || mentor.email}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {mentor.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {mentor.college ? `${mentor.college} · ${students.length} mentees` : `${students.length} active mentees`}
+                    </div>
                   </div>
                 </div>
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 800,
-                    color: "#166534",
-                    background: "#ecfdf5",
-                    padding: "2px 6px",
-                    borderRadius: 6,
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                  }}
-                >
-                  {students.length} mentees
-                </span>
-              </div>
+              )}
+
+              <button
+                onClick={signOut}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#475569",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 7,
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#475569";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+                title="Sign out of Mentor Console"
+              >
+                <LogOut size={14} />
+                <span>Sign Out of Console</span>
+              </button>
             </div>
           )}
-
-          {/* Navigation Links in Side Panel */}
-          <div style={{ padding: "16px 12px", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
-              Console Navigation
-            </div>
-
-            {NAV_ITEMS.map((item) => {
-              const active = activeTab === item.id;
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`mentor-nav-side-btn ${active ? "active" : ""}`}
-                >
-                  <Icon size={17} color={active ? ACCENT : "#64748b"} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ lineHeight: 1.25 }}>{item.label}</div>
-                  </div>
-                  {active && <ChevronRight size={15} color={ACCENT} />}
-                </button>
-              );
-            })}
-
-            {/* Quick Mentee Switcher in Side Panel */}
-            {students.length > 0 && (
-              <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
-                <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 8px" }}>
-                  Active Mentee
-                </div>
-                <select
-                  id="sidebar-mentor-student-select"
-                  value={activeId}
-                  onChange={(e) => setActiveId(e.target.value)}
-                  style={{
-                    width: "100%",
-                    height: 38,
-                    padding: "0 10px",
-                    borderRadius: 8,
-                    border: "1.5px solid rgba(255,105,61,0.35)",
-                    background: "#ffffff",
-                    color: "#0f172a",
-                    fontWeight: 700,
-                    fontSize: 12,
-                    cursor: "pointer",
-                    outline: "none",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                  }}
-                >
-                  {students.map((s) => (
-                    <option key={s.studentId} value={s.studentId}>
-                      {s.name} ({s.studentId})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar Footer / Sign Out */}
-          <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9", background: "#fafafa", flexShrink: 0 }}>
-            <button
-              onClick={signOut}
-              style={{
-                width: "100%",
-                padding: "9px 14px",
-                borderRadius: 10,
-                border: "1px solid #e2e8f0",
-                background: "#ffffff",
-                color: "#64748b",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                transition: "all 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#dc2626";
-                e.currentTarget.style.borderColor = "#fca5a5";
-                e.currentTarget.style.background = "#fef2f2";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#64748b";
-                e.currentTarget.style.borderColor = "#e2e8f0";
-                e.currentTarget.style.background = "#ffffff";
-              }}
-            >
-              <LogOut size={14} /> Sign Out of Console
-            </button>
-          </div>
         </aside>
 
 
