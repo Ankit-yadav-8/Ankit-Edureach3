@@ -407,7 +407,7 @@ export default function About() {
 
           <Reveal>
             <p style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.65rem)", lineHeight: 1.6, fontWeight: 600, color: "var(--navy)", margin: "0 0 34px", maxWidth: 1040 }}>
-              Campus Point was founded by <strong>IIT Roorkee</strong> alumni -{" "}
+              Campus Point was founded by <strong>IIT Roorkee</strong> students -{" "}
               <strong>Ankit Kumar</strong>, <strong>Mayank Singh</strong>, and <strong>Saket Kumar</strong>.
               Three students from the
               same campus, building the platform we wished existed when we were the ones staring at rank lists and cutoffs.

@@ -50,7 +50,7 @@ function Label({ children, dark }) {
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
   const isNeet = p.exam === "NEET";
-  const mentorType = isNeet ? "top Doctors and medical alumni" : "IIT/NIT students";
+  const mentorType = isNeet ? "top Doctors and medical specialists" : "IIT/NIT students";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
   const dream = isNeet ? "medical-college" : "IIT / NIT";
   const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
@@ -1243,6 +1243,375 @@ function AeoDirectAnswer({ variant, exam }) {
   );
 }
 
+
+/* ── Difference Between Coaching and 1-on-1 Mentorship ── */
+function CoachingVsMentorship({ exam }) {
+  const points = [
+    {
+      feature: "Student Attention & Cohort Size",
+      coaching: "1 teacher for 150–300 students. Doubts get lost in crowded lecture halls.",
+      mentorship: "1-on-1 personal dedicated IITian mentor. Every doubt, test score, and weak topic is tracked personally.",
+    },
+    {
+      feature: "Study Schedule & Timetable",
+      coaching: "Rigid one-size-fits-all syllabus schedule regardless of whether you understood the chapter.",
+      mentorship: "Custom daily study timetable tailored to your strengths, weak chapters, school timings, and speed.",
+    },
+    {
+      feature: "Backlog Management",
+      coaching: "Zero backlog support. If you miss a week or fall sick, the batch moves on and backlog piles up.",
+      mentorship: "Dedicated 3-phase backlog clearance sprints designed to clear old chapters without hurting current classes.",
+    },
+    {
+      feature: "Mock Test Analysis",
+      coaching: "Only rank and total marks on a leaderboard. No personalized guidance on how to fix mistakes.",
+      mentorship: "Question-by-question analysis: silly errors, time-spent audit, negative mark elimination, and accuracy optimization.",
+    },
+    {
+      feature: "Daily Accountability & Follow-up",
+      coaching: "No one checks if you completed your daily DPPs or revisions.",
+      mentorship: "Daily WhatsApp check-ins, study streaks tracking, and weekly 1-on-1 video reviews by your mentor.",
+    },
+  ];
+
+  return (
+    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
+      <div className="mj-wrap">
+        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
+          <div className="mj-label">COACHING VS 1-ON-1 MENTORSHIP</div>
+          <h2 className="mj-display mj-display-lg">
+            Coaching Teaches Concepts. <br />
+            <em>Mentorship Ensures You Crack the Exam.</em>
+          </h2>
+          <p className="mj-sec-sub" style={{ fontSize: "1.05rem", color: "#64748b", marginTop: 12 }}>
+            Most JEE aspirants don't fail because of lack of lectures—they struggle with consistency, backlogs, and test strategy. Here is why personal guidance from an IIT student changes everything.
+          </p>
+        </div>
+
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", minWidth: 640, borderCollapse: "separate", borderSpacing: "0 10px" }}>
+            <thead>
+              <tr style={{ background: "#f8fafc" }}>
+                <th style={{ padding: "14px 20px", textAlign: "left", borderRadius: "10px 0 0 10px", fontSize: 13, fontWeight: 800, color: "#475569", textTransform: "uppercase" }}>Preparation Aspect</th>
+                <th style={{ padding: "14px 20px", textAlign: "left", fontSize: 13, fontWeight: 800, color: "#64748b", textTransform: "uppercase" }}>Traditional Coaching Institute</th>
+                <th style={{ padding: "14px 20px", textAlign: "left", borderRadius: "0 10px 10px 0", fontSize: 13, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", background: "#fff7ed" }}>Campus Point 1-on-1 IITian Mentorship</th>
+              </tr>
+            </thead>
+            <tbody>
+              {points.map((p, idx) => (
+                <tr key={idx} style={{ background: idx % 2 === 0 ? "#ffffff" : "#fafaf9", boxShadow: "0 1px 4px rgba(0,0,0,0.03)" }}>
+                  <td style={{ padding: "16px 20px", fontWeight: 700, color: "#0f172a", fontSize: 13.5, borderLeft: "3px solid #cbd5e1" }}>
+                    {p.feature}
+                  </td>
+                  <td style={{ padding: "16px 20px", color: "#64748b", fontSize: 13, lineHeight: 1.55 }}>
+                    {p.coaching}
+                  </td>
+                  <td style={{ padding: "16px 20px", color: "#0f172a", fontWeight: 600, fontSize: 13, lineHeight: 1.55, background: "#fffaf5", borderLeft: "2px solid #fed7aa" }}>
+                    <span style={{ color: "#16a34a", marginRight: 6 }}>✓</span>
+                    {p.mentorship}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── How Does IITian Mentorship Work? ── */
+function MentorshipWorkflow({ year }) {
+  const steps = [
+    {
+      num: "01",
+      title: "360° Syllabus & Diagnostic Audit",
+      desc: "Your mentor reviews your current chapters, coaching modules, test marks, and study hours to pinpoint your exact baseline and create your personalized target roadmap.",
+      tag: "Day 1 Onboarding",
+    },
+    {
+      num: "02",
+      title: "Custom Daily Timetable & Targets",
+      desc: "No vague advice. Receive specific daily task lists (e.g., 25 Mechanics PYQs + 1 Inorganic NCERT reading) tailored to your school and coaching routine.",
+      tag: "Every Morning",
+    },
+    {
+      num: "03",
+      title: "Daily Accountability & WhatsApp Doubts",
+      desc: "Log completed tasks directly into your student dashboard. Share conceptual doubts and study hurdles on WhatsApp with real-time mentor feedback.",
+      tag: "Continuous 24×7",
+    },
+    {
+      num: "04",
+      title: "Weekly 1-on-1 Video Strategy Call",
+      desc: "45-minute live 1-on-1 video call every week. Your mentor evaluates your week's progress, recalibrates targets, and solves psychological/strategy roadblocks.",
+      tag: "Every Weekend",
+    },
+    {
+      num: "05",
+      title: "CBT Mock Analysis & Accuracy Lift",
+      desc: "In-depth audit of weekly full and chapter tests. Eliminate negative marking, fix silly errors, and systematically increase your accuracy from 65% to 85%+.",
+      tag: "Post-Test Review",
+    },
+  ];
+
+  return (
+    <section className="mj-section" style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+      <div className="mj-wrap">
+        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 40px" }}>
+          <div className="mj-label">PROVEN 5-STEP GUIDANCE METHODOLOGY</div>
+          <h2 className="mj-display mj-display-lg">
+            How Does <em>IITian Mentorship</em> Work?
+          </h2>
+          <p className="mj-sec-sub" style={{ fontSize: "1.05rem", color: "#64748b", marginTop: 12 }}>
+            A disciplined, data-driven framework designed by IIT Roorkee students to turn inconsistent preparation into predictable rank improvement for JEE {year || "2027"}.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          {steps.map((st) => (
+            <div
+              key={st.num}
+              style={{
+                background: "#ffffff",
+                border: "1px solid #e2e8f0",
+                borderRadius: 16,
+                padding: "24px 22px",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                boxShadow: "0 4px 16px rgba(15,23,42,0.04)",
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <span style={{ fontSize: "1.8rem", fontWeight: 900, color: "#FF693D", fontFamily: "'Space Grotesk', sans-serif" }}>
+                    {st.num}
+                  </span>
+                  <span style={{ fontSize: 11, fontWeight: 700, background: "#fff7ed", color: "#c2410c", padding: "3px 10px", borderRadius: 999, border: "1px solid #ffedd5" }}>
+                    {st.tag}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: 15.5, fontWeight: 800, color: "#0f172a", marginBottom: 8, fontFamily: "'Sora', sans-serif" }}>
+                  {st.title}
+                </h3>
+                <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0 }}>
+                  {st.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Personalised JEE Study Planning & Backlog Management ── */
+function BacklogAndStudyPlan({ year }) {
+  const backlogPhases = [
+    {
+      phase: "Phase 1: High-Weightage Filtering (80/20 Rule)",
+      detail: "Not all chapters carry equal marks. Your mentor prioritizes scoring chapters first: Modern Physics, Thermodynamics, Coordination Compounds, Vectors & 3D Geometry, and Definite Integration.",
+    },
+    {
+      phase: "Phase 2: The Parallel 90-Minute Daily Slot",
+      detail: "The biggest mistake students make is stopping current coaching lectures to clear backlogs. We allocate an isolated 90-minute daily window exclusively for backlog PYQs, keeping current topics intact.",
+    },
+    {
+      phase: "Phase 3: Active Problem Solving over Passive Videos",
+      detail: "Watching 10 hours of video lectures creates an illusion of competence. We replace passive watching with short formula review followed immediately by 30 timed previous-year questions.",
+    },
+  ];
+
+  return (
+    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
+      <div className="mj-wrap">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 36, alignItems: "center" }}>
+          <div>
+            <div className="mj-label">BACKLOG RECOVERY & PLANNING</div>
+            <h2 className="mj-display mj-display-lg" style={{ marginTop: 12 }}>
+              Personalised <em>Study Planning & Backlog Management</em>
+            </h2>
+            <p style={{ fontSize: "1rem", color: "#475569", lineHeight: 1.7, marginTop: 14 }}>
+              A massive backlog is the #1 cause of anxiety and burnout among JEE aspirants. When you try to cover everything at once, panic sets in. Your IITian mentor builds a structured backlog-clearing formula that restores confidence in 3 to 4 weeks.
+            </p>
+
+            <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+              {backlogPhases.map((b, i) => (
+                <div key={i} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 18px" }}>
+                  <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: "0 0 5px" }}>{b.phase}</h4>
+                  <p style={{ fontSize: 12.5, color: "#64748b", margin: 0, lineHeight: 1.55 }}>{b.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)", borderRadius: 20, padding: "28px 24px", color: "#ffffff", boxShadow: "0 12px 36px rgba(15,23,42,0.15)" }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: "1px" }}>
+              Sample Daily Timetable Architecture
+            </span>
+            <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "6px 0 16px", color: "#ffffff" }}>
+              Balanced 8-Hour Daily Routine for JEE {year || "2027"}
+            </h3>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 12.5 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
+                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>06:30 AM – 08:30 AM</span>
+                <span>Slot 1: High-Focus Physics Problem Solving</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
+                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>02:00 PM – 03:30 PM</span>
+                <span>Slot 2: Dedicated Backlog Sprint (High-Yield PYQs)</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
+                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>04:00 PM – 06:30 PM</span>
+                <span>Slot 3: Current Coaching Homework & DPPs</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.06)", borderRadius: 8 }}>
+                <span style={{ color: "#a5b4fc", fontWeight: 700 }}>08:00 PM – 09:30 PM</span>
+                <span>Slot 4: Inorganic / Organic Chemistry NCERT Revision</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,105,61,0.2)", borderRadius: 8, border: "1px solid rgba(255,105,61,0.4)" }}>
+                <span style={{ color: "#FF693D", fontWeight: 700 }}>09:30 PM – 10:00 PM</span>
+                <span style={{ fontWeight: 700 }}>Daily Target Log & Mentor Check-in</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Mock Test Analysis & How to Choose a Mentor ── */
+function MockTestAnalysisGuide() {
+  const testPillars = [
+    { title: "Silly Mistake Elimination", desc: "Categorize wrong answers: was it a misread question, arithmetic mistake, or formula confusion? We maintain an active Error Logbook." },
+    { title: "Time-per-Question Audit", desc: "Identify time sinks. Spending 7 minutes on a tough Maths question costs you 3 easy Chemistry questions. We train dynamic paper-skipping strategy." },
+    { title: "Negative Marking Control", desc: "Blind guessing drops ranks drastically. Your mentor calculates your risk-reward ratio and trains you to avoid unverified guesses." },
+    { title: "Exam Temperament & Anxiety", desc: "Simulate exact CBT interface pressure. Build stamina for the 3-hour stretch so you peak during the real examination day." },
+  ];
+
+  const selectionCriteria = [
+    { title: "Verified IIT Student Credentials", desc: "Ensure your mentor has actually cleared JEE Advanced and studies in an IIT, not an anonymous counsellor." },
+    { title: "Active Exam Pattern Familiarity", desc: "Your mentor must understand recent 2024–2026 NTA shift difficulty shifts, syllabus rationalization, and marking patterns." },
+    { title: "True 1-on-1 Individual Sessions", desc: "Avoid generic webinars disguised as mentorship. Demand scheduled weekly video calls where only your progress is discussed." },
+    { title: "Transparent Tracking & Accountability", desc: "A great program provides a live dashboard where daily hours, streaks, test scores, and parent reports are visible." },
+  ];
+
+  return (
+    <section className="mj-section" style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+      <div className="mj-wrap">
+        {/* Section 1: Mock Test Analysis */}
+        <div style={{ marginBottom: 54 }}>
+          <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
+            <div className="mj-label">DATA-DRIVEN TEST ANALYSIS</div>
+            <h2 className="mj-display mj-display-lg">
+              How Mentorship Transforms <em>JEE Mock Test Analysis</em>
+            </h2>
+            <p className="mj-sec-sub" style={{ fontSize: "1.05rem", color: "#64748b", marginTop: 12 }}>
+              Taking tests without rigorous analysis is wasted effort. Your mentor breaks down every mock into 4 actionable improvement vectors.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 18 }}>
+            {testPillars.map((p, idx) => (
+              <div key={idx} style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "20px 18px" }}>
+                <h4 style={{ fontSize: 14.5, fontWeight: 800, color: "#0f172a", marginBottom: 6, fontFamily: "'Sora', sans-serif" }}>
+                  {p.title}
+                </h4>
+                <p style={{ fontSize: 12.5, color: "#64748b", lineHeight: 1.6, margin: 0 }}>
+                  {p.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 2: How to Select the Right Mentor */}
+        <div style={{ background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 20, padding: "32px 28px", boxShadow: "0 8px 30px rgba(255,105,61,0.06)" }}>
+          <div style={{ maxWidth: 720, marginBottom: 24 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px" }}>
+              Student Checklist
+            </span>
+            <h3 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#0f172a", margin: "6px 0 8px", fontFamily: "'Sora', sans-serif" }}>
+              How to Select the Right Mentor for JEE Preparation?
+            </h3>
+            <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0 }}>
+              Choosing the wrong guidance costs precious months during JEE preparation. Before joining any mentorship program, verify these 4 essential standards:
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+            {selectionCriteria.map((sc, i) => (
+              <div key={i} style={{ background: "#fffaf5", border: "1px solid #fed7aa", borderRadius: 12, padding: "16px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <span style={{ color: "#16a34a", fontWeight: 800 }}>✓</span>
+                  <strong style={{ fontSize: 13, color: "#0f172a" }}>{sc.title}</strong>
+                </div>
+                <p style={{ fontSize: 12, color: "#64748b", lineHeight: 1.55, margin: 0 }}>{sc.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Contextual Internal Links to Campus Point Discovery Tools ── */
+function ContextualInternalLinks() {
+  const tools = [
+    { title: "JEE Main Rank Predictor", url: "/jee-main", desc: "Convert your percentile into an expected All-India rank." },
+    { title: "JEE Advanced Predictor", url: "/jee-advanced", desc: "Predict your IIT seat eligibility from test marks." },
+    { title: "JoSAA College Predictor", url: "/for-you", desc: "Find eligible IITs, NITs & IIITs based on category rank." },
+    { title: "Official JoSAA Cutoffs", url: "/cutoffs", desc: "Round-wise opening & closing ranks for 100+ institutes." },
+    { title: "Compare Colleges Tool", url: "/compare", desc: "Compare placements, average packages, and campus life." },
+    { title: "Engineering Branch Guide", url: "/branches", desc: "Explore CSE, ECE, Mech curricula and career scopes." },
+  ];
+
+  return (
+    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", padding: "44px 0" }}>
+      <div className="mj-wrap">
+        <div style={{ maxWidth: 680, marginBottom: 24 }}>
+          <div className="mj-label">EXPLORE FREE ADMISSION TOOLS</div>
+          <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", margin: "8px 0 6px", fontFamily: "'Sora', sans-serif" }}>
+            Explore the Campus Point College &amp; Rank Ecosystem
+          </h3>
+          <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>
+            Along with personalized IITian mentorship, use our free data-driven tools to research cutoffs, predict ranks, and plan JoSAA counselling.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 14 }}>
+          {tools.map((t, i) => (
+            <Link key={i} to={t.url} style={{ textDecoration: "none" }}>
+              <div
+                style={{
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 12,
+                  padding: "16px 18px",
+                  transition: "all 0.15s ease",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: 0 }}>{t.title}</h4>
+                  <span style={{ color: "#FF693D", fontSize: 13 }}>→</span>
+                </div>
+                <p style={{ fontSize: 12, color: "#64748b", margin: 0, lineHeight: 1.5 }}>{t.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ═══════════════ MENTORS ═══════════════ */
 function TopMentors() {
   const mentors = [
@@ -1334,6 +1703,78 @@ export default function Mentorship() {
     }))
   } : null;
 
+  // Program / Educational Service Schema
+  const programSchema = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalProgram",
+    "name": `${exam} 1-on-1 Mentorship Program by IIT Students`,
+    "description": `Comprehensive 1-on-1 ${exam} preparation mentorship by IIT Roorkee students with custom daily study targets, backlog recovery sprints, and weekly video analysis.`,
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "Campus Point",
+      "url": "https://campuspoint.in"
+    },
+    "educationalCredentialAwarded": "Competitive Exam Mentorship Certificate",
+    "timeToComplete": "P1Y",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "6-Month 1-on-1 Mentorship",
+        "price": "2599",
+        "priceCurrency": "INR"
+      },
+      {
+        "@type": "Offer",
+        "name": "1-Year Full Mentorship",
+        "price": "4999",
+        "priceCurrency": "INR"
+      }
+    ]
+  };
+
+  // Mentors Person Schema
+  const mentorSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Saneh",
+      "jobTitle": "JEE Mentor",
+      "worksFor": { "@type": "EducationalOrganization", "name": "Campus Point" },
+      "affiliation": { "@type": "CollegeOrUniversity", "name": "IIT Roorkee" },
+      "description": "B.Tech in Civil Engineering at IIT Roorkee. Mentors JEE aspirants on physics mechanics, consistency, and daily study schedules."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Saket Choudhary",
+      "jobTitle": "JEE Mentor",
+      "worksFor": { "@type": "EducationalOrganization", "name": "Campus Point" },
+      "affiliation": { "@type": "CollegeOrUniversity", "name": "IIT Roorkee" },
+      "description": "B.Tech at IIT Roorkee. Specializes in JEE Advanced strategy, percentile jump, and backlog clearance."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Mayank Singh",
+      "jobTitle": "JEE Mentor",
+      "worksFor": { "@type": "EducationalOrganization", "name": "Campus Point" },
+      "affiliation": { "@type": "CollegeOrUniversity", "name": "IIT Roorkee" },
+      "description": "Mechanical Engineering at IIT Roorkee. Specializes in time management, test analysis, and mock test revision."
+    }
+  ];
+
+  const breadcrumbsSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://campuspoint.in/" },
+      { "@type": "ListItem", "position": 2, "name": "Mentorship", "item": "https://campuspoint.in/mentorship" },
+      { "@type": "ListItem", "position": 3, "name": `${exam} Mentorship`, "item": `https://campuspoint.in/mentorship/${variant}` }
+    ]
+  };
+
+  const combinedSchemas = [programSchema, breadcrumbsSchema, faqSchema, ...mentorSchemas].filter(Boolean);
+
   return (
     <div className="mj">
       <Seo
@@ -1352,16 +1793,21 @@ export default function Mentorship() {
             : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance."
         }
         path={`/mentorship/${variant}`}
-        jsonLd={faqSchema}
+        jsonLd={combinedSchemas}
       />
       <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <AeoDirectAnswer variant={variant} exam={exam} />
       <Qualifier cfg={cfg} />
+      <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
+      <MentorshipWorkflow year={year} />
       {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
       <LiveTracking cfg={cfg} />
       <TestAnalysis cfg={cfg} />
+      <BacklogAndStudyPlan year={year} />
+      <MockTestAnalysisGuide />
       <ForParents cfg={cfg} />
+      <ContextualInternalLinks />
       <WhatsApp />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
