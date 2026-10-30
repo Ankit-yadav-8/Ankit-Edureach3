@@ -867,17 +867,6 @@ function SessionScheduler({ studentId, token, onSaveSession }) {
               onBlur={(e) => { e.target.style.borderColor = "var(--line)"; }}
             />
           </div>
-          <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={{ fontSize: 11, color: "var(--muted)" }}>Quick link:</span>
-            <button type="button" onClick={() => setMeetLink("https://meet.google.com/new")}
-              style={{ fontSize: 11, padding: "3px 8px", borderRadius: 6, border: "1px solid var(--line)", background: "#fff", color: "var(--navy)", cursor: "pointer" }}>
-              + New Google Meet
-            </button>
-            <button type="button" onClick={() => setMeetLink("https://meet.google.com/cp-mentor-live")}
-              style={{ fontSize: 11, padding: "3px 8px", borderRadius: 6, border: "1px solid var(--line)", background: "#fff", color: "var(--navy)", cursor: "pointer" }}>
-              Use Campus Point Live Room
-            </button>
-          </div>
         </div>
 
         {/* Date & Time Row */}
