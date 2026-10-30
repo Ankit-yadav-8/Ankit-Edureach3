@@ -856,7 +856,7 @@ export default function MentorDashboard() {
             height: 100%;
             flex-shrink: 0;
             box-sizing: border-box;
-            transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 1050;
             overflow-x: hidden;
             overflow-y: auto;
@@ -890,6 +890,7 @@ export default function MentorDashboard() {
             box-shadow: 0 1px 3px rgba(255, 105, 61, 0.06);
           }
 
+          /* DESKTOP (min-width: 901px) */
           @media (min-width: 901px) {
             .mentor-sidebar {
               position: static !important;
@@ -912,6 +913,7 @@ export default function MentorDashboard() {
             }
           }
 
+          /* MOBILE (max-width: 900px) */
           @media (max-width: 900px) {
             .mentor-sidebar {
               position: fixed !important;
@@ -922,6 +924,7 @@ export default function MentorDashboard() {
               width: min(300px, 86vw) !important;
               box-shadow: 4px 0 32px rgba(15,23,42,0.18) !important;
               z-index: 1200 !important;
+              transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
             .mentor-sidebar.closed {
               transform: translateX(-100%) !important;
@@ -942,30 +945,14 @@ export default function MentorDashboard() {
               display: none !important;
             }
           }
-            .mentor-sidebar.closed {
-              transform: translateX(-100%) !important;
-            }
-            .mentor-sidebar.open {
-              transform: translateX(0) !important;
-            }
-            .mentor-mobile-hamburger {
-              display: grid !important;
-            }
-            .mentor-mobile-close-btn {
-              display: flex !important;
-            }
-            .mentor-sidebar-drawer-header {
-              display: flex !important;
-            }
-          }
-        `}</style>
+`}</style>
         {/* ── ALWAYS CONSISTENT & STICKY TOP NAVBAR (CHORAL / CORAL STYLE) ── */}
         <header
           style={{
             position: "sticky",
             top: 0,
             zIndex: 1100,
-            height: 62,
+            height: 60,
             background: "#ffffff",
             borderBottom: "1px solid #f0e9e0",
             display: "flex",
@@ -977,14 +964,14 @@ export default function MentorDashboard() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Mobile Hamburger Drawer Toggle */}
+            {/* Mobile Hamburger Toggle (hidden on desktop via CSS) */}
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="mentor-mobile-hamburger"
               style={{
-                width: 38,
-                height: 38,
-                borderRadius: 10,
+                width: 36,
+                height: 36,
+                borderRadius: 8,
                 border: "1px solid #e2e8f0",
                 background: "#ffffff",
                 placeItems: "center",
@@ -993,67 +980,70 @@ export default function MentorDashboard() {
               }}
               title="Open Side Panel"
             >
-              <Menu size={20} />
+              <Menu size={19} />
             </button>
 
-            {/* Desktop ChatGPT-style Sidebar Collapse Toggle */}
-            <button
-              onClick={toggleSidebar}
-              className="desktop-header-sidebar-toggle"
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                background: sidebarCollapsed ? "#fff7ed" : "#ffffff",
-                color: sidebarCollapsed ? ACCENT : "#64748b",
-                placeItems: "center",
-                cursor: "pointer",
-                transition: "all 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = ACCENT;
-                e.currentTarget.style.borderColor = "rgba(255,105,61,0.35)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = sidebarCollapsed ? ACCENT : "#64748b";
-                e.currentTarget.style.borderColor = sidebarCollapsed ? "rgba(255,105,61,0.35)" : "#e2e8f0";
-              }}
-              title={sidebarCollapsed ? "Expand sidebar (Ctrl+[)" : "Collapse sidebar (Ctrl+[)"}
-            >
-              {sidebarCollapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
-            </button>
-
-            <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-              <span
+            {/* Desktop Expand Toggle when sidebar is collapsed (like ChatGPT) */}
+            {sidebarCollapsed && (
+              <button
+                onClick={toggleSidebar}
+                className="desktop-header-sidebar-toggle"
                 style={{
                   width: 34,
                   height: 34,
-                  borderRadius: "50%",
-                  background: ACCENT,
-                  display: "grid",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#fff7ed",
+                  color: ACCENT,
                   placeItems: "center",
-                  flexShrink: 0,
-                  boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,105,61,0.35)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                }}
+                title="Expand sidebar"
               >
-                <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, lineHeight: 1 }}>
-                  CP
+                <PanelLeftOpen size={17} />
+              </button>
+            )}
+
+            {/* Show Campus Point logo in header when sidebar is collapsed (so logo stays visible) or on mobile */}
+            {sidebarCollapsed && (
+              <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+                <span
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    background: ACCENT,
+                    display: "grid",
+                    placeItems: "center",
+                    flexShrink: 0,
+                    boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+                  }}
+                >
+                  <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, lineHeight: 1 }}>
+                    CP
+                  </span>
                 </span>
-              </span>
-              <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 15, color: "#0f172a", lineHeight: 1.2 }}>
-                Campus Point
-              </span>
-            </Link>
+                <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14, color: "#0f172a", lineHeight: 1.2 }}>
+                  Campus Point
+                </span>
+                <span style={{ width: 1.5, height: 16, background: "#e2e8f0", margin: "0 2px" }} />
+              </Link>
+            )}
 
-            <span style={{ width: 1.5, height: 20, background: "#e2e8f0", margin: "0 4px" }} />
-
+            {/* Prominently Styled "Mentors Dashboard" in Signature Choral / Coral Website Color */}
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span
                 style={{
                   fontFamily: SORA,
                   fontWeight: 800,
-                  fontSize: 16,
+                  fontSize: "1.15rem",
                   letterSpacing: "-0.015em",
                   color: ACCENT, // Choral website color #FF693D
                   display: "inline-flex",
@@ -1081,6 +1071,7 @@ export default function MentorDashboard() {
             </div>
           </div>
 
+          {/* Right: Mentor Profile Status Pill */}
           {mentor && (
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
