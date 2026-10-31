@@ -855,7 +855,7 @@ export default function MentorDashboard() {
         className="mentor-console-root"
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           height: "100vh",
           overflow: "hidden",
           background: "#f8fafc",
@@ -863,9 +863,10 @@ export default function MentorDashboard() {
           color: "#0f172a",
           boxSizing: "border-box",
           position: "relative",
+          width: "100%",
         }}
       >
-<style>{`
+        <style>{`
           /* Invisible scrollbar: keeps smooth scrolling effect without visible orange bar */
           html.dashboard-invisible-scrollbar,
           html.dashboard-invisible-scrollbar body,
@@ -935,22 +936,6 @@ export default function MentorDashboard() {
 
           /* DESKTOP (min-width: 901px) */
           @media (min-width: 901px) {
-            .mentor-sidebar {
-              position: static !important;
-              transform: none !important;
-              box-shadow: none !important;
-              display: flex !important;
-              height: 100% !important;
-            }
-          .mentor-mobile-topbar {
-            display: none !important;
-          }
-
-          /* DESKTOP (min-width: 901px) */
-          @media (min-width: 901px) {
-            .mentor-console-root {
-              flex-direction: row !important;
-            }
             .mentor-mobile-topbar {
               display: none !important;
             }
@@ -973,20 +958,8 @@ export default function MentorDashboard() {
 
           /* MOBILE (max-width: 900px) */
           @media (max-width: 900px) {
-            .mentor-console-root {
-              flex-direction: column !important;
-            }
             .mentor-mobile-topbar {
               display: flex !important;
-              height: 56px;
-              background: #ffffff;
-              border-bottom: 1px solid #f1f5f9;
-              padding: 0 16px;
-              align-items: center;
-              justify-content: space-between;
-              flex-shrink: 0;
-              z-index: 1000;
-              box-shadow: 0 1px 3px rgba(15,23,42,0.03);
             }
             .mentor-sidebar {
               position: fixed !important;
@@ -995,7 +968,7 @@ export default function MentorDashboard() {
               left: auto !important;
               bottom: 0 !important;
               height: 100vh !important;
-              width: min(310px, 86vw) !important;
+              width: min(320px, 86vw) !important;
               box-shadow: -4px 0 32px rgba(15,23,42,0.18) !important;
               border-left: 1px solid #e2e8f0 !important;
               border-right: none !important;
@@ -1015,15 +988,36 @@ export default function MentorDashboard() {
             .desktop-sidebar-toggle-btn {
               display: none !important;
             }
-            .mentor-main-scroll {
-              padding-top: 0 !important;
-            }
           }
-`}</style>
+        `}</style>
 
-        {/* ── MOBILE TOP BAR: LEFT BRAND + RIGHT HAMBURGER (ONLY ON SCREENS <= 900px) ── */}
-        <div className="mentor-mobile-topbar">
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+        {/* ── MOBILE TOP BAR (TOP LEFT BRAND + TOP RIGHT HAMBURGER, ONLY ON SCREENS <= 900px) ── */}
+        <header
+          className="mentor-mobile-topbar"
+          style={{
+            height: 56,
+            width: "100%",
+            background: "#ffffff",
+            borderBottom: "1px solid #e2e8f0",
+            padding: "0 16px",
+            boxSizing: "border-box",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            zIndex: 1000,
+          }}
+        >
+          {/* Top Left: Logo + Brand Name */}
+          <Link
+            to="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 9,
+              textDecoration: "none",
+            }}
+          >
             <span
               style={{
                 width: 32,
@@ -1036,21 +1030,39 @@ export default function MentorDashboard() {
                 boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
               }}
             >
-              <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, lineHeight: 1 }}>
+              <span
+                style={{
+                  color: "#fff",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: 12,
+                  lineHeight: 1,
+                }}
+              >
                 CP
               </span>
             </span>
-            <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 16, color: "#0f172a", letterSpacing: "-0.01em" }}>
+            <span
+              style={{
+                fontFamily: SORA,
+                fontWeight: 800,
+                fontSize: 16,
+                color: "#0f172a",
+                letterSpacing: "-0.01em",
+                whiteSpace: "nowrap",
+              }}
+            >
               Campus Point
             </span>
           </Link>
 
+          {/* Top Right: Hamburger Sign */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open menu"
+            aria-label="Open navigation menu"
             style={{
-              width: 38,
-              height: 38,
+              width: 40,
+              height: 40,
               borderRadius: 8,
               border: "1px solid #e2e8f0",
               background: "#ffffff",
@@ -1062,26 +1074,39 @@ export default function MentorDashboard() {
               transition: "all 0.15s ease",
             }}
           >
-            <Menu size={20} />
+            <Menu size={22} />
           </button>
-        </div>
+        </header>
 
-        {/* ── MOBILE BACKDROP OVERLAY ── */}
-        {mobileMenuOpen && (
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(15,23,42,0.45)",
-              backdropFilter: "blur(4px)",
-              zIndex: 1199,
-            }}
-          />
-        )}
+        {/* ── WORKSPACE LAYOUT (ROW: SIDEBAR ON LEFT / DESKTOP, MAIN SCROLL ON RIGHT) ── */}
+        <div
+          className="mentor-workspace-layout"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flex: 1,
+            minHeight: 0,
+            overflow: "hidden",
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {/* ── MOBILE BACKDROP OVERLAY ── */}
+          {mobileMenuOpen && (
+            <div
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(15,23,42,0.45)",
+                backdropFilter: "blur(4px)",
+                zIndex: 1199,
+              }}
+            />
+          )}
 
-        {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
-        <aside className={`mentor-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
+          {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
+          <aside className={`mentor-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
           {/* ── TOP HEADER OF SIDEBAR (ChatGPT Style) ── */}
           <div
             style={{
@@ -2101,6 +2126,7 @@ export default function MentorDashboard() {
             )}
           </main>
         </div>
+      </div>
 
         {/* Chapter Quiz Creator Modal */}
         <ChapterQuizModal
