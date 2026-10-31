@@ -702,9 +702,9 @@ const esc = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">"
 */
 router.post("/send-email", async (req, res) => {
   try {
+    const targetType = req.body?.targetType || req.body?.target || "all";
+    const mentorId = req.body?.mentorId || null;
     const {
-      targetType = "all",
-      mentorId = null,
       subject,
       message,
       includeDashboardLink = true,
@@ -718,7 +718,11 @@ router.post("/send-email", async (req, res) => {
     let mentors = [];
     if (targetType === "single" && mentorId) {
       const m = await Mentor.findById(mentorId);
-      if (m && m.active) mentors = [m];
+      if (m) {
+        mentors = [m];
+      } else {
+        return res.status(404).json({ error: "Selected mentor was not found in the database." });
+      }
     } else if (targetType === "inactive_today") {
       const todayIST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
       const allActive = await Mentor.find({ active: true });

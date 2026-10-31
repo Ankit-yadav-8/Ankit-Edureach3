@@ -92,10 +92,15 @@ export default function MentorTracking({ adminToken }) {
 
   const handleSendMentorEmail = async (e) => {
     if (e) e.preventDefault();
+    if (emailTarget === "single" && !emailSingleMentorId) {
+      setEmailFeedback({ type: "error", text: "Please choose a mentor from the dropdown list." });
+      return;
+    }
     setEmailSending(true);
     setEmailFeedback({ type: "", text: "" });
     try {
       const res = await apiAdminSendMentorEmail(adminToken, {
+        targetType: emailTarget,
         target: emailTarget,
         mentorId: emailTarget === "single" ? emailSingleMentorId : undefined,
         subject: emailSubject,
@@ -1882,12 +1887,14 @@ export default function MentorTracking({ adminToken }) {
             position: "fixed",
             inset: 0,
             background: "rgba(15, 23, 42, 0.65)",
-            backdropFilter: "blur(4px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            zIndex: 99999,
+            display: "grid",
+            placeItems: "center",
             padding: 16,
+            overflowY: "auto",
+            boxSizing: "border-box",
           }}
           onClick={() => !emailSending && setEmailModalOpen(false)}
         >
@@ -1897,9 +1904,13 @@ export default function MentorTracking({ adminToken }) {
               borderRadius: 16,
               maxWidth: 560,
               width: "100%",
-              boxShadow: "0 20px 40px rgba(15, 23, 42, 0.2)",
+              maxHeight: "calc(100vh - 40px)",
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: "0 24px 50px rgba(15, 23, 42, 0.28)",
               overflow: "hidden",
               border: "1px solid #e2e8f0",
+              margin: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -1912,6 +1923,7 @@ export default function MentorTracking({ adminToken }) {
                 justifyContent: "space-between",
                 alignItems: "center",
                 color: "#ffffff",
+                flexShrink: 0,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1952,7 +1964,7 @@ export default function MentorTracking({ adminToken }) {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleSendMentorEmail} style={{ padding: 22 }}>
+            <form onSubmit={handleSendMentorEmail} style={{ padding: 22, overflowY: "auto", flex: 1, boxSizing: "border-box" }}>
               {/* Target Selector */}
               <div style={{ marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>
@@ -1967,7 +1979,12 @@ export default function MentorTracking({ adminToken }) {
                     <button
                       key={t.id}
                       type="button"
-                      onClick={() => setEmailTarget(t.id)}
+                      onClick={() => {
+                        setEmailTarget(t.id);
+                        if (t.id === "single" && !emailSingleMentorId && mentors.length > 0) {
+                          setEmailSingleMentorId(mentors[0].id || mentors[0]._id);
+                        }
+                      }}
                       style={{
                         padding: "8px 10px",
                         borderRadius: 8,
@@ -1998,20 +2015,25 @@ export default function MentorTracking({ adminToken }) {
                     required
                     style={{
                       width: "100%",
-                      padding: "8px 12px",
+                      padding: "9px 12px",
                       borderRadius: 8,
-                      border: "1px solid #cbd5e1",
+                      border: "1.5px solid #cbd5e1",
                       fontSize: 12,
                       color: "#0f172a",
                       background: "#ffffff",
+                      outline: "none",
+                      boxSizing: "border-box",
                     }}
                   >
-                    <option value="">-- Choose a mentor --</option>
-                    {(data?.mentors || []).map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.name} ({m.email}) — {m.studentsCount || 0} students
-                      </option>
-                    ))}
+                    <option value="">-- Choose a mentor ({mentors.length} available) --</option>
+                    {(mentors || []).map((m) => {
+                      const mId = m.id || m._id;
+                      return (
+                        <option key={mId} value={mId}>
+                          {m.name} ({m.email}) — {m.assignedStudentsCount ?? m.studentsCount ?? 0} students
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               )}

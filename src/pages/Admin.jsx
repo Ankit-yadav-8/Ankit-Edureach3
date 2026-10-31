@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, Fragment, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   Users, Download, RefreshCw, ShieldCheck, LogOut, KeyRound, Mail, Phone, Calendar, Clock,
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
   GraduationCap, Tag, Send, Eye, EyeOff, Lock, AlertTriangle, ArrowRight, ShieldAlert,
   LayoutDashboard, LineChart, Menu, X, Search, Sparkles, Building2, UserCheck, Layers, ExternalLink,
+  PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
@@ -94,6 +96,23 @@ export default function Admin() {
   const [expanded, setExpanded] = useState(() => new Set());
   const [tab, setTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("cp:admin_sidebar_collapsed") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("cp:admin_sidebar_collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
   const [payments, setPayments] = useState([]);
   const [payTotal, setPayTotal] = useState(0);
   const [payLoaded, setPayLoaded] = useState(false);
@@ -694,513 +713,680 @@ export default function Admin() {
         @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
         .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
-        .adm-nav-btn {
+        .adm-sidebar {
+          width: ${sidebarCollapsed ? "68px" : "260px"};
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          flex-shrink: 0;
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          box-sizing: border-box;
+          overflow: hidden;
+          position: relative;
+          z-index: 20;
+        }
+
+        .adm-nav-side-btn {
           display: flex;
           align-items: center;
+          gap: 11px;
           width: 100%;
-          gap: 10px;
-          padding: 10px 14px;
-          border-radius: 12px;
-          border: none;
-          background: transparent;
-          color: #475569;
-          font-family: inherit;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.16s ease;
-          text-align: left;
-          box-sizing: border-box;
-        }
-        .adm-nav-btn:hover {
-          background: #f1f5f9;
-          color: #0f172a;
-        }
-        .adm-nav-btn.active {
-          background: ${ORANGE} !important;
-          color: #ffffff !important;
-          box-shadow: 0 4px 14px rgba(255, 105, 61, 0.35);
-        }
-        .adm-desk-pill {
-          padding: 6px 14px;
-          border-radius: 8px;
-          border: none;
-          background: transparent;
-          color: #64748b;
-          font-size: 12px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.15s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          white-space: nowrap;
-        }
-        .adm-desk-pill:hover {
-          background: #e2e8f0;
-          color: #0f172a;
-        }
-        .adm-nav-pill {
-          padding: 6px 12px;
+          padding: 9px 12px;
           border-radius: 8px;
           border: 1px solid transparent;
-          background: transparent;
-          color: #64748b;
-          font-size: 12px;
-          font-weight: 600;
           cursor: pointer;
+          text-align: left;
+          background: transparent;
+          color: #475569;
+          font-size: 13px;
+          font-weight: 600;
           transition: all 0.15s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          white-space: nowrap;
+          box-sizing: border-box;
         }
-        .adm-nav-pill:hover {
+        .adm-nav-side-btn:hover {
           background: #f8fafc;
           color: #0f172a;
         }
-        .adm-nav-pill.active {
+        .adm-nav-side-btn.active {
           background: #fff7ed;
           color: ${ORANGE};
-          border-color: rgba(255, 105, 61, 0.25);
+          border-color: rgba(255, 105, 61, 0.22);
           font-weight: 700;
-          box-shadow: 0 1px 3px rgba(255, 105, 61, 0.08);
+          box-shadow: 0 1px 3px rgba(255, 105, 61, 0.06);
         }
+
+        /* DESKTOP (min-width: 901px) */
         @media (min-width: 901px) {
-          .desktop-signout-btn { display: inline-flex !important; }
-          .mobile-hamburger-btn { display: none !important; }
+          .adm-mobile-topbar {
+            display: none !important;
+          }
+          .adm-sidebar {
+            position: static !important;
+            transform: none !important;
+            box-shadow: none !important;
+            display: flex !important;
+            height: 100% !important;
+            border-right: 1px solid #e2e8f0 !important;
+            border-left: none !important;
+          }
+          .adm-mobile-close-btn {
+            display: none !important;
+          }
+          .desktop-sidebar-toggle-btn {
+            display: grid !important;
+          }
         }
+
+        /* MOBILE (max-width: 900px) */
         @media (max-width: 900px) {
-          .navbar-middle-tabs { display: none !important; }
-          .console-badge-desktop { display: none !important; }
-          .desktop-admin-search { display: none !important; }
-          .desktop-signout-btn { display: none !important; }
-          .mobile-hamburger-btn { display: grid !important; }
+          .adm-mobile-topbar {
+            display: flex !important;
+          }
+          .adm-sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            bottom: 0 !important;
+            height: 100% !important;
+            height: 100dvh !important;
+            height: -webkit-fill-available !important;
+            max-height: 100dvh !important;
+            width: min(320px, 86vw) !important;
+            box-shadow: -8px 0 32px rgba(15,23,42,0.18) !important;
+            border-left: 1px solid #e2e8f0 !important;
+            border-right: none !important;
+            z-index: 1200 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s !important;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            box-sizing: border-box !important;
+          }
+          .adm-sidebar.closed {
+            transform: translate3d(100%, 0, 0) !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+          }
+          .adm-sidebar.open {
+            transform: translate3d(0, 0, 0) !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+          }
+          .adm-mobile-close-btn {
+            display: grid !important;
+            place-items: center;
+          }
+          .desktop-sidebar-toggle-btn {
+            display: none !important;
+          }
+        }
+
+        .adm-main-scroll {
+          overflow-x: hidden !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .adm-workspace-layout {
+          overflow-x: hidden !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .adm-content-area {
+          padding: 20px clamp(1rem, 2.5vw, 2.2rem) 80px;
+          flex: 1;
+          max-width: 1400px;
+          min-width: 0;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 640px) {
+          .adm-content-area {
+            padding: 14px 12px 60px !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
         }
       `}</style>
 
-      {/* ── TOP NAVBAR: Always Sticky, Home-Page 3-Column Layout ── */}
-      <nav
+      {/* ── MOBILE TOP BAR (TOP LEFT BRAND + TOP RIGHT HAMBURGER, ONLY ON SCREENS <= 900px) ── */}
+      <header
+        className="adm-mobile-topbar"
         style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1000,
-          background: "#ffffff",
-          borderBottom: "1px solid #f0e9e0",
-          height: 62,
+          height: 56,
           width: "100%",
-          boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
+          background: "#ffffff",
+          borderBottom: "1px solid #e2e8f0",
+          padding: "0 16px",
+          boxSizing: "border-box",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           flexShrink: 0,
+          zIndex: 1000,
         }}
       >
-        <div
+        {/* Top Left: Logo + Brand Name */}
+        <Link
+          to="/"
           style={{
-            height: "100%",
-            display: "grid",
-            gridTemplateColumns: "auto 1fr auto",
+            display: "inline-flex",
             alignItems: "center",
-            padding: "0 clamp(1.25rem, 3.5vw, 2.5rem)",
-            maxWidth: 1600,
-            margin: "0 auto",
-            boxSizing: "border-box",
-            gap: 16,
+            gap: 9,
+            textDecoration: "none",
           }}
         >
-          {/* Left: Campus Point Logo + Wordmark */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "start", flexShrink: 0 }}>
-            <span
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: ORANGE,
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-                boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
-              }}
-            >
-              <span
-                style={{
-                  color: "#fff",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "14px",
-                  letterSpacing: "-0.5px",
-                  lineHeight: 1,
-                }}
-              >
-                CP
-              </span>
-            </span>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(1.15rem, 2.5vw, 1.35rem)",
-                letterSpacing: "-0.01em",
-                color: "#1a1a2e",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Campus Point
-            </span>
-            <span
-              className="console-badge-desktop"
-              style={{
-                fontSize: 10,
-                fontWeight: 800,
-                color: ORANGE,
-                background: `${ORANGE}15`,
-                padding: "2px 8px",
-                borderRadius: 6,
-                letterSpacing: 0.5,
-                textTransform: "uppercase",
-              }}
-            >
-              Admin
-            </span>
-          </div>
-
-          {/* Middle: Admin Tabs (Desktop Only, hidden on mobile) */}
-          <div
-            className="navbar-middle-tabs cp-custom-scroll"
+          <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 4,
-              overflowX: "auto",
-              minWidth: 0,
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background: ORANGE,
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
+              boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
             }}
           >
-            {[
-              { k: "overview", label: "Overview", icon: LayoutDashboard },
-              { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart },
-              { k: "mentors", label: "Mentors", icon: GraduationCap },
-              { k: "users", label: `Students (${total})`, icon: Users },
-              { k: "payments", label: `Payments (${payTotal})`, icon: CreditCard },
-              { k: "tests", label: "Mock Tests", icon: FileText },
-              { k: "community", label: "Community", icon: MessagesSquare },
-              { k: "coupons", label: "Coupons", icon: Tag },
-            ].map((item) => {
-              const Icon = item.icon;
-              const active = tab === item.k;
-              return (
-                <button
-                  key={item.k}
-                  onClick={() => switchTab(item.k)}
-                  className={`adm-nav-pill ${active ? "active" : ""}`}
-                >
-                  <Icon size={14} color={active ? ORANGE : "#64748b"} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right: Sign Out on Laptop, Hamburger on Mobile */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
-            {/* Quick Search on Users & Payments (Desktop Only) */}
-            {(tab === "users" || tab === "payments") && (
-              <div className="desktop-admin-search" style={{ position: "relative" }}>
-                <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
-                <input
-                  placeholder={tab === "users" ? "Search..." : "Search..."}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{
-                    height: 34,
-                    paddingLeft: 28,
-                    paddingRight: 8,
-                    borderRadius: 8,
-                    border: "1px solid #e2e8f0",
-                    fontSize: 12,
-                    outline: "none",
-                    width: 140,
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Laptop Sign Out Button */}
-            <button
-              onClick={logout}
-              className="desktop-signout-btn"
-              style={{
-                height: 36,
-                padding: "0 14px",
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                background: "#ffffff",
-                color: "#475569",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                transition: "all 0.15s ease",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#dc2626";
-                e.currentTarget.style.borderColor = "#fca5a5";
-                e.currentTarget.style.background = "#fef2f2";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#475569";
-                e.currentTarget.style.borderColor = "#e2e8f0";
-                e.currentTarget.style.background = "#ffffff";
-              }}
-              title="Sign out of Admin Session"
-            >
-              <LogOut size={14} />
-              <span>Sign Out</span>
-            </button>
-
-            {/* Mobile Hamburger Menu Button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="mobile-hamburger-btn"
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 10,
-                border: "1px solid #e2e8f0",
-                background: sidebarOpen ? "#f1f5f9" : "#ffffff",
-                placeItems: "center",
-                cursor: "pointer",
-                color: "#0f172a",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-                transition: "all 0.15s ease",
-              }}
-              title="Open Navigation"
-              aria-label="Menu"
-            >
-              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* ── SLIDE-IN DRAWER ON RIGHT (where all things are) ── */}
-      {sidebarOpen && (
-        <div
-          onClick={() => setSidebarOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(15,23,42,0.45)",
-            backdropFilter: "blur(4px)",
-            zIndex: 1199,
-          }}
-        />
-      )}
-
-      <aside
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: "min(340px, 88vw)",
-          background: "#ffffff",
-          boxShadow: sidebarOpen ? "-4px 0 32px rgba(15,23,42,0.18)" : "none",
-          zIndex: 1200,
-          display: "flex",
-          flexDirection: "column",
-          transform: sidebarOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)",
-          boxSizing: "border-box",
-        }}
-        className="cp-custom-scroll"
-      >
-        {/* Drawer Header */}
-        <div
-          style={{
-            padding: "16px 20px",
-            borderBottom: "1px solid #f0e9e0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span
               style={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                background: ORANGE,
-                display: "grid",
-                placeItems: "center",
-                color: "#ffffff",
-                fontSize: 13,
-                fontWeight: 700,
+                color: "#fff",
                 fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: 12,
+                lineHeight: 1,
               }}
             >
               CP
             </span>
-            <div>
-              <div style={{ fontFamily: "Sora, sans-serif", fontSize: 15, fontWeight: 800, color: "#0f172a" }}>
-                Campus Point
-              </div>
-              <div style={{ fontSize: 9.5, fontWeight: 800, color: ORANGE, textTransform: "uppercase", letterSpacing: 0.5 }}>
-                Admin Console
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setSidebarOpen(false)}
+          </span>
+          <span
             style={{
-              background: "none",
-              border: "none",
-              color: "#64748b",
-              cursor: "pointer",
-              padding: 6,
-              borderRadius: 8,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 800,
+              fontSize: 16,
+              color: "#0f172a",
+              letterSpacing: "-0.01em",
+              whiteSpace: "nowrap",
             }}
-            title="Close menu"
           >
-            <X size={19} />
-          </button>
-        </div>
+            Campus Point
+          </span>
+        </Link>
 
-        {/* Super Admin Profile Pill */}
-        <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: "50%",
-                background: "#0f172a",
-                color: "#ffffff",
-                display: "grid",
-                placeItems: "center",
-                fontSize: 12,
-                fontWeight: 800,
-              }}
-            >
-              AD
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                Super Admin
-              </div>
-              <div style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {primaryAdminEmail}
-              </div>
-            </div>
-            <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "#ecfdf5", color: "#166534" }}>
-              Verified
-            </span>
+        {/* Top Right: Hamburger Sign */}
+        <button
+          onClick={() => setSidebarOpen((prev) => !prev)}
+          aria-label={sidebarOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={sidebarOpen}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 8,
+            border: "1px solid #e2e8f0",
+            background: sidebarOpen ? "#fff7ed" : "#ffffff",
+            display: "grid",
+            placeItems: "center",
+            cursor: "pointer",
+            color: sidebarOpen ? ORANGE : "#0f172a",
+            boxShadow: "0 1px 3px rgba(15,23,42,0.04)",
+            transition: "all 0.15s ease",
+          }}
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={22} />}
+        </button>
+      </header>
+
+      {/* ── WORKSPACE LAYOUT (ROW: SIDEBAR ON LEFT / DESKTOP, MAIN SCROLL ON RIGHT) ── */}
+      <div
+        className="adm-workspace-layout"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flex: 1,
+          minHeight: 0,
+          overflow: "hidden",
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        {/* ── MOBILE BACKDROP OVERLAY ── */}
+        <div
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden={!sidebarOpen}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15,23,42,0.48)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
+            zIndex: 1199,
+            touchAction: "none",
+            opacity: sidebarOpen ? 1 : 0,
+            visibility: sidebarOpen ? "visible" : "hidden",
+            pointerEvents: sidebarOpen ? "auto" : "none",
+            transition: "opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s",
+          }}
+        />
+
+        {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
+        <aside className={`adm-sidebar ${sidebarOpen ? "open" : "closed"} cp-custom-scroll`}>
+          {/* ── TOP HEADER OF SIDEBAR ── */}
+          <div
+            style={{
+              height: 56,
+              padding: sidebarCollapsed ? "0" : "0 14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: sidebarCollapsed ? "center" : "space-between",
+              flexShrink: 0,
+              borderBottom: "1px solid #f1f5f9",
+            }}
+          >
+            {sidebarCollapsed ? (
+              <button
+                onClick={toggleSidebar}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  border: "none",
+                  background: "transparent",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#fff7ed"; e.currentTarget.style.color = ORANGE; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                title="Expand sidebar"
+              >
+                <PanelLeftOpen size={18} />
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 9,
+                    textDecoration: "none",
+                    minWidth: 0,
+                  }}
+                  title="Campus Point Home"
+                >
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background: ORANGE,
+                      display: "grid",
+                      placeItems: "center",
+                      flexShrink: 0,
+                      boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+                    }}
+                  >
+                    <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, lineHeight: 1 }}>
+                      CP
+                    </span>
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 13.5, color: "#0f172a", lineHeight: 1.2 }}>
+                      Campus Point
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: ORANGE, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+                      Admin Console
+                    </span>
+                  </div>
+                </Link>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <button
+                    onClick={toggleSidebar}
+                    className="desktop-sidebar-toggle-btn"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 6,
+                      border: "none",
+                      background: "transparent",
+                      color: "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#0f172a"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                    title="Collapse sidebar"
+                  >
+                    <PanelLeftClose size={17} />
+                  </button>
+
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="adm-mobile-close-btn"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      background: "#f1f5f9",
+                      border: "none",
+                      color: "#475569",
+                      cursor: "pointer",
+                      borderRadius: 8,
+                      placeItems: "center",
+                      transition: "all 0.15s ease",
+                    }}
+                    title="Close menu"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-        </div>
 
-        {/* Drawer Navigation List */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "14px 12px", display: "flex", flexDirection: "column", gap: 16 }}>
-          {NAV_GROUPS.map((group, gi) => (
-            <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{
-                fontSize: 10,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                letterSpacing: 0.6,
-                padding: "0 8px 4px",
-              }}>
-                {group.title}
-              </div>
-              {group.items.map((item) => {
-                const Icon = item.icon;
+          {/* ── MIDDLE: NAVIGATION LIST ── */}
+          {sidebarCollapsed ? (
+            /* Collapsed: Centered icon rail with tooltips (ChatGPT style) */
+            <div style={{ padding: "12px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1, overflowY: "auto" }}>
+              {NAV_GROUPS.flatMap((g) => g.items).map((item) => {
                 const active = tab === item.k;
+                const Icon = item.icon;
                 return (
                   <button
                     key={item.k}
                     onClick={() => switchTab(item.k)}
-                    className={`adm-nav-btn ${active ? "active" : ""}`}
+                    title={item.label}
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 10,
+                      border: active ? "1.5px solid rgba(255,105,61,0.35)" : "1px solid transparent",
+                      background: active ? "#fff7ed" : "transparent",
+                      color: active ? ORANGE : "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                      position: "relative",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "#f8fafc";
+                        e.currentTarget.style.color = "#0f172a";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "#64748b";
+                      }
+                    }}
                   >
-                    <Icon size={16} style={{ flexShrink: 0 }} />
-                    <span style={{ flex: 1 }}>{item.label}</span>
-
-                    {item.count !== undefined && (
-                      <span style={{
-                        background: active ? "rgba(255,255,255,0.25)" : "#f1f5f9",
-                        color: active ? "#ffffff" : "#64748b",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        padding: "2px 7px",
-                        borderRadius: 20,
-                      }}>
-                        {item.count}
-                      </span>
-                    )}
-
-                    {item.badge && (
-                      <span style={{
-                        background: active ? "rgba(255,255,255,0.25)" : "#eff6ff",
-                        color: active ? "#ffffff" : "#2563eb",
-                        fontSize: 10,
-                        fontWeight: 800,
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                      }}>
-                        {item.badge}
-                      </span>
+                    <Icon size={19} color={active ? ORANGE : "currentColor"} />
+                    {item.count !== undefined && item.count > 0 && (
+                      <span
+                        style={{
+                          position: "absolute",
+                          top: 4,
+                          right: 4,
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          background: ORANGE,
+                        }}
+                      />
                     )}
                   </button>
                 );
               })}
             </div>
-          ))}
-        </div>
+          ) : (
+            /* Expanded: Categories with items, icons, badges */
+            <div
+              className="cp-custom-scroll"
+              style={{
+                padding: "14px 10px",
+                flex: "1 1 0px",
+                minHeight: 0,
+                overflowY: "auto",
+                overflowX: "hidden",
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch",
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
+              }}
+            >
+              {NAV_GROUPS.map((group, gi) => (
+                <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 800,
+                      color: "#94a3b8",
+                      textTransform: "uppercase",
+                      letterSpacing: 0.8,
+                      padding: "0 10px 4px",
+                    }}
+                  >
+                    {group.title}
+                  </div>
+                  {group.items.map((item) => {
+                    const active = tab === item.k;
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.k}
+                        onClick={() => {
+                          switchTab(item.k);
+                          setSidebarOpen(false);
+                        }}
+                        className={`adm-nav-side-btn ${active ? "active" : ""}`}
+                      >
+                        <Icon size={17} color={active ? ORANGE : "#64748b"} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ lineHeight: 1.25 }}>{item.label}</div>
+                        </div>
+                        {item.count !== undefined && (
+                          <span
+                            style={{
+                              background: active ? "rgba(255,105,61,0.15)" : "#f1f5f9",
+                              color: active ? ORANGE : "#64748b",
+                              fontSize: 11,
+                              fontWeight: 700,
+                              padding: "2px 7px",
+                              borderRadius: 20,
+                            }}
+                          >
+                            {item.count}
+                          </span>
+                        )}
+                        {item.badge && (
+                          <span
+                            style={{
+                              background: active ? ORANGE : "#eff6ff",
+                              color: active ? "#ffffff" : "#2563eb",
+                              fontSize: 10,
+                              fontWeight: 800,
+                              padding: "2px 6px",
+                              borderRadius: 4,
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                        {active && !item.count && !item.badge && (
+                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: ORANGE }} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
 
-        {/* Drawer Footer / End Session */}
-        <div style={{ padding: "14px 16px", borderTop: "1px solid #f1f5f9", background: "#fafafa" }}>
-          <button
-            onClick={logout}
-            style={{
-              width: "100%",
-              padding: "9px 14px",
-              borderRadius: 10,
-              border: "1px solid #e2e8f0",
-              background: "#ffffff",
-              color: "#64748b",
-              fontSize: 12.5,
-              fontWeight: 600,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.borderColor = "#fca5a5"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "#64748b"; e.currentTarget.style.borderColor = "#e2e8f0"; }}
-          >
-            <LogOut size={14} /> End Session
-          </button>
-        </div>
-      </aside>
+          {/* ── BOTTOM AREA: Admin Profile & Sign Out ── */}
+          {sidebarCollapsed ? (
+            /* Collapsed: Avatar + Sign Out Icon button in the bottom */
+            <div style={{ padding: "12px 0 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+              <div
+                title={`Admin (${primaryAdminEmail})`}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: `${ORANGE}18`,
+                  color: ORANGE,
+                  display: "grid",
+                  placeItems: "center",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  flexShrink: 0,
+                  border: `1.5px solid ${ORANGE}30`,
+                  cursor: "pointer",
+                }}
+              >
+                A
+              </div>
 
-      {/* ── MAIN CONTENT AREA (FULL WIDTH) ─────────────────────────── */}
-      <div
-        className="adm-main-scroll cp-custom-scroll"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          minWidth: 0,
-          overflowY: "auto",
-          boxSizing: "border-box",
-        }}
-      >
-        {/* Viewport Content */}
-        <main className="adm-content-area" style={{ flex: 1, padding: "28px clamp(1.25rem, 3.5vw, 2.5rem) 60px", maxWidth: 1400, width: "100%", margin: "0 auto", boxSizing: "border-box" }}>
+              <button
+                onClick={logout}
+                title="Sign Out of Console"
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#64748b";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            /* Expanded: Admin Profile Card + Sign Out Button */
+            <div
+              style={{
+                padding: "12px 14px max(32px, calc(env(safe-area-inset-bottom, 16px) + 16px))",
+                borderTop: "1px solid #f1f5f9",
+                background: "#ffffff",
+                flexShrink: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                boxSizing: "border-box",
+                width: "100%",
+                zIndex: 10,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0", minWidth: 0 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: `${ORANGE}18`,
+                    color: ORANGE,
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 800,
+                    fontSize: 13.5,
+                    flexShrink: 0,
+                    border: `1.5px solid ${ORANGE}30`,
+                  }}
+                >
+                  A
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    Platform Admin
+                  </div>
+                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={primaryAdminEmail}>
+                    {primaryAdminEmail}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={logout}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#475569",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  transition: "all .15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#475569";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+                title="Sign Out of Console"
+              >
+                <LogOut size={15} />
+                <span>Sign Out of Console</span>
+              </button>
+            </div>
+          )}
+        </aside>
+
+        {/* ── MAIN CONTENT AREA (FULL WIDTH) ─────────────────────────── */}
+        <div
+          className="adm-main-scroll cp-custom-scroll"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0,
+            overflowY: "auto",
+            overflowX: "hidden",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Viewport Content */}
+          <main className="adm-content-area">
           <div className="adm-fade">
             {tab === "overview" ? (
               <AdminOverview adminToken={token} onNavigateTab={switchTab} />
@@ -1444,7 +1630,8 @@ export default function Admin() {
         </main>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 /* ── Payments tab: successful enrolments only ─────────────────────── */
