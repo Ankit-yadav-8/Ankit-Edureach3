@@ -56,12 +56,12 @@ export default function MentorshipBanner() {
               marginBottom: 36,
               maxWidth: 480
             }}>
-              Stop guessing your prep strategy. Get paired with an IITian or top medical student. Receive personalized daily targets, live doubt resolution, and proven frameworks to maximize your score.
+              Stop guessing your prep strategy. Get paired with an IITian mentor 1-on-1 till JEE Mains 2027. Receive personalized daily targets, live doubt resolution, and proven frameworks to maximize your score.
             </p>
             <motion.button
               whileHover={{ y: -3, boxShadow: `0 12px 24px rgba(255,105,61,0.3)` }}
               whileTap={{ y: 0 }}
-              onClick={() => nav("/mentorship")}
+              onClick={() => nav("/mentorship/jee-2027")}
               style={{
                 background: CL.coral,
                 color: "#FFFFFF",
@@ -79,7 +79,7 @@ export default function MentorshipBanner() {
                 transition: "background 0.2s ease"
               }}
             >
-              Explore Mentorship Plans
+              Explore JEE 2027 Mentorship · ₹3,499
               <ArrowRight size={20} />
             </motion.button>
           </div>

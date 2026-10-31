@@ -22,8 +22,9 @@ const FEATURES = [
 
 /* Short reassurance chips shown under the CTA. */
 const ASSURANCE = [
-  "IITian & doctor mentors",
-  "1000+ students mentored",
+  "Starts at ₹3,499",
+  "Till JEE Mains 2027",
+  "1-on-1 IITian mentor",
   "Cancel anytime",
 ];
 
@@ -78,12 +79,12 @@ export default function PlansSection() {
                 </div>
               ))}
             </div>
-            <Link to="/mentorship" style={{
+            <Link to="/mentorship/jee-2027" style={{
               display: "inline-flex", alignItems: "center", gap: 8, background: CL.coral, color: "#fff",
               padding: "15px 26px", borderRadius: 14, fontFamily: CL.display, fontWeight: 800, fontSize: 15.5,
               textDecoration: "none", boxShadow: "0 10px 24px -8px rgba(255, 105, 61,.6)",
             }}>
-              Explore Mentorship <ArrowRight size={18} />
+              Explore JEE 2027 Mentorship · ₹3,499 <ArrowRight size={18} />
             </Link>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 18 }}>
               {ASSURANCE.map((a) => (

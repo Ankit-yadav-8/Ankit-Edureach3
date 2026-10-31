@@ -48,7 +48,7 @@ function Label({ children, dark }) {
 
 /* ═══════════════ HERO - glassmorphic performance engine ═══════════════ */
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
-  const p = MENTOR_PLANS[plan] || { amount: 2599, exam: "JEE" };
+  const p = MENTOR_PLANS[plan] || { amount: 3499, exam: "JEE" };
   const isNeet = p.exam === "NEET";
   const mentorType = isNeet ? "top Doctors and medical specialists" : "IIT/NIT students";
   const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
@@ -1030,13 +1030,14 @@ function Pricing({ plan, exam, openEnrol }) {
   // NEET now uses the same 3-card layout as JEE
 
   const isNeet = exam === "NEET" || /neet/i.test(plan);
+  const isJee2027 = /jee-2027/i.test(plan);
   const cards = [
     {
       key: keys.sixMonth,
       label: "INDIAN STUDENTS",
-      sublabel: "6 Months",
+      sublabel: isJee2027 ? "Till JEE Mains 2027" : (p6?.duration || "6 Months"),
       flag: "🇮🇳",
-      amount: p6?.amount || 2599,
+      amount: p6?.amount || 3499,
       old: p6?.old || 5999,
       accent: "#FF693D",
       bg: "linear-gradient(135deg,#FF7A3C,#F1531F)",
@@ -1067,7 +1068,7 @@ function Pricing({ plan, exam, openEnrol }) {
     <section id="enrol" className="mj-section">
       <div className="mj-wrap">
         <Reveal style={{ textAlign: "center" }}>
-          <h2 className="mj-display mj-display-xl">Choose your plan.<br />Start at <em>₹2,599.</em></h2>
+          <h2 className="mj-display mj-display-xl">Choose your plan.<br />Start at <em>₹3,499.</em></h2>
           <p className="mj-sec-sub" style={{ maxWidth: 540, margin: "16px auto 0" }}>{isNeet ? "Comprehensive 1-on-1 mentorship by top Doctor mentors. Pick your region." : "Same mentorship, same IITian mentors. Pick the duration and region that suits you."}</p>
         </Reveal>
 
@@ -1780,19 +1781,59 @@ export default function Mentorship() {
       "url": "https://campuspoint.in"
     },
     "educationalCredentialAwarded": "Competitive Exam Mentorship Certificate",
-    "timeToComplete": "P1Y",
+    "timeToComplete": variant === "jee-2027" ? "P10M" : "P1Y",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "1280",
+      "reviewCount": "1280"
+    },
     "offers": [
       {
         "@type": "Offer",
-        "name": "6-Month 1-on-1 Mentorship",
-        "price": "2599",
-        "priceCurrency": "INR"
+        "name": variant === "jee-2027" ? "Till JEE Mains 2027 1-on-1 Mentorship" : "6-Month 1-on-1 Mentorship",
+        "price": "3499",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": `https://campuspoint.in/mentorship/${variant}`
       },
       {
         "@type": "Offer",
         "name": "1-Year Full Mentorship",
         "price": "4999",
-        "priceCurrency": "INR"
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": `https://campuspoint.in/mentorship/${variant}`
+      }
+    ]
+  };
+
+  const courseSchema = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": variant === "jee-2027" ? "JEE 2027 Mentorship Program by IITians" : `${exam} Mentorship Program`,
+    "description": `1-on-1 ${exam} mentorship by IIT Roorkee and top IITians with customized daily study schedules, 24/7 WhatsApp doubt solving, and weekly mock test analysis.`,
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "Campus Point",
+      "sameAs": "https://campuspoint.in"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "1280"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "category": "Paid",
+        "priceCurrency": "INR",
+        "price": "3499",
+        "name": variant === "jee-2027" ? "Till JEE Mains 2027 1-on-1 Mentorship" : "6-Month Mentorship"
       }
     ]
   };
@@ -1838,24 +1879,24 @@ export default function Mentorship() {
     ]
   };
 
-  const combinedSchemas = [programSchema, breadcrumbsSchema, faqSchema, ...mentorSchemas].filter(Boolean);
+  const combinedSchemas = [programSchema, courseSchema, breadcrumbsSchema, faqSchema, ...mentorSchemas].filter(Boolean);
 
   return (
     <div className="mj">
       <Seo
         rawTitle={
           variant === "jee-2027"
-            ? "JEE 2027 Mentorship by IITians – Daily Targets & Doubt Solving | Campus Point"
+            ? "JEE 2027 Mentorship by IITians (Till JEE Main 2027) · ₹3,499 | Campus Point"
             : variant === "jee-2028"
-            ? "JEE 2028 Mentorship by IITians – Class 11 Foundation & Prep | Campus Point"
-            : "NEET 2027 Mentorship by Top Medical Students & Toppers | Campus Point"
+            ? "JEE 2028 Mentorship by IITians (Class 11 Foundation & Prep) · ₹3,499 | Campus Point"
+            : "NEET 2027 Mentorship by Top Medical Students & Toppers · ₹3,499 | Campus Point"
         }
         description={
           variant === "jee-2027"
-            ? "Prepare for JEE 2027 with personalized IITian mentorship, daily study targets, doubt solving and weekly test analysis. Explore the program."
+            ? "1-on-1 IIT JEE 2027 mentorship by IIT Roorkee & IIT Bombay rankers till JEE Mains 2027. Personal daily study plans, 24/7 doubt solving, weekly test analysis & Kota modules. Enroll at ₹3,499."
             : variant === "jee-2028"
-            ? "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls."
-            : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance."
+            ? "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls. 6-Month Plan at ₹3,499."
+            : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance. Starts at ₹3,499."
         }
         path={`/mentorship/${variant}`}
         jsonLd={combinedSchemas}

@@ -199,7 +199,7 @@ export default function CouponManager({ adminKey }) {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
             <label style={{ display: "block" }}>
               <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Coupon Code</span>
-              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. DIWALI2599" style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, textTransform: "uppercase", outline: "none", fontWeight: 700, color: "#111827", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
+              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. DIWALI3499" style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, textTransform: "uppercase", outline: "none", fontWeight: 700, color: "#111827", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
             </label>
             <label style={{ display: "block" }}>
               <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Discount Amount (₹)</span>

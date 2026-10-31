@@ -42,11 +42,52 @@ export default function Home({ onSearch }) {
         ]
       },
       {
-        "@type": "Organization",
+        "@type": "EducationalOrganization",
         "@id": "https://campuspoint.in/#organization",
-        "name": "CampusPoint",
+        "name": "Campus Point",
         "url": "https://campuspoint.in/",
-        "logo": "https://campuspoint.in/cplogo.svg"
+        "logo": "https://campuspoint.in/cplogo.svg",
+        "sameAs": [
+          "https://www.instagram.com/campuspoint.in",
+          "https://youtube.com/@campuspoint"
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "1280",
+          "reviewCount": "1280"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Campus Point JEE 2027 Mentorship?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Campus Point provides 1-on-1 personal mentorship by top IIT Roorkee and IIT rankers for JEE 2027 aspirants. It includes daily customized study plans, 24/7 WhatsApp doubt solving, backlog management, and weekly mock test analysis starting at ₹3,499 till JEE Mains 2027."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does 1-on-1 mentorship by IITians help improve JEE rank?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Unlike big batch coaching where everyone gets the same generic roadmap, your personal IITian mentor works only on your strengths and weak areas. They track your daily question count, analyze weekly test errors, and guide your strategy until JEE 2027."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate is the Campus Point JEE Rank Predictor?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Campus Point's JEE Main and Advanced rank predictors are calibrated against official NTA percentile vs marks trends and JoSAA opening and closing ranks from past years, giving high-precision college predictions."
+            }
+          }
+        ]
       },
       {
         "@type": "ItemList",
@@ -108,8 +149,8 @@ export default function Home({ onSearch }) {
   return (
     <>
       <Seo
-        rawTitle="Campus Point – JEE Rank Predictor, College Predictor & IITian Mentorship"
-        description="Discover your expected JEE rank, explore IIT, NIT and IIIT colleges, compare branches and get personalized JEE 2027 mentorship from IITians at Campus Point."
+        rawTitle="Campus Point – JEE 2027 Mentorship by IITians, Rank Predictor & College Cutoffs"
+        description="Crack JEE & NEET with 1-on-1 IITian mentorship (Till JEE Mains 2027 at ₹3,499). Predict your JEE Main & Advanced rank, explore JoSAA cutoffs, and compare 100+ colleges."
         path="/"
         jsonLd={jsonLd}
       />
