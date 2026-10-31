@@ -590,6 +590,54 @@ export default function MentorDashboard() {
     });
   }, []);
 
+  // Responsive mobile screen check (<= 900px)
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth <= 900;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mob = window.innerWidth <= 900;
+      setIsMobile(mob);
+      if (!mob) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Lock body scroll while mobile drawer is open so there is no sliding/wobbling glitch
+  useEffect(() => {
+    if (mobileMenuOpen && isMobile) {
+      const origOverflow = document.body.style.overflow;
+      const origTouchAction = document.body.style.touchAction;
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+      return () => {
+        document.body.style.overflow = origOverflow;
+        document.body.style.touchAction = origTouchAction;
+      };
+    }
+  }, [mobileMenuOpen, isMobile]);
+
+  // Close drawer on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
+  // Sidebar is ONLY collapsed on desktop (screen > 900px); on mobile it is always the full drawer
+  const isCollapsed = sidebarCollapsed && !isMobile;
+
   // Student caseload data
   const [students, setStudents] = useState([]);
   const [activeId, setActiveId] = useState("");
@@ -891,8 +939,14 @@ export default function MentorDashboard() {
           @keyframes admSpin { to { transform: rotate(360deg); } }
           .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
 
+          html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            overscroll-behavior-x: none !important;
+          }
+
           .mentor-sidebar {
-            width: ${sidebarCollapsed ? "68px" : "260px"};
+            width: ${isCollapsed ? "68px" : "260px"};
             background: #ffffff;
             border-right: 1px solid #e2e8f0;
             display: flex;
@@ -902,8 +956,7 @@ export default function MentorDashboard() {
             box-sizing: border-box;
             transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 1050;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
           }
 
           .mentor-nav-side-btn {
@@ -967,19 +1020,33 @@ export default function MentorDashboard() {
               right: 0 !important;
               left: auto !important;
               bottom: 0 !important;
-              height: 100vh !important;
+              height: 100% !important;
+              height: 100dvh !important;
+              height: -webkit-fill-available !important;
+              max-height: 100dvh !important;
               width: min(320px, 86vw) !important;
-              box-shadow: -4px 0 32px rgba(15,23,42,0.18) !important;
+              box-shadow: -8px 0 32px rgba(15,23,42,0.18) !important;
               border-left: 1px solid #e2e8f0 !important;
               border-right: none !important;
               z-index: 1200 !important;
-              transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+              display: flex !important;
+              flex-direction: column !important;
+              overflow: hidden !important;
+              transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s !important;
+              will-change: transform;
+              -webkit-backface-visibility: hidden;
+              backface-visibility: hidden;
+              box-sizing: border-box !important;
             }
             .mentor-sidebar.closed {
-              transform: translateX(100%) !important;
+              transform: translate3d(100%, 0, 0) !important;
+              visibility: hidden !important;
+              pointer-events: none !important;
             }
             .mentor-sidebar.open {
-              transform: translateX(0) !important;
+              transform: translate3d(0, 0, 0) !important;
+              visibility: visible !important;
+              pointer-events: auto !important;
             }
             .mentor-mobile-close-btn {
               display: grid !important;
@@ -987,6 +1054,20 @@ export default function MentorDashboard() {
             }
             .desktop-sidebar-toggle-btn {
               display: none !important;
+            }
+          }
+
+          .mentor-main-content {
+            padding: 24px clamp(1rem, 3vw, 2.5rem) 80px;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          @media (max-width: 640px) {
+            .mentor-main-content {
+              padding: 12px 10px 60px !important;
             }
           }
         `}</style>
@@ -1058,23 +1139,24 @@ export default function MentorDashboard() {
 
           {/* Top Right: Hamburger Sign */}
           <button
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open navigation menu"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileMenuOpen}
             style={{
               width: 40,
               height: 40,
               borderRadius: 8,
               border: "1px solid #e2e8f0",
-              background: "#ffffff",
+              background: mobileMenuOpen ? "#fff7ed" : "#ffffff",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
-              color: "#0f172a",
+              color: mobileMenuOpen ? ACCENT : "#0f172a",
               boxShadow: "0 1px 3px rgba(15,23,42,0.04)",
               transition: "all 0.15s ease",
             }}
           >
-            <Menu size={22} />
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={22} />}
           </button>
         </header>
 
@@ -1091,19 +1173,24 @@ export default function MentorDashboard() {
             position: "relative",
           }}
         >
-          {/* ── MOBILE BACKDROP OVERLAY ── */}
-          {mobileMenuOpen && (
-            <div
-              onClick={() => setMobileMenuOpen(false)}
-              style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgba(15,23,42,0.45)",
-                backdropFilter: "blur(4px)",
-                zIndex: 1199,
-              }}
-            />
-          )}
+          {/* ── MOBILE BACKDROP OVERLAY (SYNCHRONIZED FADE) ── */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden={!mobileMenuOpen}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15,23,42,0.48)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+              zIndex: 1199,
+              touchAction: "none",
+              opacity: mobileMenuOpen ? 1 : 0,
+              visibility: mobileMenuOpen ? "visible" : "hidden",
+              pointerEvents: mobileMenuOpen ? "auto" : "none",
+              transition: "opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s",
+            }}
+          />
 
           {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
           <aside className={`mentor-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
@@ -1111,15 +1198,15 @@ export default function MentorDashboard() {
           <div
             style={{
               height: 56,
-              padding: sidebarCollapsed ? "0" : "0 14px",
+              padding: isCollapsed ? "0" : "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: sidebarCollapsed ? "center" : "space-between",
+              justifyContent: isCollapsed ? "center" : "space-between",
               flexShrink: 0,
               borderBottom: "1px solid #f1f5f9",
             }}
           >
-            {sidebarCollapsed ? (
+            {isCollapsed ? (
               /* Collapsed: Expand Toggle Button (ChatGPT style) */
               <button
                 onClick={toggleSidebar}
@@ -1228,7 +1315,7 @@ export default function MentorDashboard() {
           </div>
 
           {/* ── MIDDLE: NAVIGATION LIST ── */}
-          {sidebarCollapsed ? (
+          {isCollapsed ? (
             /* Collapsed: Centered icon rail with tooltips (ChatGPT style) */
             <div style={{ padding: "12px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
               {NAV_ITEMS.map((item) => {
@@ -1271,7 +1358,21 @@ export default function MentorDashboard() {
             </div>
           ) : (
             /* Expanded: Full items with labels, icons & Active Mentee Selector */
-            <div style={{ padding: "14px 10px", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 5 }}>
+            <div
+              className="cp-custom-scroll"
+              style={{
+                padding: "14px 10px",
+                flex: "1 1 0px",
+                minHeight: 0,
+                overflowY: "auto",
+                overflowX: "hidden",
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch",
+                display: "flex",
+                flexDirection: "column",
+                gap: 5,
+              }}
+            >
               <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
                 Console Navigation
               </div>
@@ -1307,6 +1408,7 @@ export default function MentorDashboard() {
                     id="sidebar-mentor-student-select"
                     value={activeId}
                     onChange={(e) => setActiveId(e.target.value)}
+                    title={activeStudent ? `${activeStudent.name} · Student ID: ${activeStudent.studentId} · ${activeStudent.plan || "Mentee"}` : "Select mentee"}
                     style={{
                       width: "100%",
                       height: 38,
@@ -1316,25 +1418,66 @@ export default function MentorDashboard() {
                       background: "#ffffff",
                       color: "#0f172a",
                       fontWeight: 700,
-                      fontSize: 12,
+                      fontSize: 12.5,
                       cursor: "pointer",
                       outline: "none",
                       boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
                     }}
                   >
                     {students.map((s) => (
-                      <option key={s.studentId} value={s.studentId}>
-                        {s.name} ({s.studentId})
+                      <option key={s.studentId} value={s.studentId} title={`${s.name} · Student ID: ${s.studentId}`}>
+                        {s.name}
                       </option>
                     ))}
                   </select>
+
+                  {/* Clean Mentee ID hover pill */}
+                  {activeStudent && (
+                    <div
+                      title={`Student ID: ${activeStudent.studentId} · Plan: ${activeStudent.plan || "Mentee"}`}
+                      style={{
+                        marginTop: 6,
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        background: "#f8fafc",
+                        border: "1px solid #e2e8f0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        fontSize: 11,
+                        color: "#64748b",
+                        cursor: "pointer",
+                        transition: "all .15s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "rgba(255,105,61,0.4)";
+                        e.currentTarget.style.background = "#fff7ed";
+                        e.currentTarget.style.color = ACCENT;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "#e2e8f0";
+                        e.currentTarget.style.background = "#f8fafc";
+                        e.currentTarget.style.color = "#64748b";
+                      }}
+                    >
+                      <span style={{ fontFamily: "monospace", fontSize: 10.5, fontWeight: 700 }}>
+                        {activeStudent.studentId}
+                      </span>
+                      <span style={{ fontSize: 10, fontWeight: 700, textTransform: "capitalize" }}>
+                        {activeStudent.plan?.replace("mentor-", "") || "Mentee"}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           )}
 
           {/* ── BOTTOM AREA: User Profile & Sign Out (ChatGPT Style in both modes) ── */}
-          {sidebarCollapsed ? (
+          {isCollapsed ? (
             /* Collapsed: Avatar + Sign Out Icon button in the bottom */
             <div style={{ padding: "12px 0 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
               {mentor && (
@@ -1390,20 +1533,33 @@ export default function MentorDashboard() {
             </div>
           ) : (
             /* Expanded: Mentor Profile Card + Sign Out Button */
-            <div style={{ padding: "12px 14px 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <div
+              style={{
+                padding: "12px 14px max(32px, calc(env(safe-area-inset-bottom, 16px) + 16px))",
+                borderTop: "1px solid #f1f5f9",
+                background: "#ffffff",
+                flexShrink: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                boxSizing: "border-box",
+                width: "100%",
+                zIndex: 10,
+              }}
+            >
               {mentor && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0", minWidth: 0 }}>
                   <div
                     style={{
-                      width: 34,
-                      height: 34,
+                      width: 36,
+                      height: 36,
                       borderRadius: "50%",
                       background: `${ACCENT}18`,
                       color: ACCENT,
                       display: "grid",
                       placeItems: "center",
                       fontWeight: 800,
-                      fontSize: 13,
+                      fontSize: 13.5,
                       flexShrink: 0,
                       border: `1.5px solid ${ACCENT}30`,
                     }}
@@ -1425,19 +1581,21 @@ export default function MentorDashboard() {
                 onClick={signOut}
                 style={{
                   width: "100%",
-                  padding: "8px 12px",
+                  padding: "10px 14px",
                   borderRadius: 8,
                   border: "1px solid #e2e8f0",
                   background: "#f8fafc",
                   color: "#475569",
-                  fontSize: 12.5,
-                  fontWeight: 600,
+                  fontSize: 13,
+                  fontWeight: 700,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 7,
+                  gap: 8,
                   transition: "all 0.15s ease",
+                  boxSizing: "border-box",
+                  flexShrink: 0,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = "#dc2626";
@@ -1451,7 +1609,7 @@ export default function MentorDashboard() {
                 }}
                 title="Sign out of Mentor Console"
               >
-                <LogOut size={14} />
+                <LogOut size={15} />
                 <span>Sign Out of Console</span>
               </button>
             </div>
@@ -1475,7 +1633,7 @@ export default function MentorDashboard() {
           }}
         >
           {/* Main Body Content Container */}
-          <main style={{ padding: "28px clamp(1.25rem, 3.5vw, 2.5rem) 80px", flex: 1, maxWidth: 1400, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
+          <main className="mentor-main-content">
             {err && (
               <div
                 style={{
@@ -1829,27 +1987,66 @@ export default function MentorDashboard() {
                         <div style={{
                           display: "flex", alignItems: "center", justifyContent: "space-between",
                           padding: "8px 12px", background: "#f8fafc", borderRadius: 10,
-                          border: "1px solid #e2e8f0", marginBottom: 14, flexWrap: "wrap", gap: 8,
+                          border: "1px solid #e2e8f0", marginBottom: 14, flexWrap: "wrap", gap: 10,
+                          width: "100%", boxSizing: "border-box",
                         }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Target Mentee:</span>
-                            <select
-                              value={activeId}
-                              onChange={(e) => setActiveId(e.target.value)}
-                              style={{
-                                height: 30, padding: "0 8px", borderRadius: 6,
-                                border: "1px solid #cbd5e1", fontSize: 12, fontWeight: 700,
-                                color: "#0f172a", outline: "none", cursor: "pointer", background: "#fff",
-                              }}
-                            >
-                              {students.map((s) => (
-                                <option key={s.studentId} value={s.studentId}>
-                                  {s.name} ({s.studentId})
-                                </option>
-                              ))}
-                            </select>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", minWidth: 0 }}>
+                            <span style={{ fontSize: 11.5, fontWeight: 700, color: "#475569", whiteSpace: "nowrap", flexShrink: 0 }}>
+                              Target Mentee:
+                            </span>
+                            <div style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+                              <select
+                                value={activeId}
+                                onChange={(e) => setActiveId(e.target.value)}
+                                title={activeStudent ? `${activeStudent.name} · Student ID: ${activeStudent.studentId} (${activeStudent.plan || "Mentee"})` : "Select target mentee"}
+                                style={{
+                                  height: 32, padding: "0 10px", borderRadius: 6,
+                                  border: "1.5px solid #cbd5e1", fontSize: 12.5, fontWeight: 700,
+                                  color: "#0f172a", outline: "none", cursor: "pointer", background: "#fff",
+                                  maxWidth: "100%",
+                                }}
+                              >
+                                {students.map((s) => (
+                                  <option key={s.studentId} value={s.studentId} title={`${s.name} · Student ID: ${s.studentId}`}>
+                                    {s.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Mentee ID hover pill */}
+                            {activeStudent && (
+                              <span
+                                title={`Directly targetting mentee ID: ${activeStudent.studentId} · ${activeStudent.plan || "Mentee"}`}
+                                style={{
+                                  fontSize: 11,
+                                  fontFamily: "monospace",
+                                  fontWeight: 700,
+                                  color: "#64748b",
+                                  background: "#f1f5f9",
+                                  border: "1px solid #e2e8f0",
+                                  padding: "3px 8px",
+                                  borderRadius: 6,
+                                  cursor: "help",
+                                  whiteSpace: "nowrap",
+                                  transition: "all .15s ease",
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.borderColor = ACCENT;
+                                  e.currentTarget.style.color = ACCENT;
+                                  e.currentTarget.style.background = "#fff7ed";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.borderColor = "#e2e8f0";
+                                  e.currentTarget.style.color = "#64748b";
+                                  e.currentTarget.style.background = "#f1f5f9";
+                                }}
+                              >
+                                {activeStudent.studentId}
+                              </span>
+                            )}
                           </div>
-                          <span style={{ fontSize: 11, color: "#64748b" }}>
+                          <span style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap" }}>
                             Direct syncs to student dashboard
                           </span>
                         </div>

@@ -870,7 +870,7 @@ function SessionScheduler({ studentId, token, onSaveSession }) {
         </div>
 
         {/* Date & Time Row */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
           <div>
             <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
               Session Day / Date Tag
@@ -1127,13 +1127,15 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
     <div>
       {/* section switcher */}
       <div
-        className="mentor-sections"
+        className="mentor-sections cp-custom-scroll"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
+          display: "flex",
           gap: 8,
+          overflowX: "auto",
+          paddingBottom: 4,
           marginTop: 4,
           marginBottom: 20,
+          WebkitOverflowScrolling: "touch",
         }}
       >
         {SECTIONS.map((s, idx) => {
@@ -1144,11 +1146,13 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
               key={s.key}
               onClick={() => setI(idx)}
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                padding: "11px 12px",
+                padding: "10px 14px",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
                 borderRadius: 11,
                 cursor: "pointer",
                 border: on ? "1.5px solid #FF693D" : "1px solid #e2e8f0",
@@ -1239,8 +1243,10 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
 
       <style>{`
         @media (max-width: 780px) {
-          .mentor-sections { grid-template-columns: repeat(2, 1fr) !important; }
           .mentor-stats    { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 480px) {
+          .mentor-stats    { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

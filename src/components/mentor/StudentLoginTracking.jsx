@@ -668,20 +668,21 @@ export default function StudentLoginTracking({
               </div>
 
               {/* Direct Mentee Switcher Dropdown */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 11.5, color: "#64748b", fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0 }}>
                   Switch Mentee:
                 </span>
                 <select
                   value={selectedSid}
                   onChange={(e) => handleSelectMentee(e.target.value)}
+                  title={currentStudent ? `${currentStudent.name} · Student ID: ${currentStudent.studentId}` : "Select mentee"}
                   style={{
                     height: 34,
-                    padding: "0 10px",
+                    padding: "0 12px",
                     borderRadius: 8,
                     border: "1.5px solid #e2e8f0",
                     background: "#fff",
-                    fontSize: 12,
+                    fontSize: 12.5,
                     fontWeight: 700,
                     color: "#0f172a",
                     outline: "none",
@@ -690,8 +691,8 @@ export default function StudentLoginTracking({
                   }}
                 >
                   {studentList.map((s) => (
-                    <option key={s.studentId} value={s.studentId}>
-                      {s.name} ({s.studentId})
+                    <option key={s.studentId} value={s.studentId} title={`${s.name} · Student ID: ${s.studentId}`}>
+                      {s.name}
                     </option>
                   ))}
                 </select>
