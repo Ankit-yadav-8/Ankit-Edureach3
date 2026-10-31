@@ -942,8 +942,26 @@ export default function MentorDashboard() {
               display: flex !important;
               height: 100% !important;
             }
-            .mentor-mobile-hamburger {
+          .mentor-mobile-topbar {
+            display: none !important;
+          }
+
+          /* DESKTOP (min-width: 901px) */
+          @media (min-width: 901px) {
+            .mentor-console-root {
+              flex-direction: row !important;
+            }
+            .mentor-mobile-topbar {
               display: none !important;
+            }
+            .mentor-sidebar {
+              position: static !important;
+              transform: none !important;
+              box-shadow: none !important;
+              display: flex !important;
+              height: 100% !important;
+              border-right: 1px solid #e2e8f0 !important;
+              border-left: none !important;
             }
             .mentor-mobile-close-btn {
               display: none !important;
@@ -955,63 +973,98 @@ export default function MentorDashboard() {
 
           /* MOBILE (max-width: 900px) */
           @media (max-width: 900px) {
+            .mentor-console-root {
+              flex-direction: column !important;
+            }
+            .mentor-mobile-topbar {
+              display: flex !important;
+              height: 56px;
+              background: #ffffff;
+              border-bottom: 1px solid #f1f5f9;
+              padding: 0 16px;
+              align-items: center;
+              justify-content: space-between;
+              flex-shrink: 0;
+              z-index: 1000;
+              box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+            }
             .mentor-sidebar {
               position: fixed !important;
               top: 0 !important;
-              left: 0 !important;
+              right: 0 !important;
+              left: auto !important;
               bottom: 0 !important;
               height: 100vh !important;
-              width: min(300px, 86vw) !important;
-              box-shadow: 4px 0 32px rgba(15,23,42,0.18) !important;
+              width: min(310px, 86vw) !important;
+              box-shadow: -4px 0 32px rgba(15,23,42,0.18) !important;
+              border-left: 1px solid #e2e8f0 !important;
+              border-right: none !important;
               z-index: 1200 !important;
               transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
             .mentor-sidebar.closed {
-              transform: translateX(-100%) !important;
+              transform: translateX(100%) !important;
             }
             .mentor-sidebar.open {
               transform: translateX(0) !important;
             }
-            .mentor-mobile-hamburger {
+            .mentor-mobile-close-btn {
               display: grid !important;
               place-items: center;
-            }
-            .mentor-mobile-close-btn {
-              display: flex !important;
             }
             .desktop-sidebar-toggle-btn {
               display: none !important;
             }
             .mentor-main-scroll {
-              padding-top: 48px;
+              padding-top: 0 !important;
             }
           }
 `}</style>
 
-        {/* ── MOBILE FLOATING MENU TRIGGER (ONLY ON SCREENS <= 900px) ── */}
-        {!mobileMenuOpen && (
+        {/* ── MOBILE TOP BAR: LEFT BRAND + RIGHT HAMBURGER (ONLY ON SCREENS <= 900px) ── */}
+        <div className="mentor-mobile-topbar">
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+            <span
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                background: ACCENT,
+                display: "grid",
+                placeItems: "center",
+                flexShrink: 0,
+                boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+              }}
+            >
+              <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 12, lineHeight: 1 }}>
+                CP
+              </span>
+            </span>
+            <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 16, color: "#0f172a", letterSpacing: "-0.01em" }}>
+              Campus Point
+            </span>
+          </Link>
+
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="mentor-mobile-hamburger"
+            aria-label="Open menu"
             style={{
-              position: "fixed",
-              top: 14,
-              left: 14,
-              zIndex: 1100,
               width: 38,
               height: 38,
               borderRadius: 8,
               border: "1px solid #e2e8f0",
               background: "#ffffff",
-              boxShadow: "0 2px 8px rgba(15,23,42,0.08)",
+              display: "grid",
+              placeItems: "center",
               cursor: "pointer",
               color: "#0f172a",
+              boxShadow: "0 1px 3px rgba(15,23,42,0.04)",
+              transition: "all 0.15s ease",
             }}
-            title="Open Side Panel"
           >
             <Menu size={20} />
           </button>
-        )}
+        </div>
 
         {/* ── MOBILE BACKDROP OVERLAY ── */}
         {mobileMenuOpen && (
@@ -1027,7 +1080,7 @@ export default function MentorDashboard() {
           />
         )}
 
-        {/* ── LEFT SIDE PANEL (SIDEBAR) ── */}
+        {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
         <aside className={`mentor-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
           {/* ── TOP HEADER OF SIDEBAR (ChatGPT Style) ── */}
           <div
@@ -1130,12 +1183,15 @@ export default function MentorDashboard() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="mentor-mobile-close-btn"
                     style={{
-                      background: "none",
+                      width: 32,
+                      height: 32,
+                      background: "#f1f5f9",
                       border: "none",
-                      color: "#64748b",
+                      color: "#475569",
                       cursor: "pointer",
-                      padding: 5,
-                      borderRadius: 6,
+                      borderRadius: 8,
+                      placeItems: "center",
+                      transition: "all 0.15s ease",
                     }}
                     title="Close menu"
                   >
