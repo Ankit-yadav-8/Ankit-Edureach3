@@ -626,6 +626,7 @@ export default function Admin() {
       items: [
         { k: "overview", label: "Overview", icon: LayoutDashboard },
         { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart, badge: "Live" },
+        { k: "financial-simulator", label: "Financial Simulator", icon: LineChart, badge: "CFO Lab", link: "/financial-simulator" },
       ],
     },
     {
@@ -1121,7 +1122,13 @@ export default function Admin() {
                 return (
                   <button
                     key={item.k}
-                    onClick={() => switchTab(item.k)}
+                    onClick={() => {
+                      if (item.link) {
+                        window.location.href = item.link;
+                        return;
+                      }
+                      switchTab(item.k);
+                    }}
                     className={`adm-nav-btn ${active ? "active" : ""}`}
                   >
                     <Icon size={16} style={{ flexShrink: 0 }} />
