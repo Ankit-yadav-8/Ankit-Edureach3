@@ -62,7 +62,6 @@ const MentorshipDashboard = lazyRetry(() => import("./pages/MentorshipDashboard.
 const Chatbot = lazyRetry(() => import("./components/Chatbot.jsx"));
 const SearchOverlay = lazyRetry(() => import("./components/SearchOverlay.jsx"));
 const MentorDashboard = lazyRetry(() => import("./pages/MentorDashboard.jsx"));
-const FinancialSimulator = lazyRetry(() => import("./pages/FinancialSimulator.jsx"));
 const PublicCommunity = lazyRetry(() => import("./pages/PublicCommunity.jsx"));
 const Branches = lazyRetry(() => import("./pages/Branches.jsx"));
 const BranchDetail = lazyRetry(() => import("./pages/BranchDetail.jsx"));
@@ -147,11 +146,6 @@ export default function App() {
   const pathLower = (pathname || "").toLowerCase();
   const isAdminRoute = pathLower === "/admin" || pathLower.startsWith("/admin/");
   const isMentorRoute = pathLower === "/mentor" || pathLower.startsWith("/mentor/");
-  const isFinanceRoute =
-    pathLower === "/financial-simulator" ||
-    pathLower === "/finance" ||
-    pathLower === "/cfo" ||
-    pathLower.startsWith("/financial-simulator/");
 
   // Admin dashboard renders standalone - no public navbar, footer, chatbot,
   // WhatsApp button, compare tray or auth modal bleeding into it.
@@ -182,25 +176,6 @@ export default function App() {
             <Routes>
               <Route path="/mentor" element={<MentorDashboard />} />
               <Route path="/mentor/*" element={<MentorDashboard />} />
-            </Routes>
-          </Suspense>
-        </RouteErrorBoundary>
-      </>
-    );
-  }
-
-  // Campus Point Mentorship Financial Simulator & CFO Console renders standalone
-  if (isFinanceRoute) {
-    return (
-      <>
-        <ScrollManager />
-        <RouteErrorBoundary key={pathname}>
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/financial-simulator" element={<FinancialSimulator />} />
-              <Route path="/finance" element={<FinancialSimulator />} />
-              <Route path="/cfo" element={<FinancialSimulator />} />
-              <Route path="/financial-simulator/*" element={<FinancialSimulator />} />
             </Routes>
           </Suspense>
         </RouteErrorBoundary>
@@ -290,9 +265,6 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
-          <Route path="/financial-simulator" element={<FinancialSimulator />} />
-          <Route path="/finance" element={<Navigate to="/financial-simulator" replace />} />
-          <Route path="/cfo" element={<Navigate to="/financial-simulator" replace />} />
 
           <Route path="/community" element={<PublicCommunity />} />
           <Route path="/branches" element={<Branches />} />

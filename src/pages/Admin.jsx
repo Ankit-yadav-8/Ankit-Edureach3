@@ -4,9 +4,7 @@ import {
   ChevronRight, ChevronDown, CreditCard, IndianRupee, CheckCircle2, MessagesSquare, FileText,
   GraduationCap, Tag, Send, Eye, EyeOff, Lock, AlertTriangle, ArrowRight, ShieldAlert,
   LayoutDashboard, LineChart, Menu, X, Search, Sparkles, Building2, UserCheck, Layers, ExternalLink,
-  DollarSign,
 } from "lucide-react";
-import FinancialSimulator from "./FinancialSimulator.jsx";
 import { API_BASE } from "../auth/api.js";
 import CommunityModeration from "../components/admin/CommunityModeration.jsx";
 import TestUpload from "../components/admin/TestUpload.jsx";
@@ -97,18 +95,6 @@ export default function Admin() {
   const [tab, setTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [payments, setPayments] = useState([]);
-  const [financeUnlocked, setFinanceUnlocked] = useState(() => {
-    try {
-      return sessionStorage.getItem("cp:finance_unlocked") === "true";
-    } catch {
-      return false;
-    }
-  });
-  const [financeKeyModalOpen, setFinanceKeyModalOpen] = useState(false);
-  const [enteredFinanceKey, setEnteredFinanceKey] = useState("");
-  const [financeKeyError, setFinanceKeyError] = useState("");
-  const [showFinanceKey, setShowFinanceKey] = useState(false);
-  const [financeSubTab, setFinanceSubTab] = useState("payments"); // "payments" | "model"
   const [payTotal, setPayTotal] = useState(0);
   const [payLoaded, setPayLoaded] = useState(false);
 
@@ -167,60 +153,12 @@ export default function Admin() {
   }, []);
 
   const switchTab = (t) => {
-    if (t === "finance" || t === "payments") {
-      if (!financeUnlocked) {
-        setFinanceKeyError("");
-        setEnteredFinanceKey("");
-        setFinanceKeyModalOpen(true);
-        return;
-      }
-      setTab("finance");
-      setSearch("");
-      setExpanded(new Set());
-      setErr("");
-      setSidebarOpen(false);
-      if (!payLoaded) fetchPayments(token);
-      return;
-    }
     setTab(t); setSearch(""); setExpanded(new Set()); setErr(""); setSidebarOpen(false);
+    if (t === "payments" && !payLoaded) fetchPayments(token);
     if (t === "users" && users.length === 0) fetchUsers(token);
   };
-
-  const lockFinance = () => {
-    setFinanceUnlocked(false);
-    try {
-      sessionStorage.removeItem("cp:finance_unlocked");
-    } catch {}
-    setTab("overview");
-  };
-
-  const submitFinanceKey = (e) => {
-    e?.preventDefault();
-    const k = (enteredFinanceKey || "").trim();
-    const customKey = localStorage.getItem("cp:custom_finance_key");
-    const isValid =
-      k === "cp-finance-2026" ||
-      k === "campuspoint2026" ||
-      k === "cfo2026" ||
-      (customKey && k === customKey) ||
-      (token && k === token) ||
-      (key && k === key);
-
-    if (isValid) {
-      setFinanceUnlocked(true);
-      try {
-        sessionStorage.setItem("cp:finance_unlocked", "true");
-      } catch {}
-      setFinanceKeyModalOpen(false);
-      setTab("finance");
-      if (!payLoaded) fetchPayments(token);
-    } else {
-      setFinanceKeyError("Invalid Finance Dashboard Key. Try: cp-finance-2026");
-    }
-  };
-
   // Community and self-contained sections manage their own refresh.
-  const refreshActive = () => (tab === "users" ? fetchUsers(token) : (tab === "finance" || tab === "payments") ? fetchPayments(token) : undefined);
+  const refreshActive = () => (tab === "users" ? fetchUsers(token) : tab === "payments" ? fetchPayments(token) : undefined);
 
   useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
 
@@ -301,7 +239,7 @@ export default function Admin() {
       URL.revokeObjectURL(url);
     } catch (e) { setErr(e.message); }
   }
-  const exportActive = () => (tab === "users" ? downloadCsv() : (tab === "finance" || tab === "payments") ? downloadPaymentsCsv() : undefined);
+  const exportActive = () => (tab === "users" ? downloadCsv() : tab === "payments" ? downloadPaymentsCsv() : undefined);
   const [approvingId, setApprovingId] = useState("");
 
   async function handleApproveEmail(id) {
@@ -688,7 +626,6 @@ export default function Admin() {
       items: [
         { k: "overview", label: "Overview", icon: LayoutDashboard },
         { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart, badge: "Live" },
-
       ],
     },
     {
@@ -696,7 +633,7 @@ export default function Admin() {
       items: [
         { k: "mentors", label: "Mentors", icon: GraduationCap },
         { k: "users", label: "Students", icon: Users, count: total },
-        { k: "finance", label: "Finance", icon: DollarSign, count: payTotal, badge: "CFO" },
+        { k: "payments", label: "Payments", icon: CreditCard, count: payTotal },
       ],
     },
     {
@@ -714,8 +651,7 @@ export default function Admin() {
     "mentor-tracking": "Mentor Analytics & Tracking",
     "mentors": "Mentor Accounts & Students",
     "users": "Student User Directory",
-    "finance": "Finance & Payments Console",
-    "payments": "Finance & Payments Console",
+    "payments": "Payments & Approvals",
     "tests": "Mock Test Questions",
     "community": "Community Moderation",
     "coupons": "Discount Coupons",
@@ -943,7 +879,7 @@ export default function Admin() {
               { k: "mentor-tracking", label: "Mentor Tracking", icon: LineChart },
               { k: "mentors", label: "Mentors", icon: GraduationCap },
               { k: "users", label: `Students (${total})`, icon: Users },
-              { k: "finance", label: `Finance (${payTotal})`, icon: DollarSign },
+              { k: "payments", label: `Payments (${payTotal})`, icon: CreditCard },
               { k: "tests", label: "Mock Tests", icon: FileText },
               { k: "community", label: "Community", icon: MessagesSquare },
               { k: "coupons", label: "Coupons", icon: Tag },
@@ -966,7 +902,7 @@ export default function Admin() {
           {/* Right: Sign Out on Laptop, Hamburger on Mobile */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end", flexShrink: 0 }}>
             {/* Quick Search on Users & Payments (Desktop Only) */}
-            {(tab === "users" || tab === "finance" || tab === "payments") && (
+            {(tab === "users" || tab === "payments") && (
               <div className="desktop-admin-search" style={{ position: "relative" }}>
                 <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
                 <input
@@ -1185,13 +1121,7 @@ export default function Admin() {
                 return (
                   <button
                     key={item.k}
-                    onClick={() => {
-                      if (item.link) {
-                        window.location.href = item.link;
-                        return;
-                      }
-                      switchTab(item.k);
-                    }}
+                    onClick={() => switchTab(item.k)}
                     className={`adm-nav-btn ${active ? "active" : ""}`}
                   >
                     <Icon size={16} style={{ flexShrink: 0 }} />
@@ -1451,364 +1381,67 @@ export default function Admin() {
                   )}
                 </div>
               </>
-            ) : (tab === "finance" || tab === "payments") ? (
+            ) : (
               <>
-                {/* ── FINANCE SUB-HEADER (SWITCH BETWEEN PAYMENTS & COMPLETE FINANCIAL MODEL) ── */}
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 20,
-                  flexWrap: "wrap",
-                  gap: 12,
-                }}>
-                  {/* Sub-tab switcher: Payments vs Mentorship Financial Model */}
-                  <div style={{
-                    display: "inline-flex",
-                    background: "#ffffff",
-                    padding: 4,
-                    borderRadius: 12,
-                    border: "1px solid #e2e8f0",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
-                  }}>
-                    <button
-                      onClick={() => setFinanceSubTab("payments")}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        border: "none",
-                        fontSize: 13,
-                        fontWeight: financeSubTab === "payments" ? 800 : 600,
-                        background: financeSubTab === "payments" ? "#fff7ed" : "transparent",
-                        color: financeSubTab === "payments" ? ORANGE : "#64748b",
-                        cursor: "pointer",
-                        transition: "all .15s ease",
-                      }}
-                    >
-                      <CreditCard size={15} color={financeSubTab === "payments" ? ORANGE : "#64748b"} />
-                      <span>Payments</span>
-                      <span style={{
-                        background: financeSubTab === "payments" ? ORANGE : "#f1f5f9",
-                        color: financeSubTab === "payments" ? "#ffffff" : "#64748b",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        padding: "2px 7px",
-                        borderRadius: 20,
-                      }}>
-                        {payTotal}
-                      </span>
-                    </button>
-
-                    <button
-                      onClick={() => setFinanceSubTab("model")}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        border: "none",
-                        fontSize: 13,
-                        fontWeight: financeSubTab === "model" ? 800 : 600,
-                        background: financeSubTab === "model" ? "#fff7ed" : "transparent",
-                        color: financeSubTab === "model" ? ORANGE : "#64748b",
-                        cursor: "pointer",
-                        transition: "all .15s ease",
-                      }}
-                    >
-                      <DollarSign size={15} color={financeSubTab === "model" ? ORANGE : "#64748b"} />
-                      <span>Mentorship Financial Model</span>
-                      <span style={{
-                        background: "#ecfdf5",
-                        color: "#047857",
-                        fontSize: 10.5,
-                        fontWeight: 800,
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                      }}>
-                        CFO Lab
-                      </span>
-                    </button>
+                {/* Payments Stat Cards */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+                      <CreditCard size={22} color={ORANGE} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
+                    </div>
                   </div>
-
-                  {/* Actions: Open Full Screen & Lock Console */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <a
-                      href="/financial-simulator"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        padding: "8px 14px",
-                        borderRadius: 8,
-                        border: "1px solid #cbd5e1",
-                        background: "#ffffff",
-                        color: "#334155",
-                        fontSize: 12.5,
-                        fontWeight: 700,
-                        textDecoration: "none",
-                        boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-                      }}
-                      title="Open simulator in dedicated standalone tab"
-                    >
-                      <span>Open Full Screen</span>
-                      <ExternalLink size={13} />
-                    </a>
-
-                    <button
-                      onClick={lockFinance}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        padding: "8px 14px",
-                        borderRadius: 8,
-                        border: "1px solid #fecaca",
-                        background: "#fef2f2",
-                        color: "#b91c1c",
-                        fontSize: 12.5,
-                        fontWeight: 700,
-                        cursor: "pointer",
-                      }}
-                      title="Lock finance dashboard"
-                    >
-                      <Lock size={13} />
-                      <span>Lock Console</span>
-                    </button>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <IndianRupee size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        ₹{revenue.toLocaleString("en-IN")}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={22} color="#16a34a" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                        {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
+                    </div>
+                  </div>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
+                      <Mail size={22} color="#ea580c" />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
+                        {payments.filter(p => !p.confirmationEmailSent).length}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
+                    </div>
                   </div>
                 </div>
 
-                {financeSubTab === "payments" ? (
-                  <>
-                    {/* Payments Stat Cards */}
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-                      <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-                          <CreditCard size={22} color={ORANGE} />
-                        </div>
-                        <div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
-                          <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
-                        </div>
-                      </div>
-                      <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                          <IndianRupee size={22} color="#16a34a" />
-                        </div>
-                        <div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                            ₹{revenue.toLocaleString("en-IN")}
-                          </div>
-                          <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
-                        </div>
-                      </div>
-                      <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                          <Calendar size={22} color="#16a34a" />
-                        </div>
-                        <div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
-                            {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
-                          </div>
-                          <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
-                        </div>
-                      </div>
-                      <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
-                          <Mail size={22} color="#ea580c" />
-                        </div>
-                        <div>
-                          <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
-                            {payments.filter(p => !p.confirmationEmailSent).length}
-                          </div>
-                          <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <PaymentsTable
-                      payments={filteredPayments}
-                      search={search}
-                      setSearch={setSearch}
-                      expanded={expanded}
-                      toggleRow={toggleRow}
-                      onApproveEmail={handleApproveEmail}
-                      approvingId={approvingId}
-                    />
-                  </>
-                ) : (
-                  <FinancialSimulator embedded={true} />
-                )}
+                <PaymentsTable
+                  payments={filteredPayments}
+                  search={search}
+                  setSearch={setSearch}
+                  expanded={expanded}
+                  toggleRow={toggleRow}
+                  onApproveEmail={handleApproveEmail}
+                  approvingId={approvingId}
+                />
               </>
-            ) : (
-              <div style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>Select a section</div>
             )}
           </div>
         </main>
-        {/* ── FINANCE DASHBOARD PASSKEY MODAL ── */}
-        {financeKeyModalOpen && (
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(15, 23, 42, 0.65)",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
-              zIndex: 2500,
-              display: "grid",
-              placeItems: "center",
-              padding: 16,
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                maxWidth: 420,
-                background: "#ffffff",
-                borderRadius: 20,
-                padding: "32px 28px",
-                boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.3)",
-                textAlign: "center",
-                boxSizing: "border-box",
-              }}
-            >
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 16,
-                  background: "linear-gradient(135deg, rgba(255,105,61,0.15), rgba(249,115,22,0.08))",
-                  color: ORANGE,
-                  display: "grid",
-                  placeItems: "center",
-                  margin: "0 auto 16px",
-                  border: "1.5px solid rgba(255,105,61,0.25)",
-                }}
-              >
-                <Lock size={26} />
-              </div>
-
-              <h3 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, color: "#0f172a", margin: 0 }}>
-                Enter Finance Dashboard Key
-              </h3>
-              <p style={{ fontSize: 13, color: "#64748b", margin: "6px 0 20px", lineHeight: 1.45 }}>
-                Access restricted payments ledger, student collections & mentorship financial model.
-              </p>
-
-              {financeKeyError && (
-                <div
-                  style={{
-                    background: "#fef2f2",
-                    border: "1px solid #fecaca",
-                    borderRadius: 10,
-                    padding: "9px 12px",
-                    fontSize: 12.5,
-                    color: "#b91c1c",
-                    marginBottom: 16,
-                    textAlign: "left",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <AlertTriangle size={15} style={{ flexShrink: 0 }} />
-                  <span>{financeKeyError}</span>
-                </div>
-              )}
-
-              <form onSubmit={submitFinanceKey}>
-                <div style={{ position: "relative", marginBottom: 16 }}>
-                  <input
-                    type={showFinanceKey ? "text" : "password"}
-                    required
-                    autoFocus
-                    placeholder="••••••••••••"
-                    value={enteredFinanceKey}
-                    onChange={(e) => {
-                      setEnteredFinanceKey(e.target.value);
-                      setFinanceKeyError("");
-                    }}
-                    style={{
-                      width: "100%",
-                      height: 48,
-                      padding: "0 44px 0 14px",
-                      borderRadius: 12,
-                      border: "1.5px solid #cbd5e1",
-                      fontSize: 14,
-                      color: "#0f172a",
-                      outline: "none",
-                      boxSizing: "border-box",
-                      letterSpacing: showFinanceKey ? "normal" : "2px",
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowFinanceKey(!showFinanceKey)}
-                    style={{
-                      position: "absolute",
-                      right: 12,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      color: "#94a3b8",
-                      cursor: "pointer",
-                      padding: 4,
-                    }}
-                  >
-                    {showFinanceKey ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-
-                <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 18, textAlign: "left" }}>
-                  Default Access Key: <code style={{ background: "#f1f5f9", padding: "2px 6px", borderRadius: 4, color: "#334155", fontWeight: 700 }}>cp-finance-2026</code>
-                </div>
-
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button
-                    type="button"
-                    onClick={() => setFinanceKeyModalOpen(false)}
-                    style={{
-                      flex: 1,
-                      height: 44,
-                      borderRadius: 10,
-                      border: "1px solid #cbd5e1",
-                      background: "#f8fafc",
-                      color: "#475569",
-                      fontWeight: 700,
-                      fontSize: 13,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    style={{
-                      flex: 1.5,
-                      height: 44,
-                      borderRadius: 10,
-                      border: "none",
-                      background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                      color: "#ffffff",
-                      fontWeight: 800,
-                      fontSize: 13.5,
-                      cursor: "pointer",
-                      boxShadow: "0 4px 12px rgba(255,105,61,0.25)",
-                    }}
-                  >
-                    Unlock Console
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
