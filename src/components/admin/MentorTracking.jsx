@@ -1881,19 +1881,25 @@ export default function MentorTracking({ adminToken }) {
       )}
 
       {/* ── Admin Email to Mentors Modal ────────────────────────────────────── */}
-      {emailModalOpen && (
+      {emailModalOpen && createPortal(
         <div
           style={{
             position: "fixed",
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100vh",
+            height: "100dvh",
+            zIndex: 999999,
             background: "rgba(15, 23, 42, 0.65)",
             backdropFilter: "blur(6px)",
             WebkitBackdropFilter: "blur(6px)",
-            zIndex: 99999,
-            display: "grid",
-            placeItems: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             padding: 16,
-            overflowY: "auto",
             boxSizing: "border-box",
           }}
           onClick={() => !emailSending && setEmailModalOpen(false)}
@@ -1902,15 +1908,15 @@ export default function MentorTracking({ adminToken }) {
             style={{
               background: "#ffffff",
               borderRadius: 16,
-              maxWidth: 560,
+              maxWidth: 520,
               width: "100%",
-              maxHeight: "calc(100vh - 40px)",
+              maxHeight: "min(560px, calc(100vh - 32px))",
               display: "flex",
               flexDirection: "column",
-              boxShadow: "0 24px 50px rgba(15, 23, 42, 0.28)",
+              boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.35)",
               overflow: "hidden",
               border: "1px solid #e2e8f0",
-              margin: "auto",
+              boxSizing: "border-box",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -1918,7 +1924,7 @@ export default function MentorTracking({ adminToken }) {
             <div
               style={{
                 background: "linear-gradient(135deg, #FF693D 0%, #ee5326 100%)",
-                padding: "16px 20px",
+                padding: "12px 18px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
@@ -1929,21 +1935,22 @@ export default function MentorTracking({ adminToken }) {
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div
                   style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 9,
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
                     background: "rgba(255,255,255,0.2)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    flexShrink: 0,
                   }}
                 >
-                  <Mail size={18} color="#ffffff" />
+                  <Mail size={16} color="#ffffff" />
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800 }}>Send Email to Mentors</h3>
-                  <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.9 }}>
-                    Automated delivery with assigned students & direct mentor dashboard link
+                  <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 800, lineHeight: 1.2 }}>Send Email to Mentors</h3>
+                  <p style={{ margin: "2px 0 0", fontSize: 10.5, opacity: 0.92 }}>
+                    Automated delivery with assigned students & direct mentor link
                   </p>
                 </div>
               </div>
@@ -1957,23 +1964,25 @@ export default function MentorTracking({ adminToken }) {
                   cursor: "pointer",
                   padding: 4,
                   borderRadius: 6,
+                  display: "grid",
+                  placeItems: "center",
                 }}
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleSendMentorEmail} style={{ padding: 22, overflowY: "auto", flex: 1, boxSizing: "border-box" }}>
+            <form onSubmit={handleSendMentorEmail} style={{ padding: "14px 18px 16px", overflowY: "auto", flex: 1, boxSizing: "border-box" }}>
               {/* Target Selector */}
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#1e293b", marginBottom: 4 }}>
                   Target Recipient(s)
                 </label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
                   {[
                     { id: "all", label: "All Active Mentors" },
-                    { id: "inactive_today", label: "Inactive Today (9 PM Lobby)" },
+                    { id: "inactive_today", label: "Inactive Today" },
                     { id: "single", label: "Single Mentor" },
                   ].map((t) => (
                     <button
@@ -1986,13 +1995,13 @@ export default function MentorTracking({ adminToken }) {
                         }
                       }}
                       style={{
-                        padding: "8px 10px",
+                        padding: "6px 8px",
                         borderRadius: 8,
                         border: emailTarget === t.id ? "2px solid #FF693D" : "1px solid #cbd5e1",
                         background: emailTarget === t.id ? "#fff7ed" : "#ffffff",
                         color: emailTarget === t.id ? "#c2410c" : "#475569",
-                        fontWeight: emailTarget === t.id ? 700 : 500,
-                        fontSize: 11.5,
+                        fontWeight: emailTarget === t.id ? 700 : 600,
+                        fontSize: 11,
                         cursor: "pointer",
                         transition: "all 0.15s ease",
                       }}
@@ -2005,8 +2014,8 @@ export default function MentorTracking({ adminToken }) {
 
               {/* Single Mentor Dropdown */}
               {emailTarget === "single" && (
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: "block", fontSize: 11.5, fontWeight: 700, color: "#475569", marginBottom: 4 }}>
+                <div style={{ marginBottom: 10 }}>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#475569", marginBottom: 4 }}>
                     Select Mentor
                   </label>
                   <select
@@ -2015,10 +2024,10 @@ export default function MentorTracking({ adminToken }) {
                     required
                     style={{
                       width: "100%",
-                      padding: "9px 12px",
+                      padding: "7px 10px",
                       borderRadius: 8,
                       border: "1.5px solid #cbd5e1",
-                      fontSize: 12,
+                      fontSize: 11.5,
                       color: "#0f172a",
                       background: "#ffffff",
                       outline: "none",
@@ -2039,8 +2048,8 @@ export default function MentorTracking({ adminToken }) {
               )}
 
               {/* Quick Template Buttons */}
-              <div style={{ marginBottom: 14 }}>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 5 }}>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 10.5, fontWeight: 700, color: "#64748b", marginBottom: 4 }}>
                   Quick Templates
                 </label>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -2053,7 +2062,7 @@ export default function MentorTracking({ adminToken }) {
                       );
                     }}
                     style={{
-                      padding: "4px 9px",
+                      padding: "3px 8px",
                       borderRadius: 6,
                       border: "1px solid #e2e8f0",
                       background: "#f8fafc",
@@ -2074,7 +2083,7 @@ export default function MentorTracking({ adminToken }) {
                       );
                     }}
                     style={{
-                      padding: "4px 9px",
+                      padding: "3px 8px",
                       borderRadius: 6,
                       border: "1px solid #e2e8f0",
                       background: "#f8fafc",
@@ -2090,8 +2099,8 @@ export default function MentorTracking({ adminToken }) {
               </div>
 
               {/* Subject */}
-              <div style={{ marginBottom: 14 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 4 }}>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#1e293b", marginBottom: 3 }}>
                   Subject Line
                 </label>
                 <input
@@ -2102,35 +2111,37 @@ export default function MentorTracking({ adminToken }) {
                   placeholder="Subject line..."
                   style={{
                     width: "100%",
-                    padding: "9px 12px",
+                    height: 34,
+                    padding: "0 10px",
                     borderRadius: 8,
                     border: "1px solid #cbd5e1",
-                    fontSize: 12.5,
+                    fontSize: 12,
                     boxSizing: "border-box",
                   }}
                 />
               </div>
 
               {/* Message */}
-              <div style={{ marginBottom: 14 }}>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 4 }}>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#1e293b", marginBottom: 3 }}>
                   Custom Message Note
                 </label>
                 <textarea
                   value={emailMessage}
                   onChange={(e) => setEmailMessage(e.target.value)}
                   required
-                  rows={4}
+                  rows={3}
                   placeholder="Enter message for mentor..."
                   style={{
                     width: "100%",
-                    padding: "9px 12px",
+                    padding: "7px 10px",
                     borderRadius: 8,
                     border: "1px solid #cbd5e1",
-                    fontSize: 12,
+                    fontSize: 11.5,
                     fontFamily: "inherit",
-                    resize: "vertical",
+                    resize: "none",
                     boxSizing: "border-box",
+                    minHeight: 52,
                   }}
                 />
               </div>
@@ -2141,25 +2152,25 @@ export default function MentorTracking({ adminToken }) {
                   background: "#f8fafc",
                   border: "1px solid #e2e8f0",
                   borderRadius: 8,
-                  padding: "10px 12px",
-                  fontSize: 11,
+                  padding: "6px 10px",
+                  fontSize: 10.5,
                   color: "#64748b",
-                  lineHeight: 1.5,
-                  marginBottom: 16,
+                  lineHeight: 1.45,
+                  marginBottom: 12,
                 }}
               >
-                <strong style={{ color: "#0f172a" }}>✓ Auto-included in email:</strong> Assigned student names, target exams, student regions, and direct 1-click button to <code>https://campuspoint.in/mentor</code>.
+                <strong style={{ color: "#0f172a" }}>✓ Auto-included in email:</strong> Assigned students, target exams, student regions & direct 1-click link to <code>https://campuspoint.in/mentor</code>.
               </div>
 
               {/* Feedback Alert */}
               {emailFeedback.text && (
                 <div
                   style={{
-                    padding: "9px 12px",
+                    padding: "7px 10px",
                     borderRadius: 8,
-                    fontSize: 12,
+                    fontSize: 11.5,
                     fontWeight: 600,
-                    marginBottom: 14,
+                    marginBottom: 10,
                     background: emailFeedback.type === "success" ? "#ecfdf5" : "#fef2f2",
                     color: emailFeedback.type === "success" ? "#065f46" : "#991b1b",
                     border: `1px solid ${emailFeedback.type === "success" ? "#a7f3d0" : "#fecaca"}`,
@@ -2170,19 +2181,19 @@ export default function MentorTracking({ adminToken }) {
               )}
 
               {/* Footer Buttons */}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 4 }}>
                 <button
                   type="button"
                   disabled={emailSending}
                   onClick={() => setEmailModalOpen(false)}
                   style={{
-                    padding: "8px 16px",
+                    padding: "6px 14px",
                     borderRadius: 8,
                     border: "1px solid #cbd5e1",
                     background: "#ffffff",
                     color: "#475569",
                     fontWeight: 600,
-                    fontSize: 12,
+                    fontSize: 11.5,
                     cursor: "pointer",
                   }}
                 >
@@ -2192,13 +2203,13 @@ export default function MentorTracking({ adminToken }) {
                   type="submit"
                   disabled={emailSending}
                   style={{
-                    padding: "8px 20px",
+                    padding: "7px 18px",
                     borderRadius: 8,
                     border: "none",
                     background: "linear-gradient(135deg, #FF693D 0%, #ee5326 100%)",
                     color: "#ffffff",
                     fontWeight: 700,
-                    fontSize: 12,
+                    fontSize: 11.5,
                     cursor: "pointer",
                     boxShadow: "0 2px 8px rgba(255,105,61,0.3)",
                     display: "flex",
@@ -2221,7 +2232,8 @@ export default function MentorTracking({ adminToken }) {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

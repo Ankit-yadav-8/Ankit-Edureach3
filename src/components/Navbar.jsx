@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -732,68 +733,109 @@ export default function Navbar({ onSearch }) {
 
       {/* ── Logout confirmation ── */}
       <AnimatePresence>
-        {confirmLogout && (
+        {confirmLogout && createPortal(
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             onClick={() => setConfirmLogout(false)}
             style={{
-              position: "fixed", inset: 0, zIndex: 2000,
-              background: "rgba(13,27,62,.55)",
-              backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)",
-              display: "grid", placeItems: "center", padding: "1.2rem",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: "100vw",
+              height: "100vh",
+              height: "100dvh",
+              zIndex: 999999,
+              background: "rgba(15, 23, 42, 0.65)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 16,
+              boxSizing: "border-box",
             }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
               transition={{ type: "spring", stiffness: 420, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                width: "min(380px, 100%)", background: "var(--page-bg)",
-                borderRadius: 20, padding: "26px 24px 22px",
-                boxShadow: "0 30px 80px rgba(13,27,62,.4)",
+                width: "min(380px, 94vw)",
+                background: "#ffffff",
+                borderRadius: 22,
+                padding: "24px 22px 20px",
                 textAlign: "center",
+                boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.35)",
+                border: "1px solid #e2e8f0",
+                boxSizing: "border-box",
               }}
             >
-              <div style={{
-                width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px",
-                background: "#FFF1E9", display: "grid", placeItems: "center",
-              }}>
-                <LogOut size={26} color="#FF693D" />
+              <div
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  background: "rgba(255,105,61,0.12)",
+                  margin: "0 auto 12px",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <LogOut size={24} color="#FF693D" />
               </div>
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", color: "var(--navy)", margin: "0 0 6px" }}>
+              <h3 style={{ fontFamily: "Sora, 'DM Sans', sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#0f172a", margin: "0 0 6px" }}>
                 Log out?
               </h3>
-              <p style={{ fontSize: "0.95rem", color: "var(--gray)", margin: "0 0 20px", lineHeight: 1.5 }}>
+              <p style={{ fontSize: "13.5px", color: "#64748b", margin: "0 0 18px", lineHeight: 1.5, fontWeight: 500 }}>
                 Are you sure you want to log out of your account?
               </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <button
+                  type="button"
                   onClick={() => setConfirmLogout(false)}
                   style={{
-                    flex: 1, padding: "12px 0", borderRadius: 12,
-                    border: "1.5px solid var(--line)", background: "var(--page-bg)",
-                    color: "var(--navy)", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
+                    flex: 1,
+                    padding: "11px 0",
+                    borderRadius: 12,
+                    border: "1.5px solid #cbd5e1",
+                    background: "#f8fafc",
+                    color: "#334155",
+                    fontWeight: 700,
+                    fontSize: "13.5px",
+                    cursor: "pointer",
                   }}
                 >
                   No
                 </button>
                 <button
+                  type="button"
                   onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }}
                   style={{
-                    flex: 1, padding: "12px 0", borderRadius: 12,
-                    border: "none", background: "#e5484d",
-                    color: "#fff", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer",
-                    boxShadow: "0 6px 18px -6px #e5484d",
+                    flex: 1,
+                    padding: "11px 0",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "#FF5A36",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "13.5px",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 14px rgba(255,90,54,0.3)",
                   }}
                 >
                   Yes, log out
                 </button>
               </div>
             </motion.div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
     </>

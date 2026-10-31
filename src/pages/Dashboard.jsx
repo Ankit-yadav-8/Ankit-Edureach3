@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, ShieldCheck, X, Pencil, LogOut, ShieldOff, Bot, User, Bookmark, Layers, Trophy, GraduationCap, ArrowRightLeft, Map, Building, Users } from "lucide-react";
@@ -80,13 +81,13 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
     } finally { setBusy(false); }
   }
 
-  return (
+  return createPortal(
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}
       onMouseDown={(e) => { if (e.target === e.currentTarget && !busy) onClose(); }}
-      style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(234, 231, 224, 0.7)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", display: "grid", placeItems: "center", padding: 16, overflowY: "auto" }}>
-      <motion.div className="raised" initial={{ opacity: 0, scale: .94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .95, y: 12 }}
+      style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh", height: "100dvh", zIndex: 999999, background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, boxSizing: "border-box" }}>
+      <motion.div className="raised" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .95 }}
         transition={{ type: "spring", stiffness: 360, damping: 28 }} onMouseDown={(e) => e.stopPropagation()}
-        style={{ width: "min(560px,100%)", background: "var(--base)", borderRadius: 32, padding: "30px", margin: "auto" }}>
+        style={{ width: "min(560px,100%)", maxHeight: "calc(100vh - 40px)", overflowY: "auto", background: "var(--base)", borderRadius: 32, padding: "30px", boxSizing: "border-box" }}>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
           <div>
@@ -139,7 +140,8 @@ function EditInfoModal({ user, token, onClose, onSaved }) {
           </button>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 }
 
@@ -447,43 +449,139 @@ export default function Dashboard() {
 
       {/* Logout confirmation */}
       <AnimatePresence>
-        {confirmLogout && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}
+        {confirmLogout && createPortal(
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
             onClick={() => setConfirmLogout(false)}
-            style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(234, 231, 224, 0.7)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", display: "grid", placeItems: "center", padding: 20 }}>
-            <motion.div className="raised" initial={{ opacity: 0, scale: .92, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .94, y: 12 }}
-              transition={{ type: "spring", stiffness: 420, damping: 30 }} onClick={(e) => e.stopPropagation()}
-              style={{ width: "min(380px,100%)", background: "var(--base)", borderRadius: 28, padding: "32px 28px 28px", textAlign: "center" }}>
-              <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,105,61,0.1)", margin: "0 auto 20px", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(255,105,61,0.15)" }}>
-                <LogOut size={26} color="#ff693d" />
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: "100vw",
+              height: "100vh",
+              height: "100dvh",
+              zIndex: 999999,
+              background: "rgba(15, 23, 42, 0.65)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 16,
+              boxSizing: "border-box",
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 420, damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "min(380px, 94vw)",
+                background: "#ffffff",
+                borderRadius: 22,
+                padding: "24px 22px 20px",
+                textAlign: "center",
+                boxShadow: "0 25px 60px -15px rgba(15, 23, 42, 0.35)",
+                border: "1px solid #e2e8f0",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  background: "rgba(255,105,61,0.12)",
+                  margin: "0 auto 12px",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <LogOut size={24} color="#ff693d" />
               </div>
-              <h3 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "1.3rem", color: "var(--text)", margin: "0 0 10px" }}>Log out?</h3>
-              <p style={{ fontSize: "14px", color: "var(--text-soft)", margin: "0 0 28px", lineHeight: 1.5, fontWeight: 500 }}>Are you sure you want to log out of your account?</p>
-              <div style={{ display: "flex", gap: 16 }}>
-                <button onClick={() => setConfirmLogout(false)} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "var(--base)", color: "var(--text)", fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>No</button>
-                <button onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }} className="raised-sm" style={{ flex: 1, padding: "14px 0", borderRadius: 16, border: "none", background: "#FF5A36", color: "#fff", fontWeight: 700, cursor: "pointer", fontFamily: INTER }}>Yes, log out</button>
-              </div>
-
-              <div style={{ marginTop: 24, paddingTop: 20 }}>
+              <h3 style={{ fontFamily: INTER, fontWeight: 800, fontSize: "1.25rem", color: "#0f172a", margin: "0 0 6px" }}>
+                Log out?
+              </h3>
+              <p style={{ fontSize: "13.5px", color: "#64748b", margin: "0 0 18px", lineHeight: 1.5, fontWeight: 500 }}>
+                Are you sure you want to log out of your account?
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
                 <button
-                  onClick={signOutEverywhere} disabled={allBusy}
-                  className="raised-sm"
+                  type="button"
+                  onClick={() => setConfirmLogout(false)}
                   style={{
-                    width: "100%", padding: "12px 0", borderRadius: 14,
-                    border: "none", background: "var(--base)", color: "#e5484d",
-                    fontWeight: 600, fontSize: 13, cursor: allBusy ? "wait" : "pointer",
-                    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    fontFamily: INTER
+                    flex: 1,
+                    padding: "11px 0",
+                    borderRadius: 12,
+                    border: "1.5px solid #cbd5e1",
+                    background: "#f8fafc",
+                    color: "#334155",
+                    fontWeight: 700,
+                    fontSize: "13.5px",
+                    cursor: "pointer",
+                    fontFamily: INTER,
                   }}
                 >
-                  <ShieldOff size={16} /> {allBusy ? "Signing out everywhere..." : "Sign out on all devices"}
+                  No
                 </button>
-                <p style={{ fontSize: "11px", color: "var(--text-faint)", margin: "12px 0 0", lineHeight: 1.5, fontWeight: 500 }}>
-                  {allMsg || "Ends your session on every other phone, tablet and computer. Use this if you've lost a device or think someone else is signed in."}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => { logout(); setConfirmLogout(false); navigate("/"); }}
+                  style={{
+                    flex: 1,
+                    padding: "11px 0",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "#FF5A36",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "13.5px",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 14px rgba(255,90,54,0.3)",
+                    fontFamily: INTER,
+                  }}
+                >
+                  Yes, log out
+                </button>
+              </div>
+
+              <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #f1f5f9" }}>
+                <button
+                  type="button"
+                  onClick={signOutEverywhere}
+                  disabled={allBusy}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: "#dc2626",
+                    fontWeight: 600,
+                    fontSize: 12,
+                    cursor: allBusy ? "wait" : "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontFamily: INTER,
+                    padding: "4px 8px",
+                  }}
+                >
+                  <ShieldOff size={14} /> {allBusy ? "Signing out everywhere..." : "Sign out on all devices"}
+                </button>
+                {allMsg && (
+                  <p style={{ fontSize: "11px", color: "#059669", margin: "6px 0 0", lineHeight: 1.4, fontWeight: 600 }}>
+                    {allMsg}
+                  </p>
+                )}
               </div>
             </motion.div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
 
