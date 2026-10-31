@@ -870,7 +870,7 @@ function SessionScheduler({ studentId, token, onSaveSession }) {
         </div>
 
         {/* Date & Time Row */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14 }}>
           <div>
             <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
               Session Day / Date Tag
@@ -1126,18 +1126,7 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
   return (
     <div>
       {/* section switcher */}
-      <div
-        className="mentor-sections cp-custom-scroll"
-        style={{
-          display: "flex",
-          gap: 8,
-          overflowX: "auto",
-          paddingBottom: 4,
-          marginTop: 4,
-          marginBottom: 20,
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
+      <div className="mentor-sections cp-custom-scroll">
         {SECTIONS.map((s, idx) => {
           const on = idx === i;
           const Ic = s.icon;
@@ -1145,26 +1134,17 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
             <button
               key={s.key}
               onClick={() => setI(idx)}
+              className={`mentor-section-btn ${on ? "active" : ""}`}
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                padding: "10px 14px",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-                borderRadius: 11,
-                cursor: "pointer",
                 border: on ? "1.5px solid #FF693D" : "1px solid #e2e8f0",
                 background: on ? "#fff5f1" : "#ffffff",
                 color: on ? "#FF693D" : "#475569",
                 fontWeight: on ? 800 : 600,
-                fontSize: 12.5,
                 boxShadow: on ? "0 2px 8px rgba(255,105,61,0.14)" : "0 1px 3px rgba(0,0,0,0.02)",
-                transition: "all .18s ease",
               }}
             >
-              <Ic size={15} color={on ? "#FF693D" : "#64748b"} /> {s.label}
+              <Ic size={15} color={on ? "#FF693D" : "#64748b"} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: "nowrap" }}>{s.label}</span>
             </button>
           );
         })}
@@ -1242,11 +1222,65 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
       </div>
 
       <style>{`
-        @media (max-width: 780px) {
-          .mentor-stats    { grid-template-columns: repeat(2, 1fr) !important; }
+        .mentor-sections {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 12px;
+          width: 100%;
+          margin-top: 4px;
+          margin-bottom: 20px;
         }
+        .mentor-section-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          padding: 11px 12px;
+          border-radius: 11px;
+          cursor: pointer;
+          font-size: 12.5px;
+          box-sizing: border-box;
+          transition: all .18s ease;
+        }
+        .mentor-section-btn:hover {
+          border-color: rgba(255, 105, 61, 0.35);
+        }
+
+        /* ── MOBILE RESPONSIVENESS: STAY IN SAME LINE (SINGLE HORIZONTAL LINE) ── */
+        @media (max-width: 820px) {
+          .mentor-sections {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 8px !important;
+            padding-bottom: 6px !important;
+            margin-bottom: 16px !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          .mentor-sections::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+          .mentor-section-btn {
+            flex: 0 0 auto !important;
+            width: auto !important;
+            white-space: nowrap !important;
+            padding: 9px 13px !important;
+            font-size: 12px !important;
+          }
+          .mentor-stats {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+
         @media (max-width: 480px) {
-          .mentor-stats    { grid-template-columns: 1fr !important; }
+          .mentor-stats {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </div>
