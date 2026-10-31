@@ -855,7 +855,7 @@ export default function MentorDashboard() {
         className="mentor-console-root"
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           height: "100vh",
           overflow: "hidden",
           background: "#f8fafc",
@@ -948,9 +948,6 @@ export default function MentorDashboard() {
             .mentor-mobile-close-btn {
               display: none !important;
             }
-            .desktop-header-sidebar-toggle {
-              display: grid !important;
-            }
             .desktop-sidebar-toggle-btn {
               display: grid !important;
             }
@@ -977,170 +974,44 @@ export default function MentorDashboard() {
             }
             .mentor-mobile-hamburger {
               display: grid !important;
+              place-items: center;
             }
             .mentor-mobile-close-btn {
               display: flex !important;
             }
-            .desktop-header-sidebar-toggle {
-              display: none !important;
-            }
             .desktop-sidebar-toggle-btn {
               display: none !important;
             }
+            .mentor-main-scroll {
+              padding-top: 48px;
+            }
           }
 `}</style>
-        {/* ── ALWAYS CONSISTENT & STICKY TOP NAVBAR (CHORAL / CORAL STYLE) ── */}
-        <header
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 1100,
-            height: 60,
-            background: "#ffffff",
-            borderBottom: "1px solid #f0e9e0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 clamp(1rem, 2.5vw, 2rem)",
-            boxShadow: "0 1px 3px rgba(15,23,42,0.03)",
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Mobile Hamburger Toggle (hidden on desktop via CSS) */}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="mentor-mobile-hamburger"
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                background: "#ffffff",
-                placeItems: "center",
-                cursor: "pointer",
-                color: "#0f172a",
-              }}
-              title="Open Side Panel"
-            >
-              <Menu size={19} />
-            </button>
 
-            {/* Desktop Expand Toggle when sidebar is collapsed (like ChatGPT) */}
-            {sidebarCollapsed && (
-              <button
-                onClick={toggleSidebar}
-                className="desktop-header-sidebar-toggle"
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 8,
-                  border: "1px solid #e2e8f0",
-                  background: "#fff7ed",
-                  color: ACCENT,
-                  placeItems: "center",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,105,61,0.35)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#e2e8f0";
-                }}
-                title="Expand sidebar"
-              >
-                <PanelLeftOpen size={17} />
-              </button>
-            )}
-
-            {/* Show Campus Point logo in header when sidebar is collapsed (so logo stays visible) or on mobile */}
-            {sidebarCollapsed && (
-              <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-                <span
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: "50%",
-                    background: ACCENT,
-                    display: "grid",
-                    placeItems: "center",
-                    flexShrink: 0,
-                    boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
-                  }}
-                >
-                  <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, lineHeight: 1 }}>
-                    CP
-                  </span>
-                </span>
-                <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14, color: "#0f172a", lineHeight: 1.2 }}>
-                  Campus Point
-                </span>
-                <span style={{ width: 1.5, height: 16, background: "#e2e8f0", margin: "0 2px" }} />
-              </Link>
-            )}
-
-            {/* Prominently Styled "Mentors Dashboard" in Signature Choral / Coral Website Color */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
-                style={{
-                  fontFamily: SORA,
-                  fontWeight: 800,
-                  fontSize: "1.15rem",
-                  letterSpacing: "-0.015em",
-                  color: ACCENT, // Choral website color #FF693D
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                Mentors Dashboard
-              </span>
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: ACCENT,
-                  background: "rgba(255, 105, 61, 0.10)",
-                  border: "1px solid rgba(255, 105, 61, 0.25)",
-                  padding: "2px 7px",
-                  borderRadius: 999,
-                }}
-              >
-                Console
-              </span>
-            </div>
-          </div>
-
-          {/* Right: Mentor Profile Status Pill */}
-          {mentor && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 7,
-                  padding: "5px 12px",
-                  borderRadius: 999,
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#334155",
-                }}
-              >
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#16a34a", boxShadow: "0 0 0 2px #dcfce7" }} />
-                <span>{mentor.name}</span>
-              </div>
-            </div>
-          )}
-        </header>
-
-        {/* ── BODY CONTAINER: SIDEBAR + MAIN CONTENT ── */}
-        <div className="mentor-body-layout" style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
-
+        {/* ── MOBILE FLOATING MENU TRIGGER (ONLY ON SCREENS <= 900px) ── */}
+        {!mobileMenuOpen && (
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="mentor-mobile-hamburger"
+            style={{
+              position: "fixed",
+              top: 14,
+              left: 14,
+              zIndex: 1100,
+              width: 38,
+              height: 38,
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              background: "#ffffff",
+              boxShadow: "0 2px 8px rgba(15,23,42,0.08)",
+              cursor: "pointer",
+              color: "#0f172a",
+            }}
+            title="Open Side Panel"
+          >
+            <Menu size={20} />
+          </button>
+        )}
 
         {/* ── MOBILE BACKDROP OVERLAY ── */}
         {mobileMenuOpen && (
@@ -1193,9 +1064,19 @@ export default function MentorDashboard() {
                 <PanelLeftOpen size={18} />
               </button>
             ) : (
-              /* Expanded: Brand mark + ChatGPT-style Collapse Button */
+              /* Expanded: Brand mark + Mentors Dashboard + ChatGPT-style Collapse Button */
               <>
-                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                <Link
+                  to="/"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 9,
+                    textDecoration: "none",
+                    minWidth: 0,
+                  }}
+                  title="Campus Point Home"
+                >
                   <span
                     style={{
                       width: 28,
@@ -1212,10 +1093,15 @@ export default function MentorDashboard() {
                       CP
                     </span>
                   </span>
-                  <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13.5, color: "#0f172a" }}>
-                    Campus Point
-                  </span>
-                </div>
+                  <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                    <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13.5, color: "#0f172a", lineHeight: 1.2 }}>
+                      Campus Point
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+                      Mentors Dashboard
+                    </span>
+                  </div>
+                </Link>
 
                 <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                   <button
@@ -2159,8 +2045,6 @@ export default function MentorDashboard() {
             )}
           </main>
         </div>
-
-                </div>
 
         {/* Chapter Quiz Creator Modal */}
         <ChapterQuizModal
