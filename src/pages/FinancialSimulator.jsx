@@ -54,7 +54,7 @@ const ACCENT = "#FF693D";
 const SORA = "'Sora', sans-serif";
 const STORAGE_KEY = "cp:mentorship_financial_model_v1";
 
-export default function FinancialSimulator() {
+export default function FinancialSimulator({ embedded = false }) {
   // Navigation active tab:
   // "dashboard" | "whatif" | "pnl" | "mentors" | "packages" | "team" | "expenses"
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -208,24 +208,28 @@ export default function FinancialSimulator() {
 
   return (
     <>
-      <Seo
-        title="Mentorship Financial Simulator & CFO Console · Campus Point"
-        description="Interactive 1-year financial and operational simulation engine for Campus Point mentorship business."
-        robots="noindex, nofollow"
-      />
+      {!embedded && (
+        <Seo
+          title="Mentorship Financial Simulator & CFO Console · Campus Point"
+          description="Interactive 1-year financial and operational simulation engine for Campus Point mentorship business."
+          robots="noindex, nofollow"
+        />
+      )}
 
       <div
         className="cfo-console-root"
         style={{
-          minHeight: "100vh",
-          background: "#f8fafc",
+          minHeight: embedded ? "auto" : "100vh",
+          background: embedded ? "transparent" : "#f8fafc",
           fontFamily: "Inter, system-ui, -apple-system, sans-serif",
           color: "#0f172a",
           display: "flex",
           flexDirection: "column",
+          borderRadius: embedded ? 16 : 0,
         }}
       >
-        {/* ── TOP APP BAR (MATCHING IMAGE 2 & 1) ── */}
+        {/* ── TOP APP BAR (STANDALONE ONLY) ── */}
+        {!embedded && (
         <header
           style={{
             height: 64,
@@ -391,6 +395,7 @@ export default function FinancialSimulator() {
             </button>
           </div>
         </header>
+        )}
 
         {/* ── TOP SUB-NAV TABS (MATCHING IMAGE 2: Dashboard, Forecast, Actual, Reports) ── */}
         <div
@@ -441,14 +446,89 @@ export default function FinancialSimulator() {
               </button>
             );
           })}
+
+          {embedded && (
+            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, padding: "8px 0" }}>
+              <div style={{ display: "inline-flex", background: "#f1f5f9", padding: 2, borderRadius: 8 }}>
+                <button
+                  onClick={() => setCurrency("INR")}
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: 6,
+                    border: "none",
+                    fontSize: 11,
+                    fontWeight: 800,
+                    background: currency === "INR" ? "#ffffff" : "transparent",
+                    color: currency === "INR" ? ACCENT : "#64748b",
+                    cursor: "pointer",
+                  }}
+                >
+                  ₹ INR
+                </button>
+                <button
+                  onClick={() => setCurrency("USD")}
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: 6,
+                    border: "none",
+                    fontSize: 11,
+                    fontWeight: 800,
+                    background: currency === "USD" ? "#ffffff" : "transparent",
+                    color: currency === "USD" ? ACCENT : "#64748b",
+                    cursor: "pointer",
+                  }}
+                >
+                  $ USD
+                </button>
+              </div>
+
+              <button
+                onClick={() => setReportModalOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "5px 10px",
+                  borderRadius: 6,
+                  border: "1px solid #cbd5e1",
+                  background: "#ffffff",
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  color: "#334155",
+                  cursor: "pointer",
+                }}
+              >
+                <FileText size={13} /> Report
+              </button>
+
+              <button
+                onClick={handleResetDefaults}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "5px 10px",
+                  borderRadius: 6,
+                  border: "1px solid #cbd5e1",
+                  background: "#f8fafc",
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  color: "#64748b",
+                  cursor: "pointer",
+                }}
+              >
+                <RotateCcw size={12} /> Reset
+              </button>
+            </div>
+          )}
         </div>
 
         {/* ── MAIN CONTENT CONTAINER ── */}
         <main
           style={{
             flex: 1,
-            padding: "24px clamp(1rem, 3vw, 2.5rem) 60px",
-            maxWidth: 1440,
+            padding: embedded ? "20px 0 40px" : "24px clamp(1rem, 3vw, 2.5rem) 60px",
+            maxWidth: embedded ? "100%" : 1440,
             margin: "0 auto",
             width: "100%",
             boxSizing: "border-box",
