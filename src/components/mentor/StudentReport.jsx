@@ -870,7 +870,7 @@ function SessionScheduler({ studentId, token, onSaveSession }) {
         </div>
 
         {/* Date & Time Row */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14 }}>
+        <div className="session-datetime-grid">
           <div>
             <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--navy)", marginBottom: 6 }}>
               Session Day / Date Tag
@@ -1124,7 +1124,7 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
   const go = (d) => setI((p) => Math.min(Math.max(p + d, 0), SECTIONS.length - 1));
 
   return (
-    <div>
+    <div style={{ width: "100%", maxWidth: "100%", minWidth: 0, boxSizing: "border-box" }}>
       {/* section switcher */}
       <div className="mentor-sections cp-custom-scroll">
         {SECTIONS.map((s, idx) => {
@@ -1150,10 +1150,10 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
         })}
       </div>
 
-      <div className="card" style={{ minHeight: 340 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div className="card" style={{ minHeight: 340, width: "100%", maxWidth: "100%", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 16 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <h3 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 17, color: "var(--navy)", margin: 0 }}>
                 {section.label}
               </h3>
@@ -1222,13 +1222,22 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
       </div>
 
       <style>{`
+        .session-datetime-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
         .mentor-sections {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
           gap: 12px;
           width: 100%;
+          max-width: 100%;
+          min-width: 0;
           margin-top: 4px;
           margin-bottom: 20px;
+          box-sizing: border-box;
         }
         .mentor-section-btn {
           display: flex;
@@ -1255,10 +1264,14 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
             gap: 8px !important;
-            padding-bottom: 6px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            padding: 2px 2px 8px !important;
             margin-bottom: 16px !important;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
+            box-sizing: border-box !important;
           }
           .mentor-sections::-webkit-scrollbar {
             display: none !important;
@@ -1271,6 +1284,17 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
             white-space: nowrap !important;
             padding: 9px 13px !important;
             font-size: 12px !important;
+          }
+          .session-datetime-grid {
+            grid-template-columns: 1fr !important;
+            gap: 14px !important;
+          }
+          .card {
+            padding: 16px 14px !important;
+            border-radius: 14px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            max-width: 100% !important;
           }
           .mentor-stats {
             grid-template-columns: repeat(2, 1fr) !important;

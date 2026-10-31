@@ -1057,17 +1057,33 @@ export default function MentorDashboard() {
             }
           }
 
+          .mentor-main-scroll {
+            overflow-x: hidden !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .mentor-workspace-layout {
+            overflow-x: hidden !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
           .mentor-main-content {
-            padding: 24px clamp(1rem, 3vw, 2.5rem) 80px;
+            padding: 20px clamp(1rem, 2.5vw, 2.2rem) 80px;
             flex: 1;
             max-width: 1400px;
+            min-width: 0;
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
           }
           @media (max-width: 640px) {
             .mentor-main-content {
-              padding: 12px 10px 60px !important;
+              padding: 14px 12px 60px !important;
+              max-width: 100% !important;
+              width: 100% !important;
+              box-sizing: border-box !important;
             }
           }
         `}</style>
