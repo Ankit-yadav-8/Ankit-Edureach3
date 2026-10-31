@@ -441,16 +441,15 @@ export default function Dashboard() {
       </div>
 
       {/* Edit info modal */}
-      <AnimatePresence>
-        {editOpen && (
-          <EditInfoModal user={user} token={token} onClose={() => setEditOpen(false)} onSaved={(u) => updateUser?.(u)} />
-        )}
-      </AnimatePresence>
+      {editOpen && (
+        <EditInfoModal user={user} token={token} onClose={() => setEditOpen(false)} onSaved={(u) => updateUser?.(u)} />
+      )}
 
       {/* Logout confirmation */}
-      <AnimatePresence>
-        {confirmLogout && createPortal(
+      {confirmLogout && typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
           <motion.div
+            key="logout-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -477,6 +476,7 @@ export default function Dashboard() {
             }}
           >
             <motion.div
+              key="logout-modal-card"
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
@@ -580,10 +580,10 @@ export default function Dashboard() {
                 )}
               </div>
             </motion.div>
-          </motion.div>,
-          document.body
-        )}
-      </AnimatePresence>
+          </motion.div>
+        </AnimatePresence>,
+        document.body
+      )}
 
       <style>{`
         @keyframes dashspin{to{transform:rotate(360deg)}}

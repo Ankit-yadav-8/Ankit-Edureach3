@@ -732,9 +732,10 @@ export default function Navbar({ onSearch }) {
       </AnimatePresence>
 
       {/* ── Logout confirmation ── */}
-      <AnimatePresence>
-        {confirmLogout && createPortal(
+      {confirmLogout && typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
           <motion.div
+            key="nav-logout-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -761,6 +762,7 @@ export default function Navbar({ onSearch }) {
             }}
           >
             <motion.div
+              key="nav-logout-card"
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
@@ -834,10 +836,10 @@ export default function Navbar({ onSearch }) {
                 </button>
               </div>
             </motion.div>
-          </motion.div>,
-          document.body
-        )}
-      </AnimatePresence>
+          </motion.div>
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
