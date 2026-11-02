@@ -1,10 +1,10 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, User, Mail, Phone, MapPin, Hash, ShieldCheck, Check, Loader2,
   ArrowRight, Sparkles, BadgeCheck, PartyPopper, GraduationCap,
-  Globe, Tag,
+  Globe, Tag, QrCode, CreditCard,
 } from "lucide-react";
 import { startPayment } from "../payments/razorpay.js";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -27,7 +27,7 @@ const PLAN_META = {
     band: "Any rank · State / Private / Deemed + NITs",
   },
 
-  // ── Indian · Till JEE Mains 2027 / 6 months ──
+  // ── Indian Mentorship (6 Months / Till JEE Mains 2027) · ₹3,499 ──
   "mentor-jee-2027-6m": {
     amount: 3499, old: 5999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship (Till JEE Mains 2027)",
@@ -59,39 +59,7 @@ const PLAN_META = {
     region: "indian", duration: "6 months",
   },
 
-  // ── Indian · 1 year ──
-  "mentor-jee-2027": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2027",
-    title: "JEE 2027 Mentorship (1 Year)",
-    band: "Indian Students · 1 Year · Class 12 / Droppers",
-    region: "indian", duration: "1 year",
-  },
-  "mentor-neet-2027": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2027",
-    title: "NEET 2027 Mentorship (1 Year)",
-    band: "Indian Students · 1 Year · Class 12 / Droppers",
-    region: "indian", duration: "1 year",
-  },
-  "mentor-jee-2028": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "JEE 2028",
-    title: "JEE 2028 Mentorship (1 Year, 2-Year Plan)",
-    band: "Indian Students · 1 Year · Class 11",
-    region: "indian", duration: "1 year",
-  },
-  "mentor-neet-2028": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "NEET 2028",
-    title: "NEET 2028 Mentorship (1 Year, 2-Year Plan)",
-    band: "Indian Students · 1 Year · Class 11",
-    region: "indian", duration: "1 year",
-  },
-  "mentor-foundation": {
-    amount: 4999, old: 9999, kind: "mentorship", targetExam: "Foundation (JEE/NEET)",
-    title: "Foundation Mentorship 1 Year (Class 9–10)",
-    band: "Indian Students · 1 Year · Class 9 & 10",
-    region: "indian", duration: "1 year",
-  },
-
-  // ── International · 1 year ──
+  // ── International Mentorship (1 Year) · ₹13,999 ──
   "mentor-jee-2027-intl": {
     amount: 13999, old: 24999, kind: "mentorship", targetExam: "JEE 2027",
     title: "JEE 2027 Mentorship – International (1 Year)",
@@ -123,6 +91,13 @@ const PLAN_META = {
     region: "international", duration: "1 year",
   },
 };
+
+export function resolvePlanKey(key) {
+  if (!key) return "mentor-jee-2027-6m";
+  if (PLAN_META[key]) return key;
+  if (PLAN_META[key + "-6m"]) return key + "-6m";
+  return "mentor-jee-2027-6m";
+}
 
 const CLASS_OPTIONS = ["Class 9", "Class 10", "Class 11", "Class 12", "Dropper / Repeater"];
 
@@ -262,6 +237,79 @@ function EnrolModal({ plan, onClose }) {
     return Object.keys(er).length === 0;
   }
 
+  // ── Dynamic UPI QR Code Scanner state ──
+  const [qrView, setQrView] = useState(false);
+  const [qrData, setQrData] = useState(null); // { qrId, imageUrl, amount }
+  const [qrLoading, setQrLoading] = useState(false);
+
+  async function handleStartQr() {
+    setTopError("");
+    if (!validate()) return;
+    setQrLoading(true);
+    try {
+      const res = await fetch(API_BASE + "/api/payment/create-qr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          plan: activePlanKey,
+          targetExam: meta.targetExam || "",
+          couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
+          ...f,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not generate QR code.");
+      setQrData(data);
+      setQrView(true);
+    } catch (e) {
+      setTopError(e.message || "Could not generate QR code. Try standard checkout.");
+    } finally {
+      setQrLoading(false);
+    }
+  }
+
+  // Poll for QR payment status
+  useEffect(() => {
+    if (!qrView || !qrData?.qrId || done) return;
+    let cancelled = false;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(API_BASE + "/api/payment/check-qr", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            qrId: qrData.qrId,
+            plan: activePlanKey,
+            couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
+            targetExam: meta.targetExam || "",
+            ...f,
+          }),
+        });
+        const data = await res.json();
+        if (cancelled) return;
+        if (data.paid) {
+          clearInterval(interval);
+          setDone({ paymentId: data.paymentId });
+          setQrView(false);
+        }
+      } catch (err) {
+        console.error("check-qr poll error:", err);
+      }
+    }, 2500);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [qrView, qrData, done, activePlanKey, couponValid, couponCode, meta.targetExam, f, token]);
+
   async function handlePay() {
     setTopError("");
     if (!validate()) return;
@@ -313,7 +361,7 @@ function EnrolModal({ plan, onClose }) {
         </button>
 
         {done ? (
-          <SuccessView meta={meta} plan={plan} paymentId={done.paymentId} onClose={onClose} displayAmount={displayAmount} />
+          <SuccessView meta={meta} plan={activePlanKey} paymentId={done.paymentId} onClose={onClose} displayAmount={displayAmount} />
         ) : (
           <>
             {/* ── Header with price ── */}
@@ -322,7 +370,7 @@ function EnrolModal({ plan, onClose }) {
                 ? "linear-gradient(135deg,#1a1d42,#3c2a66)"
                 : "linear-gradient(135deg,#FF693D,#E0421F)",
               color: "#fff",
-              padding: "26px 28px 24px", position: "relative", overflow: "hidden",
+              padding: "24px 28px 22px", position: "relative", overflow: "hidden", flexShrink: 0,
             }}>
               <div style={{ position: "absolute", top: -30, right: -10, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)" }} />
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, background: "rgba(255,255,255,.18)", padding: "5px 12px", borderRadius: 50 }}>
@@ -452,16 +500,52 @@ function EnrolModal({ plan, onClose }) {
                 </>
               )}
 
-              <button onClick={handlePay} disabled={busy}
+              <button
+                type="button"
+                onClick={handleStartQr}
+                disabled={busy || qrLoading}
                 style={{
-                  width: "100%", marginTop: 20, padding: "15px", border: "none", borderRadius: 14,
-                  background: busy ? "#f9a25e" : "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff",
-                  fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, cursor: busy ? "wait" : "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  boxShadow: "0 10px 26px rgba(255, 105, 61,.4)",
-                }}>
-                {busy ? <><Loader2 size={18} className="enrol-spin" /> Processing…</>
-                      : <>Pay ₹{displayAmount} & Enrol <ArrowRight size={18} /></>}
+                  width: "100%", marginTop: 20, padding: "15px 18px", border: "none", borderRadius: 14,
+                  background: (busy || qrLoading) ? "#f9a25e" : "linear-gradient(135deg,#FF693D,#E0421F)",
+                  color: "#fff", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16,
+                  cursor: (busy || qrLoading) ? "wait" : "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  boxShadow: "0 10px 26px rgba(255, 105, 61,.38)",
+                }}
+              >
+                {qrLoading ? (
+                  <><Loader2 size={19} className="enrol-spin" /> Generating UPI QR Scanner…</>
+                ) : (
+                  <>
+                    <QrCode size={20} />
+                    <span>Scan QR Code to Pay ₹{displayAmount}</span>
+                  </>
+                )}
+              </button>
+              <div style={{ textAlign: "center", fontSize: 12, color: "#6b7280", marginTop: 6, fontWeight: 600 }}>
+                ⚡ Scan with Google Pay, PhonePe, Paytm or from parent's phone
+              </div>
+
+              <button
+                type="button"
+                onClick={handlePay}
+                disabled={busy || qrLoading}
+                style={{
+                  width: "100%", marginTop: 12, padding: "13px 18px", borderRadius: 14,
+                  border: "1.5px solid rgba(255,105,61,0.35)", background: "#fff",
+                  color: "#c2410c", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 14.5,
+                  cursor: (busy || qrLoading) ? "wait" : "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                }}
+              >
+                {busy ? (
+                  <><Loader2 size={17} className="enrol-spin" /> Opening Gateway…</>
+                ) : (
+                  <>
+                    <CreditCard size={17} />
+                    <span>Pay via Cards, Netbanking & UPI Apps</span>
+                  </>
+                )}
               </button>
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 14, flexWrap: "wrap" }}>
@@ -477,7 +561,7 @@ function EnrolModal({ plan, onClose }) {
         )}
       </motion.div>
 
-      <style>{`@keyframes enrolspin{to{transform:rotate(360deg)}}.enrol-spin{animation:enrolspin .8s linear infinite}`}</style>
+      <style>{`@keyframes enrolspin{to{transform:rotate(360deg)}}.enrol-spin{animation:enrolspin .8s linear infinite}@keyframes enrolpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}.enrol-pulse{animation:enrolpulse 1.6s ease-in-out infinite}`}</style>
     </motion.div>,
     document.body
   );

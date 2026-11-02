@@ -13,26 +13,19 @@ export const SEATS_LIMIT = 120;
 export const SEATS_LEFT = 37; // shown as "X of 120 seats left"
 
 /* Pricing (server is the source of truth - these are display only).
-   Indian students: ₹3,499 (Till JEE Mains 2027 / 6 months), ₹4,999 / 1 year.
-   International students: ₹14,999 / 1 year. */
+   Indian students: ₹3,499 (Till JEE Mains 2027 / 6 months).
+   International students: ₹13,999 (1 year). */
 export const MENTOR_PLANS = {
-  // ── Indian · Till JEE Mains 2027 / 6 months ──
+  // ── Indian · ₹3,499 ──
   "mentor-jee-2027-6m":    { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "JEE",        year: 2027, duration: "Till JEE Mains 2027", region: "indian" },
   "mentor-neet-2027-6m":   { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "NEET",       year: 2027, duration: "6 months", region: "indian" },
   "mentor-jee-2028-6m":    { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "JEE",        year: 2028, duration: "6 months", region: "indian" },
   "mentor-neet-2028-6m":   { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "NEET",       year: 2028, duration: "6 months", region: "indian" },
   "mentor-foundation-6m":  { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "Foundation", year: null, duration: "6 months", region: "indian" },
 
-  // ── Indian · 1 year ──
-  "mentor-jee-2027":       { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "JEE",        year: 2027, duration: "1 year", region: "indian" },
-  "mentor-neet-2027":      { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "NEET",       year: 2027, duration: "1 year", region: "indian" },
-  "mentor-jee-2028":       { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "JEE",        year: 2028, duration: "1 year", region: "indian" },
-  "mentor-neet-2028":      { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "NEET",       year: 2028, duration: "1 year", region: "indian" },
-  "mentor-foundation":     { amount: 4999,  old: 9999,  drops: [9999, 4999],  exam: "Foundation", year: null, duration: "1 year", region: "indian" },
-
-  // ── International · 1 year ──
+  // ── International · 1 year (₹13,999) ──
   "mentor-jee-2027-intl":      { amount: 13999, old: 24999, drops: [24999, 13999], exam: "JEE",        year: 2027, duration: "1 year", region: "international" },
-  "mentor-neet-2027-intl":     { amount: 13999, old: 24999, drops: [24999, 13999], exam: "NEET",       year: 2028, duration: "1 year", region: "international" },
+  "mentor-neet-2027-intl":     { amount: 13999, old: 24999, drops: [24999, 13999], exam: "NEET",       year: 2027, duration: "1 year", region: "international" },
   "mentor-jee-2028-intl":      { amount: 13999, old: 24999, drops: [24999, 13999], exam: "JEE",        year: 2028, duration: "1 year", region: "international" },
   "mentor-neet-2028-intl":     { amount: 13999, old: 24999, drops: [24999, 13999], exam: "NEET",       year: 2028, duration: "1 year", region: "international" },
   "mentor-foundation-intl":    { amount: 13999, old: 24999, drops: [24999, 13999], exam: "Foundation", year: null, duration: "1 year", region: "international" },
@@ -171,7 +164,7 @@ export const MENTORSHIP = {
     ],
 
     tracks: [
-      { plan: "mentor-jee-2027",  exam: "JEE 2027",  accent: "#FF693D", line: "IITian mentors · backlog + rank push" },
+      { plan: "mentor-jee-2027-6m",  exam: "JEE 2027",  accent: "#FF693D", line: "IITian mentors · backlog + rank push" },
     ],
   },
 
@@ -302,7 +295,7 @@ export const MENTORSHIP = {
     ],
 
     tracks: [
-      { plan: "mentor-jee-2028",  exam: "JEE 2028",  accent: "#FF693D", line: "2-year IITian mentorship · concept-first" },
+      { plan: "mentor-jee-2028-6m",  exam: "JEE 2028",  accent: "#FF693D", line: "6-Month IITian mentorship · concept-first" },
     ],
   },
 
@@ -426,8 +419,8 @@ export const MENTORSHIP = {
     ],
 
     tracks: [
-      { plan: "mentor-neet-2027", exam: "NEET 2027", accent: "#22c55e", line: "1-year Doctor mentorship · score push" },
-      { plan: "mentor-neet-2028", exam: "NEET 2028", accent: "#0ea5a4", line: "2-year Doctor mentorship · concept-first" },
+      { plan: "mentor-neet-2027-6m", exam: "NEET 2027", accent: "#22c55e", line: "Doctor mentorship · score push" },
+      { plan: "mentor-neet-2028-6m", exam: "NEET 2028", accent: "#0ea5a4", line: "Doctor mentorship · concept-first" },
     ],
   },
 
@@ -553,7 +546,7 @@ export const MENTORSHIP = {
       { q: "What if I don't see improvement?", a: "We track your progress at a granular level. If your mock scores aren't improving, your mentor will instantly pivot your strategy-whether that means changing study material, adjusting time allocation, or focusing entirely on weak areas." },
     ],
     tracks: [
-      { plan: "mentor-foundation",  exam: "Foundation",  accent: "#FF693D", line: "IITian mentors · Class 9 & 10" },
+      { plan: "mentor-foundation-6m",  exam: "Foundation",  accent: "#FF693D", line: "IITian mentors · Class 9 & 10" },
     ],
   },
 

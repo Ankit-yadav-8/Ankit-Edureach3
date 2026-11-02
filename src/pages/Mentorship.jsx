@@ -1010,35 +1010,30 @@ const INCLUDED = [
   "Full mock marathon in final phase", "Rank prediction + college shortlist",
 ];
 
-/* Build the three plan keys for any batch.
-   e.g. base="mentor-jee-2027" → 6m="mentor-jee-2027-6m", intl="mentor-jee-2027-intl" */
+/* Build the plan keys for any batch: Indian (₹3,499) & International (₹13,999) */
 function buildPricingPlans(basePlan) {
-  // strip any existing suffix to get the family
   const family = basePlan.replace(/-(6m|intl)$/, "");
   return {
-    sixMonth: family + "-6m",
-    oneYear: family,
+    indian: family,
     intl: family + "-intl",
   };
 }
 
 function Pricing({ plan, exam, openEnrol }) {
   const keys = buildPricingPlans(plan);
-  const p6 = MENTOR_PLANS[keys.sixMonth];
-  const p1 = MENTOR_PLANS[keys.oneYear] || { amount: 4999, old: 9999 };
-  const pi = MENTOR_PLANS[keys.intl];
-  // NEET now uses the same 3-card layout as JEE
+  const pInd = MENTOR_PLANS[keys.indian] || { amount: 3499, old: 5999 };
+  const pi = MENTOR_PLANS[keys.intl] || { amount: 13999, old: 24999 };
 
   const isNeet = exam === "NEET" || /neet/i.test(plan);
   const isJee2027 = /jee-2027/i.test(plan);
   const cards = [
     {
-      key: keys.sixMonth,
+      key: keys.indian,
       label: "INDIAN STUDENTS",
-      sublabel: isJee2027 ? "Till JEE Mains 2027" : (p6?.duration || "6 Months"),
+      sublabel: isJee2027 ? "Till JEE Mains 2027" : (pInd?.duration || "6 Months"),
       flag: "🇮🇳",
-      amount: p6?.amount || 3499,
-      old: p6?.old || 5999,
+      amount: pInd?.amount || 3499,
+      old: pInd?.old || 5999,
       accent: "#FF693D",
       bg: "linear-gradient(135deg,#FF7A3C,#F1531F)",
       highlight: false,
@@ -1750,7 +1745,7 @@ export default function Mentorship() {
   const { open: openEnrol } = useEnrol();
   if (!cfg) return <Navigate to="/mentorship/jee-2027" replace />;
 
-  const plan = cfg.tracks?.[0]?.plan || "mentor-jee-2027";
+  const plan = cfg.tracks?.[0]?.plan || "mentor-jee-2027-6m";
   const exam = cfg.tracks?.[0]?.exam || "JEE 2027";
   const year = (cfg.eyebrow || "").match(/\d{4}/)?.[0] || String(MENTOR_PLANS[plan]?.year || "2027");
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -1801,8 +1796,8 @@ export default function Mentorship() {
       },
       {
         "@type": "Offer",
-        "name": "1-Year Full Mentorship",
-        "price": "4999",
+        "name": "International 1-Year Mentorship",
+        "price": "13999",
         "priceCurrency": "INR",
         "availability": "https://schema.org/InStock",
         "url": `https://campuspoint.in/mentorship/${variant}`

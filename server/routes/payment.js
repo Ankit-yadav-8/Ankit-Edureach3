@@ -20,21 +20,14 @@ const PLANS = {
   "josaa":         { amount: 299,  label: "JoSAA + CSAB 2026 Counselling" },
   "all-colleges":  { amount: 499,  label: "All Colleges Counselling (Any Rank)" },
 
-  // ── Indian · Till JEE Mains 2027 / 6 months ──
+  // ── Indian Mentorship (6 Months / Till JEE Mains 2027) · ₹3,499 ──
   "mentor-jee-2027-6m":    { amount: 3499,  label: "JEE 2027 Mentorship (Till JEE Mains 2027)" },
   "mentor-neet-2027-6m":   { amount: 3499,  label: "NEET 2027 Mentorship (6 Months)" },
   "mentor-jee-2028-6m":    { amount: 3499,  label: "JEE 2028 Mentorship (6 Months)" },
   "mentor-neet-2028-6m":   { amount: 3499,  label: "NEET 2028 Mentorship (6 Months)" },
   "mentor-foundation-6m":  { amount: 3499,  label: "Foundation Mentorship 6 Months (Class 9–10)" },
 
-  // ── Indian · 1 year ──
-  "mentor-jee-2027":       { amount: 4999,  label: "JEE 2027 Mentorship (1 Year)" },
-  "mentor-neet-2027":      { amount: 4999,  label: "NEET 2027 Mentorship (1 Year)" },
-  "mentor-jee-2028":       { amount: 4999,  label: "JEE 2028 Mentorship (1 Year, 2-Year Plan)" },
-  "mentor-neet-2028":      { amount: 4999,  label: "NEET 2028 Mentorship (1 Year, 2-Year Plan)" },
-  "mentor-foundation":     { amount: 4999,  label: "Foundation Mentorship 1 Year (Class 9–10)" },
-
-  // ── International · 1 year ──
+  // ── International · 1 year (₹13,999) ──
   "mentor-jee-2027-intl":      { amount: 13999, label: "JEE 2027 Mentorship – International (1 Year)" },
   "mentor-neet-2027-intl":     { amount: 13999, label: "NEET 2027 Mentorship – International (1 Year)" },
   "mentor-jee-2028-intl":      { amount: 13999, label: "JEE 2028 Mentorship – International (1 Year)" },
@@ -141,6 +134,187 @@ router.post("/order", async (req, res) => {
   }
 });
 
+/* ── Generate a live Razorpay Dynamic UPI QR code ─────────────────
+   Allows mobile & desktop users to directly scan and pay with any UPI
+   app without being forced into mobile intent app redirection.     */
+router.post("/create-qr", optionalAuth, async (req, res) => {
+  try {
+    if (!razorpay) return res.status(503).json({ error: "Payments are not configured yet." });
+
+    const { plan, couponCode, name, email, phone } = req.body || {};
+    const planMeta = PLANS[plan];
+    if (!planMeta) return res.status(400).json({ error: "Invalid plan selected." });
+    if (!name || !String(name).trim()) return res.status(400).json({ error: "Name is required." });
+
+    let finalAmount = planMeta.amount;
+    let discount = 0;
+    let appliedCoupon = "";
+
+    if (couponCode && String(couponCode).trim()) {
+      const code = String(couponCode).trim().toUpperCase();
+      const coupon = await Coupon.findOne({ code, isActive: true });
+      if (coupon) {
+        const family = planFamily(plan);
+        const region = planRegion(plan);
+        const planMatch = coupon.applicablePlans.includes(family);
+        const regionMatch = coupon.region === "both" || coupon.region === region;
+        const usageOk = !coupon.maxUses || coupon.usageCount < coupon.maxUses;
+
+        if (planMatch && regionMatch && usageOk) {
+          discount = Math.min(coupon.discountAmount, finalAmount - 1);
+          finalAmount = finalAmount - discount;
+          appliedCoupon = code;
+        }
+      }
+    }
+
+    const amountPaise = finalAmount * 100;
+
+    const qr = await razorpay.qrCode.create({
+      type: "upi_qr",
+      name: "Campus Point Mentorship",
+      usage: "single_use",
+      fixed_amount: true,
+      payment_amount: amountPaise,
+      description: planMeta.label || "Mentorship Enrolment",
+      notes: {
+        plan,
+        name: String(name).slice(0, 100),
+        email: String(email || "").slice(0, 100),
+        phone: String(phone || "").slice(0, 30),
+        couponCode: appliedCoupon,
+      },
+    });
+
+    res.json({
+      qrId: qr.id,
+      imageUrl: qr.image_url,
+      amount: finalAmount,
+      planLabel: planMeta.label,
+      discount,
+      couponCode: appliedCoupon,
+    });
+  } catch (e) {
+    console.error("payment/create-qr error:", e?.message || e);
+    res.status(500).json({ error: "Could not generate QR code. Please try again." });
+  }
+});
+
+/* ── Check if a dynamic QR code was paid ────────────────────────── */
+router.post("/check-qr", optionalAuth, async (req, res) => {
+  try {
+    if (!razorpay) return res.status(503).json({ error: "Payments are not configured yet." });
+
+    const { qrId, plan } = req.body || {};
+    if (!qrId) return res.status(400).json({ error: "Missing qrId." });
+
+    // Check existing enrollment in DB first (fast path)
+    const existing = await Enrollment.findOne({ razorpayOrderId: qrId, status: "paid" });
+    if (existing) {
+      return res.json({ paid: true, paymentId: existing.razorpayPaymentId });
+    }
+
+    const payments = await razorpay.qrCode.fetchAllPayments(qrId);
+    if (!payments || !payments.count || !payments.items || payments.items.length === 0) {
+      return res.json({ paid: false });
+    }
+
+    const payment = payments.items[0];
+    if (payment.status !== "captured" && payment.status !== "authorized") {
+      return res.json({ paid: false, status: payment.status });
+    }
+
+    // Payment is verified genuine by Razorpay! Create enrollment now.
+    const planMeta = PLANS[plan];
+    if (!planMeta) return res.status(400).json({ error: "Invalid plan selected." });
+
+    const couponCode = String(req.body.couponCode || "").trim().toUpperCase();
+    let finalAmount = planMeta.amount;
+    let discount = 0;
+    if (couponCode) {
+      const coupon = await Coupon.findOne({ code: couponCode, isActive: true });
+      if (coupon) {
+        const family = planFamily(plan);
+        const region = planRegion(plan);
+        const planMatch = coupon.applicablePlans.includes(family);
+        const regionMatch = coupon.region === "both" || coupon.region === region;
+        const usageOk = !coupon.maxUses || coupon.usageCount < coupon.maxUses;
+        if (planMatch && regionMatch && usageOk) {
+          discount = Math.min(coupon.discountAmount, finalAmount - 1);
+          finalAmount = finalAmount - discount;
+        }
+      }
+    }
+
+    try {
+      const approvalToken = crypto.randomBytes(32).toString("hex");
+      const enr = await Enrollment.findOneAndUpdate(
+        { razorpayOrderId: qrId },
+        {
+          plan,
+          amount: finalAmount,
+          originalAmount: discount > 0 ? planMeta.amount : null,
+          couponCode: couponCode || "",
+          region: planRegion(plan),
+          ...(req.user?.id ? { userId: req.user.id } : {}),
+          name:      String(req.body.name || "").trim(),
+          email:     String(req.body.email || "").trim().toLowerCase(),
+          phone:     String(req.body.phone || "").trim(),
+          phone10:   String(req.body.phone || "").replace(/\D/g, "").slice(-10),
+          homeState: String(req.body.homeState || "").trim(),
+          parentEmail: String(req.body.parentEmail || "").trim().toLowerCase(),
+          currentClass: String(req.body.currentClass || "").trim(),
+          targetExam:   String(req.body.targetExam || "").trim(),
+          jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
+          jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
+          jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
+          jeeAdvCategoryRank:  num(req.body.jeeAdvCategoryRank),
+          razorpayOrderId:   qrId,
+          razorpayPaymentId: payment.id,
+          status: "paid",
+          emailApproved: false,
+          confirmationEmailSent: false,
+          approvalToken,
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+
+      let studentAssignedId = enr?.studentId || null;
+      if (enr && /^mentor-/.test(enr.plan) && !enr.studentId) {
+        studentAssignedId = await nextStudentId(new Date(enr.createdAt || Date.now()).getFullYear());
+        await Enrollment.updateOne(
+          { _id: enr._id, $or: [{ studentId: null }, { studentId: "" }, { studentId: { $exists: false } }] },
+          { $set: { studentId: studentAssignedId } }
+        );
+      }
+
+      if (couponCode && discount > 0) {
+        await Coupon.updateOne({ code: couponCode }, { $inc: { usageCount: 1 } }).catch(() => {});
+      }
+
+      sendAdminPaymentApprovalEmail({
+        enrollmentId: enr._id,
+        approvalToken,
+        name: enr.name,
+        email: enr.email,
+        phone: enr.phone,
+        planLabel: planMeta.label || plan,
+        amount: finalAmount,
+        orderId: qrId,
+        paymentId: payment.id,
+        studentId: studentAssignedId,
+      }).catch((err) => console.error("[ADMIN PAYMENT APPROVAL ALERT ERROR]", err?.message || err));
+    } catch (e) {
+      console.error("qr enrollment persist error:", e?.message || e);
+    }
+
+    res.json({ paid: true, paymentId: payment.id });
+  } catch (e) {
+    console.error("payment/check-qr error:", e?.message || e);
+    res.status(500).json({ error: "Could not check QR status." });
+  }
+});
+
 /* ── Verify the payment signature ─────────────────────────────────
    Body: { razorpay_order_id, razorpay_payment_id, razorpay_signature,
            plan, name, email, phone, couponCode?, region?, ... }         */
@@ -209,6 +383,7 @@ router.post("/verify", optionalAuth, async (req, res) => {
           name:      String(req.body.name || "").trim(),
           email:     String(req.body.email || "").trim().toLowerCase(),
           phone:     String(req.body.phone || "").trim(),
+          phone10:   String(req.body.phone || "").replace(/\D/g, "").slice(-10),
           homeState: String(req.body.homeState || "").trim(),
           parentEmail: String(req.body.parentEmail || "").trim().toLowerCase(),
           currentClass: String(req.body.currentClass || "").trim(),
