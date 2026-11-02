@@ -11,6 +11,7 @@ import Seo from "../components/Seo.jsx";
 import StudentReport from "../components/mentor/StudentReport.jsx";
 import StudentLoginTracking from "../components/mentor/StudentLoginTracking.jsx";
 import AllMenteesMatrix from "../components/mentor/AllMenteesMatrix.jsx";
+import MentorEmailStudio from "../components/mentor/MentorEmailStudio.jsx";
 import ChapterQuizModal from "../components/quiz/ChapterQuizModal.jsx";
 import {
   apiMentorLogin, apiMentorMe, apiMentorSetPassword, apiMentorStudents,
@@ -641,6 +642,12 @@ export default function MentorDashboard() {
   // Student caseload data
   const [students, setStudents] = useState([]);
   const [activeId, setActiveId] = useState("");
+  const [emailPreselected, setEmailPreselected] = useState("");
+
+  const openEmailForStudent = useCallback((sid = "") => {
+    setEmailPreselected(sid || activeId || "");
+    setActiveTab("email");
+  }, [activeId]);
   const [report, setReport] = useState({ progress: null, tests: [], tasks: [], updatedAt: null });
   const [loadingStudent, setLoadingStudent] = useState(false);
   const [err, setErr] = useState("");
@@ -890,6 +897,7 @@ export default function MentorDashboard() {
 
   const NAV_ITEMS = [
     { id: "workspace", label: "Student Workspace", icon: UserCheck, desc: "Study log, tests, backlog" },
+    { id: "email", label: "Email Mentees", icon: Mail, desc: "Send direct guidance & announcements to mentees" },
     { id: "logins", label: "Student Login Telemetry", icon: Activity, desc: "Authentication events & pie chart" },
     { id: "assign", label: "Exam & Task Studio", icon: Zap, desc: "Question bank generator & task assigner" },
     { id: "matrix", label: "All Mentees Matrix", icon: Trophy, desc: "Complete scores & comparative overview" },
@@ -1669,6 +1677,17 @@ export default function MentorDashboard() {
               </div>
             )}
 
+            {/* TAB: Email Mentees Studio */}
+            {activeTab === "email" && (
+              <MentorEmailStudio
+                token={token}
+                mentor={mentor}
+                students={students}
+                preselectedStudentId={emailPreselected}
+                onSent={() => {}}
+              />
+            )}
+
             {/* TAB 1: Student Workspace (Individual Mentee Study Log, Allen Test Analysis, Backlog, Tasks) */}
             {activeTab === "workspace" && (
               <div>
@@ -1714,6 +1733,7 @@ export default function MentorDashboard() {
                     student={activeStudent}
                     token={token}
                     onSaveSession={saveSession}
+                    onOpenEmail={() => openEmailForStudent(activeId)}
                   />
                 )}
               </div>
@@ -2335,6 +2355,7 @@ export default function MentorDashboard() {
                   setActiveId(sid);
                   setActiveTab("workspace");
                 }}
+                onOpenEmail={(sid) => openEmailForStudent(sid)}
               />
             )}
           </main>

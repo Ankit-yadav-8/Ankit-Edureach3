@@ -5,7 +5,7 @@ import {
   ChevronLeft, ChevronRight, AlertTriangle, CheckCircle2, Eye,
   Plus, Trash2, Save, Loader2, Pencil, Lock, History, UserCheck,
   Target, Award, Zap, BarChart2, BookOpen, Percent, Search,
-  Video, Calendar, ExternalLink, Link2, Copy, Check,
+  Video, Calendar, ExternalLink, Link2, Copy, Check, Mail,
 } from "lucide-react";
 import { normalizeTestScore } from "../../utils/testScoring.js";
 import { apiMentorStudentSession, apiMentorSetStudentSession } from "../../auth/api.js";
@@ -1024,7 +1024,7 @@ function freshness(updatedAt) {
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-export default function StudentReport({ progress, tests, tasks, updatedAt, onSaveTasks, studentId, student, token, onSaveSession }) {
+export default function StudentReport({ progress, tests, tasks, updatedAt, onSaveTasks, studentId, student, token, onSaveSession, onOpenEmail }) {
   const [i, setI] = useState(0);
   const section = SECTIONS[i];
   const synced = freshness(updatedAt);
@@ -1182,6 +1182,29 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            {onOpenEmail && (
+              <button
+                type="button"
+                onClick={onOpenEmail}
+                title="Send direct email to this student"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  padding: "5px 11px",
+                  borderRadius: 8,
+                  border: "1px solid #fed7aa",
+                  background: "#fff7ed",
+                  color: ACCENT,
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  marginRight: 4,
+                }}
+              >
+                <Mail size={12} /> Email {student?.name?.split(" ")[0] || "Student"}
+              </button>
+            )}
             <span style={{ fontSize: 11.5, color: "var(--muted)", marginRight: 2 }}>{i + 1} / {SECTIONS.length}</span>
             {[[ChevronLeft, -1], [ChevronRight, 1]].map(([Ic, d]) => {
               const disabled = d < 0 ? i === 0 : i === SECTIONS.length - 1;

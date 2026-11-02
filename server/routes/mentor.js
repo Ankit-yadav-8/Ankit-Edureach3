@@ -9,11 +9,15 @@ import MentorActivityLog from "../models/MentorActivityLog.js";
 import Enrollment from "../models/Enrollment.js";
 import User from "../models/User.js";
 import { normalizeTestScore } from "../utils/testScoring.js";
+import { sendMail } from "../utils/mailer.js";
 import {
   signMentorToken, requireMentor, requirePasswordChanged, resolveAssignedStudent,
 } from "../middleware/mentor.js";
 
 const router = express.Router();
+
+const siteOrigin = () =>
+  (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
 
 /**
  * Record that a mentor read (or tried to read) a student.
@@ -189,7 +193,15 @@ router.get("/students", requireMentor, requirePasswordChanged, async (req, res) 
     const out = [];
     for (const sid of req.mentor.students || []) {
       const enr = await resolveAssignedStudent(req.mentor, sid);
-      if (enr) out.push({ studentId: enr.studentId, name: enr.name, plan: enr.plan, since: enr.createdAt });
+      if (enr) out.push({
+        studentId: enr.studentId,
+        name: enr.name,
+        email: enr.email,
+        parentEmail: enr.parentEmail || "",
+        phone: enr.phone || "",
+        plan: enr.plan,
+        since: enr.createdAt,
+      });
     }
     res.json({ students: out });
   } catch (e) {
@@ -743,6 +755,283 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
   } catch (e) {
     console.error("[mentor/students-overview]", e.message);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mentor Direct Email Dispatcher
+//
+// Allows an authenticated mentor to send official guidance, announcements,
+// study check-ins, or schedule updates to their allotted students (and
+// optionally CC parents).
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildMentorEmailHtml({
+  mentorName,
+  mentorCollege,
+  studentName,
+  studentId,
+  plan,
+  category,
+  subject,
+  message,
+  link,
+  isParentCopy = false,
+}) {
+  const esc = (s) =>
+    String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+
+  // Auto-format paragraphs and convert URLs into clickable buttons/links
+  const formattedMsg = esc(message)
+    .split(/\r?\n\r?\n/)
+    .map((p) => {
+      const withLinks = p.replace(
+        /(https?:\/\/[^\s<]+)/g,
+        '<a href="$1" style="color:#FF693D;font-weight:700;text-decoration:underline" target="_blank">$1</a>'
+      );
+      return `<p style="margin:0 0 14px;font-size:14.5px;line-height:1.7;color:#334155">${withLinks.replace(/\r?\n/g, "<br>")}</p>`;
+    })
+    .join("");
+
+  const planLabel = plan ? plan.replace(/^mentor-/, "").toUpperCase() : "MENTORSHIP";
+
+  return `
+<div style="margin:0;padding:0;background:#f8fafc;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f8fafc;font-size:1px;line-height:1px">
+    Message from your mentor ${esc(mentorName)}: ${esc(subject)}
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:26px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="580" cellpadding="0" cellspacing="0" style="width:100%;max-width:580px;background:#ffffff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 8px 30px rgba(15,23,42,0.06)">
+        
+        <!-- Top Branded Navy Bar -->
+        <tr><td style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);padding:18px 24px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="36" style="vertical-align:middle;padding-right:12px">
+                <table role="presentation" width="34" height="34" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;text-align:center">
+                  <tr><td align="center" valign="middle" style="color:#FF693D;font-size:13px;font-weight:900;line-height:34px;padding:0">CP</td></tr>
+                </table>
+              </td>
+              <td style="vertical-align:middle">
+                <div style="color:#ffffff;font-size:15px;font-weight:800;letter-spacing:-0.2px">Campus Point Mentorship</div>
+                <div style="color:#94a3b8;font-size:11px;font-weight:600">Personal IITian / NEET Mentorship Console</div>
+              </td>
+              <td align="right" style="vertical-align:middle">
+                <span style="display:inline-block;background:rgba(255,105,61,0.22);border:1px solid rgba(255,105,61,0.45);color:#ff8a65;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:4px 10px;border-radius:20px">
+                  ${esc(category || "MENTOR GUIDANCE")}
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Sender / Recipient Sub-Bar -->
+        <tr><td style="background:#fff7ed;border-bottom:1px solid #fed7aa;padding:12px 24px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td>
+                <div style="font-size:9.5px;text-transform:uppercase;font-weight:800;color:#c2410c;letter-spacing:0.7px">Mentor</div>
+                <div style="font-size:13.5px;font-weight:800;color:#0f172a;margin-top:1px">
+                  ${esc(mentorName)} <span style="font-size:11.5px;font-weight:600;color:#64748b">(${esc(mentorCollege || "Senior Mentor")})</span>
+                </div>
+              </td>
+              <td align="right">
+                <div style="font-size:9.5px;text-transform:uppercase;font-weight:800;color:#94a3b8;letter-spacing:0.7px">${isParentCopy ? "Parent Copy" : "Student"}</div>
+                <div style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:1px">
+                  ${esc(studentName)} <span style="font-size:10.5px;color:#94a3b8">(${esc(studentId)} · ${esc(planLabel)})</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Main Content Area -->
+        <tr><td style="padding:28px 24px 20px">
+          <div style="font-size:18px;font-weight:800;color:#0f172a;letter-spacing:-0.3px;margin-bottom:18px;line-height:1.3">
+            ${esc(subject)}
+          </div>
+          
+          <div style="margin-bottom:20px">
+            <div style="font-size:14.5px;font-weight:700;color:#0f172a;margin-bottom:12px">
+              Dear ${esc(studentName)},
+            </div>
+            ${formattedMsg}
+          </div>
+
+          <!-- CTA Button -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0 14px">
+            <tr><td align="center">
+              <a href="${esc(link)}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#FF693D 0%,#EE5326 100%);color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 28px;border-radius:10px;box-shadow:0 6px 18px rgba(255,105,61,0.35);letter-spacing:0.2px">
+                Open Mentorship Dashboard &rarr;
+              </a>
+            </td></tr>
+          </table>
+
+          <!-- Mentor follow-up note -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-top:20px">
+            <div style="font-size:10.5px;font-weight:800;text-transform:uppercase;color:#475569;letter-spacing:0.6px;margin-bottom:3px">
+              💬 Need to discuss this?
+            </div>
+            <div style="font-size:12px;color:#64748b;line-height:1.5">
+              Discuss this during your next scheduled 1-on-1 session with ${esc(mentorName)}, or post a doubt in the Community section of your dashboard.
+            </div>
+          </div>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="background:#f8fafc;border-top:1px solid #f1f5f9;padding:16px 24px">
+          <div style="color:#94a3b8;font-size:11px;line-height:1.55;text-align:center">
+            This message was authored and sent directly by your mentor <b>${esc(mentorName)}</b> via CampusPoint.<br>
+            <span style="color:#cbd5e1">CampusPoint · Personalised JEE &amp; NEET Mentorship · <a href="https://campuspoint.in" style="color:#FF693D;text-decoration:none">campuspoint.in</a></span>
+          </div>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</div>
+`;
+}
+
+router.post("/send-email", requireMentor, requirePasswordChanged, async (req, res) => {
+  try {
+    const {
+      recipientType = "all",
+      studentIds = [],
+      subject,
+      message,
+      includeParent = false,
+      category = "Mentor Guidance",
+    } = req.body || {};
+
+    if (!subject || !String(subject).trim()) {
+      return res.status(400).json({ error: "Email subject is required" });
+    }
+    if (!message || !String(message).trim()) {
+      return res.status(400).json({ error: "Email message body is required" });
+    }
+
+    const assignedIds = (req.mentor.students || []).map((s) => String(s).toUpperCase());
+    if (assignedIds.length === 0) {
+      return res.status(400).json({ error: "You currently have no allotted students" });
+    }
+
+    // Determine target student IDs - mentor can ONLY email their own assigned students
+    let targetStudentIds = [];
+    if (recipientType === "all") {
+      targetStudentIds = assignedIds;
+    } else {
+      const requested = (Array.isArray(studentIds) ? studentIds : [studentIds])
+        .map((s) => String(s).trim().toUpperCase())
+        .filter(Boolean);
+      targetStudentIds = requested.filter((sid) => assignedIds.includes(sid));
+    }
+
+    if (targetStudentIds.length === 0) {
+      return res.status(400).json({ error: "No valid allotted students selected" });
+    }
+
+    const enrollments = await Enrollment.find({
+      studentId: { $in: targetStudentIds },
+      status: "paid",
+    }).select("studentId name email parentEmail plan").lean();
+
+    if (enrollments.length === 0) {
+      return res.status(404).json({ error: "No active paid enrollments found for the selected students" });
+    }
+
+    const mentorName = req.mentor.name || "Your Mentor";
+    const mentorCollege = req.mentor.college || "CampusPoint Senior Mentor";
+    const cleanSubject = String(subject).trim();
+    const cleanMessage = String(message).trim();
+    const link = `${siteOrigin()}/mentorship-dashboard`;
+
+    let sentCount = 0;
+    const recipientLogs = [];
+
+    for (const enr of enrollments) {
+      if (!enr.email) continue;
+      const studentName = enr.name || "Student";
+      const emailSubject = `[CampusPoint Mentorship] ${cleanSubject} — from ${mentorName}`;
+
+      const html = buildMentorEmailHtml({
+        mentorName,
+        mentorCollege,
+        studentName,
+        studentId: enr.studentId,
+        plan: enr.plan,
+        category,
+        subject: cleanSubject,
+        message: cleanMessage,
+        link,
+      });
+
+      const text = `Hi ${studentName},\n\nA message from your mentor ${mentorName} (${mentorCollege}):\n\n${cleanMessage}\n\nOpen your dashboard: ${link}`;
+
+      const out = await sendMail({
+        to: enr.email,
+        subject: emailSubject,
+        html,
+        text,
+      });
+
+      if (out.ok) {
+        sentCount++;
+        recipientLogs.push({ studentId: enr.studentId, name: studentName, email: enr.email, status: "sent" });
+      } else {
+        recipientLogs.push({ studentId: enr.studentId, name: studentName, email: enr.email, status: "failed", error: out.error });
+      }
+
+      // If mentor selected to include parents
+      if (includeParent && enr.parentEmail && enr.parentEmail.toLowerCase() !== enr.email.toLowerCase()) {
+        sendMail({
+          to: enr.parentEmail,
+          subject: `[Parent Notice · CampusPoint] ${cleanSubject} (for ${studentName})`,
+          html: buildMentorEmailHtml({
+            mentorName,
+            mentorCollege,
+            studentName,
+            studentId: enr.studentId,
+            plan: enr.plan,
+            category: `${category} (Parent Copy)`,
+            subject: cleanSubject,
+            message: cleanMessage,
+            link,
+            isParentCopy: true,
+          }),
+          text,
+        }).catch((err) => console.error(`[mentor/send-email] parent copy error for ${enr.parentEmail}:`, err.message));
+      }
+    }
+
+    // Audit activity log
+    MentorActivityLog.create({
+      mentorId: req.mentor._id,
+      mentorEmail: req.mentor.email,
+      action: "mentor_email_sent",
+      details: {
+        recipientType,
+        targetCount: enrollments.length,
+        sentCount,
+        subject: cleanSubject,
+        category,
+        includeParent,
+      },
+      ip: req.ip || "",
+      userAgent: String(req.headers["user-agent"] || "").slice(0, 300),
+    }).catch(() => {});
+
+    return res.json({
+      ok: true,
+      sentCount,
+      totalRequested: enrollments.length,
+      recipients: recipientLogs,
+    });
+  } catch (e) {
+    console.error("[mentor/send-email]", e);
+    return res.status(500).json({ error: "Failed to send email. " + (e.message || "") });
   }
 });
 

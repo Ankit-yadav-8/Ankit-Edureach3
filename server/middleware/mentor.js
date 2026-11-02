@@ -67,7 +67,7 @@ export async function resolveAssignedStudent(mentor, rawStudentId) {
   if (!assigned.includes(studentId)) return null;
 
   const enr = await Enrollment.findOne({ studentId, status: "paid" })
-    .select("studentId name email plan createdAt")
+    .select("studentId name email parentEmail phone plan createdAt")
     .lean();
   if (!enr) return null;
 

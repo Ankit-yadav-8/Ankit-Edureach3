@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Users, Trophy, Target, ClipboardList, Clock, Search,
   ArrowUpDown, ExternalLink, CheckCircle2, AlertCircle, RefreshCw,
-  Flame, Award, BookOpen,
+  Flame, Award, BookOpen, Mail,
 } from "lucide-react";
 import { apiMentorStudentsOverview } from "../../auth/api.js";
 
@@ -22,7 +22,7 @@ function timeAgo(iso) {
   return `${days}d ago`;
 }
 
-export default function AllMenteesMatrix({ token, onSelectStudent }) {
+export default function AllMenteesMatrix({ token, onSelectStudent, onOpenEmail }) {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -124,25 +124,46 @@ export default function AllMenteesMatrix({ token, onSelectStudent }) {
           </div>
         </div>
 
-        <button
-          onClick={fetchOverview}
-          disabled={loading}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "7px 12px",
-            borderRadius: 8,
-            border: "1px solid #e2e8f0",
-            background: "#fff",
-            color: "#64748b",
-            fontSize: 12,
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          <RefreshCw size={13} className={loading ? "cp-spin" : ""} /> Refresh Matrix
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            onClick={() => onOpenEmail && onOpenEmail("")}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "7px 14px",
+              borderRadius: 8,
+              border: "none",
+              background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+              color: "#fff",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+            }}
+          >
+            <Mail size={13} /> Email Mentees
+          </button>
+          <button
+            onClick={fetchOverview}
+            disabled={loading}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "7px 12px",
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              background: "#fff",
+              color: "#64748b",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            <RefreshCw size={13} className={loading ? "cp-spin" : ""} /> Refresh Matrix
+          </button>
+        </div>
       </div>
 
       {err && (
@@ -592,8 +613,33 @@ export default function AllMenteesMatrix({ token, onSelectStudent }) {
                       </td>
 
                       {/* Action */}
-                      <td style={{ padding: "12px", textAlign: "right" }}>
+                      <td style={{ padding: "12px", textAlign: "right", whiteSpace: "nowrap" }}>
                         <button
+                          type="button"
+                          title={`Send email to ${s.name}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenEmail && onOpenEmail(s.studentId);
+                          }}
+                          style={{
+                            padding: "6px 10px",
+                            borderRadius: 8,
+                            border: "1px solid #fed7aa",
+                            background: "#fff7ed",
+                            color: ACCENT,
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 4,
+                            marginRight: 6,
+                          }}
+                        >
+                          <Mail size={12} /> Email
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => onSelectStudent && onSelectStudent(s.studentId)}
                           style={{
                             padding: "6px 12px",

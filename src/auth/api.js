@@ -149,6 +149,9 @@ export const apiMentorStudentLogins = (token, range = "7d") =>
 export const apiMentorStudentsOverview = (token) =>
   req("/api/mentor/students-overview", { token });
 
+export const apiMentorSendEmail = (token, b) =>
+  req("/api/mentor/send-email", { method: "POST", body: b, token });
+
 // ── Admin → mentor management ───────────────────────────────────────────────
 export const apiAdminMentorList   = (adminToken) => adminReq("/api/admin/mentors", adminToken);
 export const apiAdminMentorCreate = (adminToken, b) => adminReq("/api/admin/mentors", adminToken, { method: "POST", body: b });
