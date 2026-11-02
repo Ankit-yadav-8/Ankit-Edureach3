@@ -147,7 +147,8 @@ const EMPTY = {
 };
 
 function EnrolModal({ plan, onClose }) {
-  const meta = PLAN_META[plan] || PLAN_META["josaa"];
+  const activePlanKey = resolvePlanKey(plan);
+  const meta = PLAN_META[activePlanKey] || PLAN_META["mentor-jee-2027-6m"] || PLAN_META["josaa"];
   const isMentorship = meta.kind === "mentorship";
   // Pre-fill contact details straight from the logged-in account - the student
   // can still edit any of them before paying.
@@ -190,7 +191,7 @@ function EnrolModal({ plan, onClose }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code: couponCode.trim(),
-          plan,
+          plan: activePlanKey,
           region: meta.region || "indian",
         }),
       });
@@ -316,7 +317,7 @@ function EnrolModal({ plan, onClose }) {
     setBusy(true);
     try {
       const { paymentId } = await startPayment({
-        plan,
+        plan: activePlanKey,
         targetExam: meta.targetExam || "",
         couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
         ...f,
