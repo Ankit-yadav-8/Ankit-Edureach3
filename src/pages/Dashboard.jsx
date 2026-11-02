@@ -163,7 +163,7 @@ function Reveal({ children, delay = 0, style }) {
 /* ── One field inside "Your details" ── */
 function DetailField({ label, value }) {
   return (
-    <div className="pressed" style={{ padding: "16px", borderRadius: 16, display: "flex", flexDirection: "column", gap: 4, background: "var(--base)" }}>
+    <div className="pressed" style={{ padding: "14px", borderRadius: 16, display: "flex", flexDirection: "column", gap: 4, background: "var(--base)", minWidth: 0, overflow: "hidden", boxSizing: "border-box" }}>
       <div style={{ fontSize: 10, color: "var(--text-soft)", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", fontFamily: INTER }}>{label}</div>
       <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 14, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", opacity: 0.9 }}>{value}</div>
     </div>
@@ -259,13 +259,13 @@ export default function Dashboard() {
   ];
 
   return (
-    <section className="neo-auth" style={{ "--base": "#ffffff", "--shadow-dark": "#d1d9e6", "--shadow-light": "#ffffff", background: "var(--base)", padding: "140px 16px 60px", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
+    <section className="neo-auth" style={{ "--base": "#ffffff", "--shadow-dark": "#d1d9e6", "--shadow-light": "#ffffff", background: "var(--base)", padding: "120px 14px 60px", minHeight: "100vh", overflowX: "hidden", width: "100%", boxSizing: "border-box" }}>
+      <div style={{ maxWidth: 1100, width: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: 20, minWidth: 0, boxSizing: "border-box" }}>
 
         {/* ── Header ─────────────────────────────────────────────── */}
         <Reveal>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 8, padding: "0 10px" }}>
-            <h1 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)", color: "var(--text)", margin: 0, letterSpacing: "-0.5px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 8, padding: "0 4px" }}>
+            <h1 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(1.4rem, 4vw, 2.2rem)", color: "var(--text)", margin: 0, letterSpacing: "-0.5px", wordBreak: "break-word" }}>
               Welcome back, <span style={{ color: "#FF5A36" }}>{firstName}</span>
             </h1>
             <button onClick={() => setConfirmLogout(true)} className="raised-sm" aria-label="Log out"
@@ -279,8 +279,8 @@ export default function Dashboard() {
         {/* ── Row 1 ──────────────────────────────────────────────── */}
         <div className="dash-2col">
           {/* Parichay AI */}
-          <Reveal delay={0.1} style={{ display: "flex" }}>
-            <div className="raised" style={{ flex: 1, padding: "30px 30px", borderRadius: 24, background: "var(--base)", display: "flex", flexDirection: "column" }}>
+          <Reveal delay={0.1} style={{ display: "flex", minWidth: 0, width: "100%" }}>
+            <div className="raised dash-card">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(99,102,241,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(99,102,241,0.15)" }}>
@@ -300,27 +300,27 @@ export default function Dashboard() {
               </div>
 
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1px", color: "var(--text-faint)", textTransform: "uppercase", margin: "10px 0 12px" }}>SUGGESTED FOR YOU</div>
-              <div className="pressed" style={{ borderRadius: 16, padding: "20px", fontSize: 13.5, color: "var(--text)", fontWeight: 500, lineHeight: 1.6, background: "var(--base)" }}>
+              <div className="pressed" style={{ borderRadius: 16, padding: "16px", fontSize: 13.5, color: "var(--text)", fontWeight: 500, lineHeight: 1.6, background: "var(--base)", wordBreak: "break-word" }}>
                 {firstName}, based on your class of <span style={{ color: "#FF5A36" }}>{classPhrase}</span> and <span style={{ color: "#FF5A36" }}>{statePhrase}</span> home state, here are 5 colleges worth targeting...
               </div>
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "24px 0" }}>
-                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "10px 16px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Colleges for class {classPhrase}?</button>
-                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "10px 16px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>JEE Advanced strategy</button>
-                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "10px 16px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Compare NITs vs IIITs</button>
-                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "10px 16px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>{statePhrase} state quota</button>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "20px 0" }}>
+                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "8px 14px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer", maxWidth: "100%", textAlign: "left", lineHeight: 1.35, whiteSpace: "normal" }}>Colleges for class {classPhrase}?</button>
+                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "8px 14px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer", maxWidth: "100%", textAlign: "left", lineHeight: 1.35, whiteSpace: "normal" }}>JEE Advanced strategy</button>
+                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "8px 14px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer", maxWidth: "100%", textAlign: "left", lineHeight: 1.35, whiteSpace: "normal" }}>Compare NITs vs IIITs</button>
+                <button className="raised-sm" onClick={() => navigate("/ai")} style={{ padding: "8px 14px", borderRadius: 20, border: "none", background: "var(--base)", color: "var(--text-soft)", fontSize: 12, fontWeight: 600, cursor: "pointer", maxWidth: "100%", textAlign: "left", lineHeight: 1.35, whiteSpace: "normal" }}>{statePhrase} state quota</button>
               </div>
 
-              <div className="pressed" onClick={() => navigate("/ai")} style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "10px 10px 10px 20px", borderRadius: 30, background: "var(--base)", cursor: "text" }}>
-                <span style={{ flex: 1, fontSize: 13, color: "var(--text-faint)", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling...</span>
-                <span style={{ width: 46, height: 46, borderRadius: "50%", background: "#FF5A36", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)", color: "#fff", fontSize: 11, fontWeight: 700, fontFamily: INTER, textAlign: "center", lineHeight: 1.1 }}>Ask<br/>Ai</span>
+              <div className="pressed" onClick={() => navigate("/ai")} style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 10, width: "100%", maxWidth: "100%", boxSizing: "border-box", padding: "8px 8px 8px 16px", borderRadius: 30, background: "var(--base)", cursor: "text", minWidth: 0 }}>
+                <span style={{ flex: 1, minWidth: 0, fontSize: 13, color: "var(--text-faint)", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Ask Parichay AI anything about colleges, ranks, counselling...</span>
+                <span style={{ width: 42, height: 42, borderRadius: "50%", background: "#FF5A36", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "0 4px 10px rgba(244,123,32,0.3)", color: "#fff", fontSize: 11, fontWeight: 700, fontFamily: INTER, textAlign: "center", lineHeight: 1.1 }}>Ask<br/>Ai</span>
               </div>
             </div>
           </Reveal>
 
           {/* Your details */}
-          <Reveal delay={0.2} style={{ display: "flex" }}>
-            <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
+          <Reveal delay={0.2} style={{ display: "flex", minWidth: 0, width: "100%" }}>
+            <div className="raised dash-card">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(14,165,233,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(14,165,233,0.15)" }}>
@@ -333,7 +333,7 @@ export default function Dashboard() {
                 </button>
               </div>
               
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+              <div className="dash-details-grid">
                 <DetailField label="Name" value={user?.name || "Student"} />
                 <DetailField label="Coaching" value={user?.coaching || "-"} />
                 <DetailField label="Email" value={user?.email || "-"} />
@@ -351,8 +351,8 @@ export default function Dashboard() {
         {/* ── Row 2 ──────────────────────────────────────────────── */}
         <div className="dash-2col" style={{ alignItems: "stretch" }}>
           {/* My plans */}
-          <Reveal delay={0.15} style={{ display: "flex" }}>
-            <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
+          <Reveal delay={0.15} style={{ display: "flex", minWidth: 0, width: "100%" }}>
+            <div className="raised dash-card">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,105,61,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(255,105,61,0.15)" }}>
@@ -409,8 +409,8 @@ export default function Dashboard() {
           </Reveal>
 
           {/* Quick links */}
-          <Reveal delay={0.25} style={{ display: "flex" }}>
-            <div className="raised" style={{ flex: 1, padding: "30px", borderRadius: 24, background: "var(--base)" }}>
+          <Reveal delay={0.25} style={{ display: "flex", minWidth: 0, width: "100%" }}>
+            <div className="raised dash-card">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(139,92,246,0.1)", display: "grid", placeItems: "center", boxShadow: "0 4px 12px rgba(139,92,246,0.15)" }}>
                   <Layers size={20} color="#8b5cf6" />
@@ -588,16 +588,23 @@ export default function Dashboard() {
       <style>{`
         @keyframes dashspin{to{transform:rotate(360deg)}}
         .dash-spin{display:inline-block;animation:dashspin .8s linear infinite;vertical-align:middle;}
-        .dash-2col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;}
-        .dash-2col>*{min-width:0}
-        .dash-quick{display:grid;grid-template-columns:repeat(2, 1fr);gap:16px;}
-        .dash-quick>*{min-width:0}
+        .dash-2col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;width:100%;min-width:0;}
+        .dash-2col>*{min-width:0;max-width:100%;}
+        .dash-card{flex:1;padding:28px;border-radius:24px;background:var(--base);display:flex;flex-direction:column;min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden;}
+        .dash-details-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;min-width:0;}
+        .dash-quick{display:grid;grid-template-columns:repeat(2, 1fr);gap:16px;min-width:0;}
+        .dash-quick>*{min-width:0;max-width:100%;}
         @media (max-width:860px){
           .dash-2col{grid-template-columns:1fr; gap:16px;}
-          .dash-quick{grid-template-columns:repeat(2,1fr);}
         }
-        @media (max-width:520px){
-          .dash-quick{grid-template-columns:repeat(2,1fr);}
+        @media (max-width:600px){
+          .dash-card{padding:20px 16px !important;border-radius:20px;}
+        }
+        @media (max-width:480px){
+          .dash-details-grid{grid-template-columns:1fr;gap:10px;}
+        }
+        @media (max-width:360px){
+          .dash-quick{grid-template-columns:1fr;}
         }
       `}</style>
     </section>
