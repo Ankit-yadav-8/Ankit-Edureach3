@@ -64,6 +64,29 @@ export async function startPayment(details, token) {
         color: "#FF693D",
         backdrop_color: "#1c1c28",
       },
+      config: {
+        display: {
+          blocks: {
+            qr: {
+              name: "Pay with QR Code (Scan with any UPI App)",
+              instruments: [
+                {
+                  method: "upi",
+                  flows: ["qr"],
+                },
+              ],
+            },
+          },
+          sequence: ["block.qr"],
+          preferences: {
+            show_default_blocks: true,
+          },
+        },
+      },
+      retry: {
+        enabled: true,
+        max_count: 3,
+      },
       handler: async (response) => {
         try {
           // Send the student details too - the enrolment row is created here,
@@ -80,6 +103,7 @@ export async function startPayment(details, token) {
         }
       },
       modal: {
+        confirm_close: true,
         ondismiss: () => reject(new Error("CANCELLED")),
       },
     });
