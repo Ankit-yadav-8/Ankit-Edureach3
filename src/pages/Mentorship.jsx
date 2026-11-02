@@ -1014,7 +1014,7 @@ const INCLUDED = [
 function buildPricingPlans(basePlan) {
   const family = basePlan.replace(/-(6m|intl)$/, "");
   return {
-    indian: family,
+    indian: family + "-6m",
     intl: family + "-intl",
   };
 }

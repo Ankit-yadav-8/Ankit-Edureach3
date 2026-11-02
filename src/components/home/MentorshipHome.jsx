@@ -29,7 +29,7 @@ const PROGRAMS = [
     color: "#6366f1",
     exam: "JEE 2028 Mentorship",
     tag: "Class 11 · 6 Months",
-    price: "3499",
+    price: "1",
     old: "5999",
     blurb: "Start early and finish ahead of everyone. A disciplined roadmap that compounds every single day.",
     points: ["Same IITian mentor", "6 Months concept-first roadmap", "Weekly test analysis & parent reports"],

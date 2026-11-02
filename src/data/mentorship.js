@@ -19,7 +19,8 @@ export const MENTOR_PLANS = {
   // ── Indian · ₹3,499 ──
   "mentor-jee-2027-6m":    { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "JEE",        year: 2027, duration: "Till JEE Mains 2027", region: "indian" },
   "mentor-neet-2027-6m":   { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "NEET",       year: 2027, duration: "6 months", region: "indian" },
-  "mentor-jee-2028-6m":    { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "JEE",        year: 2028, duration: "6 months", region: "indian" },
+  "mentor-jee-2028":       { amount: 1,  old: 5999,  drops: [5999, 1],  exam: "JEE",        year: 2028, duration: "6 months", region: "indian" },
+  "mentor-jee-2028-6m":    { amount: 1,  old: 5999,  drops: [5999, 1],  exam: "JEE",        year: 2028, duration: "6 months", region: "indian" },
   "mentor-neet-2028-6m":   { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "NEET",       year: 2028, duration: "6 months", region: "indian" },
   "mentor-foundation-6m":  { amount: 3499,  old: 5999,  drops: [5999, 3499],  exam: "Foundation", year: null, duration: "6 months", region: "indian" },
 
@@ -34,7 +35,7 @@ export const MENTOR_PLANS = {
 /* ── Quick summary used by navbar + hero card ───────────────────── */
 export const MENTOR_LINKS = [
   { slug: "jee-2027", label: "JEE 2027", to: "/mentorship/jee-2027", price: 3499, tag: "Class 12 / Droppers · Till JEE Mains 2027" },
-  { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 3499, tag: "Class 11 · 2-Year Plan · 6 Months" },
+  { slug: "jee-2028", label: "JEE 2028", to: "/mentorship/jee-2028", price: 1, tag: "Class 11 · 2-Year Plan · 6 Months" },
   { slug: "neet",     label: "NEET",     to: "/mentorship/neet",     price: 3499, tag: "Medical Aspirants" },
   { slug: "foundation", label: "Foundation", to: "/mentorship/foundation", price: 3499, tag: "Class 9 & 10" },
 ];

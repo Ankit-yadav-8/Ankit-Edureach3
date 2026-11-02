@@ -23,7 +23,8 @@ const PLANS = {
   // ── Indian Mentorship (6 Months / Till JEE Mains 2027) · ₹3,499 ──
   "mentor-jee-2027-6m":    { amount: 3499,  label: "JEE 2027 Mentorship (Till JEE Mains 2027)" },
   "mentor-neet-2027-6m":   { amount: 3499,  label: "NEET 2027 Mentorship (6 Months)" },
-  "mentor-jee-2028-6m":    { amount: 3499,  label: "JEE 2028 Mentorship (6 Months)" },
+  "mentor-jee-2028":       { amount: 1,     label: "JEE 2028 Mentorship (6 Months)" },
+  "mentor-jee-2028-6m":    { amount: 1,     label: "JEE 2028 Mentorship (6 Months)" },
   "mentor-neet-2028-6m":   { amount: 3499,  label: "NEET 2028 Mentorship (6 Months)" },
   "mentor-foundation-6m":  { amount: 3499,  label: "Foundation Mentorship 6 Months (Class 9–10)" },
 
