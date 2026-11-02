@@ -1,10 +1,10 @@
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, User, Mail, Phone, MapPin, Hash, ShieldCheck, Check, Loader2,
   ArrowRight, Sparkles, BadgeCheck, PartyPopper, GraduationCap,
-  Globe, Tag, QrCode, CreditCard,
+  Globe, Tag,
 } from "lucide-react";
 import { startPayment } from "../payments/razorpay.js";
 import { useAuth } from "../auth/AuthContext.jsx";
@@ -237,80 +237,6 @@ function EnrolModal({ plan, onClose }) {
     setErrors(er);
     return Object.keys(er).length === 0;
   }
-
-  // ── Dynamic UPI QR Code Scanner state ──
-  const [qrView, setQrView] = useState(false);
-  const [qrData, setQrData] = useState(null); // { qrId, imageUrl, amount }
-  const [qrLoading, setQrLoading] = useState(false);
-
-  async function handleStartQr() {
-    setTopError("");
-    if (!validate()) return;
-    setQrLoading(true);
-    try {
-      const res = await fetch(API_BASE + "/api/payment/create-qr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          plan: activePlanKey,
-          targetExam: meta.targetExam || "",
-          couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
-          ...f,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not generate QR code.");
-      setQrData(data);
-      setQrView(true);
-    } catch (e) {
-      setTopError(e.message || "Could not generate QR code. Try standard checkout.");
-    } finally {
-      setQrLoading(false);
-    }
-  }
-
-  // Poll for QR payment status
-  useEffect(() => {
-    if (!qrView || !qrData?.qrId || done) return;
-    let cancelled = false;
-
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(API_BASE + "/api/payment/check-qr", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({
-            qrId: qrData.qrId,
-            plan: activePlanKey,
-            couponCode: couponValid ? couponCode.trim().toUpperCase() : "",
-            targetExam: meta.targetExam || "",
-            ...f,
-          }),
-        });
-        const data = await res.json();
-        if (cancelled) return;
-        if (data.paid) {
-          clearInterval(interval);
-          setDone({ paymentId: data.paymentId });
-          setQrView(false);
-        }
-      } catch (err) {
-        console.error("check-qr poll error:", err);
-      }
-    }, 2500);
-
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [qrView, qrData, done, activePlanKey, couponValid, couponCode, meta.targetExam, f, token]);
-
   async function handlePay() {
     setTopError("");
     if (!validate()) return;
@@ -501,52 +427,16 @@ function EnrolModal({ plan, onClose }) {
                 </>
               )}
 
-              <button
-                type="button"
-                onClick={handleStartQr}
-                disabled={busy || qrLoading}
+              <button onClick={handlePay} disabled={busy}
                 style={{
-                  width: "100%", marginTop: 20, padding: "15px 18px", border: "none", borderRadius: 14,
-                  background: (busy || qrLoading) ? "#f9a25e" : "linear-gradient(135deg,#FF693D,#E0421F)",
-                  color: "#fff", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16,
-                  cursor: (busy || qrLoading) ? "wait" : "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                  boxShadow: "0 10px 26px rgba(255, 105, 61,.38)",
-                }}
-              >
-                {qrLoading ? (
-                  <><Loader2 size={19} className="enrol-spin" /> Generating UPI QR Scanner…</>
-                ) : (
-                  <>
-                    <QrCode size={20} />
-                    <span>Scan QR Code to Pay ₹{displayAmount}</span>
-                  </>
-                )}
-              </button>
-              <div style={{ textAlign: "center", fontSize: 12, color: "#6b7280", marginTop: 6, fontWeight: 600 }}>
-                ⚡ Scan with Google Pay, PhonePe, Paytm or from parent's phone
-              </div>
-
-              <button
-                type="button"
-                onClick={handlePay}
-                disabled={busy || qrLoading}
-                style={{
-                  width: "100%", marginTop: 12, padding: "13px 18px", borderRadius: 14,
-                  border: "1.5px solid rgba(255,105,61,0.35)", background: "#fff",
-                  color: "#c2410c", fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 14.5,
-                  cursor: (busy || qrLoading) ? "wait" : "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                }}
-              >
-                {busy ? (
-                  <><Loader2 size={17} className="enrol-spin" /> Opening Gateway…</>
-                ) : (
-                  <>
-                    <CreditCard size={17} />
-                    <span>Pay via Cards, Netbanking & UPI Apps</span>
-                  </>
-                )}
+                  width: "100%", marginTop: 20, padding: "15px", border: "none", borderRadius: 14,
+                  background: busy ? "#f9a25e" : "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff",
+                  fontFamily: "'Space Grotesk',sans-serif", fontWeight: 800, fontSize: 16, cursor: busy ? "wait" : "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
+                  boxShadow: "0 10px 26px rgba(255, 105, 61,.4)",
+                }}>
+                {busy ? <><Loader2 size={18} className="enrol-spin" /> Processing…</>
+                      : <>Pay ₹{displayAmount} & Enrol <ArrowRight size={18} /></>}
               </button>
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 14, flexWrap: "wrap" }}>
@@ -562,7 +452,7 @@ function EnrolModal({ plan, onClose }) {
         )}
       </motion.div>
 
-      <style>{`@keyframes enrolspin{to{transform:rotate(360deg)}}.enrol-spin{animation:enrolspin .8s linear infinite}@keyframes enrolpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}.enrol-pulse{animation:enrolpulse 1.6s ease-in-out infinite}`}</style>
+      <style>{`@keyframes enrolspin{to{transform:rotate(360deg)}}.enrol-spin{animation:enrolspin .8s linear infinite}`}</style>
     </motion.div>,
     document.body
   );
