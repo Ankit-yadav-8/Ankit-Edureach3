@@ -40,14 +40,8 @@ const PLAN_META = {
     band: "Indian Students · 6 Months · 1-on-1 doctor mentor",
     region: "indian", duration: "6 months",
   },
-  "mentor-jee-2028": {
-    amount: 1, old: 5999, kind: "mentorship", targetExam: "JEE 2028",
-    title: "JEE 2028 Mentorship (6 Months)",
-    band: "Indian Students · 6 Months · Class 11",
-    region: "indian", duration: "6 months",
-  },
   "mentor-jee-2028-6m": {
-    amount: 1, old: 5999, kind: "mentorship", targetExam: "JEE 2028",
+    amount: 3499, old: 5999, kind: "mentorship", targetExam: "JEE 2028",
     title: "JEE 2028 Mentorship (6 Months)",
     band: "Indian Students · 6 Months · Class 11",
     region: "indian", duration: "6 months",
