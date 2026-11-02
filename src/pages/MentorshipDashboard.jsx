@@ -2138,7 +2138,7 @@ function DashboardBody({ urlPlan = "" }) {
 
         {/* ── DAILY & WEEKLY REPORTS ── */}
         <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
-          sub="A weekly report is auto-emailed to your parent every Sunday and a daily report every day - automatically, whether or not you log anything. You can also send either one now if you want an update in between.">
+          sub="Your previous day's complete study report is auto-emailed to your parent every morning between 10:00 AM – 10:30 AM IST, and a weekly progress booklet every Sunday. You can also send an update anytime.">
 
           {/* ── WEEKLY PROGRESS BOOKLET ── */}
           <ProgressBooklet
@@ -2201,11 +2201,11 @@ function DashboardBody({ urlPlan = "" }) {
           {todayEntry ? (
             <ProgressBooklet
               title="Daily Progress Booklet"
-              subtitle="Today's effort at a glance - hours, tasks, routine and any test, auto-built from the daily log."
+              subtitle="Daily effort at a glance — hours, tasks, routine and tests, auto-built from the daily study log."
               studentName={user?.name || "Student"}
               studentSub={`${fmtFull(new Date())} · CampusPoint Mentorship`}
               heroPoints={["Hours studied per subject", "Tasks completed & routine", "Any test taken today", "Predicted rank (if tested)"]}
-              heroNote="Auto-emailed to your parent every day - a quick daily snapshot so they always know how today went."
+              heroNote="Previous day's complete report is auto-emailed to your parent every morning (10:00 AM – 10:30 AM IST) so they stay comfortably updated on your consistency."
               rows={[
                 { icon: Clock, color: ORANGE, label: "Study hours today", sub: `${subjects.length} subjects logged`, value: `${todayEntry.hours} h` },
                 { icon: CheckCircle2, color: "#14b8a6", label: "Tasks completed", sub: todayEntry.routine ? "Routine followed" : "Routine missed", value: `${todayEntry.tasksDone} / ${todayEntry.tasksTotal}` },
@@ -2229,16 +2229,16 @@ function DashboardBody({ urlPlan = "" }) {
                 </div>
               }
               footer={<SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report"
-                autoLocked autoLabel="Auto-emailed every day" parentEmail={parentEmail} />}
+                autoLocked autoLabel="Auto-emailed next morning (10:00–10:30 AM)" parentEmail={parentEmail} />}
             />
           ) : (
             <div style={{ background: "var(--page-bg)", border: "1px solid rgba(8,145,178,.22)", borderRadius: 20, padding: "22px", boxShadow: "0 18px 44px -30px rgba(26,26,46,.4)", marginBottom: 18 }}>
               <div style={{ textAlign: "center", padding: "18px 0", color: "#9ca3af", fontSize: 13 }}>
-                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Nothing logged yet today - your parent still gets today's report (shown as 0h) automatically. Fill today's log to make it count.
+                <CalendarDays size={24} style={{ marginBottom: 6, opacity: .6 }} /><br />Nothing logged yet today — keep your dashboard updated so your parent receives a complete progress report tomorrow morning (10:00 – 10:30 AM IST).
               </div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
                 <SendControls color="#0891b2" state={dailyState} onSend={() => sendReport("daily")} sendLabel="Send today's report"
-                  autoLocked autoLabel="Auto-emailed every day" parentEmail={parentEmail} />
+                  autoLocked autoLabel="Auto-emailed next morning (10:00–10:30 AM)" parentEmail={parentEmail} />
               </div>
             </div>
           )}

@@ -1,15 +1,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Daily parent-report job.
 //
-// Sends a real numeric daily report to the parent every day — even if the
-// student never opens the dashboard that day (it just shows 0h). Now that the
-// student's tracking data is synced server-side (MentorProgress), this builds
-// the same daily email the client sends, straight from that data.
+// Sends a complete daily study report to the parent every morning between
+// 10:00 AM and 10:30 AM IST for the PREVIOUS calendar day (e.g. on 2 Nov at
+// 10:00 AM, it compiles 1 Nov's full-day study hours, tasks, routine and tests).
 //
-// Coordination with the client: the client's own daily auto-send stamps
-// `lastDailyReportAt` on the enrolment, and this job only sends when that stamp
-// is older than the start of today — so a student who already opened the app
-// (and triggered the client send) is skipped, avoiding duplicate emails.
+// This gives students the entire day until midnight to update their dashboard,
+// allowing parents to comfortably review their child's completed previous-day
+// progress every morning with breakfast.
+//
+// Coordination: stamps `lastDailyReportAt` on the enrolment for today, ensuring
+// exactly one automated daily email per enrolment per morning.
 //
 // Best-effort & dev-safe: without a Brevo key (or with OTP_DEV_MODE=true),
 // sendMail only logs, so nothing real is sent locally.
@@ -22,10 +23,28 @@ import { buildDailyHtml } from "../routes/mentorship.js";
 const siteOrigin = () =>
   (process.env.CLIENT_ORIGIN || "").split(",")[0].trim() || "https://campuspoint.in";
 
-// Local calendar day in Indian Standard Time (YYYY-MM-DD), matching the student's dashboard
-const todayIsoIST = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
-const todayIsoUTC = todayIsoIST; // Backward compatibility alias
-const fmtDay = (iso) => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+// Calendar date in Indian Standard Time (YYYY-MM-DD)
+export const todayIsoIST = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+
+export const todayIsoUTC = todayIsoIST; // Backward compatibility alias
+
+// Previous calendar date in Indian Standard Time (YYYY-MM-DD)
+export function yesterdayIsoIST() {
+  const istStr = todayIsoIST();
+  const [y, m, d] = istStr.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d - 1)).toISOString().slice(0, 10);
+}
+
+// Format YYYY-MM-DD as e.g. "01 Nov 2026"
+export function fmtDay(iso) {
+  if (!iso) return "";
+  const [y, m, d] = String(iso).split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${String(d).padStart(2, "0")} ${months[m - 1]} ${y}`;
+}
+
 const inr = (n) => Number(n || 0).toLocaleString("en-IN");
 
 const SHORT = {
@@ -34,7 +53,6 @@ const SHORT = {
 };
 const shortName = (s) => SHORT[s] || s;
 
-// today's per-subject hours/tasks — tolerant of the old number-only shape
 function subVal(entry, name) {
   const v = entry?.subjects?.[name];
   if (v == null) return { h: 0, t: 0 };
@@ -42,7 +60,6 @@ function subVal(entry, name) {
   return { h: Number(v.h) || 0, t: Number(v.t) || 0 };
 }
 
-// Latest ranked test → the compact rank block shape buildDailyHtml expects.
 function buildRankSummary(tests) {
   const ranked = [...(tests || [])].reverse().find((t) => t?.rank?.ranked);
   if (!ranked) return null;
@@ -58,23 +75,22 @@ function buildRankSummary(tests) {
   };
 }
 
-// Build the daily report object from a MentorProgress data blob — mirrors the
-// client's buildDailyReport() so the emailed report is identical.
-function buildDailyR(data) {
-  const iso = todayIsoUTC();
+// Build the daily report object from a MentorProgress data blob for a target date
+export function buildDailyR(data, targetIso) {
+  const iso = targetIso || yesterdayIsoIST();
   const entries = Array.isArray(data?.entries) ? data.entries : [];
   const tests = Array.isArray(data?.tests) ? data.tests : [];
-  const today = entries.find((e) => e.date === iso);
-  const names = today?.subjects ? Object.keys(today.subjects) : [];
+  const dayEntry = entries.find((e) => e.date === iso);
+  const names = dayEntry?.subjects ? Object.keys(dayEntry.subjects) : [];
   const subjects = names.map((name) => {
-    const { h, t } = subVal(today, name);
+    const { h, t } = subVal(dayEntry, name);
     return { name: shortName(name), h, t };
   });
-  const todayTest = tests.find((t) => t.date === iso);
+  const dayTest = tests.find((t) => t.date === iso);
 
-  // If the student has no entry for today, or hours=0 with no subjects/tasks,
-  // mark the report as "not updated" so the email shows an irregularity warning.
-  const notUpdated = !today || ((today.hours ?? 0) === 0 && names.length === 0 && (today.tasksDone ?? 0) === 0);
+  // If the student has no entry for that day, or hours=0 with no subjects/tasks,
+  // mark the report as "not updated" so the email alerts the parent of irregularity.
+  const notUpdated = !dayEntry || ((dayEntry.hours ?? 0) === 0 && names.length === 0 && (dayEntry.tasksDone ?? 0) === 0);
 
   // ── Latest test analysis with improvement vs previous test ──────────────
   const sortedTests = [...tests].sort((a, b) => (a.date || "").localeCompare(b.date || ""));
@@ -98,14 +114,15 @@ function buildDailyR(data) {
 
   return {
     date: fmtDay(iso),
+    targetIso: iso,
     notUpdated,
     daily: {
-      hours: today?.hours ?? 0,
+      hours: dayEntry?.hours ?? 0,
       subjects,
-      tasksDone: today?.tasksDone ?? 0,
-      tasksTotal: today?.tasksTotal ?? 0,
-      routine: !!today?.routine,
-      todayTest: todayTest ? `${todayTest.name}: ${todayTest.scored}/${todayTest.total}` : null,
+      tasksDone: dayEntry?.tasksDone ?? 0,
+      tasksTotal: dayEntry?.tasksTotal ?? 0,
+      routine: !!dayEntry?.routine,
+      todayTest: dayTest ? `${dayTest.name}: ${dayTest.scored}/${dayTest.total}` : null,
     },
     latestTest,
     prevTest,
@@ -114,14 +131,30 @@ function buildDailyR(data) {
   };
 }
 
-async function runOnce() {
-  // Check the current hour in Indian Standard Time (Asia/Kolkata).
-  // Send late at night between 10:30 PM (22) and 1:30 AM (1) IST so the full day's work is included.
-  const istHour = Number(new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()));
-  if (istHour < 22 && istHour > 1) return;
+export function isDailyReportWindowIST() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+  }).formatToParts(new Date());
+  const hour = Number(parts.find((p) => p.type === "hour")?.value || 0);
+  const minute = Number(parts.find((p) => p.type === "minute")?.value || 0);
+  // Send every morning between 10:00 AM and 10:30 AM IST (window extends to 10:35 for interval tick coverage)
+  return hour === 10 && minute <= 35;
+}
+
+export async function runOnce(force = false) {
+  // Check if current time is within the morning 10:00 AM to 10:30 AM IST window
+  if (!force && process.env.FORCE_DAILY_REPORT !== "true" && !isDailyReportWindowIST()) {
+    return;
+  }
 
   const todayIso = todayIsoIST();
+  const yesterdayIso = yesterdayIsoIST();
+  const formattedDay = fmtDay(yesterdayIso);
   const startOfDay = new Date(`${todayIso}T00:00:00+05:30`);
+
   const due = await Enrollment.find({
     status: "paid",
     plan: { $regex: /^mentor-/ },
@@ -133,19 +166,32 @@ async function runOnce() {
   const link = `${siteOrigin()}/mentorship-dashboard`;
   for (const enr of due) {
     try {
-      // Only report for students who have actually used the dashboard — don't
-      // email parents of enrolments that never synced any data.
+      // Only report for students who have actually used the dashboard
       const prog = await MentorProgress.findOne({ email: (enr.email || "").toLowerCase(), plan: enr.plan }).lean();
       if (!prog) continue;
 
-      const r = buildDailyR(prog.data || {});
+      const r = buildDailyR(prog.data || {}, yesterdayIso);
+      const studentName = enr.name || "Student";
+      const subject = `Daily mentorship report (${formattedDay}) — ${studentName}`;
+
       const out = await sendMail({
         to: enr.parentEmail,
-        subject: `Daily mentorship update — ${enr.name}`,
-        html: buildDailyHtml(enr.name || "your child", r, link),
-        text: `Daily mentorship update for ${enr.name}. Open the dashboard: ${link}`,
+        subject,
+        html: buildDailyHtml(studentName, r, link),
+        text: `Daily mentorship report (${formattedDay}) for ${studentName}. Open the dashboard: ${link}`,
       });
+
       if (out.ok) {
+        // Also send copy to student if different from parent email
+        if (enr.email && enr.email.toLowerCase() !== (enr.parentEmail || "").toLowerCase()) {
+          sendMail({
+            to: enr.email,
+            subject: `Your daily mentorship report (${formattedDay}) — CampusPoint`,
+            html: buildDailyHtml(studentName, r, link),
+            text: `Daily mentorship report (${formattedDay}) for ${studentName}. Open the dashboard: ${link}`,
+          }).catch((err) => console.error(`[dailyReport] student copy ${enr.email}:`, err.message));
+        }
+
         enr.lastDailyReportAt = new Date();
         await enr.save();
         sent++;
@@ -154,11 +200,11 @@ async function runOnce() {
       console.error(`[dailyReport] ${enr._id}:`, e.message);
     }
   }
-  if (sent) console.log(`[dailyReport] sent daily reports for ${sent} enrolment(s)`);
+  if (sent) console.log(`[dailyReport] sent previous day (${formattedDay}) daily reports for ${sent} enrolment(s)`);
 }
 
 export function startDailyReportJob() {
   const tick = () => runOnce().catch((e) => console.error("[dailyReport]", e.message));
-  setTimeout(tick, 90 * 1000);            // first pass ~1.5 min after boot
-  setInterval(tick, 60 * 60 * 1000);      // then every hour for precise 11 PM IST window; each enrolment fires ≤ once/day
+  setTimeout(tick, 90 * 1000);        // first pass ~1.5 min after boot
+  setInterval(tick, 5 * 60 * 1000);   // check every 5 min; reliably catches the 10:00–10:30 AM IST window
 }

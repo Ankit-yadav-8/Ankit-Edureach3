@@ -272,14 +272,14 @@ export function buildDailyHtml(studentName, r, link) {
     const warningBlock = `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px">
         <tr><td style="background:#fff7f7;border:1px solid #fca5a5;border-radius:10px;padding:14px 16px">
-          <div style="font-size:13px;font-weight:800;color:#dc2626;margin-bottom:4px">⚠️ Study Progress Not Updated Today</div>
+          <div style="font-size:13px;font-weight:800;color:#dc2626;margin-bottom:4px">⚠️ Study Progress Not Updated (${esc(r.date || "Yesterday")})</div>
           <div style="font-size:12px;color:#7c2d12;line-height:1.6">
-            <b style="color:#991b1b">${esc(studentName)}</b> did not log their study hours or tasks today. This indicates irregularity in their daily preparation routine.
+            <b style="color:#991b1b">${esc(studentName)}</b> did not log their study hours or tasks for <b>${esc(r.date || "yesterday")}</b>. This indicates irregularity in their daily preparation routine.
           </div>
           <div style="margin-top:10px;background:#ffffff;border:1px solid #fed7aa;border-radius:8px;padding:10px 12px">
             <div style="font-size:10.5px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px">👨‍👩‍👧 What parents can do</div>
             <div style="font-size:11.5px;color:#78350f;line-height:1.6">
-              • Ask your child about today's study — they may have studied but forgotten to log it<br>
+              • Ask your child about their study on ${esc(r.date || "yesterday")} — they may have studied but forgotten to log it<br>
               • Encourage them to open the dashboard daily to keep their streak alive<br>
               • Consistent tracking builds discipline and keeps the mentor updated
             </div>
@@ -288,7 +288,7 @@ export function buildDailyHtml(studentName, r, link) {
       </table>`;
 
     return shell(`
-      ${intro(`Namaste — here is today's daily report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+      ${intro(`Namaste — here is the daily report for <b style="color:${BRAND.ink}">${esc(studentName)}</b> (${esc(r.date || "yesterday")}).`)}
       ${infoBar}
       ${warningBlock}
       ${rankBlock(r.rank)}
@@ -299,7 +299,7 @@ export function buildDailyHtml(studentName, r, link) {
         </div>
       </div>`,
       {
-        preheader: `⚠️ ${studentName} did not update study progress today — irregularity detected`,
+        preheader: `⚠️ ${studentName} did not update study progress for ${r.date || "yesterday"} — irregularity detected`,
         eyebrow: "Daily alert",
         alertStrip,
       });
@@ -391,12 +391,12 @@ export function buildDailyHtml(studentName, r, link) {
   `, "📊");
 
   const tasksCard = d.tasksTotal ? cardWrap("Task Progress", bar("Tasks Completed", taskPct, BRAND.coral, `${d.tasksDone ?? 0} / ${d.tasksTotal}`), "📋") : "";
-  const testCard = d.todayTest ? cardWrap("Test Taken Today", `<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:8px;padding:10px 12px;font-size:12.5px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</div>`, "✍️") : "";
+  const testCard = d.todayTest ? cardWrap("Test Taken", `<div style="background:#faf5ff;border:1px solid #e6d8fb;border-radius:8px;padding:10px 12px;font-size:12.5px;font-weight:700;color:#6d28d9;text-align:center">${esc(d.todayTest)}</div>`, "✍️") : "";
   const subjectsCard = cardWrap("Subject Breakdown", subHtml, "📚");
   const rankCard = r.rank ? rankBlock(r.rank) : "";
 
   return shell(`
-    ${intro(`Namaste — here is today's daily study report for <b style="color:${BRAND.ink}">${esc(studentName)}</b>.`)}
+    ${intro(`Namaste — here is the daily study report for <b style="color:${BRAND.ink}">${esc(studentName)}</b> (${esc(r.date || "Daily update")}).`)}
     ${infoBar}
     ${overviewCard}
     ${tasksCard}
@@ -407,12 +407,12 @@ export function buildDailyHtml(studentName, r, link) {
     <div style="margin:14px 0 12px;background:#f8fafc;border-left:3px solid ${BRAND.coral};border-radius:0 8px 8px 0;padding:10px 14px">
       <div style="font-size:10.5px;font-weight:700;color:${BRAND.coral};text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">💡 For parents</div>
       <div style="font-size:12px;color:#475569;line-height:1.55">
-        ${Number(d.hours) >= 6 ? "Your child is putting in great effort today! Encourage them to keep up this consistency." : Number(d.hours) >= 3 ? "A decent study day. Encourage them to aim for 6+ hours for competitive exam readiness." : "Study hours are on the lower side today. A gentle nudge can help maintain the routine."}
+        ${Number(d.hours) >= 6 ? "Your child put in great effort on this day! Encourage them to keep up this consistency." : Number(d.hours) >= 3 ? "A decent study day. Encourage them to aim for 6+ hours for competitive exam readiness." : "Study hours were on the lower side on this day. A gentle nudge can help maintain the routine."}
       </div>
     </div>
     ${button("Open the dashboard", link)}`,
     {
-      preheader: `${studentName} studied ${d.hours ?? 0}h today · ${d.tasksDone ?? 0}/${d.tasksTotal ?? 0} tasks done${lt ? ` · Latest test: ${lt.scored}/${lt.total}` : ""}`,
+      preheader: `${studentName} studied ${d.hours ?? 0}h (${r.date || "daily"}) · ${d.tasksDone ?? 0}/${d.tasksTotal ?? 0} tasks done${lt ? ` · Latest test: ${lt.scored}/${lt.total}` : ""}`,
       eyebrow: "Daily update",
       alertStrip,
     });
@@ -504,7 +504,8 @@ router.post("/parent-report", requireAuth, async (req, res) => {
     const html = kind === "daily" ? buildDailyHtml(studentName, report, link)
       : kind === "backlog" ? buildBacklogHtml(studentName, report, link)
       : buildWeeklyHtml(studentName, report, link);
-    const subject = kind === "daily" ? `Daily mentorship update — ${studentName}`
+    const reportDate = (report && report.date) ? ` (${report.date})` : "";
+    const subject = kind === "daily" ? `Daily mentorship report${reportDate} — ${studentName}`
       : kind === "backlog" ? `Action needed — ${studentName} is behind on their backlog`
       : `Weekly mentorship report — ${studentName}`;
 
