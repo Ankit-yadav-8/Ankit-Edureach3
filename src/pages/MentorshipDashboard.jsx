@@ -1354,6 +1354,33 @@ function DashboardBody({ urlPlan = "" }) {
           box-shadow: 0 1px 3px rgba(255, 105, 61, 0.06);
         }
 
+        
+        /* Responsive Grid Breakpoints for Console Tools & Booklet */
+        @media (max-width: 900px) {
+          .md-tools-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .md-track-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .md-booklet {
+            grid-template-columns: 1fr !important;
+          }
+          .md-donut-row {
+            grid-template-columns: 1fr !important;
+            justify-items: center !important;
+            text-align: center !important;
+          }
+        }
+        @media (max-width: 500px) {
+          .md-form-2col {
+            grid-template-columns: 1fr !important;
+          }
+          .md-stat-3col {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
         /* DESKTOP (min-width: 901px) */
         @media (min-width: 901px) {
           .student-mobile-topbar {
@@ -3042,7 +3069,7 @@ function DashboardBody({ urlPlan = "" }) {
             <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors - tracked, by topic, and killed.">
               {sillyTrend.length ? (
                 <>
-                  <Bars data={sillyTrend} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={170} angle={-32} />
+                  <Bars data={sillyTrend.slice(-8)} bars={[{ key: "silly", label: "Silly mistakes", color: "#ef4444" }]} height={170} angle={-25} />
                   {latest && prev && (
                     <DeltaPill d={Number(latest?.silly || 0) - Number(prev?.silly || 0)} lowerIsBetter subtext={`${prev?.silly ?? 0} → ${latest?.silly ?? 0} this test`} />
                   )}
@@ -3063,7 +3090,7 @@ function DashboardBody({ urlPlan = "" }) {
             {/* Chapter strength & weekly coverage - feeds the parent chapter report */}
             <ToolCard icon={BookOpen} color="#FF693D" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week - it appears in your Chapter-strength report.">
               <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div className="md-form-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                   <NumField label="Covered this week (%)" value={chapForm.coverage} onChange={(v) => setChapForm((s) => ({ ...s, coverage: v }))} placeholder="e.g. 60" full />
                 </div>
