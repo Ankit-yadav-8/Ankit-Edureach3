@@ -1338,7 +1338,7 @@ function DashboardBody({ urlPlan = "" }) {
           text-align: left;
           background: transparent;
           color: #475569;
-          font-size: 12px;
+          font-size: 11.5px;
           font-weight: 600;
           transition: all 0.15s ease;
         }
@@ -1931,10 +1931,10 @@ function DashboardBody({ urlPlan = "" }) {
                   {initial}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 12, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontWeight: 600, fontSize: 11, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {user?.name || "Student"}
                   </div>
-                  <div style={{ fontSize: 10.5, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontSize: 10, color: "#b0b8c4", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {user?.email || identity.studentId || "Mentee"}
                   </div>
                 </div>
@@ -1949,13 +1949,13 @@ function DashboardBody({ urlPlan = "" }) {
                   border: "1px solid #e2e8f0",
                   background: "#f8fafc",
                   color: "#475569",
-                  fontSize: 11.5,
+                  fontSize: 11,
                   fontWeight: 600,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 7,
+                  gap: 6,
                   transition: "all 0.15s ease",
                   boxSizing: "border-box",
                   flexShrink: 0,
@@ -1997,67 +1997,26 @@ function DashboardBody({ urlPlan = "" }) {
               position: "sticky",
               top: 0,
               zIndex: 40,
-              background: "rgba(255, 255, 255, 0.9)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              borderBottom: "1px solid #e2e8f0",
-              padding: "12px clamp(1rem, 2.5vw, 2.2rem)",
+              background: "rgba(255, 255, 255, 0.92)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              borderBottom: "1px solid #f1f5f9",
+              padding: "8px clamp(0.8rem, 2vw, 1.8rem)",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              gap: 16,
-              flexWrap: "wrap",
+              gap: 12,
             }}
           >
             <div>
-              <h1 style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+              <h1 style={{ fontFamily: INTER, fontWeight: 600, fontSize: 13, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
                 {currentNav?.label || "Student Console"}
               </h1>
-              <p style={{ fontSize: 11, color: "#94a3b8", margin: "1px 0 0", fontWeight: 500 }}>
+              <p style={{ fontSize: 10, color: "#b0b8c4", margin: "1px 0 0", fontWeight: 500 }}>
                 {currentNav?.desc || "Track your daily study, analysis, backlog and mentor guidance."}
               </p>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
 
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "#c2410c",
-                  background: "#fff7ed",
-                  border: "1px solid #fed7aa",
-                  borderRadius: 50,
-                  padding: "5px 11px",
-                }}
-              >
-                <Flame size={13} color="#ea580c" />
-                <span>{streak} day{streak === 1 ? "" : "s"} streak</span>
-              </span>
-
-              {identity.studentId && (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    fontSize: 10.5,
-                    fontWeight: 600,
-                    fontFamily: "monospace",
-                    color: "#64748b",
-                    background: "#f1f5f9",
-                    border: "1px solid #e2e8f0",
-                    borderRadius: 6,
-                    padding: "5px 9px",
-                  }}
-                >
-                  {identity.studentId}
-                </span>
-              )}
-            </div>
           </div>
 
           {/* Main Body Content Container */}
@@ -2070,14 +2029,14 @@ function DashboardBody({ urlPlan = "" }) {
                   style={{
                     background: "linear-gradient(135deg, #ffffff 0%, #fff7ed 100%)",
                     border: "1px solid rgba(255,105,61,0.22)",
-                    borderRadius: 20,
-                    padding: "22px 20px",
-                    boxShadow: "0 4px 20px rgba(15,23,42,0.03)",
+                    borderRadius: 14,
+                    padding: "18px 18px",
+                    boxShadow: "0 2px 12px rgba(15,23,42,0.03)",
                     position: "relative",
                     overflow: "hidden",
                   }}
                 >
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #15a06e, #FF693D)" }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #15a06e, #FF693D)" }} />
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, flexWrap: "wrap" }}>
                     <div style={{ maxWidth: 620 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
@@ -2085,11 +2044,11 @@ function DashboardBody({ urlPlan = "" }) {
                           style={{
                             display: "inline-flex",
                             alignItems: "center",
-                            gap: 5,
-                            fontSize: 10,
+                            gap: 4,
+                            fontSize: 9,
                             fontWeight: 700,
                             borderRadius: 50,
-                            padding: "3px 10px",
+                            padding: "3px 9px",
                             color: identity.status === "expired" ? "#dc2626" : "#FF693D",
                             background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)",
                           }}
@@ -2101,16 +2060,16 @@ function DashboardBody({ urlPlan = "" }) {
                         </span>
 
                         {identity.batchLabel && (
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "3px 8px", borderRadius: 5 }}>
+                          <span style={{ fontSize: 9, fontWeight: 600, color: "#94a3b8", background: "#f1f5f9", padding: "2px 7px", borderRadius: 4 }}>
                             {identity.batchLabel}
                           </span>
                         )}
                       </div>
 
-                      <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)", color: "#0f172a", margin: "0 0 6px", lineHeight: 1.25 }}>
+                      <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1rem, 2vw, 1.3rem)", color: "#0f172a", margin: "0 0 5px", lineHeight: 1.25 }}>
                         Welcome back, <span style={{ color: "#FF693D" }}>{(user?.name || "Student").trim().split(/\s+/)[0]}</span> 👋
                       </h2>
-                      <p style={{ color: "#64748b", fontSize: 12, lineHeight: 1.55, margin: 0 }}>
+                      <p style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.5, margin: 0 }}>
                         Track your daily study hours, mock test scores, chapter sprint backlogs and weekly reports in one place.
                       </p>
 
@@ -2121,11 +2080,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#FF693D",
                             color: "#fff",
                             border: "none",
-                            padding: "7px 14px",
-                            borderRadius: 7,
+                            padding: "6px 12px",
+                            borderRadius: 6,
                             fontFamily: INTER,
                             fontWeight: 600,
-                            fontSize: 11.5,
+                            fontSize: 10.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2142,11 +2101,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#fff",
                             color: "#0f172a",
                             border: "1px solid #e2e8f0",
-                            padding: "7px 14px",
-                            borderRadius: 7,
+                            padding: "6px 12px",
+                            borderRadius: 6,
                             fontFamily: INTER,
                             fontWeight: 600,
-                            fontSize: 11.5,
+                            fontSize: 10.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2162,11 +2121,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#fff",
                             color: "#0f172a",
                             border: "1px solid #e2e8f0",
-                            padding: "7px 14px",
-                            borderRadius: 7,
+                            padding: "6px 12px",
+                            borderRadius: 6,
                             fontFamily: INTER,
                             fontWeight: 600,
-                            fontSize: 11.5,
+                            fontSize: 10.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2257,7 +2216,7 @@ function DashboardBody({ urlPlan = "" }) {
                       </div>
                       <div>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: "#FF693D", textTransform: "uppercase", letterSpacing: 0.4 }}>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: "#FF693D", textTransform: "uppercase", letterSpacing: 0.4 }}>
                             1-on-1 Mentor Session
                           </span>
                           {session.dateLabel && (
@@ -2267,7 +2226,7 @@ function DashboardBody({ urlPlan = "" }) {
                           )}
                           {session.time && <span style={{ fontSize: 11, color: "#64748b" }}>• {session.time}</span>}
                         </div>
-                        <div style={{ fontSize: 12.5, fontWeight: 600, color: "#0f172a", marginTop: 1 }}>
+                        <div style={{ fontSize: 11.5, fontWeight: 600, color: "#0f172a", marginTop: 1 }}>
                           {session.topic || "Physics Strategy & Mock Test Analysis"}
                         </div>
                       </div>
@@ -2279,11 +2238,11 @@ function DashboardBody({ urlPlan = "" }) {
                         background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
                         color: "#ffffff",
                         border: "none",
-                        padding: "7px 14px",
+                        padding: "6px 12px",
                         borderRadius: 50,
                         fontFamily: INTER,
                         fontWeight: 700,
-                        fontSize: 11.5,
+                        fontSize: 10.5,
                         cursor: "pointer",
                         display: "inline-flex",
                         alignItems: "center",
@@ -2313,15 +2272,15 @@ function DashboardBody({ urlPlan = "" }) {
                   {/* 1. Habit Streak */}
                   <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
+                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
                       <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fff7ed", display: "grid", placeItems: "center" }}>
                         <Flame size={16} color="#ea580c" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
-                      {streak} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>days</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
+                      {streak} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>days</span>
                     </div>
-                    <div style={{ fontSize: 10.5, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
                       {streak > 0 ? "🔥 Consistency on track" : "Log today to build streak"}
                     </div>
                   </div>
@@ -2329,13 +2288,13 @@ function DashboardBody({ urlPlan = "" }) {
                   {/* 2. Weekly Hours */}
                   <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
+                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
                       <div style={{ width: 26, height: 26, borderRadius: 6, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
                         <Clock size={16} color="#15a06e" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
-                      {round1(weekHours)} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>/ 40 hrs</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
+                      {round1(weekHours)} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>/ 40 hrs</span>
                     </div>
                     <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 10, marginTop: 8, overflow: "hidden" }}>
                       <div style={{ width: `${Math.min(100, Math.round((weekHours / 40) * 100))}%`, height: "100%", background: "#15a06e", borderRadius: 10 }} />
@@ -2345,15 +2304,15 @@ function DashboardBody({ urlPlan = "" }) {
                   {/* 3. Tests Logged */}
                   <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
+                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
                       <div style={{ width: 26, height: 26, borderRadius: 6, background: "#eef2ff", display: "grid", placeItems: "center" }}>
                         <Trophy size={16} color="#6366f1" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
-                      {tests.length} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>tests</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
+                      {tests.length} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>tests</span>
                     </div>
-                    <div style={{ fontSize: 10.5, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
                       {tests.length > 0 ? `Latest: ${tests[0]?.scored || 0}/${tests[0]?.total || 300}` : "No tests added yet"}
                     </div>
                   </div>
@@ -2361,15 +2320,15 @@ function DashboardBody({ urlPlan = "" }) {
                   {/* 4. Pending Backlog */}
                   <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
+                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
                       <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fef2f2", display: "grid", placeItems: "center" }}>
                         <Rocket size={16} color="#ef4444" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
-                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>topics</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
+                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>topics</span>
                     </div>
-                    <div style={{ fontSize: 10.5, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
                       {backlog.length > 0 ? "Target dates active" : "Zero pending backlogs"}
                     </div>
                   </div>
@@ -2393,10 +2352,10 @@ function DashboardBody({ urlPlan = "" }) {
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                       <span style={{ width: 8, height: 8, borderRadius: "50%", background: todayEntry ? "#15a06e" : "#f59e0b" }} />
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                      <span style={{ fontSize: 9.5, fontWeight: 700, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
                         {todayEntry ? "Today's Study Logged" : "Today's Study Pending"}
                       </span>
-                      <span style={{ fontSize: 10.5, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
+                      <span style={{ fontSize: 9.5, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
                     </div>
                     <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>
                       {todayEntry
@@ -2435,9 +2394,9 @@ function DashboardBody({ urlPlan = "" }) {
                       background: todayEntry ? "#f8fafc" : "#FF693D",
                       color: todayEntry ? "#0f172a" : "#fff",
                       border: todayEntry ? "1px solid #e2e8f0" : "none",
-                      padding: "7px 13px",
-                      borderRadius: 7,
-                      fontSize: 11,
+                      padding: "6px 12px",
+                      borderRadius: 6,
+                      fontSize: 10,
                       fontWeight: 600,
                       cursor: "pointer",
                       display: "inline-flex",
@@ -2452,7 +2411,7 @@ function DashboardBody({ urlPlan = "" }) {
 
                 {/* Console Feature Navigation Grid (6 Cards) */}
                 <div>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 10 }}>
+                  <div style={{ fontSize: 9, fontWeight: 600, color: "#b0b8c4", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>
                     Console Quick Access
                   </div>
                   <div
@@ -2507,10 +2466,10 @@ function DashboardBody({ urlPlan = "" }) {
                             <Icon size={18} />
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 12, color: "#0f172a", marginBottom: 2 }}>
+                            <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 11, color: "#0f172a", marginBottom: 2 }}>
                               {item.label}
                             </div>
-                            <div style={{ fontSize: 10.5, color: "#94a3b8", lineHeight: 1.45 }}>
+                            <div style={{ fontSize: 10, color: "#b0b8c4", lineHeight: 1.4 }}>
                               {item.desc}
                             </div>
                           </div>
