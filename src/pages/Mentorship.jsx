@@ -1319,100 +1319,6 @@ function CoachingVsMentorship({ exam }) {
   );
 }
 
-/* ── How Does IITian Mentorship Work? ── */
-function MentorshipWorkflow({ year }) {
-  const steps = [
-    {
-      num: "01",
-      title: "360° Syllabus & Diagnostic Audit",
-      desc: "Your mentor reviews your current chapters, coaching modules, test marks, and study hours to pinpoint your exact baseline and create your personalized target roadmap.",
-      tag: "Day 1 Onboarding",
-    },
-    {
-      num: "02",
-      title: "Custom Daily Timetable & Targets",
-      desc: "No vague advice. Receive specific daily task lists (e.g., 25 Mechanics PYQs + 1 Inorganic NCERT reading) tailored to your school and coaching routine.",
-      tag: "Every Morning",
-    },
-    {
-      num: "03",
-      title: "Daily Accountability & WhatsApp Doubts",
-      desc: "Log completed tasks directly into your student dashboard. Share conceptual doubts and study hurdles on WhatsApp with real-time mentor feedback.",
-      tag: "Continuous 24×7",
-    },
-    {
-      num: "04",
-      title: "Weekly 1-on-1 Video Strategy Call",
-      desc: "45-minute live 1-on-1 video call every week. Your mentor evaluates your week's progress, recalibrates targets, and solves psychological/strategy roadblocks.",
-      tag: "Every Weekend",
-    },
-    {
-      num: "05",
-      title: "CBT Mock Analysis & Accuracy Lift",
-      desc: "In-depth audit of weekly full and chapter tests. Eliminate negative marking, fix silly errors, and systematically increase your accuracy from 65% to 85%+.",
-      tag: "Post-Test Review",
-    },
-    {
-      num: "06",
-      title: "Final Exam Sprint & JoSAA Admissions Guidance",
-      desc: "Full syllabus speed revision, formula sheets, exam temperament coaching, and end-to-end JoSAA choice-filling guidance to convert your score into the best IIT/NIT branch.",
-      tag: "Exam Sprint & JoSAA",
-    },
-  ];
-
-  return (
-    <section className="mj-section" style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
-      <div className="mj-wrap">
-        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 40px" }}>
-          <div className="mj-label">PROVEN 6-STEP GUIDANCE METHODOLOGY</div>
-          <h2 className="mj-display mj-display-lg">
-            How Does <em>IITian Mentorship</em> Work?
-          </h2>
-          <p className="mj-sec-sub" style={{ fontSize: "1.05rem", color: "#64748b", marginTop: 12 }}>
-            A disciplined, data-driven framework designed by IIT Roorkee students to turn inconsistent preparation into predictable rank improvement for JEE {year || "2027"}.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-          {steps.map((st) => (
-            <div
-              key={st.num}
-              style={{
-                background: "#ffffff",
-                border: "1px solid #e2e8f0",
-                borderRadius: 16,
-                padding: "24px 22px",
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxShadow: "0 4px 16px rgba(15,23,42,0.04)",
-              }}
-            >
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <span style={{ fontSize: "1.8rem", fontWeight: 900, color: "#FF693D", fontFamily: "'Space Grotesk', sans-serif" }}>
-                    {st.num}
-                  </span>
-                  <span style={{ fontSize: 11, fontWeight: 700, background: "#fff7ed", color: "#c2410c", padding: "3px 10px", borderRadius: 999, border: "1px solid #ffedd5" }}>
-                    {st.tag}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: 15.5, fontWeight: 800, color: "#0f172a", marginBottom: 8, fontFamily: "'Sora', sans-serif" }}>
-                  {st.title}
-                </h3>
-                <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0 }}>
-                  {st.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── Personalised JEE Study Planning & Backlog Management ── */
 function BacklogAndStudyPlan({ year }) {
   const backlogPhases = [
@@ -1901,7 +1807,6 @@ export default function Mentorship() {
       <Qualifier cfg={cfg} />
       <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
-      <MentorshipWorkflow year={year} />
       {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
       <LiveTracking cfg={cfg} />
       <TestAnalysis cfg={cfg} />
