@@ -149,8 +149,8 @@ const ADV_PAPER_MINUTES = 180;   // each Advanced paper is 3 hours (6h total)
    pre-enrolment purge in the body.) */
 
 function streakOf(entries) {
-  const list = Array.isArray(entries) ? entries.filter((e) => e && e.date) : [];
-  const set = new Set(list.map((e) => e.date));
+  const list = Array.isArray(entries) ? entries.filter((e) => e && e.date && Number(e.hours) > 0) : [];
+  const set = new Set(list.map((e) => isoDay(e.date)));
   let streak = 0;
   const d = new Date();
   if (!set.has(isoDay(d))) d.setDate(d.getDate() - 1);
@@ -452,7 +452,9 @@ function DashboardBody({ urlPlan = "" }) {
   const [chapForm, setChapForm] = useState({ subject: "", topic: "", strength: "weak", coverage: "" });
 
   const todayIso = isoDay(new Date());
-  const todayEntry = (Array.isArray(entries) ? entries : []).find((e) => e && e.date === todayIso);
+  const todayEntry = (Array.isArray(entries) ? entries : []).find(
+    (e) => e && (e.date === todayIso || isoDay(e.date) === todayIso)
+  );
 
   const [logForm, setLogForm] = useState({ subjects: {}, tasksTotal: "", routine: true });
   const [editingLog, setEditingLog] = useState(false); // re-open today's log to update it
@@ -678,7 +680,7 @@ function DashboardBody({ urlPlan = "" }) {
   const zeroDay = (iso) => ({ date: iso, hours: 0, subjects: {}, tasksDone: 0, tasksTotal: 0, routine: false, missed: true });
   const lastNDays = (n, offsetDays = 0) => {
     const valid = (Array.isArray(entries) ? entries : []).filter((e) => e && e.date);
-    const byDate = new Map(valid.map((e) => [e.date, e]));
+    const byDate = new Map(valid.map((e) => [isoDay(e.date), e]));
     const base = new Date();
     const out = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -730,7 +732,12 @@ function DashboardBody({ urlPlan = "" }) {
   /* ── derived test metrics (safe against missing date, score, total) ── */
   const testsSorted = useMemo(() => {
     const list = Array.isArray(tests) ? [...tests].filter((t) => t && typeof t === "object") : [];
-    return list.sort((a, b) => String(a?.date || "").localeCompare(String(b?.date || "")));
+    return list.sort((a, b) => {
+      const da = String(a?.date || "");
+      const db = String(b?.date || "");
+      if (da !== db) return da.localeCompare(db);
+      return Number(a?.id || 0) - Number(b?.id || 0);
+    });
   }, [tests]);
   const latest = testsSorted[testsSorted.length - 1];
   const prev = testsSorted[testsSorted.length - 2];
@@ -1114,7 +1121,9 @@ function DashboardBody({ urlPlan = "" }) {
   const weeklyDone = (Array.isArray(weeklyTasks) ? weeklyTasks : []).filter((t) => t && t.done).length;
 
   /* ── parent report builders + send (daily & weekly) ── */
-  const todayTest = tests.find((t) => t.date === todayIso);
+  const todayTest = (Array.isArray(tests) ? tests : []).find(
+    (t) => t && (t.date === todayIso || isoDay(t.date) === todayIso)
+  );
   // Predicted JEE rank (latest Main/Advanced test) - shared by both reports so
   // parents always see where their child currently stands.
   function buildRankSummary() {
@@ -1326,6 +1335,27 @@ function DashboardBody({ urlPlan = "" }) {
           width: 0 !important;
           height: 0 !important;
           background: transparent !important;
+        }
+
+        .student-console-root {
+          font-size: 11.5px !important;
+          line-height: 1.45 !important;
+        }
+        .student-console-root h1 {
+          font-size: 1.25rem !important;
+          letter-spacing: -0.3px;
+        }
+        .student-console-root h2 {
+          font-size: 1.12rem !important;
+          letter-spacing: -0.2px;
+        }
+        .student-console-root h3 {
+          font-size: 0.92rem !important;
+        }
+        .student-console-root input,
+        .student-console-root select,
+        .student-console-root textarea {
+          font-size: 11.5px !important;
         }
 
         @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
@@ -2291,72 +2321,79 @@ function DashboardBody({ urlPlan = "" }) {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-                    gap: 14,
+                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                    gap: 12,
                   }}
                 >
                   {/* 1. Habit Streak */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
-                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fff7ed", display: "grid", placeItems: "center" }}>
-                        <Flame size={16} color="#ea580c" />
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 3px rgba(0,0,0,0.02)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 8.5, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.6 }}>Habit Streak</span>
+                      <div style={{ width: 24, height: 24, borderRadius: 6, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                        <Flame size={14} color="#ea580c" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
-                      {streak} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>days</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a" }}>
+                      {streak} <span style={{ fontSize: 10, fontWeight: 500, color: "#94a3b8" }}>days</span>
                     </div>
-                    <div style={{ fontSize: 10, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 9.5, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 3 }}>
                       {streak > 0 ? "🔥 Consistency on track" : "Log today to build streak"}
                     </div>
                   </div>
 
                   {/* 2. Weekly Hours */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
-                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                        <Clock size={16} color="#15a06e" />
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 3px rgba(0,0,0,0.02)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 8.5, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.6 }}>Weekly Study</span>
+                      <div style={{ width: 24, height: 24, borderRadius: 6, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                        <Clock size={14} color="#15a06e" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
-                      {round1(weekHours)} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>/ 40 hrs</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a" }}>
+                      {round1(weekHours)} <span style={{ fontSize: 10, fontWeight: 500, color: "#94a3b8" }}>/ 40 hrs</span>
                     </div>
-                    <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 10, marginTop: 8, overflow: "hidden" }}>
+                    <div style={{ width: "100%", height: 4, background: "#f1f5f9", borderRadius: 10, marginTop: 7, overflow: "hidden" }}>
                       <div style={{ width: `${Math.min(100, Math.round((weekHours / 40) * 100))}%`, height: "100%", background: "#15a06e", borderRadius: 10 }} />
                     </div>
                   </div>
 
                   {/* 3. Tests Logged */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
-                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#eef2ff", display: "grid", placeItems: "center" }}>
-                        <Trophy size={16} color="#6366f1" />
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 3px rgba(0,0,0,0.02)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 8.5, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.6 }}>Tests Logged</span>
+                      <div style={{ width: 24, height: 24, borderRadius: 6, background: "#eef2ff", display: "grid", placeItems: "center" }}>
+                        <Trophy size={14} color="#6366f1" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
-                      {tests.length} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>tests</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a" }}>
+                      {testsSorted.length} <span style={{ fontSize: 10, fontWeight: 500, color: "#94a3b8" }}>tests</span>
                     </div>
-                    <div style={{ fontSize: 10, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
-                      {tests.length > 0 ? `Latest: ${tests[0]?.scored || 0}/${tests[0]?.total || 300}` : "No tests added yet"}
+                    <div style={{ fontSize: 9.5, color: latest ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {latest ? `Latest: ${latest.scored ?? latest.score ?? 0}/${latest.total ?? latest.maxMarks ?? 300} (${pct(latest)}%)` : "No tests added yet"}
                     </div>
                   </div>
 
                   {/* 4. Pending Backlog */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
-                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fef2f2", display: "grid", placeItems: "center" }}>
-                        <Rocket size={16} color="#ef4444" />
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 3px rgba(0,0,0,0.02)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 8.5, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.6 }}>Active Backlog</span>
+                      <div style={{ width: 24, height: 24, borderRadius: 6, background: "#fef2f2", display: "grid", placeItems: "center" }}>
+                        <Rocket size={14} color="#ef4444" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 18, color: "#0f172a" }}>
-                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>topics</span>
-                    </div>
-                    <div style={{ fontSize: 10, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
-                      {backlog.length > 0 ? "Target dates active" : "Zero pending backlogs"}
-                    </div>
+                    {(() => {
+                      const openCount = (Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length;
+                      return (
+                        <>
+                          <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a" }}>
+                            {openCount} <span style={{ fontSize: 10, fontWeight: 500, color: "#94a3b8" }}>topics</span>
+                          </div>
+                          <div style={{ fontSize: 9.5, color: openCount > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 3 }}>
+                            {openCount > 0 ? "Target dates active" : "Zero pending backlogs"}
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -2365,31 +2402,31 @@ function DashboardBody({ urlPlan = "" }) {
                   style={{
                     background: "#fff",
                     border: "1px solid #e2e8f0",
-                    borderRadius: 16,
-                    padding: "16px 18px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                    borderRadius: 14,
+                    padding: "13px 15px",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: 18,
+                    gap: 14,
                     flexWrap: "wrap",
                   }}
                 >
                   <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: todayEntry ? "#15a06e" : "#f59e0b" }} />
-                      <span style={{ fontSize: 9.5, fontWeight: 700, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
+                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: todayEntry ? "#15a06e" : "#f59e0b" }} />
+                      <span style={{ fontSize: 9, fontWeight: 700, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
                         {todayEntry ? "Today's Study Logged" : "Today's Study Pending"}
                       </span>
-                      <span style={{ fontSize: 9.5, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
+                      <span style={{ fontSize: 9, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
                     </div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a" }}>
                       {todayEntry
                         ? `${todayEntry.hours || 0} hours studied · ${todayEntry.tasksTotal || 0} tasks finished · ${todayEntry.routine ? "Routine maintained" : "Flexible schedule"}`
                         : "You have not logged your study hours for today yet."}
                     </div>
                     {todayEntry?.subjects && Object.keys(todayEntry.subjects).length > 0 && (
-                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 6 }}>
                         {subjects.map((s) => {
                           const v = subVal(todayEntry, s);
                           if (!v.h) return null;
@@ -2397,10 +2434,10 @@ function DashboardBody({ urlPlan = "" }) {
                             <span
                               key={s}
                               style={{
-                                fontSize: 11,
+                                fontSize: 10,
                                 fontWeight: 700,
-                                padding: "3px 9px",
-                                borderRadius: 6,
+                                padding: "2px 7px",
+                                borderRadius: 5,
                                 background: "#f8fafc",
                                 border: "1px solid #e2e8f0",
                                 color: subColor(s),
@@ -2409,7 +2446,7 @@ function DashboardBody({ urlPlan = "" }) {
                                 gap: 4,
                               }}
                             >
-                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: subColor(s) }} />
+                              <span style={{ width: 5, height: 5, borderRadius: "50%", background: subColor(s) }} />
                               {s}: {v.h}h{v.t ? ` · ${v.t}✓` : ""}
                             </span>
                           );
@@ -2424,17 +2461,17 @@ function DashboardBody({ urlPlan = "" }) {
                       background: todayEntry ? "#f8fafc" : "#FF693D",
                       color: todayEntry ? "#0f172a" : "#fff",
                       border: todayEntry ? "1px solid #e2e8f0" : "none",
-                      padding: "6px 12px",
+                      padding: "5px 11px",
                       borderRadius: 6,
-                      fontSize: 10,
+                      fontSize: 9.5,
                       fontWeight: 600,
                       cursor: "pointer",
                       display: "inline-flex",
                       alignItems: "center",
-                      gap: 6,
+                      gap: 5,
                     }}
                   >
-                    <Pencil size={13} />
+                    <Pencil size={12} />
                     <span>{todayEntry ? "Update Today's Log" : "Log Today's Work"}</span>
                   </button>
                 </div>
@@ -2520,24 +2557,24 @@ function DashboardBody({ urlPlan = "" }) {
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
 
             {/* header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              <div style={{ width: 46, height: 46, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 18 }}>{initial}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+              <div style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 15 }}>{initial}</div>
               <div style={{ flex: 1, minWidth: 160 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>{user?.name || "Student"} · {planExam}</div>
-                <div style={{ fontSize: 12.5, color: MUTE }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", color: INK }}>{user?.name || "Student"} · {planExam}</div>
+                <div style={{ fontSize: 11, color: MUTE }}>
                   {mentor?.name
                     ? <>Mentor: <strong style={{ color: NAVY, fontWeight: 700 }}>{mentor.name}</strong>{mentor.college ? ` · ${mentor.college}` : ""}</>
                     : "Mentor: Assigned · 1-on-1"}
                 </div>
               </div>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontWeight: 800, color: "#16a34a", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "6px 13px", borderRadius: 50 }}>
-                <motion.span animate={{ opacity: [1, .3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 8, height: 8, borderRadius: "50%", background: "#16a34a", display: "block" }} />
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, fontWeight: 800, color: "#16a34a", background: "rgba(34,197,94,.12)", border: "1px solid rgba(34,197,94,.3)", padding: "4px 10px", borderRadius: 50 }}>
+                <motion.span animate={{ opacity: [1, .3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} style={{ width: 7, height: 7, borderRadius: "50%", background: "#16a34a", display: "block" }} />
                 LIVE · Active now
               </span>
             </div>
 
             {/* stat tiles */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(120px, 100%), 1fr))", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 16 }}>
               {[
                 { icon: Clock, c: ORANGE, v: todayEntry ? `${todayEntry.hours}h` : "0h", l: "Today" },
                 { icon: Activity, c: "#6366f1", v: `${round1(weekHours)}h`, l: "This week" },
@@ -2545,55 +2582,55 @@ function DashboardBody({ urlPlan = "" }) {
                 { icon: CheckCircle2, c: "#22c55e", v: tasksLabel, l: "Tasks done" },
                 { icon: Target, c: "#FF693D", v: `${routinePct}%`, l: "Routine kept" },
               ].map(({ icon: Icon, c, v, l }) => (
-                <div key={l} style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 14, padding: "14px 12px", textAlign: "center" }}>
-                  <Icon size={18} color={c} style={{ marginBottom: 6 }} />
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 17, color: INK }}>{v}</div>
-                  <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{l}</div>
+                <div key={l} style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.16)", borderRadius: 12, padding: "11px 10px", textAlign: "center" }}>
+                  <Icon size={16} color={c} style={{ marginBottom: 4 }} />
+                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, color: INK }}>{v}</div>
+                  <div style={{ fontSize: 10, color: MUTE, marginTop: 1 }}>{l}</div>
                 </div>
               ))}
             </div>
 
             {/* log today - up to 3 updates a day, then locked till tomorrow */}
             {todayEntry && !editingLog ? (
-              <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 800, color: "#15803d" }}>
-                    <CheckCircle2 size={17} /> Logged for today ({fmtDay(todayIso)})
+              <div style={{ background: "#f0faf4", border: "1px solid rgba(34,197,94,.3)", borderRadius: 12, padding: "13px 15px", marginBottom: 18 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: "#15803d" }}>
+                    <CheckCircle2 size={15} /> Logged for today ({fmtDay(todayIso)})
                     {/* updates-used pips */}
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginLeft: 2 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, marginLeft: 2 }}>
                       {Array.from({ length: MAX_LOGS_PER_DAY }).map((_, i) => (
-                        <span key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: i < editsUsed ? "#15803d" : "#bbf7d0" }} />
+                        <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i < editsUsed ? "#15803d" : "#bbf7d0" }} />
                       ))}
                     </span>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#15803d" }}>{editsUsed}/{MAX_LOGS_PER_DAY}</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#15803d" }}>{editsUsed}/{MAX_LOGS_PER_DAY}</span>
                   </span>
                   {canLogMore ? (
                     <button type="button" onClick={startEditLog}
-                      style={{ display: "inline-flex", alignItems: "center", gap: 6, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, border: "none", borderRadius: 9, padding: "9px 15px", fontSize: 12.5, fontWeight: 800, color: "#fff", cursor: "pointer", fontFamily: "Sora", boxShadow: `0 8px 18px -10px ${ORANGE}` }}>
-                      <Pencil size={13} /> Edit / update hours · {editsLeft} left
+                      style={{ display: "inline-flex", alignItems: "center", gap: 5, background: `linear-gradient(135deg,${ORANGE},${GOLD})`, border: "none", borderRadius: 8, padding: "6px 12px", fontSize: 11, fontWeight: 800, color: "#fff", cursor: "pointer", fontFamily: "Sora", boxShadow: `0 8px 18px -10px ${ORANGE}` }}>
+                      <Pencil size={12} /> Edit / update hours · {editsLeft} left
                     </button>
                   ) : (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: "1px solid #cbd5e1", borderRadius: 9, padding: "7px 12px", fontSize: 12, fontWeight: 700, color: MUTE }}>
-                      <Lock size={13} /> All {MAX_LOGS_PER_DAY} updates used · locked till tomorrow
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "var(--page-bg)", border: "1px solid #cbd5e1", borderRadius: 8, padding: "5px 10px", fontSize: 10.5, fontWeight: 700, color: MUTE }}>
+                      <Lock size={12} /> All {MAX_LOGS_PER_DAY} updates used · locked till tomorrow
                     </span>
                   )}
                 </div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {subjects.map((s) => (
-                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>
-                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
+                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "var(--page-bg)", border: `1px solid ${subColor(s)}33`, borderRadius: 7, padding: "4px 9px", fontSize: 11, fontWeight: 700, color: NAVY }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: subColor(s) }} /> {shortName(s)}: {subVal(todayEntry, s).h}h · {subVal(todayEntry, s).t}✓
                     </span>
                   ))}
-                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
-                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 9, padding: "6px 11px", fontSize: 12.5, fontWeight: 700, color: todayEntry.routine ? "#15803d" : "#b91c1c" }}>Routine: {todayEntry.routine ? "Followed ✓" : "Missed"}</span>
+                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 7, padding: "4px 9px", fontSize: 11, fontWeight: 700, color: NAVY }}>Tasks: {todayEntry.tasksDone}/{todayEntry.tasksTotal}</span>
+                  <span style={{ background: "var(--page-bg)", border: "1px solid #e5e7eb", borderRadius: 7, padding: "4px 9px", fontSize: 11, fontWeight: 700, color: todayEntry.routine ? "#15803d" : "#b91c1c" }}>Routine: {todayEntry.routine ? "Followed ✓" : "Missed"}</span>
                 </div>
               </div>
             ) : (
-              <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 14, padding: "16px 18px", marginBottom: 22 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>
+              <form onSubmit={addLog} style={{ background: "#fffaf5", border: "1px solid rgba(255, 105, 61,.22)", borderRadius: 12, padding: "14px 16px", marginBottom: 18 }}>
+                <div style={{ fontSize: 11.5, fontWeight: 800, color: "#9a3412", marginBottom: 10 }}>
                   {editingLog ? "Update today" : "Log today"} ({fmtDay(todayIso)}) · hours & tasks completed per subject
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 10, marginBottom: 12 }}>
                   {subjects.map((s) => (
                     <SubjectDualField key={s} subject={s}
                       hours={logForm.subjects?.[s]?.h ?? ""} tasks={logForm.subjects?.[s]?.t ?? ""}
@@ -2601,42 +2638,42 @@ function DashboardBody({ urlPlan = "" }) {
                       onTasks={(v) => setLogForm((st) => ({ ...st, subjects: { ...st.subjects, [s]: { ...st.subjects?.[s], t: v } } }))} />
                   ))}
                 </div>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "flex-end" }}>
                   <NumField label="Tasks planned (total)" value={logForm.tasksTotal} onChange={(v) => setLogForm((s) => ({ ...s, tasksTotal: v }))} placeholder="e.g. 21" />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>Followed routine?</span>
-                    <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: "#6b7280" }}>Followed routine?</span>
+                    <div style={{ display: "flex", gap: 5 }}>
                       {[["Yes", true], ["No", false]].map(([lbl, val]) => (
                         <button type="button" key={lbl} onClick={() => setLogForm((s) => ({ ...s, routine: val }))}
-                          style={{ padding: "10px 16px", borderRadius: 10, border: `1.5px solid ${logForm.routine === val ? ORANGE : "#e5e7eb"}`, background: logForm.routine === val ? `${ORANGE}10` : "#fff", color: logForm.routine === val ? "#9a3412" : "#6b7280", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                          style={{ padding: "7px 13px", borderRadius: 8, border: `1.5px solid ${logForm.routine === val ? ORANGE : "#e5e7eb"}`, background: logForm.routine === val ? `${ORANGE}10` : "#fff", color: logForm.routine === val ? "#9a3412" : "#6b7280", fontWeight: 700, fontSize: 11.5, cursor: "pointer" }}>
                           {lbl}
                         </button>
                       ))}
                     </div>
                   </div>
-                  <button type="submit" style={{ padding: "11px 18px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7 }}>
-                    <Plus size={15} /> {editingLog ? "Save changes" : "Save today's log"}
+                  <button type="submit" style={{ padding: "8px 14px", borderRadius: 9, border: "none", background: `linear-gradient(135deg,${ORANGE},${GOLD})`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <Plus size={14} /> {editingLog ? "Save changes" : "Save today's log"}
                   </button>
                   {editingLog && (
                     <button type="button" onClick={() => { setEditingLog(false); setLogForm({ subjects: {}, tasksTotal: "", routine: true }); }}
-                      style={{ padding: "11px 18px", borderRadius: 11, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, fontFamily: "Sora", fontWeight: 700, fontSize: 13.5, cursor: "pointer" }}>
+                      style={{ padding: "8px 14px", borderRadius: 9, border: "1.5px solid #e5e7eb", background: "var(--page-bg)", color: MUTE, fontFamily: "Sora", fontWeight: 700, fontSize: 11.5, cursor: "pointer" }}>
                       Cancel
                     </button>
                   )}
                 </div>
-                <div style={{ fontSize: 11.5, color: MUTE, marginTop: 10, display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <RotateCw size={12} /> You can update today's log up to {MAX_LOGS_PER_DAY} times a day{editingLog ? ` - ${editsLeft} update${editsLeft === 1 ? "" : "s"} left after this` : ""}. It locks till tomorrow once used up.
+                <div style={{ fontSize: 10.5, color: MUTE, marginTop: 8, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                  <RotateCw size={11} /> You can update today's log up to {MAX_LOGS_PER_DAY} times a day{editingLog ? ` - ${editsLeft} update${editsLeft === 1 ? "" : "s"} left after this` : ""}. It locks till tomorrow once used up.
                 </div>
               </form>
             )}
 
             {/* weekly hours bars + goal gauge */}
-            <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 22, alignItems: "center" }} className="md-track-grid">
+            <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(0,1fr)", gap: 18, alignItems: "center" }} className="md-track-grid">
               {/* weekly-hours bar chart - premium card with gridlines */}
-              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 16, padding: "16px 16px 14px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, background: `${ORANGE}12`, borderRadius: 50, padding: "3px 9px" }}>{round1(weekHours)}h total</span>
+              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 14, padding: "14px 14px 12px", boxShadow: "0 16px 40px -30px rgba(255, 105, 61,.8)" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Total study hours · last 7 days</span>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: ORANGE, background: `${ORANGE}12`, borderRadius: 50, padding: "2px 8px" }}>{round1(weekHours)}h total</span>
                 </div>
                 {/* plot: gridlines layer + bars layer share the same box.
                     Gridlines are bottom-anchored on the SAME scale as the bars
@@ -2657,24 +2694,20 @@ function DashboardBody({ urlPlan = "" }) {
                     {last7.map((e, i) => {
                       const h = Number(e.hours) || 0;
                       const isToday = i === last7.length - 1;
-                      // A past calendar day with no log → a genuine 0h (NOT a
-                      // fabricated average). Today with no log yet is just pending.
                       const isMissing = h === 0 && !isToday;
                       const dow = DOW[new Date(e.date).getDay()];
-                      // 0h days still get a tiny 3px stub so the day reads as
-                      // "present but empty" rather than a blank gap.
                       const barPx = h > 0 ? Math.max(5, Math.round((h / maxH) * 132)) : 3;
 
                       return (
                         <div key={e.date} title={isMissing ? `No study log for ${dow} - recorded as 0h` : `${h}h on ${dow}`}
-                          style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                          style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 4 }}>
 
-                          <span style={{ fontSize: 11, fontWeight: 800, color: isMissing ? "#9aa0aa" : (isToday ? ORANGE : INK) }}>
+                          <span style={{ fontSize: 10, fontWeight: 800, color: isMissing ? "#9aa0aa" : (isToday ? ORANGE : INK) }}>
                             {h}h
                           </span>
 
                           <motion.div initial={{ height: 0 }} animate={{ height: barPx }} transition={{ type: "spring", stiffness: 120, damping: 18, delay: i * 0.06 }}
-                            style={{ width: "100%", maxWidth: 30, borderRadius: "8px 8px 2px 2px",
+                            style={{ width: "100%", maxWidth: 28, borderRadius: "6px 6px 2px 2px",
                               background: isMissing ? "#e7ebf0" : (isToday ? `linear-gradient(180deg,${ORANGE},${GOLD})` : "linear-gradient(180deg,rgba(255, 105, 61,.6),rgba(255, 105, 61,.26))"),
                               boxShadow: isToday ? `0 8px 18px -8px ${ORANGE}` : "none" }} />
                         </div>
@@ -2683,25 +2716,25 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
                 </div>
                 {/* day labels row (aligned under the bars) */}
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 7, marginTop: 9, paddingLeft: 28 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 7, marginTop: 8, paddingLeft: 28 }}>
                   {last7.map((e, i) => (
-                    <span key={e.date} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10.5, fontWeight: 700, color: i === last7.length - 1 ? ORANGE : MUTE }}>
+                    <span key={e.date} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10, fontWeight: 700, color: i === last7.length - 1 ? ORANGE : MUTE }}>
                       {DOW[new Date(e.date).getDay()]}
                     </span>
                   ))}
                 </div>
                 {/* subtle note so a 0h bar reads as "missed update", not a bug */}
                 {last7.some((e, i) => Number(e.hours) === 0 && i !== last7.length - 1) && (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 10.5, fontWeight: 600, color: "#9aa0aa" }}>
-                    <span style={{ width: 9, height: 9, borderRadius: 3, background: "#e7ebf0", flexShrink: 0 }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7, fontSize: 10, fontWeight: 600, color: "#9aa0aa" }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 2, background: "#e7ebf0", flexShrink: 0 }} />
                     Days with no log are counted as 0h.
                   </div>
                 )}
               </div>
-              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(34,197,94,.22)", borderRadius: 16, padding: "16px 14px 12px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
-                <div style={{ fontSize: 12.5, fontWeight: 800, color: NAVY, marginBottom: 2 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
-                <Gauge value={goalPct} label="of target" color="#22c55e" height={170} />
-                <div style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, marginTop: -2 }}>
+              <div style={{ background: "var(--page-bg)", border: "1px solid rgba(34,197,94,.22)", borderRadius: 14, padding: "14px 12px 10px", boxShadow: "0 16px 40px -30px rgba(34,197,94,.9)", textAlign: "center" }}>
+                <div style={{ fontSize: 11.5, fontWeight: 800, color: NAVY, marginBottom: 2 }}>Weekly goal ({WEEK_TARGET_HRS}h)</div>
+                <Gauge value={goalPct} label="of target" color="#22c55e" height={160} />
+                <div style={{ fontSize: 10.5, color: MUTE, fontWeight: 600, marginTop: -2 }}>
                   {round1(weekHours)}h of {WEEK_TARGET_HRS}h · {Math.max(0, round1(WEEK_TARGET_HRS - weekHours))}h to go
                 </div>
               </div>
@@ -2718,7 +2751,7 @@ function DashboardBody({ urlPlan = "" }) {
           sub="Compare study velocity, weekly delta, and balance across Physics, Chemistry, and Maths.">
           
           {/* Top 3 Subject Performance Power Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 14, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 12, marginBottom: 16 }}>
             {subjects.map((s) => {
               const now = round1(thisWkH[s]);
               const was = round1(lastWkH[s]);
@@ -2729,31 +2762,31 @@ function DashboardBody({ urlPlan = "" }) {
               return (
                 <motion.div
                   key={s}
-                  whileHover={{ y: -3, boxShadow: "0 10px 25px -8px rgba(0,0,0,0.08)" }}
+                  whileHover={{ y: -2, boxShadow: "0 8px 20px -6px rgba(0,0,0,0.06)" }}
                   transition={{ duration: 0.18 }}
                   style={{
                     background: "#ffffff",
                     border: "1px solid #e2e8f0",
-                    borderTop: `4px solid ${c}`,
-                    borderRadius: 16,
-                    padding: "16px 18px",
-                    boxShadow: "0 4px 16px rgba(15,23,42,0.04)",
+                    borderTop: `3px solid ${c}`,
+                    borderRadius: 14,
+                    padding: "13px 15px",
+                    boxShadow: "0 4px 14px rgba(15,23,42,0.03)",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 12,
+                    gap: 10,
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}25` }} />
-                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 14, color: NAVY }}>{s}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}25` }} />
+                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 12.5, color: NAVY }}>{s}</span>
                     </div>
                     <span style={{
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: 700,
                       color: c,
                       background: `${c}12`,
-                      padding: "3px 8px",
+                      padding: "2px 7px",
                       borderRadius: 50,
                     }}>
                       {sharePct}% of study
@@ -2762,21 +2795,21 @@ function DashboardBody({ urlPlan = "" }) {
 
                   <div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                      <span style={{ fontFamily: SORA, fontWeight: 900, fontSize: 28, color: NAVY, lineHeight: 1 }}>{now}</span>
-                      <span style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13, color: MUTE }}>hrs</span>
+                      <span style={{ fontFamily: SORA, fontWeight: 900, fontSize: 21, color: NAVY, lineHeight: 1 }}>{now}</span>
+                      <span style={{ fontFamily: SORA, fontWeight: 700, fontSize: 11, color: MUTE }}>hrs</span>
                     </div>
                     {/* Progress track */}
-                    <div style={{ width: "100%", height: 6, background: "#f1f5f9", borderRadius: 4, marginTop: 10, overflow: "hidden" }}>
+                    <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 4, marginTop: 8, overflow: "hidden" }}>
                       <div style={{ width: `${Math.min(100, (now / Math.max(1, weekHours)) * 100)}%`, height: "100%", background: c, borderRadius: 4, transition: "width 0.5s ease" }} />
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid #f1f5f9" }}>
-                    <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                      <Clock size={12} color={c} /> {round1(now / 7)}h / day
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 7, borderTop: "1px solid #f1f5f9" }}>
+                    <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <Clock size={11} color={c} /> {round1(now / 7)}h / day
                     </span>
-                    <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                      <CheckCircle2 size={12} color={c} /> {tasks} tasks
+                    <span style={{ fontSize: 10.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <CheckCircle2 size={11} color={c} /> {tasks} tasks
                     </span>
                   </div>
 
@@ -2906,29 +2939,29 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: 16 }}>
             {/* left column - Add Test Form + Rank Prediction */}
-            <div id="add-test-form" style={{ background: "#ffffff", border: "1.5px solid rgba(255,105,61,.2)", borderRadius: 20, padding: "22px", boxShadow: "0 12px 36px -15px rgba(26,26,46,.1)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
+            <div id="add-test-form" style={{ background: "#ffffff", border: "1.5px solid rgba(255,105,61,.2)", borderRadius: 16, padding: "16px 18px", boxShadow: "0 10px 30px -15px rgba(26,26,46,.08)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
               
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 9, background: "#fff7ed", display: "grid", placeItems: "center" }}>
-                    <Trophy size={17} color="#FF693D" />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                    <Trophy size={15} color="#FF693D" />
                   </div>
                   <div>
-                    <h3 style={{ fontFamily: INTER, fontWeight: 800, fontSize: 16, color: INK, margin: 0 }}>Add a test result</h3>
-                    <div style={{ fontSize: 11, color: MUTE, marginTop: 1 }}>CBT score breakdown & error analysis</div>
+                    <h3 style={{ fontFamily: INTER, fontWeight: 800, fontSize: 13.5, color: INK, margin: 0 }}>Add a test result</h3>
+                    <div style={{ fontSize: 10, color: MUTE, marginTop: 1 }}>CBT score breakdown & error analysis</div>
                   </div>
                 </div>
-                <span style={{ fontSize: 10, fontWeight: 800, color: "#FF693D", background: "rgba(255,105,61,0.1)", border: "1px solid rgba(255,105,61,0.2)", borderRadius: 50, padding: "3px 9px", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                <span style={{ fontSize: 9.5, fontWeight: 800, color: "#FF693D", background: "rgba(255,105,61,0.1)", border: "1px solid rgba(255,105,61,0.2)", borderRadius: 50, padding: "2px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
                   AI Diagnostics
                 </span>
               </div>
 
               {/* JEE-only test type toggle */}
               {rankEnabled && (
-                <div style={{ display: "flex", background: "#f1f5f9", padding: 4, borderRadius: 12, gap: 4, marginBottom: 14 }}>
+                <div style={{ display: "flex", background: "#f1f5f9", padding: 3, borderRadius: 10, gap: 3, marginBottom: 12 }}>
                   {[["main", "JEE Mains (300 Marks)"], ["adv", "JEE Advanced (360 Marks)"]].map(([val, lbl]) => (
                     <button
                       key={val}
@@ -2936,46 +2969,46 @@ function DashboardBody({ urlPlan = "" }) {
                       onClick={() => setTestType(val)}
                       style={{
                         flex: 1,
-                        padding: "8px 12px",
-                        borderRadius: 9,
+                        padding: "6px 10px",
+                        borderRadius: 7,
                         border: "none",
                         background: testForm.type === val ? "#ffffff" : "transparent",
                         color: testForm.type === val ? "#0f172a" : "#64748b",
                         fontFamily: INTER,
                         fontWeight: 700,
-                        fontSize: 11.5,
+                        fontSize: 10.5,
                         cursor: "pointer",
                         boxShadow: testForm.type === val ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 6,
+                        gap: 5,
                         transition: "all 0.15s ease",
                       }}
                     >
-                      <Trophy size={12} color={testForm.type === val ? "#FF693D" : "#94a3b8"} />
+                      <Trophy size={11} color={testForm.type === val ? "#FF693D" : "#94a3b8"} />
                       {lbl}
                     </button>
                   ))}
                 </div>
               )}
 
-              <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 <TextField label="Test Name / Series" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" icon={Award} />
 
                 {rankEnabled && isAdv(testForm.type) ? (
                   <>
-                    <div style={{ background: "#fff5f1", border: "1px solid #fecfbf", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <Timer size={14} color="#E0421F" />
-                      <span style={{ fontSize: 11.5, fontWeight: 800, color: "#E0421F" }}>Full exam · 6 hours total</span>
-                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 (3h) + Paper 2 (3h) - enter both papers below</span>
+                    <div style={{ background: "#fff5f1", border: "1px solid #fecfbf", borderRadius: 10, padding: "8px 10px", display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <Timer size={13} color="#E0421F" />
+                      <span style={{ fontSize: 10.5, fontWeight: 800, color: "#E0421F" }}>Full exam · 6 hours total</span>
+                      <span style={{ fontSize: 10, color: "#FF693D" }}>Paper 1 (3h) + Paper 2 (3h) - enter both papers below</span>
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#E0421F", marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.4 }}>
                         Paper 1 · Marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)
                       </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
                         <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
                         <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
                         <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
@@ -2983,17 +3016,17 @@ function DashboardBody({ urlPlan = "" }) {
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#E0421F", marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.4 }}>
                         Paper 2 · Marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)
                       </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
                         <NumField label="Physics" value={testForm.mp2} onChange={(v) => setTestForm((s) => ({ ...s, mp2: v }))} placeholder="0" full />
                         <NumField label="Chemistry" value={testForm.mc2} onChange={(v) => setTestForm((s) => ({ ...s, mc2: v }))} placeholder="0" full />
                         <NumField label="Maths" value={testForm.mm2} onChange={(v) => setTestForm((s) => ({ ...s, mm2: v }))} placeholder="0" full />
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                       <NumField label="Total marks of exam" value={testForm.advTotal} onChange={(v) => setTestForm((s) => ({ ...s, advTotal: v }))} placeholder={String(ADV_FULL_TOTAL)} full />
                       <NumField label="Total questions in exam" value={testForm.advQuestions} onChange={(v) => setTestForm((s) => ({ ...s, advQuestions: v }))} placeholder={String(ADV_FULL_QUESTIONS)} full />
                     </div>
@@ -3002,22 +3035,22 @@ function DashboardBody({ urlPlan = "" }) {
                 ) : rankEnabled && testForm.type === "main" ? (
                   <>
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4 }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5 }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4 }}>
                           Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})
                         </span>
-                        <span style={{ fontSize: 11, fontWeight: 800, color: (Number(testForm.mp)||0)+(Number(testForm.mc)||0)+(Number(testForm.mm)||0) > 0 ? "#FF693D" : "#94a3b8" }}>
+                        <span style={{ fontSize: 10, fontWeight: 800, color: (Number(testForm.mp)||0)+(Number(testForm.mc)||0)+(Number(testForm.mm)||0) > 0 ? "#FF693D" : "#94a3b8" }}>
                           Total: {(Number(testForm.mp)||0) + (Number(testForm.mc)||0) + (Number(testForm.mm)||0)} / 300
                         </span>
                       </div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                        <div style={{ border: "1.5px solid rgba(99,102,241,0.25)", background: "#fbfbfe", borderRadius: 12, padding: "10px 10px 8px" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#6366f1" }} />
-                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Physics</span>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                        <div style={{ border: "1.5px solid rgba(99,102,241,0.25)", background: "#fbfbfe", borderRadius: 10, padding: "8px 8px 6px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#6366f1" }} />
+                              <span style={{ fontSize: 10.5, fontWeight: 800, color: NAVY }}>Physics</span>
                             </div>
-                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#6366f1", background: "rgba(99,102,241,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: "#6366f1", background: "rgba(99,102,241,0.1)", borderRadius: 4, padding: "1px 4px" }}>/ 100</span>
                           </div>
                           <input
                             value={testForm.mp}
@@ -3025,21 +3058,21 @@ function DashboardBody({ urlPlan = "" }) {
                             placeholder="0"
                             inputMode="decimal"
                             style={{
-                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
-                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                              width: "100%", padding: "5px 7px", borderRadius: 6, border: "1px solid #e2e8f0",
+                              fontSize: 12, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
                             }}
                             onFocus={(e) => { e.target.style.borderColor = "#6366f1"; }}
                             onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
                           />
                         </div>
 
-                        <div style={{ border: "1.5px solid rgba(16,185,129,0.25)", background: "#fbfefe", borderRadius: 12, padding: "10px 10px 8px" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981" }} />
-                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Chemistry</span>
+                        <div style={{ border: "1.5px solid rgba(16,185,129,0.25)", background: "#fbfefe", borderRadius: 10, padding: "8px 8px 6px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981" }} />
+                              <span style={{ fontSize: 10.5, fontWeight: 800, color: NAVY }}>Chemistry</span>
                             </div>
-                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.1)", borderRadius: 4, padding: "1px 4px" }}>/ 100</span>
                           </div>
                           <input
                             value={testForm.mc}
@@ -3047,21 +3080,21 @@ function DashboardBody({ urlPlan = "" }) {
                             placeholder="0"
                             inputMode="decimal"
                             style={{
-                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
-                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                              width: "100%", padding: "5px 7px", borderRadius: 6, border: "1px solid #e2e8f0",
+                              fontSize: 12, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
                             }}
                             onFocus={(e) => { e.target.style.borderColor = "#10b981"; }}
                             onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
                           />
                         </div>
 
-                        <div style={{ border: "1.5px solid rgba(255,105,61,0.25)", background: "#fffbfa", borderRadius: 12, padding: "10px 10px 8px" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF693D" }} />
-                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Maths</span>
+                        <div style={{ border: "1.5px solid rgba(255,105,61,0.25)", background: "#fffbfa", borderRadius: 10, padding: "8px 8px 6px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} />
+                              <span style={{ fontSize: 10.5, fontWeight: 800, color: NAVY }}>Maths</span>
                             </div>
-                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#FF693D", background: "rgba(255,105,61,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: "#FF693D", background: "rgba(255,105,61,0.1)", borderRadius: 4, padding: "1px 4px" }}>/ 100</span>
                           </div>
                           <input
                             value={testForm.mm}
@@ -3069,8 +3102,8 @@ function DashboardBody({ urlPlan = "" }) {
                             placeholder="0"
                             inputMode="decimal"
                             style={{
-                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
-                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                              width: "100%", padding: "5px 7px", borderRadius: 6, border: "1px solid #e2e8f0",
+                              fontSize: 12, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
                             }}
                             onFocus={(e) => { e.target.style.borderColor = "#FF693D"; }}
                             onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
@@ -3081,7 +3114,7 @@ function DashboardBody({ urlPlan = "" }) {
                     <SelectField label="Category (Quota Pool)" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} icon={Users} />
                   </>
                 ) : (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                     <NumField label="Total marks" value={testForm.total} onChange={(v) => setTestForm((s) => ({ ...s, total: v }))} placeholder="300" full />
                     <NumField label="Marks scored" value={testForm.scored} onChange={(v) => setTestForm((s) => ({ ...s, scored: v }))} placeholder="178" full />
                   </div>
@@ -3089,38 +3122,38 @@ function DashboardBody({ urlPlan = "" }) {
 
                 {/* Question Diagnostics Scorecard */}
                 <div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4, display: "block", marginBottom: 6 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4, display: "block", marginBottom: 5 }}>
                     Question Diagnostics (Accuracy Scorecard)
                   </span>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                    <div style={{ border: "1px solid #bbf7d0", background: "#f0fdf4", borderRadius: 10, padding: "8px 10px" }}>
-                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#166534", marginBottom: 4 }}>Correct (+4)</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                    <div style={{ border: "1px solid #bbf7d0", background: "#f0fdf4", borderRadius: 8, padding: "6px 8px" }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#166534", marginBottom: 3 }}>Correct (+4)</div>
                       <input
                         value={testForm.correct}
                         onChange={(e) => setTestForm((s) => ({ ...s, correct: e.target.value }))}
                         placeholder="64"
                         inputMode="numeric"
-                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #bbf7d0", fontSize: 13.5, fontWeight: 700, color: "#166534", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                        style={{ width: "100%", padding: "5px 6px", borderRadius: 5, border: "1px solid #bbf7d0", fontSize: 12, fontWeight: 700, color: "#166534", background: "#fff", outline: "none", boxSizing: "border-box" }}
                       />
                     </div>
-                    <div style={{ border: "1px solid #fecaca", background: "#fef2f2", borderRadius: 10, padding: "8px 10px" }}>
-                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#991b1b", marginBottom: 4 }}>Wrong (-1)</div>
+                    <div style={{ border: "1px solid #fecaca", background: "#fef2f2", borderRadius: 8, padding: "6px 8px" }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#991b1b", marginBottom: 3 }}>Wrong (-1)</div>
                       <input
                         value={testForm.wrong}
                         onChange={(e) => setTestForm((s) => ({ ...s, wrong: e.target.value }))}
                         placeholder="14"
                         inputMode="numeric"
-                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #fecaca", fontSize: 13.5, fontWeight: 700, color: "#991b1b", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                        style={{ width: "100%", padding: "5px 6px", borderRadius: 5, border: "1px solid #fecaca", fontSize: 12, fontWeight: 700, color: "#991b1b", background: "#fff", outline: "none", boxSizing: "border-box" }}
                       />
                     </div>
-                    <div style={{ border: "1px solid #e2e8f0", background: "#f8fafc", borderRadius: 10, padding: "8px 10px" }}>
-                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#475569", marginBottom: 4 }}>Skipped (0)</div>
+                    <div style={{ border: "1px solid #e2e8f0", background: "#f8fafc", borderRadius: 8, padding: "6px 8px" }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#475569", marginBottom: 3 }}>Skipped (0)</div>
                       <input
                         value={testForm.skipped}
                         onChange={(e) => setTestForm((s) => ({ ...s, skipped: e.target.value }))}
                         placeholder="12"
                         inputMode="numeric"
-                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #cbd5e1", fontSize: 13.5, fontWeight: 700, color: "#475569", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                        style={{ width: "100%", padding: "5px 6px", borderRadius: 5, border: "1px solid #cbd5e1", fontSize: 12, fontWeight: 700, color: "#475569", background: "#fff", outline: "none", boxSizing: "border-box" }}
                       />
                     </div>
                   </div>
@@ -3128,12 +3161,12 @@ function DashboardBody({ urlPlan = "" }) {
 
                 {/* Silly Mistakes & Quick Chips */}
                 <div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 10, marginBottom: 8 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 8, marginBottom: 6 }}>
                     <NumField label="Silly mistakes count" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
                     <TextField label="Silly mistake root cause" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8" }}>Quick pick:</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 9.5, fontWeight: 600, color: "#94a3b8" }}>Quick pick:</span>
                     {["Calculation error", "Sign error", "Question misread", "Formula slip"].map((topic) => (
                       <button
                         key={topic}
@@ -3142,9 +3175,9 @@ function DashboardBody({ urlPlan = "" }) {
                         style={{
                           background: testForm.sillyTopic === topic ? "#fff7ed" : "#f1f5f9",
                           border: `1px solid ${testForm.sillyTopic === topic ? "#fed7aa" : "#e2e8f0"}`,
-                          borderRadius: 6,
-                          padding: "2px 8px",
-                          fontSize: 10,
+                          borderRadius: 5,
+                          padding: "2px 7px",
+                          fontSize: 9.5,
                           fontWeight: 600,
                           color: testForm.sillyTopic === topic ? "#c2410c" : "#475569",
                           cursor: "pointer",
@@ -3162,31 +3195,31 @@ function DashboardBody({ urlPlan = "" }) {
                   type="submit"
                   disabled={!testFormComplete()}
                   style={{
-                    marginTop: 4,
-                    padding: "12px 18px",
-                    borderRadius: 12,
+                    marginTop: 2,
+                    padding: "10px 16px",
+                    borderRadius: 10,
                     border: "none",
                     background: testFormComplete() ? "linear-gradient(135deg, #FF693D 0%, #E0421F 100%)" : "#fed7aa",
                     color: "#ffffff",
                     fontFamily: SORA,
                     fontWeight: 800,
-                    fontSize: 13.5,
+                    fontSize: 11.5,
                     cursor: testFormComplete() ? "pointer" : "not-allowed",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: 8,
-                    boxShadow: testFormComplete() ? "0 8px 20px -6px rgba(255,105,61,0.5)" : "none",
+                    gap: 7,
+                    boxShadow: testFormComplete() ? "0 6px 18px -6px rgba(255,105,61,0.5)" : "none",
                     transition: "all 0.15s ease",
                   }}
                 >
-                  <Sparkles size={16} />
+                  <Sparkles size={14} />
                   {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse Test & Predict Rank" : "Analyse Test Performance"}
                 </button>
 
                 {!testFormComplete() && (
-                  <div style={{ fontSize: 11.5, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", gap: 7, lineHeight: 1.45 }}>
-                    <AlertCircle size={14} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above - a test is only analysed once all details are entered.
+                  <div style={{ fontSize: 10.5, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 8, padding: "6px 10px", display: "flex", alignItems: "center", gap: 6, lineHeight: 1.4 }}>
+                    <AlertCircle size={13} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above - a test is only analysed once all details are entered.
                   </div>
                 )}
               </form>
@@ -3194,26 +3227,26 @@ function DashboardBody({ urlPlan = "" }) {
               {/* improvement / decline report */}
               {latest && (
                 <div style={{
-                  marginTop: 16,
+                  marginTop: 14,
                   background: improvement == null ? "#f8fafc" : improvement >= 0 ? "#f0fdf4" : "#fef2f2",
                   border: `1px solid ${improvement == null ? "#e2e8f0" : improvement >= 0 ? "#bbf7d0" : "#fecaca"}`,
-                  borderRadius: 14,
-                  padding: "13px 16px",
+                  borderRadius: 12,
+                  padding: "11px 13px",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      {improvement == null ? <BarChart3 size={15} color="#64748b" />
-                        : improvement >= 0 ? <TrendingUp size={15} color="#16a34a" /> : <TrendingDown size={15} color="#dc2626" />}
-                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 13, color: INK }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      {improvement == null ? <BarChart3 size={14} color="#64748b" />
+                        : improvement >= 0 ? <TrendingUp size={14} color="#16a34a" /> : <TrendingDown size={14} color="#dc2626" />}
+                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 12, color: INK }}>
                         {latest.name} · {pct(latest)}% Score
                       </span>
                     </div>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: acc(latest) >= 75 ? "#16a34a" : "#d97706", background: "#fff", padding: "2px 7px", borderRadius: 6, border: "1px solid #e2e8f0" }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: acc(latest) >= 75 ? "#16a34a" : "#d97706", background: "#fff", padding: "1px 6px", borderRadius: 5, border: "1px solid #e2e8f0" }}>
                       {acc(latest)}% Accuracy
                     </span>
                   </div>
-                  <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 11, color: "#374151", lineHeight: 1.45 }}>
                     {improvement == null
                       ? "Add one more test and we'll track your score trajectory automatically."
                       : improvement >= 0
@@ -3234,13 +3267,13 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
 
             {/* right column - charts + strategies */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#FF693D">
-                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#94a3b8" }]} height={200} />
+                <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#94a3b8" }]} height={190} />
               </ChartCard>
               
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
-                <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
+                <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={170} fmt={(v) => `${v}%`} />
               </ChartCard>
 
               {/* Modern AI Diagnostic Strategies Panel */}
@@ -3250,68 +3283,68 @@ function DashboardBody({ urlPlan = "" }) {
                 flexDirection: "column",
                 background: "#ffffff",
                 border: "1.5px solid rgba(255,105,61,0.2)",
-                borderRadius: 20,
-                padding: "20px",
-                boxShadow: "0 8px 30px -10px rgba(15,23,42,0.06)",
+                borderRadius: 16,
+                padding: "16px 18px",
+                boxShadow: "0 6px 24px -10px rgba(15,23,42,0.05)",
               }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 9, background: "#fff7ed", display: "grid", placeItems: "center" }}>
-                      <Lightbulb size={17} color="#FF693D" />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                      <Lightbulb size={15} color="#FF693D" />
                     </div>
                     <div>
-                      <span style={{ fontFamily: INTER, fontWeight: 800, fontSize: 15, color: INK }}>AI Mentorship Strategies</span>
-                      <div style={{ fontSize: 11, color: MUTE, marginTop: 1 }}>Tailored recommendations from your test trends</div>
+                      <span style={{ fontFamily: INTER, fontWeight: 800, fontSize: 13, color: INK }}>AI Mentorship Strategies</span>
+                      <div style={{ fontSize: 10, color: MUTE, marginTop: 1 }}>Tailored recommendations from your test trends</div>
                     </div>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 50, padding: "3px 9px" }}>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 50, padding: "2px 8px" }}>
                     Action Plan
                   </span>
                 </div>
 
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, justifyContent: "space-around" }}>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, justifyContent: "space-around" }}>
                   {strategies.map((st, i) => (
                     <div
                       key={i}
                       style={{
                         display: "flex",
-                        gap: 12,
+                        gap: 10,
                         alignItems: "flex-start",
-                        padding: "10px 12px",
-                        borderRadius: 12,
+                        padding: "8px 10px",
+                        borderRadius: 10,
                         background: "#f8fafc",
                         border: "1px solid #f1f5f9",
                         transition: "all 0.15s ease",
                       }}
                     >
                       <span style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 8,
+                        width: 28,
+                        height: 28,
+                        borderRadius: 7,
                         background: `${st.color}14`,
                         border: `1px solid ${st.color}30`,
                         display: "grid",
                         placeItems: "center",
                         flexShrink: 0,
-                        marginTop: 2,
+                        marginTop: 1,
                       }}>
-                        <st.icon size={16} color={st.color} />
+                        <st.icon size={14} color={st.color} />
                       </span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         {st.tag && (
                           <span style={{
-                            fontSize: 9.5,
+                            fontSize: 9,
                             fontWeight: 700,
                             color: st.color,
                             textTransform: "uppercase",
                             letterSpacing: 0.5,
                             display: "block",
-                            marginBottom: 3,
+                            marginBottom: 2,
                           }}>
                             {st.tag}
                           </span>
                         )}
-                        <span style={{ fontSize: 12.5, color: "#334155", lineHeight: 1.5, fontWeight: 500 }}>
+                        <span style={{ fontSize: 11.5, color: "#334155", lineHeight: 1.45, fontWeight: 500 }}>
                           {st.text}
                         </span>
                       </div>
@@ -3330,32 +3363,32 @@ function DashboardBody({ urlPlan = "" }) {
               <div>
                         <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#FF693D"
           sub="A structured catch-up system that clears months of pending chapters - list them, rate your strength, and set a plan date.">
-          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 16, padding: "18px 20px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.35)", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
 
-            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#fff5f1", border: "1px solid #fecfbf", display: "grid", placeItems: "center" }}><Rocket size={22} color="#FF693D" /></span>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+              <span style={{ width: 38, height: 38, borderRadius: 10, background: "#fff5f1", border: "1px solid #fecfbf", display: "grid", placeItems: "center" }}><Rocket size={18} color="#FF693D" /></span>
               <div style={{ flex: 1, minWidth: 180 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
-                <div style={{ height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", marginTop: 8, maxWidth: 320 }}>
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
+                <div style={{ height: 7, borderRadius: 5, background: "#f1f5f9", overflow: "hidden", marginTop: 6, maxWidth: 300 }}>
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 5, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
                 </div>
               </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#FF693D" }}>{backlogPct}%</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 20, color: "#FF693D" }}>{backlogPct}%</div>
             </div>
 
-            <form onSubmit={addBacklog} style={{ background: "#fff8f4", border: "1px solid #ffe0d4", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
+            <form onSubmit={addBacklog} style={{ background: "#fff8f4", border: "1px solid #ffe0d4", borderRadius: 12, padding: "13px 15px", marginBottom: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(130px, 100%), 1fr))", gap: 8, alignItems: "flex-end" }}>
               <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
               <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
               <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
               <DateField label="Target date" value={blForm.targetDate} onChange={(v) => setBlForm((s) => ({ ...s, targetDate: v }))} />
-              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
-                <Plus size={15} /> Add
+              <button type="submit" style={{ padding: "8px 14px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, height: 36 }}>
+                <Plus size={14} /> Add
               </button>
             </form>
 
             {backlog.length ? (
-              <motion.div style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              <motion.div style={{ display: "flex", flexDirection: "column", gap: 8 }}
                 initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.05 } } }}>
                 <AnimatePresence initial={false}>
                 {backlog.map((b) => {
@@ -3368,24 +3401,24 @@ function DashboardBody({ urlPlan = "" }) {
                       exit={{ opacity: 0, x: -14, transition: { duration: 0.18 } }}
                       whileHover={{ x: 3 }}
                       transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                      style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
+                      style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 10, padding: "10px 12px", opacity: b.done ? 0.72 : 1 }}>
                       <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
-                        style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                        {b.done && <CheckCircle2 size={16} color="#fff" />}
+                        style={{ width: 22, height: 22, borderRadius: 6, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        {b.done && <CheckCircle2 size={14} color="#fff" />}
                       </button>
-                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
-                      <div style={{ flex: 1, minWidth: 150 }}>
-                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
-                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}</div>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 140 }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
+                        <div style={{ fontSize: 10.5, color: MUTE }}>{shortName(b.subject)}</div>
                       </div>
-                      <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
+                      <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "3px 9px", fontSize: 10, fontWeight: 800 }}>{st.label}</span>
                       {date && (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: overdue ? "#dc2626" : "#6b7280", fontWeight: overdue ? 800 : 600 }}>
-                          <CalendarDays size={13} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, color: overdue ? "#dc2626" : "#6b7280", fontWeight: overdue ? 800 : 600 }}>
+                          <CalendarDays size={12} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
                         </span>
                       )}
-                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                        <Trash2 size={14} />
+                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 26, height: 26, borderRadius: 7, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        <Trash2 size={13} />
                       </button>
                     </motion.div>
                   );
@@ -3393,8 +3426,8 @@ function DashboardBody({ urlPlan = "" }) {
                 </AnimatePresence>
               </motion.div>
             ) : (
-              <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
-                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet - add your pending chapters above.
+              <div style={{ textAlign: "center", padding: "20px 0", color: "#9ca3af", fontSize: 11.5 }}>
+                <BookOpen size={22} style={{ marginBottom: 6, opacity: .6 }} /><br />No backlog yet - add your pending chapters above.
               </div>
             )}
           </div>
@@ -3419,27 +3452,27 @@ function DashboardBody({ urlPlan = "" }) {
           sub="Every number you enter is automatically turned into the exact breakdowns your mentor reviews - and an action list for the week.">
 
           {/* AI insights banner */}
-          <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "20px 22px", marginBottom: 18, boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12 }}>
-              <span style={{ width: 36, height: 36, borderRadius: 11, background: `${GOLD}1a`, border: `1px solid ${GOLD}44`, display: "grid", placeItems: "center" }}><Brain size={18} color={GOLD} /></span>
+          <div style={{ background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 16, padding: "16px 18px", marginBottom: 16, boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <span style={{ width: 32, height: 32, borderRadius: 9, background: `${GOLD}1a`, border: `1px solid ${GOLD}44`, display: "grid", placeItems: "center" }}><Brain size={16} color={GOLD} /></span>
               <div>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>AI auto-analysis</div>
-                <div style={{ fontSize: 12, color: MUTE }}>Improvement & decline report, updated from your latest log & test</div>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", color: INK }}>AI auto-analysis</div>
+                <div style={{ fontSize: 10.5, color: MUTE }}>Improvement & decline report, updated from your latest log & test</div>
               </div>
             </div>
-            <div style={{ display: "grid", gap: 8 }}>
+            <div style={{ display: "grid", gap: 6 }}>
               {insights.length ? insights.map((ins, i) => (
-                <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start", background: "var(--page-bg)", border: "1px solid #f1f5f9", borderRadius: 12, padding: "10px 13px" }}>
-                  {ins.tone === "up" ? <TrendingUp size={16} color="#16a34a" style={{ flexShrink: 0, marginTop: 1 }} />
-                    : ins.tone === "down" ? <TrendingDown size={16} color="#dc2626" style={{ flexShrink: 0, marginTop: 1 }} />
-                    : <Minus size={16} color="#64748b" style={{ flexShrink: 0, marginTop: 1 }} />}
-                  <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>{ins.text}</span>
+                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "var(--page-bg)", border: "1px solid #f1f5f9", borderRadius: 10, padding: "8px 11px" }}>
+                  {ins.tone === "up" ? <TrendingUp size={14} color="#16a34a" style={{ flexShrink: 0, marginTop: 1 }} />
+                    : ins.tone === "down" ? <TrendingDown size={14} color="#dc2626" style={{ flexShrink: 0, marginTop: 1 }} />
+                    : <Minus size={14} color="#64748b" style={{ flexShrink: 0, marginTop: 1 }} />}
+                  <span style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.45 }}>{ins.text}</span>
                 </div>
-              )) : <span style={{ fontSize: 13, color: MUTE }}>Add a couple of tests and daily logs to unlock your improvement & decline report.</span>}
+              )) : <span style={{ fontSize: 11.5, color: MUTE }}>Add a couple of tests and daily logs to unlock your improvement & decline report.</span>}
             </div>
           </div>
 
-          <div className="md-tools-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 16 }}>
+          <div className="md-tools-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14 }}>
             {/* Silly-mistake audit */}
             <ToolCard icon={Crosshair} color="#ef4444" title="Silly-mistake audit" desc="Marks lost to silly errors - tracked, by topic, and killed.">
               {sillyTrend.length ? (
@@ -3449,11 +3482,11 @@ function DashboardBody({ urlPlan = "" }) {
                     <DeltaPill d={Number(latest?.silly || 0) - Number(prev?.silly || 0)} lowerIsBetter subtext={`${prev?.silly ?? 0} → ${latest?.silly ?? 0} this test`} />
                   )}
                   {sillyTopics.length > 0 && (
-                    <div style={{ marginTop: 12 }}>
-                      <div style={{ fontSize: 11.5, fontWeight: 700, color: MUTE, marginBottom: 6 }}>Where silly mistakes happen</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    <div style={{ marginTop: 10 }}>
+                      <div style={{ fontSize: 10.5, fontWeight: 700, color: MUTE, marginBottom: 5 }}>Where silly mistakes happen</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                         {sillyTopics.slice(0, 5).map(([c, n]) => (
-                          <span key={c} style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 50, padding: "4px 10px", fontSize: 11.5, fontWeight: 700 }}>{c}{n > 1 ? ` ×${n}` : ""}</span>
+                          <span key={c} style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 50, padding: "3px 8px", fontSize: 10, fontWeight: 700 }}>{c}{n > 1 ? ` ×${n}` : ""}</span>
                         ))}
                       </div>
                     </div>
@@ -3464,31 +3497,31 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* Chapter strength & weekly coverage - feeds the parent chapter report */}
             <ToolCard icon={BookOpen} color="#FF693D" title="Add a chapter" desc="Tag each chapter weak / medium / strong and how much you covered this week - it appears in your Chapter-strength report.">
-              <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <div className="md-form-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <form onSubmit={addChapter} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div className="md-form-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   <SelectField label="Subject" value={chapForm.subject || subjects[0]} onChange={(v) => setChapForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
                   <NumField label="Covered this week (%)" value={chapForm.coverage} onChange={(v) => setChapForm((s) => ({ ...s, coverage: v }))} placeholder="e.g. 60" full />
                 </div>
                 <TextField label="Chapter" value={chapForm.topic} onChange={(v) => setChapForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
                 <div>
-                  <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>Strength</span>
-                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, color: "#6b7280" }}>Strength</span>
+                  <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
                     {["weak", "medium", "strong"].map((k) => {
                       const st = STRENGTHS[k]; const on = chapForm.strength === k;
                       return (
                         <button type="button" key={k} onClick={() => setChapForm((s) => ({ ...s, strength: k }))}
-                          style={{ flex: 1, padding: "9px", borderRadius: 10, border: `1.5px solid ${on ? st.color : "#e5e7eb"}`, background: on ? `${st.color}12` : "#fff", color: on ? st.color : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer" }}>
+                          style={{ flex: 1, padding: "7px", borderRadius: 8, border: `1.5px solid ${on ? st.color : "#e5e7eb"}`, background: on ? `${st.color}12` : "#fff", color: on ? st.color : "#6b7280", fontWeight: 800, fontSize: 11, cursor: "pointer" }}>
                           {st.label}
                         </button>
                       );
                     })}
                   </div>
                 </div>
-                <button type="submit" style={{ padding: "11px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
-                  <Plus size={15} /> Add chapter
+                <button type="submit" style={{ padding: "8px 12px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  <Plus size={14} /> Add chapter
                 </button>
               </form>
-              <div style={{ marginTop: 12, fontSize: 12, color: MUTE, lineHeight: 1.5, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 10, padding: "9px 12px" }}>
+              <div style={{ marginTop: 10, fontSize: 10.5, color: MUTE, lineHeight: 1.45, background: "#f8fafc", border: "1px solid #eef2f7", borderRadius: 8, padding: "7px 10px" }}>
                 Added chapters {chapterLog.length ? <><strong style={{ color: NAVY }}>({chapterLog.length})</strong> </> : ""}appear in your <strong style={{ color: "#E0421F" }}>Chapter-strength report</strong> - where you can review and remove them.
               </div>
             </ToolCard>
@@ -3499,70 +3532,70 @@ function DashboardBody({ urlPlan = "" }) {
             <ToolCard icon={ListChecks} color={GREEN} title="Your weekly fix-list" desc="Your mentor's tasks plus your own - all summarised in the weekly parent report.">
               {/* tasks your mentor assigned for this student */}
               {mentorTasks.length > 0 ? (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, color: "#E0421F", background: "#fff5f1", border: "1px solid #ffe0d4", borderRadius: 50, padding: "3px 10px", marginBottom: 8 }}>
-                    <Brain size={12} /> From your mentor
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 800, color: "#E0421F", background: "#fff5f1", border: "1px solid #ffe0d4", borderRadius: 50, padding: "2px 8px", marginBottom: 6 }}>
+                    <Brain size={11} /> From your mentor
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {mentorTasks.map((t) => {
                       const label = t.text;
                       const done = fixDoneSet.includes(label);
                       return (
                         <button key={t.id || label} onClick={() => toggleFix(label)}
-                          style={{ display: "flex", gap: 10, alignItems: "flex-start", textAlign: "left", background: done ? "#fff5f1" : "#fff", border: `1px solid ${done ? "#fecfbf" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px", cursor: "pointer" }}>
-                          <span style={{ width: 19, height: 19, borderRadius: 6, border: `1.5px solid ${done ? "#FF693D" : "#cbd5e1"}`, background: done ? "#FF693D" : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
-                            {done && <CheckCircle2 size={14} color="#fff" />}
+                          style={{ display: "flex", gap: 8, alignItems: "flex-start", textAlign: "left", background: done ? "#fff5f1" : "#fff", border: `1px solid ${done ? "#fecfbf" : "#eef2f7"}`, borderRadius: 9, padding: "8px 10px", cursor: "pointer" }}>
+                          <span style={{ width: 17, height: 17, borderRadius: 5, border: `1.5px solid ${done ? "#FF693D" : "#cbd5e1"}`, background: done ? "#FF693D" : "#fff", display: "grid", placeItems: "center", flexShrink: 0, marginTop: 1 }}>
+                            {done && <CheckCircle2 size={12} color="#fff" />}
                           </span>
-                          <span style={{ fontSize: 13, color: done ? "#E0421F" : "#374151", lineHeight: 1.45, textDecoration: done ? "line-through" : "none" }}>{label}</span>
+                          <span style={{ fontSize: 11.5, color: done ? "#E0421F" : "#374151", lineHeight: 1.4, textDecoration: done ? "line-through" : "none" }}>{label}</span>
                         </button>
                       );
                     })}
                   </div>
-                  <div style={{ fontSize: 11.5, color: MUTE, marginTop: 8, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 10.5, color: MUTE, marginTop: 6, lineHeight: 1.45 }}>
                     Tick these off as you finish them - your mentor sees your progress live. They reset each week.
                   </div>
                 </div>
               ) : (
-                <div style={{ marginBottom: 16, padding: "14px 14px", background: "#fff7f3", border: "1px dashed #fecfbf", borderRadius: 11, fontSize: 12.5, color: "#E0421F", lineHeight: 1.5 }}>
+                <div style={{ marginBottom: 12, padding: "10px 12px", background: "#fff7f3", border: "1px dashed #fecfbf", borderRadius: 9, fontSize: 11, color: "#E0421F", lineHeight: 1.45 }}>
                   <strong>No mentor tasks yet.</strong> When your mentor assigns tasks, they'll appear here as your must-do list.
                 </div>
               )}
 
               {/* the student's own weekly tasks - add + edit + complete (no delete) */}
               <div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em" }}>Your tasks</div>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "3px 10px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: MUTE, textTransform: "uppercase", letterSpacing: ".05em" }}>Your tasks</div>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: GREEN, background: "#dcfce7", borderRadius: 50, padding: "2px 8px" }}>{weeklyDone}/{weeklyTasks.length} done</span>
                 </div>
-                <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                <form onSubmit={addWeeklyTask} style={{ display: "flex", gap: 6, marginBottom: 8 }}>
                   <input value={wtInput} onChange={(e) => setWtInput(e.target.value)} placeholder="Add your own task - e.g. Finish Rotational Motion DPP"
-                    style={{ flex: 1, minWidth: 0, padding: "10px 12px", borderRadius: 11, border: "1.5px solid #e5e7eb", fontSize: 13.5, color: NAVY, outline: "none", boxSizing: "border-box" }}
+                    style={{ flex: 1, minWidth: 0, padding: "8px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 12, color: NAVY, outline: "none", boxSizing: "border-box" }}
                     onFocus={(e) => { e.target.style.borderColor = GREEN; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
-                  <button type="submit" style={{ flexShrink: 0, padding: "10px 15px", borderRadius: 11, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                    <Plus size={15} /> Add
+                  <button type="submit" style={{ flexShrink: 0, padding: "8px 12px", borderRadius: 8, border: "none", background: `linear-gradient(135deg,${GREEN},#22c55e)`, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 11.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                    <Plus size={13} /> Add
                   </button>
                 </form>
                 {weeklyTasks.length ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {weeklyTasks.map((t) => (
-                      <div key={t.id} style={{ display: "flex", gap: 10, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 11, padding: "10px 12px" }}>
+                      <div key={t.id} style={{ display: "flex", gap: 8, alignItems: "center", background: t.done ? "#f0faf4" : "#fff", border: `1px solid ${t.done ? "#bbf7d0" : "#eef2f7"}`, borderRadius: 9, padding: "8px 10px" }}>
                         <button onClick={() => toggleWeeklyTask(t.id)} title={t.done ? "Mark incomplete" : "Mark complete"}
-                          style={{ width: 21, height: 21, borderRadius: 6, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
-                          {t.done && <CheckCircle2 size={14} color="#fff" />}
+                          style={{ width: 19, height: 19, borderRadius: 5, border: `1.5px solid ${t.done ? GREEN : "#cbd5e1"}`, background: t.done ? GREEN : "#fff", display: "grid", placeItems: "center", flexShrink: 0, cursor: "pointer" }}>
+                          {t.done && <CheckCircle2 size={12} color="#fff" />}
                         </button>
                         {wtEdit.id === t.id ? (
                           <>
                             <input value={wtEdit.text} autoFocus onChange={(e) => setWtEdit((s) => ({ ...s, text: e.target.value }))}
                               onKeyDown={(e) => e.key === "Enter" && saveWeeklyEdit()}
-                              style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1.5px solid ${GREEN}`, fontSize: 13, color: NAVY, outline: "none", minWidth: 0 }} />
-                            <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 8, padding: "7px 11px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>Save</button>
+                              style={{ flex: 1, padding: "5px 8px", borderRadius: 6, border: `1.5px solid ${GREEN}`, fontSize: 11.5, color: NAVY, outline: "none", minWidth: 0 }} />
+                            <button onClick={saveWeeklyEdit} style={{ background: GREEN, color: "#fff", border: "none", borderRadius: 6, padding: "5px 9px", fontSize: 11, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>Save</button>
                           </>
                         ) : (
                           <>
-                            <span style={{ flex: 1, fontSize: 13, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+                            <span style={{ flex: 1, fontSize: 11.5, color: t.done ? "#15803d" : "#374151", lineHeight: 1.4, textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
                             {!t.done && (
-                              <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #e5e7eb", background: "var(--page-bg)", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                                <Pencil size={13} />
+                              <button onClick={() => setWtEdit({ id: t.id, text: t.text })} title="Edit" style={{ width: 24, height: 24, borderRadius: 6, border: "1px solid #e5e7eb", background: "var(--page-bg)", color: "#6b7280", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                                <Pencil size={11} />
                               </button>
                             )}
                           </>
@@ -3571,7 +3604,7 @@ function DashboardBody({ urlPlan = "" }) {
                     ))}
                   </div>
                 ) : (
-                  <div style={{ fontSize: 12.5, color: "#9ca3af", lineHeight: 1.5 }}>No tasks yet - add your first one above. Tasks stay for accountability and can't be deleted.</div>
+                  <div style={{ fontSize: 10.5, color: "#9ca3af", lineHeight: 1.45 }}>No tasks yet - add your first one above. Tasks stay for accountability and can't be deleted.</div>
                 )}
               </div>
             </ToolCard>
@@ -3580,37 +3613,37 @@ function DashboardBody({ urlPlan = "" }) {
                 above); this is exactly what goes into the weekly parent email. */}
             <ToolCard icon={BarChart3} color="#f59e0b" title="Chapter-strength report" desc="Your weak / medium / strong chapters and weekly coverage - this list is included in the weekly parent email.">
               {chapterLog.length ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {["weak", "medium", "strong"].map((k) => {
                     const st = STRENGTHS[k];
                     const items = chapterLog.filter((c) => c.strength === k);
                     return (
                       <div key={k}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 8 }}>
-                          <span style={{ width: 9, height: 9, borderRadius: "50%", background: st.color }} />
-                          <span style={{ fontSize: 12.5, fontWeight: 800, color: st.color }}>{st.label}</span>
-                          <span style={{ fontSize: 10.5, fontWeight: 800, color: st.color, background: `${st.color}14`, borderRadius: 50, padding: "1px 8px" }}>{items.length}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: st.color }} />
+                          <span style={{ fontSize: 11, fontWeight: 800, color: st.color }}>{st.label}</span>
+                          <span style={{ fontSize: 9.5, fontWeight: 800, color: st.color, background: `${st.color}14`, borderRadius: 50, padding: "1px 6px" }}>{items.length}</span>
                         </div>
                         {items.length ? (
-                          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                             {items.map((c) => (
-                              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 10, background: `${st.color}0d`, border: `1px solid ${st.color}2e`, borderRadius: 11, padding: "9px 11px" }}>
+                              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 8, background: `${st.color}0d`, border: `1px solid ${st.color}2e`, borderRadius: 9, padding: "7px 9px" }}>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.topic} <span style={{ color: MUTE, fontWeight: 600 }}>· {shortName(c.subject)}</span></div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 5 }}>
-                                    <div style={{ flex: 1, height: 6, borderRadius: 4, background: "#eef2f7", overflow: "hidden" }}>
-                                      <div style={{ width: `${c.coverage || 0}%`, height: "100%", background: st.color, borderRadius: 4 }} />
+                                  <div style={{ fontSize: 11.5, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.topic} <span style={{ color: MUTE, fontWeight: 600 }}>· {shortName(c.subject)}</span></div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                                    <div style={{ flex: 1, height: 5, borderRadius: 3, background: "#eef2f7", overflow: "hidden" }}>
+                                      <div style={{ width: `${c.coverage || 0}%`, height: "100%", background: st.color, borderRadius: 3 }} />
                                     </div>
-                                    <span style={{ fontSize: 11, fontWeight: 800, color: st.color, width: 34, textAlign: "right" }}>{c.coverage || 0}%</span>
+                                    <span style={{ fontSize: 10, fontWeight: 800, color: st.color, width: 30, textAlign: "right" }}>{c.coverage || 0}%</span>
                                   </div>
                                 </div>
-                                <button onClick={() => removeChapter(c.id)} title="Remove chapter" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                                  <Trash2 size={13} />
+                                <button onClick={() => removeChapter(c.id)} title="Remove chapter" style={{ width: 24, height: 24, borderRadius: 6, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                                  <Trash2 size={12} />
                                 </button>
                               </div>
                             ))}
                           </div>
-                        ) : <div style={{ fontSize: 12, color: "#9ca3af", paddingLeft: 16 }}>None yet.</div>}
+                        ) : <div style={{ fontSize: 10.5, color: "#9ca3af", paddingLeft: 14 }}>None yet.</div>}
                       </div>
                     );
                   })}
@@ -3668,21 +3701,21 @@ function DashboardBody({ urlPlan = "" }) {
             footer={<SendControls color={GREEN} state={weeklyState} onSend={() => sendReport("weekly")} sendLabel="Send weekly report now"
               autoLocked autoLabel="Auto-emailed every Sunday" parentEmail={parentEmail} />}
           />
-          <p style={{ fontSize: 12, color: MUTE, margin: "-6px 0 18px", textAlign: "center" }}>
+          <p style={{ fontSize: 11, color: MUTE, margin: "-6px 0 16px", textAlign: "center" }}>
             Includes your <strong style={{ color: NAVY }}>weak / medium / strong chapter list</strong> (shown below) - auto-emailed every <strong style={{ color: NAVY }}>Sunday</strong>.
           </p>
 
           {/* ── BACKLOG ALERT strip - auto-emails the parent when chapters fall behind ── */}
-          <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 20, padding: "22px 24px", boxShadow: "0 20px 46px -30px rgba(234,88,12,.6)", position: "relative", overflow: "hidden", marginBottom: 18 }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#ffedd5", display: "grid", placeItems: "center", flexShrink: 0 }}><AlertCircle size={22} color="#E0421F" /></span>
-              <div style={{ flex: 1, minWidth: 240 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <div style={{ background: overdueBacklog.length || studyIrregular ? "#fff7ed" : "#fff", border: `1px solid ${overdueBacklog.length || studyIrregular ? "#fdba74" : "#fde68a"}`, borderRadius: 16, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(234,88,12,.5)", position: "relative", overflow: "hidden", marginBottom: 16 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#f59e0b,#ef4444)" }} />
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 14, flexWrap: "wrap" }}>
+              <span style={{ width: 38, height: 38, borderRadius: 10, background: "#ffedd5", display: "grid", placeItems: "center", flexShrink: 0 }}><AlertCircle size={18} color="#E0421F" /></span>
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", color: INK, display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
                   Backlog alert to parent
-                  {overdueBacklog.length > 0 && <span style={{ fontSize: 11, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 50, padding: "3px 10px" }}>{overdueBacklog.length} overdue</span>}
+                  {overdueBacklog.length > 0 && <span style={{ fontSize: 9.5, fontWeight: 800, color: "#b91c1c", background: "#fee2e2", borderRadius: 50, padding: "2px 8px" }}>{overdueBacklog.length} overdue</span>}
                 </div>
-                <p style={{ color: MUTE, fontSize: 13.5, lineHeight: 1.6, margin: "4px 0 14px" }}>
+                <p style={{ color: MUTE, fontSize: 11.5, lineHeight: 1.5, margin: "4px 0 12px" }}>
                   If chapters pass their <strong style={{ color: NAVY }}>target date</strong> unfinished or study turns irregular (low streak / routine), your parent is automatically emailed that the backlog isn't being cleared - so they can step in early.{" "}
                   {overdueBacklog.length || studyIrregular
                     ? <strong style={{ color: "#c2410c" }}>Currently flagged: {overdueBacklog.length ? `${overdueBacklog.length} overdue chapter${overdueBacklog.length === 1 ? "" : "s"}` : "irregular study"}.</strong>
@@ -3754,11 +3787,11 @@ function DashboardBody({ urlPlan = "" }) {
 /* ── building blocks ─────────────────────────────────────────────── */
 function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
   return (
-    <section id={id} style={{ scrollMarginTop: 80, paddingTop: 6 }}>
-      <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 16px" }}>
-        <span style={{ display: "inline-block", fontSize: 10.5, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: tColor, marginBottom: 5 }}>{kicker}</span>
-        <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1.2rem, 2.4vw, 1.6rem)", color: INK, margin: 0, letterSpacing: "-0.4px" }}>{title}</h2>
-        {sub && <p style={{ color: MUTE, fontSize: 12, lineHeight: 1.5, marginTop: 6 }}>{sub}</p>}
+    <section id={id} style={{ scrollMarginTop: 80, paddingTop: 4 }}>
+      <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 14px" }}>
+        <span style={{ display: "inline-block", fontSize: 9, fontWeight: 800, letterSpacing: "1.2px", textTransform: "uppercase", color: tColor, marginBottom: 4 }}>{kicker}</span>
+        <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1rem, 1.8vw, 1.25rem)", color: INK, margin: 0, letterSpacing: "-0.3px" }}>{title}</h2>
+        {sub && <p style={{ color: MUTE, fontSize: 11, lineHeight: 1.45, marginTop: 4 }}>{sub}</p>}
       </div>
       {children}
     </section>
@@ -3770,31 +3803,31 @@ function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
 function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra, remark, remarkTitle = "Highlight", heroPoints, heroNote, footer }) {
   const dark = "#E0421F";
   return (
-    <div className="md-booklet" style={{ display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", borderRadius: 22, overflow: "hidden", border: "1px solid #f0e9e0", boxShadow: "0 24px 54px -34px rgba(26,26,46,.5)", background: "var(--page-bg)", marginBottom: 18 }}>
+    <div className="md-booklet" style={{ display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", borderRadius: 18, overflow: "hidden", border: "1px solid #f0e9e0", boxShadow: "0 20px 46px -30px rgba(26,26,46,.4)", background: "var(--page-bg)", marginBottom: 16 }}>
       {/* LEFT - hero */}
-      <div style={{ position: "relative", padding: "28px 28px 26px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      <div style={{ position: "relative", padding: "22px 22px 20px", color: "#fff", background: `linear-gradient(155deg, ${ORANGE} 0%, ${dark} 100%)`, overflow: "hidden", display: "flex", flexDirection: "column" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)", backgroundSize: "26px 26px", opacity: .55, pointerEvents: "none" }} />
         <div style={{ position: "relative" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 800, letterSpacing: ".08em", background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 50, padding: "5px 12px" }}>
-            <BookOpen size={12} /> PARENT REPORT
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 9.5, fontWeight: 800, letterSpacing: ".08em", background: "rgba(255,255,255,.18)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 50, padding: "3px 10px" }}>
+            <BookOpen size={11} /> PARENT REPORT
           </span>
-          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.7rem", lineHeight: 1.15, margin: "16px 0 10px", letterSpacing: "-.5px" }}>{title}</h3>
-          <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,.9)", margin: 0, maxWidth: 320 }}>{subtitle}</p>
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: "1px solid rgba(255,255,255,.25)" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em" }}>Student</div>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", marginTop: 4 }}>{studentName}</div>
-            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.82)", marginTop: 3 }}>{studentSub}</div>
+          <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.25rem", lineHeight: 1.2, margin: "12px 0 8px", letterSpacing: "-.4px" }}>{title}</h3>
+          <p style={{ fontSize: 11.5, lineHeight: 1.5, color: "rgba(255,255,255,.9)", margin: 0, maxWidth: 320 }}>{subtitle}</p>
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,.25)" }}>
+            <div style={{ fontSize: 9.5, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em" }}>Student</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", marginTop: 2 }}>{studentName}</div>
+            <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.82)", marginTop: 2 }}>{studentSub}</div>
           </div>
         </div>
         {/* fills the lower half of the hero so it doesn't read as empty */}
         {heroPoints?.length > 0 && (
-          <div style={{ position: "relative", marginTop: 22 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>What's inside</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+          <div style={{ position: "relative", marginTop: 16 }}>
+            <div style={{ fontSize: 9.5, fontWeight: 700, color: "rgba(255,255,255,.72)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>What's inside</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               {heroPoints.map((p) => (
-                <div key={p} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: "rgba(255,255,255,.95)", fontWeight: 600 }}>
-                  <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(255,255,255,.22)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                    <CheckCircle2 size={12} color="#fff" />
+                <div key={p} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11, color: "rgba(255,255,255,.95)", fontWeight: 600 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(255,255,255,.22)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <CheckCircle2 size={10} color="#fff" />
                   </span>
                   {p}
                 </div>
@@ -3803,38 +3836,38 @@ function ProgressBooklet({ title, subtitle, studentName, studentSub, rows, extra
           </div>
         )}
         {heroNote && (
-          <div style={{ position: "relative", marginTop: "auto", paddingTop: 20 }}>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: "rgba(255,255,255,.82)", margin: 0 }}>{heroNote}</p>
+          <div style={{ position: "relative", marginTop: "auto", paddingTop: 14 }}>
+            <p style={{ fontSize: 10.5, lineHeight: 1.5, color: "rgba(255,255,255,.82)", margin: 0 }}>{heroNote}</p>
           </div>
         )}
       </div>
       {/* RIGHT - stats */}
-      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column" }}>
         {rows.map((r, i) => {
           const Icon = r.icon;
           return (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 13, padding: "12px 0", borderBottom: i < rows.length - 1 ? "1px solid #f1f5f9" : "none" }}>
-              <span style={{ width: 38, height: 38, borderRadius: 11, background: `${r.color}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <Icon size={18} color={r.color} />
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: "9px 0", borderBottom: i < rows.length - 1 ? "1px solid #f1f5f9" : "none" }}>
+              <span style={{ width: 32, height: 32, borderRadius: 9, background: `${r.color}14`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Icon size={16} color={r.color} />
               </span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: INK }}>{r.label}</div>
-                {r.sub && <div style={{ fontSize: 12, color: MUTE, marginTop: 1 }}>{r.sub}</div>}
+                <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12, color: INK }}>{r.label}</div>
+                {r.sub && <div style={{ fontSize: 10.5, color: MUTE, marginTop: 1 }}>{r.sub}</div>}
               </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: r.valueColor || r.color, flexShrink: 0, whiteSpace: "nowrap" }}>{r.value}</div>
+              <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.95rem", color: r.valueColor || r.color, flexShrink: 0, whiteSpace: "nowrap" }}>{r.value}</div>
             </div>
           );
         })}
-        {extra && <div style={{ marginTop: 12 }}>{extra}</div>}
+        {extra && <div style={{ marginTop: 10 }}>{extra}</div>}
         {remark && (
-          <div style={{ marginTop: 14, background: "#fff7f3", border: `1px solid ${ORANGE}26`, borderRadius: 14, padding: "13px 15px" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 800, color: dark, marginBottom: 5 }}>
-              <Sparkles size={13} /> {remarkTitle}
+          <div style={{ marginTop: 12, background: "#fff7f3", border: `1px solid ${ORANGE}26`, borderRadius: 12, padding: "10px 13px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10.5, fontWeight: 800, color: dark, marginBottom: 4 }}>
+              <Sparkles size={12} /> {remarkTitle}
             </div>
-            <div style={{ fontSize: 13, color: "#7c2d12", lineHeight: 1.55 }}>{remark}</div>
+            <div style={{ fontSize: 11.5, color: "#7c2d12", lineHeight: 1.5 }}>{remark}</div>
           </div>
         )}
-        {footer && <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>{footer}</div>}
+        {footer && <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid #f1f5f9" }}>{footer}</div>}
       </div>
     </div>
   );
@@ -3845,10 +3878,10 @@ function ChartCard({ title, hint, accent = ORANGE, children }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      style={{ background: "var(--page-bg)", border: `1px solid ${accent}28`, borderRadius: 18, padding: "20px 20px 16px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${accent},${GOLD})` }} />
-      <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1rem", color: INK, margin: "0 0 2px" }}>{title}</h3>
-      {hint && <p style={{ fontSize: 12.5, color: MUTE, margin: "0 0 12px" }}>{hint}</p>}
+      style={{ background: "var(--page-bg)", border: `1px solid ${accent}28`, borderRadius: 16, padding: "16px 18px 14px", boxShadow: "0 14px 34px -24px rgba(26,26,46,.35)", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg,${accent},${GOLD})` }} />
+      <h3 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "0.9rem", color: INK, margin: "0 0 2px" }}>{title}</h3>
+      {hint && <p style={{ fontSize: 11, color: MUTE, margin: "0 0 10px" }}>{hint}</p>}
       {children}
     </motion.div>
   );
@@ -3856,12 +3889,12 @@ function ChartCard({ title, hint, accent = ORANGE, children }) {
 
 function ToolCard({ icon: Icon, color, title, desc, children }) {
   return (
-    <div style={{ background: "var(--page-bg)", border: `1px solid ${color}28`, borderRadius: 18, padding: "20px", boxShadow: "0 16px 40px -28px rgba(26,26,46,.4)", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 4 }}>
-        <span style={{ width: 38, height: 38, borderRadius: 11, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}><Icon size={18} color={color} /></span>
-        <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1rem", color: INK, margin: 0 }}>{title}</h3>
+    <div style={{ background: "var(--page-bg)", border: `1px solid ${color}28`, borderRadius: 16, padding: "16px 18px", boxShadow: "0 14px 34px -24px rgba(26,26,46,.35)", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 3 }}>
+        <span style={{ width: 32, height: 32, borderRadius: 9, background: `${color}14`, border: `1px solid ${color}30`, display: "grid", placeItems: "center", flexShrink: 0 }}><Icon size={16} color={color} /></span>
+        <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "0.9rem", color: INK, margin: 0 }}>{title}</h3>
       </div>
-      <p style={{ fontSize: 12.5, color: MUTE, margin: "4px 0 14px", lineHeight: 1.5 }}>{desc}</p>
+      <p style={{ fontSize: 11, color: MUTE, margin: "3px 0 12px", lineHeight: 1.45 }}>{desc}</p>
       <div style={{ marginTop: "auto" }}>{children}</div>
     </div>
   );
@@ -3874,18 +3907,18 @@ function RankCard({ r, name }) {
   if (!r.ranked) {
     return (
       <div style={{
-        marginTop: 18,
+        marginTop: 16,
         background: "#fff7ed",
         border: "1px solid #fed7aa",
-        borderRadius: 16,
-        padding: "16px 18px",
+        borderRadius: 14,
+        padding: "14px 16px",
         boxShadow: "0 4px 14px rgba(234,88,12,0.06)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 6 }}>
-          <Trophy size={17} color="#c2410c" />
-          <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14, color: INK }}>{name} · {r.total} marks</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <Trophy size={15} color="#c2410c" />
+          <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 12.5, color: INK }}>{name} · {r.total} marks</span>
         </div>
-        <div style={{ fontSize: 12.5, color: "#9a3412", lineHeight: 1.55 }}>
+        <div style={{ fontSize: 11, color: "#9a3412", lineHeight: 1.5 }}>
           Below the qualifying cutoff{r.cutoffNeeded ? ` (need ~${r.cutoffNeeded} aggregate marks)` : ""}. Focus on scoring minimum qualifying marks in each subject first.
         </div>
       </div>
@@ -3930,33 +3963,33 @@ function RankCard({ r, name }) {
             <Trophy size={18} color="#ffffff" />
           </div>
           <div>
-            <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "#ffffff", letterSpacing: "-0.2px" }}>
+            <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13, color: "#ffffff", letterSpacing: "-0.2px" }}>
               Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 Rank
             </div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 1 }}>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", marginTop: 1 }}>
               {name} · <strong style={{ color: "#FF8A65" }}>{r.total}{r.examMax ? `/${r.examMax}` : ""} Marks</strong>
             </div>
           </div>
         </div>
 
         <span style={{
-          fontSize: 10.5,
+          fontSize: 9.5,
           fontWeight: 800,
           color: "#22c55e",
           background: "rgba(34,197,94,0.15)",
           border: "1px solid rgba(34,197,94,0.3)",
           borderRadius: 50,
-          padding: "3px 10px",
+          padding: "2px 8px",
           display: "inline-flex",
           alignItems: "center",
-          gap: 5,
+          gap: 4,
         }}>
-          <Sparkles size={11} /> Qualified
+          <Sparkles size={10} /> Qualified
         </span>
       </div>
 
       {r.advanced && r.paper1 != null && (
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, marginBottom: 12 }}>
+        <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.45, marginBottom: 10 }}>
           Both papers combined · Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6h total.
         </div>
       )}
@@ -3965,9 +3998,9 @@ function RankCard({ r, name }) {
       <motion.div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(105px, 100%), 1fr))",
-          gap: 10,
-          marginBottom: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100px, 100%), 1fr))",
+          gap: 8,
+          marginBottom: 12,
           position: "relative",
         }}
         initial="hidden"
@@ -3981,14 +4014,14 @@ function RankCard({ r, name }) {
             background: "rgba(255,255,255,0.06)",
             backdropFilter: "blur(8px)",
             border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: 12,
-            padding: "12px 14px",
+            borderRadius: 10,
+            padding: "10px 12px",
           }}
         >
-          <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#FF8A65", letterSpacing: "-0.5px" }}>
+          <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 15, color: "#FF8A65", letterSpacing: "-0.4px" }}>
             {r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}
           </div>
-          <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+          <div style={{ fontSize: 9.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
             {r.advanced ? "CRL Range" : "All-India CRL"}
           </div>
         </motion.div>
@@ -4000,14 +4033,14 @@ function RankCard({ r, name }) {
               background: "rgba(255,255,255,0.06)",
               backdropFilter: "blur(8px)",
               border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 12,
-              padding: "12px 14px",
+              borderRadius: 10,
+              padding: "10px 12px",
             }}
           >
-            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#38bdf8", letterSpacing: "-0.5px" }}>
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 15, color: "#38bdf8", letterSpacing: "-0.4px" }}>
               {inr(r.categoryRank)}
             </div>
-            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+            <div style={{ fontSize: 9.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
               {r.category} Rank
             </div>
           </motion.div>
@@ -4020,14 +4053,14 @@ function RankCard({ r, name }) {
               background: "rgba(255,255,255,0.06)",
               backdropFilter: "blur(8px)",
               border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 12,
-              padding: "12px 14px",
+              borderRadius: 10,
+              padding: "10px 12px",
             }}
           >
-            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#4ade80", letterSpacing: "-0.5px" }}>
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 15, color: "#4ade80", letterSpacing: "-0.4px" }}>
               {r.percentile}
             </div>
-            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+            <div style={{ fontSize: 9.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
               Percentile
             </div>
           </motion.div>
@@ -4040,14 +4073,14 @@ function RankCard({ r, name }) {
               background: "rgba(255,255,255,0.06)",
               backdropFilter: "blur(8px)",
               border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 12,
-              padding: "12px 14px",
+              borderRadius: 10,
+              padding: "10px 12px",
             }}
           >
-            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 16, color: "#facc15", letterSpacing: "-0.5px" }}>
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 13.5, color: "#facc15", letterSpacing: "-0.4px" }}>
               {rng(r.low, r.high)}
             </div>
-            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+            <div style={{ fontSize: 9.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
               Likely Band
             </div>
           </motion.div>
@@ -4055,18 +4088,18 @@ function RankCard({ r, name }) {
       </motion.div>
 
       {r.advanced && r.branches?.length > 0 && (
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", lineHeight: 1.5, background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "8px 12px", marginBottom: 8 }}>
+        <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.45, background: "rgba(255,255,255,0.05)", borderRadius: 7, padding: "7px 10px", marginBottom: 6 }}>
           <strong style={{ color: "#38bdf8" }}>Possible Branches:</strong> {r.branches.join(" · ")}
         </div>
       )}
 
       {r.advice && (
-        <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, marginTop: 4 }}>
+        <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.45, marginTop: 4 }}>
           {r.advice}
         </div>
       )}
 
-      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 10, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 8 }}>
+      <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.45)", marginTop: 8, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 6 }}>
         AI model based on 2024–2025 normalized shift data. Actual rank depends on official NTA shift difficulty.
       </div>
     </div>
@@ -4074,14 +4107,14 @@ function RankCard({ r, name }) {
 }
 
 function ChartHint({ text }) {
-  return <div style={{ color: "#9ca3af", fontSize: 13, padding: "28px 0", textAlign: "center" }}>{text}</div>;
+  return <div style={{ color: "#9ca3af", fontSize: 11.5, padding: "20px 0", textAlign: "center" }}>{text}</div>;
 }
 
 function ToggleSwitch({ on, onClick, color = GREEN }) {
   return (
     <button type="button" role="switch" aria-checked={on} onClick={onClick}
-      style={{ width: 40, height: 22, borderRadius: 50, border: "none", cursor: "pointer", background: on ? color : "#cbd5e1", position: "relative", transition: "background .2s", flexShrink: 0, padding: 0 }}>
-      <span style={{ position: "absolute", top: 2, left: on ? 20 : 2, width: 18, height: 18, borderRadius: "50%", background: "var(--page-bg)", transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.3)" }} />
+      style={{ width: 36, height: 20, borderRadius: 50, border: "none", cursor: "pointer", background: on ? color : "#cbd5e1", position: "relative", transition: "background .2s", flexShrink: 0, padding: 0 }}>
+      <span style={{ position: "absolute", top: 2, left: on ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "var(--page-bg)", transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.3)" }} />
     </button>
   );
 }
@@ -4090,23 +4123,23 @@ function SendControls({ color, state, onSend, sendLabel, disabled, auto, onToggl
   const off = state.sending || disabled;
   return (
     <div>
-      <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
         <button onClick={onSend} disabled={off}
-          style={{ padding: "11px 18px", borderRadius: 12, border: "none", background: off ? `${color}99` : color, color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: off ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: off ? "none" : `0 12px 26px -12px ${color}` }}>
-          {state.sending ? <><Loader2 size={16} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={15} /> {sendLabel}</>}
+          style={{ padding: "8px 14px", borderRadius: 10, border: "none", background: off ? `${color}99` : color, color: "#fff", fontFamily: "Sora", fontWeight: 700, fontSize: 11.5, cursor: off ? "not-allowed" : "pointer", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: off ? "none" : `0 10px 22px -10px ${color}` }}>
+          {state.sending ? <><Loader2 size={14} style={{ animation: "spin .8s linear infinite" }} /> Sending…</> : <><Send size={13} /> {sendLabel}</>}
         </button>
         {autoLocked ? (
           // Auto-send is always on and can't be turned off - just show the cadence.
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "6px 13px" }}>
-            <CheckCircle2 size={14} /> {autoLabel}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#16a34a", background: "#dcfce7", border: "1px solid #86efac", borderRadius: 50, padding: "4px 10px" }}>
+            <CheckCircle2 size={12} /> {autoLabel}
           </span>
         ) : (
-          <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 11, fontWeight: 700, color: NAVY, cursor: "pointer" }}>
             <ToggleSwitch on={auto} onClick={onToggle} color={color} /> {autoLabel}
           </label>
         )}
       </div>
-      <div style={{ fontSize: 11.5, color: parentEmail ? "#94a3b8" : "#b45309", marginTop: 8 }}>
+      <div style={{ fontSize: 10.5, color: parentEmail ? "#94a3b8" : "#b45309", marginTop: 6 }}>
         {parentEmail
           ? <>Sends to parent: <strong style={{ color: "#64748b" }}>{parentEmail}</strong></>
           : "Add a parent email at enrolment to receive these reports."}
@@ -4129,10 +4162,10 @@ function DeltaPill({ d, unit = "", subtext, lowerIsBetter = false }) {
   const Icon = d === 0 ? Minus : d > 0 ? TrendingUp : TrendingDown;
   const word = d === 0 ? "no change" : `${d > 0 ? "+" : ""}${d}${unit}`;
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 10, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 50, padding: "4px 11px" }}>
-      <Icon size={13} color={color} />
-      <span style={{ fontSize: 11.5, fontWeight: 800, color }}>{word}</span>
-      {subtext && <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>· {subtext}</span>}
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8, background: `${color}12`, border: `1px solid ${color}30`, borderRadius: 50, padding: "3px 9px" }}>
+      <Icon size={12} color={color} />
+      <span style={{ fontSize: 10.5, fontWeight: 800, color }}>{word}</span>
+      {subtext && <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>· {subtext}</span>}
     </div>
   );
 }
@@ -4147,19 +4180,19 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
   return (
     <div style={{
       border: `1.5px solid ${c}30`,
-      borderRadius: 14,
-      padding: "14px",
+      borderRadius: 12,
+      padding: "11px 12px",
       background: "#ffffff",
       boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
       display: "flex",
       flexDirection: "column",
-      gap: 10,
+      gap: 8,
       transition: "all 0.15s ease",
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22` }} />
-          <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 13, color: NAVY }}>{subject}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22` }} />
+          <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 12, color: NAVY }}>{subject}</span>
         </div>
         <div style={{ display: "flex", gap: 4 }}>
           {[0.5, 1, 2].map((add) => (
@@ -4170,9 +4203,9 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
               style={{
                 background: `${c}10`,
                 border: `1px solid ${c}30`,
-                borderRadius: 6,
-                padding: "2px 6px",
-                fontSize: 10.5,
+                borderRadius: 5,
+                padding: "1px 5px",
+                fontSize: 9.5,
                 fontWeight: 700,
                 color: c,
                 cursor: "pointer",
@@ -4184,9 +4217,9 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
           ))}
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Hours</span>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b" }}>Hours</span>
           <div style={{ position: "relative" }}>
             <input
               value={hours}
@@ -4195,10 +4228,10 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
               inputMode="decimal"
               style={{
                 width: "100%",
-                padding: "8px 26px 8px 10px",
-                borderRadius: 8,
+                padding: "6px 22px 6px 8px",
+                borderRadius: 7,
                 border: "1.5px solid #e2e8f0",
-                fontSize: 13.5,
+                fontSize: 12,
                 fontFamily: SORA,
                 fontWeight: 700,
                 color: NAVY,
@@ -4209,11 +4242,11 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
               onFocus={(e) => { e.target.style.borderColor = c; }}
               onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
             />
-            <span style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>h</span>
+            <span style={{ position: "absolute", right: 7, top: "50%", transform: "translateY(-50%)", fontSize: 10, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>h</span>
           </div>
         </label>
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Tasks ✓</span>
+        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b" }}>Tasks ✓</span>
           <div>
             <input
               value={tasks}
@@ -4222,10 +4255,10 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
               inputMode="numeric"
               style={{
                 width: "100%",
-                padding: "8px 10px",
-                borderRadius: 8,
+                padding: "6px 8px",
+                borderRadius: 7,
                 border: "1.5px solid #e2e8f0",
-                fontSize: 13.5,
+                fontSize: 12,
                 fontFamily: SORA,
                 fontWeight: 700,
                 color: NAVY,
@@ -4245,15 +4278,15 @@ function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
 
 function NumField({ label, value, onChange, placeholder, full, unit, icon: Icon, badge }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 4, flex: full ? "none" : "1 1 110px", minWidth: 0 }}>
+    <label style={{ display: "flex", flexDirection: "column", gap: 3, flex: full ? "none" : "1 1 100px", minWidth: 0 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
-        {badge && <span style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8" }}>{badge}</span>}
+        <span style={{ fontSize: 10.5, fontWeight: 600, color: "#475569" }}>{label}</span>
+        {badge && <span style={{ fontSize: 9.5, fontWeight: 700, color: "#94a3b8" }}>{badge}</span>}
       </div>
       <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
         {Icon && (
-          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
-            <Icon size={14} />
+          <span style={{ position: "absolute", left: 9, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={13} />
           </span>
         )}
         <input
@@ -4263,10 +4296,10 @@ function NumField({ label, value, onChange, placeholder, full, unit, icon: Icon,
           inputMode="decimal"
           style={{
             width: "100%",
-            padding: Icon ? "9px 12px 9px 32px" : unit ? "9px 30px 9px 12px" : "9px 12px",
-            borderRadius: 10,
+            padding: Icon ? "7px 10px 7px 28px" : unit ? "7px 26px 7px 10px" : "7px 10px",
+            borderRadius: 8,
             border: "1.5px solid #e2e8f0",
-            fontSize: 13.5,
+            fontSize: 12,
             fontFamily: SORA,
             fontWeight: 700,
             color: NAVY,
@@ -4285,7 +4318,7 @@ function NumField({ label, value, onChange, placeholder, full, unit, icon: Icon,
           }}
         />
         {unit && (
-          <span style={{ position: "absolute", right: 10, fontSize: 11, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>
+          <span style={{ position: "absolute", right: 9, fontSize: 10, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>
             {unit}
           </span>
         )}
@@ -4296,12 +4329,12 @@ function NumField({ label, value, onChange, placeholder, full, unit, icon: Icon,
 
 function TextField({ label, value, onChange, placeholder, icon: Icon }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
+    <label style={{ display: "flex", flexDirection: "column", gap: 3, minWidth: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: "#475569" }}>{label}</span>
       <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
         {Icon && (
-          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
-            <Icon size={14} />
+          <span style={{ position: "absolute", left: 9, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={13} />
           </span>
         )}
         <input
@@ -4310,10 +4343,10 @@ function TextField({ label, value, onChange, placeholder, icon: Icon }) {
           placeholder={placeholder}
           style={{
             width: "100%",
-            padding: Icon ? "9px 12px 9px 32px" : "9px 12px",
-            borderRadius: 10,
+            padding: Icon ? "7px 10px 7px 28px" : "7px 10px",
+            borderRadius: 8,
             border: "1.5px solid #e2e8f0",
-            fontSize: 13,
+            fontSize: 12,
             color: NAVY,
             outline: "none",
             boxSizing: "border-box",
@@ -4336,12 +4369,12 @@ function TextField({ label, value, onChange, placeholder, icon: Icon }) {
 
 function SelectField({ label, value, onChange, options, labels, placeholders, icon: Icon }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
+    <label style={{ display: "flex", flexDirection: "column", gap: 3, minWidth: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: "#475569" }}>{label}</span>
       <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
         {Icon && (
-          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
-            <Icon size={14} />
+          <span style={{ position: "absolute", left: 9, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={13} />
           </span>
         )}
         <select
@@ -4349,10 +4382,10 @@ function SelectField({ label, value, onChange, options, labels, placeholders, ic
           onChange={(e) => onChange(e.target.value)}
           style={{
             width: "100%",
-            padding: Icon ? "9px 32px 9px 32px" : "9px 32px 9px 12px",
-            borderRadius: 10,
+            padding: Icon ? "7px 26px 7px 28px" : "7px 26px 7px 10px",
+            borderRadius: 8,
             border: "1.5px solid #e2e8f0",
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 600,
             color: NAVY,
             outline: "none",
@@ -4376,7 +4409,7 @@ function SelectField({ label, value, onChange, options, labels, placeholders, ic
             <option key={o} value={o}>{(placeholders && placeholders[o]) || (labels && labels[o]) || o}</option>
           ))}
         </select>
-        <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#94a3b8", fontSize: 11 }}>
+        <span style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#94a3b8", fontSize: 10 }}>
           ▼
         </span>
       </div>
@@ -4386,10 +4419,10 @@ function SelectField({ label, value, onChange, options, labels, placeholders, ic
 
 function DateField({ label, value, onChange }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
-      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
+    <label style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
       <input type="date" value={value} onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: "9px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
+        style={{ width: "100%", padding: "7px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 12, color: NAVY, outline: "none", boxSizing: "border-box" }}
         onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
     </label>
   );
