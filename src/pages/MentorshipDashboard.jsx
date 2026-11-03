@@ -1437,7 +1437,7 @@ function DashboardBody({ urlPlan = "" }) {
           max-width: 100% !important;
         }
         .student-main-content {
-          padding: 16px clamp(0.8rem, 2vw, 1.8rem) 60px;
+          padding: 10px clamp(0.8rem, 2vw, 1.8rem) 40px;
           flex: 1;
           max-width: 1400px;
           min-width: 0;
@@ -1991,33 +1991,6 @@ function DashboardBody({ urlPlan = "" }) {
             boxSizing: "border-box",
           }}
         >
-          {/* Sticky Top Header inside main scroll */}
-          <div
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 40,
-              background: "rgba(255, 255, 255, 0.92)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              borderBottom: "1px solid #f1f5f9",
-              padding: "8px clamp(0.8rem, 2vw, 1.8rem)",
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-            }}
-          >
-            <div>
-              <h1 style={{ fontFamily: INTER, fontWeight: 600, fontSize: 13, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
-                {currentNav?.label || "Student Console"}
-              </h1>
-              <p style={{ fontSize: 10, color: "#b0b8c4", margin: "1px 0 0", fontWeight: 500 }}>
-                {currentNav?.desc || "Track your daily study, analysis, backlog and mentor guidance."}
-              </p>
-            </div>
-
-
-          </div>
 
           {/* Main Body Content Container */}
           <main className="student-main-content">
@@ -2683,7 +2656,7 @@ function DashboardBody({ urlPlan = "" }) {
 
             {/* ── TAB 3: SUBJECT & TEST ANALYSIS ── */}
             {activeTab === "analysis" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                         <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor={ORANGE}
           sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
@@ -3379,11 +3352,11 @@ function DashboardBody({ urlPlan = "" }) {
 /* ── building blocks ─────────────────────────────────────────────── */
 function Section({ id, kicker, title, sub, tColor = ORANGE, children }) {
   return (
-    <section id={id} style={{ scrollMarginTop: 140, paddingTop: 44 }}>
-      <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 26px" }}>
-        <span style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: "2px", textTransform: "uppercase", color: tColor, marginBottom: 10 }}>{kicker}</span>
-        <h2 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.5rem,3.4vw,2.1rem)", color: INK, margin: 0, letterSpacing: "-0.5px" }}>{title}</h2>
-        {sub && <p style={{ color: MUTE, fontSize: 14.5, lineHeight: 1.6, marginTop: 12 }}>{sub}</p>}
+    <section id={id} style={{ scrollMarginTop: 80, paddingTop: 6 }}>
+      <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 16px" }}>
+        <span style={{ display: "inline-block", fontSize: 10.5, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: tColor, marginBottom: 5 }}>{kicker}</span>
+        <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1.2rem, 2.4vw, 1.6rem)", color: INK, margin: 0, letterSpacing: "-0.4px" }}>{title}</h2>
+        {sub && <p style={{ color: MUTE, fontSize: 12, lineHeight: 1.5, marginTop: 6 }}>{sub}</p>}
       </div>
       {children}
     </section>
