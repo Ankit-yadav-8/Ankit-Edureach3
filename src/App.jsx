@@ -165,9 +165,10 @@ export default function App() {
     );
   }
 
-  // Mentor Console renders standalone - no public navbar, footer, chatbot,
-  // WhatsApp button, compare tray or auth modal bleeding into it.
-  if (isMentorRoute) {
+  // Mentor Console & Student Mentorship Console render standalone - full viewport consoles
+  // without public marketing navbar, footer or floating elements bleeding in.
+  const isMentorshipConsole = pathname === "/mentorship-dashboard" || pathname.startsWith("/mentorship-dashboard");
+  if (isMentorRoute || isMentorshipConsole) {
     return (
       <>
         <ScrollManager />
@@ -176,9 +177,11 @@ export default function App() {
             <Routes>
               <Route path="/mentor" element={<MentorDashboard />} />
               <Route path="/mentor/*" element={<MentorDashboard />} />
+              <Route path="/mentorship-dashboard" element={<MentorshipDashboard />} />
             </Routes>
           </Suspense>
         </RouteErrorBoundary>
+        <AuthModal />
       </>
     );
   }

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap, LineChart as LineIcon, Mail, Activity,
@@ -8,6 +8,7 @@ import {
   ListChecks, Lock, Loader2, RotateCw, Pencil, Trash2, CalendarDays, Brain,
   BookOpen, Minus, Trophy, Send, Lightbulb, Hourglass, AlertCircle,
   Video, ExternalLink,
+  Menu, X, PanelLeftClose, PanelLeftOpen, LogOut, LayoutDashboard, Layers, Award, ClipboardList
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext.jsx";
 import {
@@ -20,12 +21,14 @@ import { Trend, Gauge, CenterDonut, DonutLegend, Bars } from "../components/Char
 import { predictRank, maxPerSubject, maxTotal } from "../utils/rankPredictor.js";
 
 const ORANGE = "#FF693D";
+const ACCENT = "#FF693D";
 const GOLD = "#FF693D";
 const GREEN = "#15a06e";
 const NAVY = "#0d1b3e";
 const INK = "#1a1a2e";
 const MUTE = "#5b6472";
-
+const SORA = "'Sora', system-ui, sans-serif";
+const INTER = "'Inter', system-ui, sans-serif";
 /* ── tiny localStorage helpers (per-user persistence) ─────────────── */
 const load = (key, fallback) => {
   try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; }
@@ -363,7 +366,8 @@ function OtpGate({ email, name, onVerified }) {
    DASHBOARD BODY
    ════════════════════════════════════════════════════════════════ */
 function DashboardBody({ urlPlan = "" }) {
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const emailKey = (user?.email || "guest").toLowerCase();
@@ -1183,207 +1187,1391 @@ function DashboardBody({ urlPlan = "" }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, reportPrefs.autoBacklogAlert, lastAuto.weekly, lastAuto.backlog, overdueBacklog.length, backlogPct, studyIrregular]);
 
-  const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  
+
+
   const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
 
-  const FEATURES = [
-    { id: "live-tracking",    label: "Live student tracking",       desc: "Subject-wise daily log and streak, updated as you study.", icon: Activity },
-    { id: "subject-analysis", label: "Subject-wise analysis",       desc: "Hours, tasks and day-by-day comparison across subjects.", icon: BarChart3 },
-    { id: "test-analysis",    label: "Test analysis",               desc: rankEnabled ? "Marks turned into charts, trends and rank prediction." : "Marks turned into charts and trend analysis.", icon: LineIcon },
-    { id: "mentor-tools",     label: "What your mentor breaks down", desc: "Silly-mistake audit and weak-chapter heatmap, explained plainly.", icon: Brain },
-    { id: "backlog",          label: "Backlog clearing sprints",    desc: "A running list of pending topics, cleared one sprint at a time.", icon: Rocket },
-    { id: "parent-report",    label: "Weekly report and tasks",     desc: "Tasks for the week, with an auto email sent to your parents.", icon: Mail },
+  const [activeTab, setActiveTab] = useState(() => {
+    const fromUrl = searchParams.get("tab");
+    const validIds = ["overview", "tracking", "analysis", "backlog", "cbt", "mentor", "community", "reports"];
+    return validIds.includes(fromUrl) ? fromUrl : "overview";
+  });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("student_console_sidebar_collapsed") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebar = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("student_console_sidebar_collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const handleTabChange = useCallback((tabId) => {
+    setActiveTab(tabId);
+    setMobileMenuOpen(false);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tabId);
+      window.history.replaceState(null, "", url.toString());
+    } catch {}
+    const mainScroll = document.querySelector(".student-main-scroll");
+    if (mainScroll) mainScroll.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const tabMap = {
+    "live-tracking": "tracking",
+    "subject-analysis": "analysis",
+    "test-analysis": "analysis",
+    "mentor-tools": "mentor",
+    "backlog": "backlog",
+    "parent-report": "reports",
+    "test-series": "cbt",
+    "community": "community",
+  };
+  const scrollTo = (id) => {
+    const targetTab = tabMap[id];
+    if (targetTab) {
+      handleTabChange(targetTab);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const signOut = () => {
+    logout();
+    navigate("/");
+  };
+
+  const NAV_ITEMS = [
+    { id: "overview", label: "Console Overview", icon: LayoutDashboard, desc: "Welcome, quick stats, 1-on-1 session & highlights" },
+    { id: "tracking", label: "Live Study Log", icon: Clock, desc: "Daily hours per subject, tasks & habit streak" },
+    { id: "analysis", label: "Subject & Test Analysis", icon: TrendingUp, desc: "Hours breakdown, mock tests & predicted rank" },
+    { id: "backlog", label: "Backlog Clearing", icon: Layers, desc: "Chapter sprint targets & strength ratings" },
+    { id: "cbt", label: "CBT Test Series", icon: Award, desc: "NTA-style mock tests & auto-grading" },
+    { id: "mentor", label: "Mentor & Fix-List", icon: ClipboardList, desc: "Tasks assigned by your mentor & 1-on-1 calls" },
+    { id: "community", label: "Batch Community", icon: Users, desc: "Doubt feed, solutions & peer discussions" },
+    { id: "reports", label: "Daily & Weekly Reports", icon: Mail, desc: "Previous day's report (10 AM) & weekly booklet" },
   ];
+  const currentNav = NAV_ITEMS.find((n) => n.id === activeTab) || NAV_ITEMS[0];
 
   return (
-    <section style={{ background: "var(--page-bg)", minHeight: "100vh", paddingBottom: 70 }}>
-      {/* ── Title strip ── */}
-      {/* The fixed header is 98px tall (34px announcement + 64px nav); this
-          top padding clears it with real breathing room so the eyebrow doesn't
-          sit flush against the navbar. */}
-      <div style={{ paddingTop: 138, textAlign: "center" }}>
-        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: ".02em", color: ORANGE, background: "rgba(255,105,61,.1)", borderRadius: 50, padding: "6px 16px", marginBottom: 16 }}>
-          1-on-1 · personalised · verified
-        </motion.div>
-        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 }}
-          style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "clamp(1.7rem,3.6vw,2.4rem)", color: NAVY, margin: 0, letterSpacing: "-0.5px", lineHeight: 1.1 }}>
-          Mentorship dashboard
-        </motion.h1>
-      </div>
+    <div
+      className="student-console-root"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        overflow: "hidden",
+        background: "#f8fafc",
+        fontFamily: "Inter, system-ui, sans-serif",
+        color: "#0f172a",
+        boxSizing: "border-box",
+        position: "relative",
+        width: "100%",
+      }}
+    >
+      <style>{`
+        /* Invisible scrollbar: keeps smooth scrolling effect without visible scroll bar */
+        html.dashboard-invisible-scrollbar,
+        html.dashboard-invisible-scrollbar body,
+        html.dashboard-invisible-scrollbar *,
+        .student-console-root,
+        .student-console-root * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        html.dashboard-invisible-scrollbar::-webkit-scrollbar,
+        html.dashboard-invisible-scrollbar body::-webkit-scrollbar,
+        html.dashboard-invisible-scrollbar *::-webkit-scrollbar,
+        .student-console-root::-webkit-scrollbar,
+        .student-console-root *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          background: transparent !important;
+        }
 
-      {/* ══ HERO - centered welcome ══ */}
-      <div style={{ position: "relative", overflow: "hidden" }}>
-        {/* decorative rising "trajectory" - faint dashed line + dots, top-right */}
-        <svg className="md-hero-line" width="380" height="170" viewBox="0 0 380 170" fill="none" aria-hidden="true"
-          style={{ position: "absolute", top: 6, right: 0, pointerEvents: "none" }}>
-          <path d="M8 150 C 100 140, 150 100, 215 78 S 320 26, 360 12" stroke={ORANGE} strokeWidth="2" strokeDasharray="4 7" strokeLinecap="round" opacity=".45" />
-          <circle cx="150" cy="102" r="4" fill={ORANGE} opacity=".4" />
-          <circle cx="256" cy="52" r="4.5" fill={ORANGE} opacity=".65" />
-          <circle cx="360" cy="12" r="5.5" fill={ORANGE} />
-        </svg>
+        @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
+        @keyframes admSpin { to { transform: rotate(360deg); } }
+        .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
 
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .06 }}
-          style={{ position: "relative", maxWidth: 720, margin: "0 auto", padding: "48px 24px 8px", textAlign: "center" }}>
+        html, body {
+          overflow-x: hidden !important;
+          max-width: 100vw !important;
+          overscroll-behavior-x: none !important;
+        }
 
-          {/* status + student ID pill */}
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 800, borderRadius: 50, padding: "6px 15px",
-            color: identity.status === "expired" ? "#dc2626" : ORANGE,
-            background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)" }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: identity.status === "expired" ? "#dc2626" : ORANGE, display: "block" }} />
-            <span style={{ textTransform: "capitalize" }}>{identity.status || "Active"}</span>
-            {identity.studentId && <span style={{ opacity: .55 }}>·</span>}
-            {identity.studentId && <span style={{ fontFamily: "monospace", letterSpacing: ".02em" }}>{identity.studentId}</span>}
-          </span>
+        .student-sidebar {
+          width: ${isCollapsed ? "68px" : "260px"};
+          background: #ffffff;
+          border-right: 1px solid #e2e8f0;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          flex-shrink: 0;
+          box-sizing: border-box;
+          transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 1050;
+          overflow: hidden;
+        }
 
-          {/* welcome heading with hand-drawn coral underline on the name */}
-          <h2 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "clamp(1.5rem,3.6vw,2.1rem)", color: NAVY, lineHeight: 1.15, letterSpacing: "-0.5px", margin: "16px 0 0" }}>
-            Welcome back,<br />
-            <span style={{ position: "relative", display: "inline-block", color: ORANGE }}>
-              {(user?.name || "there").trim().split(/\s+/)[0]}.
-              <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" fill="none"
-                style={{ position: "absolute", left: 0, bottom: -5, width: "100%" }} aria-hidden="true">
-                <path d="M3 8 C 45 3, 100 3, 150 6 S 190 9, 197 5" stroke={ORANGE} strokeWidth="2.5" strokeLinecap="round" opacity=".8" />
-              </svg>
+        .student-nav-side-btn {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          width: 100%;
+          padding: 9px 12px;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          cursor: pointer;
+          text-align: left;
+          background: transparent;
+          color: #475569;
+          font-size: 13px;
+          font-weight: 600;
+          transition: all 0.15s ease;
+        }
+        .student-nav-side-btn:hover {
+          background: #f8fafc;
+          color: #0f172a;
+        }
+        .student-nav-side-btn.active {
+          background: #fff7ed;
+          color: ${ORANGE};
+          border-color: rgba(255, 105, 61, 0.22);
+          font-weight: 700;
+          box-shadow: 0 1px 3px rgba(255, 105, 61, 0.06);
+        }
+
+        /* DESKTOP (min-width: 901px) */
+        @media (min-width: 901px) {
+          .student-mobile-topbar {
+            display: none !important;
+          }
+          .student-sidebar {
+            position: static !important;
+            transform: none !important;
+            box-shadow: none !important;
+            display: flex !important;
+            height: 100% !important;
+            border-right: 1px solid #e2e8f0 !important;
+            border-left: none !important;
+          }
+          .student-mobile-close-btn {
+            display: none !important;
+          }
+          .desktop-sidebar-toggle-btn {
+            display: grid !important;
+          }
+        }
+
+        /* MOBILE (max-width: 900px) */
+        @media (max-width: 900px) {
+          .student-mobile-topbar {
+            display: flex !important;
+          }
+          .student-sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            bottom: 0 !important;
+            height: 100% !important;
+            height: 100dvh !important;
+            height: -webkit-fill-available !important;
+            max-height: 100dvh !important;
+            width: min(320px, 86vw) !important;
+            box-shadow: -8px 0 32px rgba(15,23,42,0.18) !important;
+            border-left: 1px solid #e2e8f0 !important;
+            border-right: none !important;
+            z-index: 1200 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s !important;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            box-sizing: border-box !important;
+          }
+          .student-sidebar.closed {
+            transform: translate3d(100%, 0, 0) !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+          }
+          .student-sidebar.open {
+            transform: translate3d(0, 0, 0) !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+          }
+          .student-mobile-close-btn {
+            display: grid !important;
+            place-items: center;
+          }
+          .desktop-sidebar-toggle-btn {
+            display: none !important;
+          }
+        }
+
+        .student-main-scroll {
+          overflow-x: hidden !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .student-workspace-layout {
+          overflow-x: hidden !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .student-main-content {
+          padding: 20px clamp(1rem, 2.5vw, 2.2rem) 80px;
+          flex: 1;
+          max-width: 1400px;
+          min-width: 0;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 640px) {
+          .student-main-content {
+            padding: 14px 12px 60px !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+        }
+      `}</style>
+
+      {/* ── MOBILE TOP BAR (TOP LEFT BRAND + TOP RIGHT HAMBURGER, ONLY ON SCREENS <= 900px) ── */}
+      <header
+        className="student-mobile-topbar"
+        style={{
+          height: 56,
+          width: "100%",
+          background: "#ffffff",
+          borderBottom: "1px solid #e2e8f0",
+          padding: "0 16px",
+          boxSizing: "border-box",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexShrink: 0,
+          zIndex: 1000,
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 9,
+            textDecoration: "none",
+          }}
+        >
+          <span
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background: ACCENT,
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
+              boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: 12,
+                lineHeight: 1,
+              }}
+            >
+              CP
             </span>
-          </h2>
+          </span>
+          <span
+            style={{
+              fontFamily: SORA,
+              fontWeight: 800,
+              fontSize: 16,
+              color: "#0f172a",
+              letterSpacing: "-0.01em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Campus Point
+          </span>
+        </Link>
 
-          <p style={{ color: MUTE, fontSize: 15.5, lineHeight: 1.7, margin: "22px auto 0", maxWidth: 500 }}>
-            Log your day, track every test, and get a clean weekly report - everything to turn your prep into a real rank.
-          </p>
+        <button
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileMenuOpen}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 8,
+            border: "1px solid #e2e8f0",
+            background: mobileMenuOpen ? "#fff7ed" : "#ffffff",
+            display: "grid",
+            placeItems: "center",
+            cursor: "pointer",
+            color: mobileMenuOpen ? ACCENT : "#0f172a",
+            boxShadow: "0 1px 3px rgba(15,23,42,0.04)",
+            transition: "all 0.15s ease",
+          }}
+        >
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={22} />}
+        </button>
+      </header>
 
-          {/* actions */}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
-            <button onClick={() => scrollTo("live-tracking")} style={{ background: ORANGE, color: "#fff", border: "none", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, boxShadow: `0 12px 26px -12px ${ORANGE}` }}>
-              Log today <ArrowRight size={16} />
-            </button>
-            <button onClick={() => scrollTo("test-analysis")} style={{ background: "#fff", color: NAVY, border: "1px solid #ececec", padding: "13px 24px", borderRadius: 50, fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: "pointer" }}>
-              Add a test
-            </button>
-          </div>
+      {/* ── WORKSPACE LAYOUT (ROW: SIDEBAR ON LEFT / DESKTOP, MAIN SCROLL ON RIGHT) ── */}
+      <div
+        className="student-workspace-layout"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flex: 1,
+          minHeight: 0,
+          overflow: "hidden",
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        {/* ── MOBILE BACKDROP OVERLAY (SYNCHRONIZED FADE) ── */}
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden={!mobileMenuOpen}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15,23,42,0.48)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
+            zIndex: 1199,
+            touchAction: "none",
+            opacity: mobileMenuOpen ? 1 : 0,
+            visibility: mobileMenuOpen ? "visible" : "hidden",
+            pointerEvents: mobileMenuOpen ? "auto" : "none",
+            transition: "opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s",
+          }}
+        />
 
-          {/* Live 1-on-1 Mentor Session Card with Google Meet Link */}
-          {session?.meetLink && (
-            <div style={{
-              margin: "24px auto 0",
-              background: "#ffffff",
-              borderRadius: 16,
-              border: "1.5px solid rgba(255,105,61,0.28)",
-              padding: "14px 20px",
+        {/* ── SIDE PANEL (OPENS FROM RIGHT ON MOBILE, LEFT ON DESKTOP) ── */}
+        <aside className={`student-sidebar ${mobileMenuOpen ? "open" : "closed"} cp-custom-scroll`}>
+          {/* Top Header of Sidebar */}
+          <div
+            style={{
+              height: 56,
+              padding: isCollapsed ? "0" : "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              gap: 16,
-              boxShadow: "0 10px 28px -12px rgba(255,105,61,0.22)",
-              maxWidth: 580,
-              textAlign: "left",
-              flexWrap: "wrap",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 200, flex: 1 }}>
-                <div style={{
-                  width: 42, height: 42, borderRadius: 12,
-                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                  display: "grid", placeItems: "center", color: "#fff", flexShrink: 0,
-                  boxShadow: "0 4px 12px rgba(255,105,61,0.3)",
-                }}>
-                  <Video size={20} />
-                </div>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: ORANGE, textTransform: "uppercase", letterSpacing: 0.5 }}>
-                      1-on-1 Mentor Session
+              justifyContent: isCollapsed ? "center" : "space-between",
+              flexShrink: 0,
+              borderBottom: "1px solid #f1f5f9",
+            }}
+          >
+            {isCollapsed ? (
+              <button
+                onClick={toggleSidebar}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  border: "none",
+                  background: "transparent",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#fff7ed"; e.currentTarget.style.color = ACCENT; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                title="Expand sidebar"
+              >
+                <PanelLeftOpen size={18} />
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 9,
+                    textDecoration: "none",
+                    minWidth: 0,
+                  }}
+                  title="Campus Point Home"
+                >
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background: ACCENT,
+                      display: "grid",
+                      placeItems: "center",
+                      flexShrink: 0,
+                      boxShadow: "0 2px 6px rgba(255,105,61,0.25)",
+                    }}
+                  >
+                    <span style={{ color: "#fff", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 11, lineHeight: 1 }}>
+                      CP
                     </span>
-                    {session.dateLabel && (
-                      <span style={{ fontSize: 10, fontWeight: 700, background: "#fff7ed", color: "#ea580c", padding: "1px 6px", borderRadius: 4, border: "1px solid #fed7aa" }}>
-                        {session.dateLabel}
-                      </span>
-                    )}
-                    {session.time && (
-                      <span style={{ fontSize: 11, color: "#64748b" }}>
-                        • {session.time}
-                      </span>
-                    )}
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                    <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13.5, color: "#0f172a", lineHeight: 1.2 }}>
+                      Campus Point
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+                      Student Mentorship
+                    </span>
                   </div>
-                  <div style={{ fontSize: 13.5, fontWeight: 700, color: NAVY, marginTop: 2 }}>
-                    {session.topic || "Physics Strategy & Mock Test Analysis"}
+                </Link>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <button
+                    onClick={toggleSidebar}
+                    className="desktop-sidebar-toggle-btn"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 6,
+                      border: "none",
+                      background: "transparent",
+                      color: "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#0f172a"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#64748b"; }}
+                    title="Collapse sidebar"
+                  >
+                    <PanelLeftClose size={17} />
+                  </button>
+
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="student-mobile-close-btn"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      background: "#f1f5f9",
+                      border: "none",
+                      color: "#475569",
+                      cursor: "pointer",
+                      borderRadius: 8,
+                      placeItems: "center",
+                      transition: "all 0.15s ease",
+                    }}
+                    title="Close menu"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Middle: Navigation List & Batch Info */}
+          {isCollapsed ? (
+            <div style={{ padding: "12px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, flex: 1 }}>
+              {NAV_ITEMS.map((item) => {
+                const active = activeTab === item.id;
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    title={item.label}
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 10,
+                      border: active ? "1.5px solid rgba(255,105,61,0.35)" : "1px solid transparent",
+                      background: active ? "#fff7ed" : "transparent",
+                      color: active ? ACCENT : "#64748b",
+                      display: "grid",
+                      placeItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "#f8fafc";
+                        e.currentTarget.style.color = "#0f172a";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "#64748b";
+                      }
+                    }}
+                  >
+                    <Icon size={19} color={active ? ACCENT : "currentColor"} />
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div
+              className="cp-custom-scroll"
+              style={{
+                padding: "14px 10px",
+                flex: "1 1 0px",
+                minHeight: 0,
+                overflowY: "auto",
+                overflowX: "hidden",
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch",
+                display: "flex",
+                flexDirection: "column",
+                gap: 5,
+              }}
+            >
+              {/* Batch Selector / Student ID Card in Sidebar */}
+              <div style={{ marginBottom: 12, paddingBottom: 12, borderBottom: "1px solid #f1f5f9" }}>
+                {myBatches.length > 1 ? (
+                  <>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 6px" }}>
+                      Enrolled Batch
+                    </div>
+                    <select
+                      value={selectedPlan}
+                      onChange={(e) => switchBatch(e.target.value)}
+                      style={{
+                        width: "100%",
+                        height: 36,
+                        padding: "0 10px",
+                        borderRadius: 8,
+                        border: "1.5px solid rgba(255,105,61,0.35)",
+                        background: "#ffffff",
+                        color: "#0f172a",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        cursor: "pointer",
+                        outline: "none",
+                      }}
+                    >
+                      {myBatches.map((b) => (
+                        <option key={b.plan} value={b.plan}>
+                          {b.label}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                ) : (
+                  <div style={{ padding: "0 10px" }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 4 }}>
+                      Enrolled Batch
+                    </div>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", lineHeight: 1.3 }}>
+                      {identity.batchLabel || planLabel}
+                    </div>
+                  </div>
+                )}
+
+                {identity.studentId && (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      marginInline: 4,
+                      padding: "5px 8px",
+                      borderRadius: 6,
+                      background: "#f8fafc",
+                      border: "1px solid #e2e8f0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      fontSize: 11,
+                      color: "#64748b",
+                    }}
+                  >
+                    <span style={{ fontFamily: "monospace", fontSize: 10.5, fontWeight: 700 }}>
+                      {identity.studentId}
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: identity.status === "expired" ? "#dc2626" : "#15a06e", textTransform: "capitalize" }}>
+                      {identity.status || "Active"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
+                Console Navigation
+              </div>
+
+              {NAV_ITEMS.map((item) => {
+                const active = activeTab === item.id;
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`student-nav-side-btn ${active ? "active" : ""}`}
+                  >
+                    <Icon size={17} color={active ? ACCENT : "#64748b"} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ lineHeight: 1.25 }}>{item.label}</div>
+                    </div>
+                    {active && <span style={{ width: 6, height: 6, borderRadius: "50%", background: ACCENT }} />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Bottom Area: Student Profile & Sign Out (ChatGPT Style in both modes) */}
+          {isCollapsed ? (
+            <div style={{ padding: "12px 0 16px", borderTop: "1px solid #f1f5f9", background: "#ffffff", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+              <div
+                title={`${user?.name || "Student"} (${identity.studentId || "Student"})`}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: "rgba(255,105,61,0.12)",
+                  color: ACCENT,
+                  display: "grid",
+                  placeItems: "center",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  flexShrink: 0,
+                  border: "1.5px solid rgba(255,105,61,0.25)",
+                  cursor: "pointer",
+                }}
+              >
+                {initial}
+              </div>
+
+              <button
+                onClick={signOut}
+                title="Sign Out of Console"
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#64748b",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#64748b";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                padding: "12px 14px max(24px, calc(env(safe-area-inset-bottom, 16px) + 16px))",
+                borderTop: "1px solid #f1f5f9",
+                background: "#ffffff",
+                flexShrink: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                boxSizing: "border-box",
+                width: "100%",
+                zIndex: 10,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0", minWidth: 0 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: "rgba(255,105,61,0.12)",
+                    color: ACCENT,
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 800,
+                    fontSize: 13.5,
+                    flexShrink: 0,
+                    border: "1.5px solid rgba(255,105,61,0.25)",
+                  }}
+                >
+                  {initial}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {user?.name || "Student"}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {user?.email || identity.studentId || "Mentee"}
                   </div>
                 </div>
               </div>
 
               <button
-                onClick={openMeetingRoom}
+                onClick={signOut}
                 style={{
-                  background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                  color: "#ffffff",
-                  border: "none",
-                  padding: "10px 20px",
-                  borderRadius: 50,
-                  fontFamily: "Sora, sans-serif",
-                  fontWeight: 800,
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  color: "#475569",
                   fontSize: 13,
+                  fontWeight: 700,
                   cursor: "pointer",
-                  display: "inline-flex",
+                  display: "flex",
                   alignItems: "center",
-                  gap: 7,
-                  whiteSpace: "nowrap",
-                  boxShadow: "0 4px 14px rgba(255,105,61,0.35)",
-                  transition: "transform 0.15s ease",
+                  justifyContent: "center",
+                  gap: 8,
+                  transition: "all 0.15s ease",
+                  boxSizing: "border-box",
+                  flexShrink: 0,
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.03)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dc2626";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#475569";
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.background = "#f8fafc";
+                }}
+                title="Sign out of Student Console"
               >
-                <Video size={15} />
-                <span>Join Google Meet</span>
-                <ExternalLink size={13} />
+                <LogOut size={15} />
+                <span>Sign Out of Console</span>
               </button>
             </div>
           )}
+        </aside>
 
-          {/* meta pills - batch, enrolment, validity, streak */}
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
-            {[
-              { icon: GraduationCap, text: identity.batchLabel || planLabel },
-              { icon: CalendarDays,  text: identity.enrolledOn ? `Enrolled ${fmtFull(identity.enrolledOn)}` : null },
-              { icon: ShieldCheck,   text: identity.validUntil ? `Valid until ${fmtFull(identity.validUntil)}` : null },
-              { icon: Flame,         text: `${streak} day${streak === 1 ? "" : "s"} streak` },
-            ].filter((p) => p.text).map(({ icon: Icon, text }) => (
-              <span key={text} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 700, color: MUTE, background: "#fff", border: "1px solid #ececec", borderRadius: 50, padding: "7px 14px" }}>
-                <Icon size={14} color={ORANGE} /> {text}
+        {/* ── MAIN CONTENT AREA (FULL VIEWPORT) ── */}
+        <div
+          className="student-main-scroll cp-custom-scroll"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0,
+            overflowY: "auto",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Sticky Top Header inside main scroll */}
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 40,
+              background: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderBottom: "1px solid #e2e8f0",
+              padding: "12px clamp(1rem, 2.5vw, 2.2rem)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <h1 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 18, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+                {currentNav?.label || "Student Console"}
+              </h1>
+              <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+                {currentNav?.desc || "Track your daily study, analysis, backlog and mentor guidance."}
+              </p>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              {session?.meetLink && (
+                <button
+                  onClick={openMeetingRoom}
+                  style={{
+                    background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                    color: "#fff",
+                    border: "none",
+                    padding: "7px 14px",
+                    borderRadius: 50,
+                    fontWeight: 700,
+                    fontSize: 12,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
+                  }}
+                >
+                  <Video size={13} />
+                  <span>Join 1-on-1 Meet</span>
+                </button>
+              )}
+
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#c2410c",
+                  background: "#fff7ed",
+                  border: "1px solid #fed7aa",
+                  borderRadius: 50,
+                  padding: "5px 11px",
+                }}
+              >
+                <Flame size={13} color="#ea580c" />
+                <span>{streak} day{streak === 1 ? "" : "s"} streak</span>
               </span>
-            ))}
+
+              {identity.studentId && (
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    fontFamily: "monospace",
+                    color: "#475569",
+                    background: "#f1f5f9",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: 6,
+                    padding: "5px 9px",
+                  }}
+                >
+                  {identity.studentId}
+                </span>
+              )}
+            </div>
           </div>
-        </motion.div>
-      </div>
 
-      {/* ══ FEATURE GRID - what the dashboard gives you ══ */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 0" }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .12 }}
-          className="md-feature-grid"
-          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: "#ececec", border: "1px solid #ececec", borderRadius: 18, overflow: "hidden" }}>
-          {FEATURES.map(({ id, label, desc, icon: Icon }) => (
-            <button key={id} onClick={() => scrollTo(id)}
-              style={{ textAlign: "left", background: "var(--page-bg)", border: "none", padding: "24px 22px 26px", cursor: "pointer", display: "flex", flexDirection: "column", gap: 14, transition: "background .15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,105,61,.04)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--page-bg)"; }}>
-              <span style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(255,105,61,.1)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                <Icon size={19} color={ORANGE} />
-              </span>
-              <div>
-                <div style={{ fontFamily: "Sora", fontWeight: 600, fontSize: 15, color: NAVY, marginBottom: 6 }}>{label}</div>
-                <div style={{ fontSize: 12.5, color: MUTE, lineHeight: 1.55 }}>{desc}</div>
+          {/* Main Body Content Container */}
+          <main className="student-main-content">
+            {/* ── TAB 1: CONSOLE OVERVIEW ── */}
+            {activeTab === "overview" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                {/* Welcome & Student Hero Card */}
+                <div
+                  style={{
+                    background: "linear-gradient(135deg, #ffffff 0%, #fff7ed 100%)",
+                    border: "1px solid rgba(255,105,61,0.22)",
+                    borderRadius: 20,
+                    padding: "28px 24px",
+                    boxShadow: "0 4px 20px rgba(15,23,42,0.03)",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #15a06e, #FF693D)" }} />
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, flexWrap: "wrap" }}>
+                    <div style={{ maxWidth: 620 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            fontSize: 11.5,
+                            fontWeight: 800,
+                            borderRadius: 50,
+                            padding: "4px 12px",
+                            color: identity.status === "expired" ? "#dc2626" : "#FF693D",
+                            background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)",
+                          }}
+                        >
+                          <span style={{ width: 7, height: 7, borderRadius: "50%", background: identity.status === "expired" ? "#dc2626" : "#FF693D" }} />
+                          <span style={{ textTransform: "capitalize" }}>{identity.status || "Active Student"}</span>
+                          {identity.studentId && <span>·</span>}
+                          {identity.studentId && <span style={{ fontFamily: "monospace" }}>{identity.studentId}</span>}
+                        </span>
+
+                        {identity.batchLabel && (
+                          <span style={{ fontSize: 11.5, fontWeight: 700, color: "#475569", background: "#f1f5f9", padding: "4px 10px", borderRadius: 6 }}>
+                            {identity.batchLabel}
+                          </span>
+                        )}
+                      </div>
+
+                      <h2 style={{ fontFamily: SORA, fontWeight: 800, fontSize: "clamp(1.4rem, 2.5vw, 1.85rem)", color: "#0f172a", margin: "0 0 8px", lineHeight: 1.2 }}>
+                        Welcome back, <span style={{ color: "#FF693D" }}>{(user?.name || "Student").trim().split(/\s+/)[0]}</span> 👋
+                      </h2>
+                      <p style={{ color: "#64748b", fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
+                        Track your daily study hours, mock test scores, chapter sprint backlogs and weekly reports in one place.
+                      </p>
+
+                      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
+                        <button
+                          onClick={() => handleTabChange("tracking")}
+                          style={{
+                            background: "#FF693D",
+                            color: "#fff",
+                            border: "none",
+                            padding: "10px 18px",
+                            borderRadius: 8,
+                            fontFamily: SORA,
+                            fontWeight: 700,
+                            fontSize: 13,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 7,
+                            boxShadow: "0 4px 12px rgba(255,105,61,0.25)",
+                          }}
+                        >
+                          <Clock size={15} />
+                          <span>Log Today's Work</span>
+                        </button>
+                        <button
+                          onClick={() => handleTabChange("analysis")}
+                          style={{
+                            background: "#fff",
+                            color: "#0f172a",
+                            border: "1px solid #e2e8f0",
+                            padding: "10px 18px",
+                            borderRadius: 8,
+                            fontFamily: SORA,
+                            fontWeight: 700,
+                            fontSize: 13,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 7,
+                          }}
+                        >
+                          <TrendingUp size={15} color="#FF693D" />
+                          <span>Add Mock Test</span>
+                        </button>
+                        <button
+                          onClick={() => handleTabChange("cbt")}
+                          style={{
+                            background: "#fff",
+                            color: "#0f172a",
+                            border: "1px solid #e2e8f0",
+                            padding: "10px 18px",
+                            borderRadius: 8,
+                            fontFamily: SORA,
+                            fontWeight: 700,
+                            fontSize: 13,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 7,
+                          }}
+                        >
+                          <Award size={15} color="#0ea5a4" />
+                          <span>NTA CBT Tests</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Assigned Mentor Card */}
+                    {mentor && (
+                      <div
+                        style={{
+                          background: "#fff",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: 14,
+                          padding: "14px 18px",
+                          minWidth: 220,
+                          maxWidth: 320,
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                        }}
+                      >
+                        <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>
+                          Assigned Mentor
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div
+                            style={{
+                              width: 38,
+                              height: 38,
+                              borderRadius: "50%",
+                              background: "rgba(255,105,61,0.12)",
+                              color: "#FF693D",
+                              display: "grid",
+                              placeItems: "center",
+                              fontWeight: 800,
+                              fontSize: 14,
+                              flexShrink: 0,
+                              border: "1.5px solid rgba(255,105,61,0.25)",
+                            }}
+                          >
+                            {mentor.name?.charAt(0) || "M"}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 800, fontSize: 13.5, color: "#0f172a" }}>{mentor.name}</div>
+                            <div style={{ fontSize: 11.5, color: "#64748b" }}>{mentor.college || "IIT / NIT Mentor"}</div>
+                          </div>
+                        </div>
+                        {session?.meetLink && (
+                          <button
+                            onClick={openMeetingRoom}
+                            style={{
+                              marginTop: 12,
+                              width: "100%",
+                              padding: "7px 12px",
+                              borderRadius: 6,
+                              border: "none",
+                              background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                              color: "#fff",
+                              fontSize: 11.5,
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: 6,
+                            }}
+                          >
+                            <Video size={13} />
+                            <span>Join 1-on-1 Call</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 1-on-1 Mentor Session Card with Google Meet Link */}
+                {session?.meetLink && (
+                  <div
+                    style={{
+                      background: "#ffffff",
+                      borderRadius: 16,
+                      border: "1.5px solid rgba(255,105,61,0.28)",
+                      padding: "16px 20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 16,
+                      boxShadow: "0 8px 24px -10px rgba(255,105,61,0.22)",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 220, flex: 1 }}>
+                      <div
+                        style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 12,
+                          background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                          display: "grid",
+                          placeItems: "center",
+                          color: "#fff",
+                          flexShrink: 0,
+                          boxShadow: "0 4px 12px rgba(255,105,61,0.3)",
+                        }}
+                      >
+                        <Video size={22} />
+                      </div>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                            1-on-1 Mentor Session
+                          </span>
+                          {session.dateLabel && (
+                            <span style={{ fontSize: 10, fontWeight: 700, background: "#fff7ed", color: "#ea580c", padding: "1px 6px", borderRadius: 4, border: "1px solid #fed7aa" }}>
+                              {session.dateLabel}
+                            </span>
+                          )}
+                          {session.time && <span style={{ fontSize: 11, color: "#64748b" }}>• {session.time}</span>}
+                        </div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>
+                          {session.topic || "Physics Strategy & Mock Test Analysis"}
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={openMeetingRoom}
+                      style={{
+                        background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
+                        color: "#ffffff",
+                        border: "none",
+                        padding: "10px 20px",
+                        borderRadius: 50,
+                        fontFamily: SORA,
+                        fontWeight: 800,
+                        fontSize: 13,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 7,
+                        whiteSpace: "nowrap",
+                        boxShadow: "0 4px 14px rgba(255,105,61,0.35)",
+                        transition: "transform 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.03)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+                    >
+                      <Video size={15} />
+                      <span>Join Google Meet</span>
+                      <ExternalLink size={13} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Key Stats Row (4 Cards) */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+                    gap: 14,
+                  }}
+                >
+                  {/* 1. Habit Streak */}
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
+                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                        <Flame size={16} color="#ea580c" />
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
+                      {streak} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>days</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                      {streak > 0 ? "🔥 Consistency on track" : "Log today to build streak"}
+                    </div>
+                  </div>
+
+                  {/* 2. Weekly Hours */}
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
+                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                        <Clock size={16} color="#15a06e" />
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
+                      {round1(weekHours)} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>/ 40 hrs</span>
+                    </div>
+                    <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 10, marginTop: 8, overflow: "hidden" }}>
+                      <div style={{ width: `${Math.min(100, Math.round((weekHours / 40) * 100))}%`, height: "100%", background: "#15a06e", borderRadius: 10 }} />
+                    </div>
+                  </div>
+
+                  {/* 3. Tests Logged */}
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
+                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#eef2ff", display: "grid", placeItems: "center" }}>
+                        <Trophy size={16} color="#6366f1" />
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
+                      {tests.length} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>tests</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                      {tests.length > 0 ? `Latest: ${tests[0]?.scored || 0}/${tests[0]?.total || 300}` : "No tests added yet"}
+                    </div>
+                  </div>
+
+                  {/* 4. Pending Backlog */}
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
+                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#fef2f2", display: "grid", placeItems: "center" }}>
+                        <Rocket size={16} color="#ef4444" />
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
+                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>topics</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
+                      {backlog.length > 0 ? "Target dates active" : "Zero pending backlogs"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Today's Study Log Card */}
+                <div
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: 16,
+                    padding: "20px 22px",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 18,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: todayEntry ? "#15a06e" : "#f59e0b" }} />
+                      <span style={{ fontSize: 12, fontWeight: 800, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                        {todayEntry ? "Today's Study Logged" : "Today's Study Pending"}
+                      </span>
+                      <span style={{ fontSize: 12, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
+                    </div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>
+                      {todayEntry
+                        ? `${todayEntry.hours || 0} hours studied · ${todayEntry.tasksTotal || 0} tasks finished · ${todayEntry.routine ? "Routine maintained" : "Flexible schedule"}`
+                        : "You have not logged your study hours for today yet."}
+                    </div>
+                    {todayEntry?.subjects && Object.keys(todayEntry.subjects).length > 0 && (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                        {Object.entries(todayEntry.subjects).map(([s, val]) => {
+                          const h = typeof val === "number" ? val : val?.h || 0;
+                          if (!h) return null;
+                          return (
+                            <span
+                              key={s}
+                              style={{
+                                fontSize: 11,
+                                fontWeight: 700,
+                                padding: "2px 8px",
+                                borderRadius: 6,
+                                background: "#f8fafc",
+                                border: "1px solid #e2e8f0",
+                                color: subColor(s),
+                              }}
+                            >
+                              {s}: {h}h
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => handleTabChange("tracking")}
+                    style={{
+                      background: todayEntry ? "#f8fafc" : "#FF693D",
+                      color: todayEntry ? "#0f172a" : "#fff",
+                      border: todayEntry ? "1px solid #e2e8f0" : "none",
+                      padding: "9px 16px",
+                      borderRadius: 8,
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <Pencil size={13} />
+                    <span>{todayEntry ? "Update Today's Log" : "Log Today's Work"}</span>
+                  </button>
+                </div>
+
+                {/* Console Feature Navigation Grid (6 Cards) */}
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 12 }}>
+                    Console Quick Access
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                      gap: 14,
+                    }}
+                  >
+                    {NAV_ITEMS.filter((n) => n.id !== "overview").map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => handleTabChange(item.id)}
+                          style={{
+                            textAlign: "left",
+                            background: "#ffffff",
+                            border: "1px solid #e2e8f0",
+                            borderRadius: 14,
+                            padding: "16px 18px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: 14,
+                            transition: "all 0.15s ease",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = "rgba(255,105,61,0.4)";
+                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(255,105,61,0.08)";
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = "#e2e8f0";
+                            e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.02)";
+                            e.currentTarget.style.transform = "none";
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 38,
+                              height: 38,
+                              borderRadius: 10,
+                              background: "#fff7ed",
+                              color: "#FF693D",
+                              display: "grid",
+                              placeItems: "center",
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Icon size={18} />
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13.5, color: "#0f172a", marginBottom: 3 }}>
+                              {item.label}
+                            </div>
+                            <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.45 }}>
+                              {item.desc}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-            </button>
-          ))}
-        </motion.div>
-      </div>
+            )}
 
-      {/* ══ STICKY SECTION NAV ══ */}
-      {/* ══ BODY ══ */}
-      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
-
-        {/* ── PERSONALISED OVERVIEW ── */}
-        {/* ── LIVE STUDENT TRACKING ── */}
-        <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
+            {/* ── TAB 2: LIVE STUDY TRACKING ── */}
+            {activeTab === "tracking" && (
+              <div>
+                        <Section id="live-tracking" kicker={`Always on · up to ${MAX_LOGS_PER_DAY}× a day`} title="Live Student Tracking" tColor="#ef4444"
           sub={`Log each subject's study hours and tasks - and update them up to ${MAX_LOGS_PER_DAY} times a day. The charts refresh instantly so nothing slips through the cracks.`}>
           <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255, 105, 61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${GREEN},${ORANGE})` }} />
@@ -1577,9 +2765,13 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           </div>
         </Section>
+              </div>
+            )}
 
-        {/* ── SUBJECT-WISE ANALYSIS ── */}
-        <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor={ORANGE}
+            {/* ── TAB 3: SUBJECT & TEST ANALYSIS ── */}
+            {activeTab === "analysis" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                        <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor={ORANGE}
           sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
             <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent={ORANGE}>
@@ -1651,9 +2843,7 @@ function DashboardBody({ urlPlan = "" }) {
             </ChartCard>
           </div>
         </Section>
-
-        {/* ── TEST ANALYSIS ── */}
-        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
+                        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
           sub={rankEnabled
             ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank - everything else is analysed automatically."
             : "Enter your marks, silly mistakes and weak chapters - we analyse accuracy, score and week-on-week change automatically."}>
@@ -1844,9 +3034,100 @@ function DashboardBody({ urlPlan = "" }) {
             </div>
           </div>
         </Section>
+              </div>
+            )}
 
-        {/* ── MENTOR TOOLS ── */}
-        <Section id="mentor-tools" kicker="Proof, not guesswork" title="What Your Mentor Breaks Down" tColor={GOLD}
+            {/* ── TAB 4: BACKLOG CLEARING ── */}
+            {activeTab === "backlog" && (
+              <div>
+                        <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#FF693D"
+          sub="A structured catch-up system that clears months of pending chapters - list them, rate your strength, and set a plan date.">
+          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
+
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
+              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#fff5f1", border: "1px solid #fecfbf", display: "grid", placeItems: "center" }}><Rocket size={22} color="#FF693D" /></span>
+              <div style={{ flex: 1, minWidth: 180 }}>
+                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
+                <div style={{ height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", marginTop: 8, maxWidth: 320 }}>
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
+                </div>
+              </div>
+              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#FF693D" }}>{backlogPct}%</div>
+            </div>
+
+            <form onSubmit={addBacklog} style={{ background: "#fff8f4", border: "1px solid #ffe0d4", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
+              <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
+              <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
+              <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
+              <DateField label="Target date" value={blForm.targetDate} onChange={(v) => setBlForm((s) => ({ ...s, targetDate: v }))} />
+              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
+                <Plus size={15} /> Add
+              </button>
+            </form>
+
+            {backlog.length ? (
+              <motion.div style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.05 } } }}>
+                <AnimatePresence initial={false}>
+                {backlog.map((b) => {
+                  const st = STRENGTHS[b.strength] || STRENGTHS.weak;
+                  const date = blDate(b);
+                  const overdue = !b.done && date && date < todayIso;
+                  return (
+                    <motion.div key={b.id} layout
+                      variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                      exit={{ opacity: 0, x: -14, transition: { duration: 0.18 } }}
+                      whileHover={{ x: 3 }}
+                      transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                      style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
+                      <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
+                        style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        {b.done && <CheckCircle2 size={16} color="#fff" />}
+                      </button>
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 150 }}>
+                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
+                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}</div>
+                      </div>
+                      <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
+                      {date && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: overdue ? "#dc2626" : "#6b7280", fontWeight: overdue ? 800 : 600 }}>
+                          <CalendarDays size={13} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
+                        </span>
+                      )}
+                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
+                        <Trash2 size={14} />
+                      </button>
+                    </motion.div>
+                  );
+                })}
+                </AnimatePresence>
+              </motion.div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
+                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet - add your pending chapters above.
+              </div>
+            )}
+          </div>
+        </Section>
+              </div>
+            )}
+
+            {/* ── TAB 5: CBT TEST SERIES ── */}
+            {activeTab === "cbt" && (
+              <div>
+                        <Section id="test-series" kicker="Daily · Weekly · Full tests" title="CBT Test Series" tColor="#0ea5a4"
+          sub="Attempt your mentor's uploaded tests in NTA-style CBT mode. They're auto-graded against the answer key the moment you submit, and your score flows into the performance stats below.">
+          <TestSeries plan={selectedPlan || urlPlan || undefined} />
+        </Section>
+              </div>
+            )}
+
+            {/* ── TAB 6: MENTOR GUIDANCE & TASKS ── */}
+            {activeTab === "mentor" && (
+              <div>
+                        <Section id="mentor-tools" kicker="Proof, not guesswork" title="What Your Mentor Breaks Down" tColor={GOLD}
           sub="Every number you enter is automatically turned into the exact breakdowns your mentor reviews - and an action list for the week.">
 
           {/* AI insights banner */}
@@ -2050,94 +3331,23 @@ function DashboardBody({ urlPlan = "" }) {
             </ToolCard>
           </div>
         </Section>
-
-        {/* ── BACKLOG ── */}
-        <Section id="backlog" kicker="Catch up without burning out" title="Backlog Clearing Sprints" tColor="#FF693D"
-          sub="A structured catch-up system that clears months of pending chapters - list them, rate your strength, and set a plan date.">
-          <div style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "24px", boxShadow: "0 20px 46px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
-
-            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginBottom: 18 }}>
-              <span style={{ width: 46, height: 46, borderRadius: 13, background: "#fff5f1", border: "1px solid #fecfbf", display: "grid", placeItems: "center" }}><Rocket size={22} color="#FF693D" /></span>
-              <div style={{ flex: 1, minWidth: 180 }}>
-                <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: INK }}>Your backlog · {backlogDone}/{backlog.length} cleared</div>
-                <div style={{ height: 9, borderRadius: 6, background: "#f1f5f9", overflow: "hidden", marginTop: 8, maxWidth: 320 }}>
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${backlogPct}%` }} style={{ height: "100%", borderRadius: 6, background: "linear-gradient(90deg,#FF693D,#E0421F)" }} />
-                </div>
-              </div>
-              <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 26, color: "#FF693D" }}>{backlogPct}%</div>
-            </div>
-
-            <form onSubmit={addBacklog} style={{ background: "#fff8f4", border: "1px solid #ffe0d4", borderRadius: 14, padding: "16px 18px", marginBottom: 18, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10, alignItems: "flex-end" }}>
-              <SelectField label="Subject" value={blForm.subject} onChange={(v) => setBlForm((s) => ({ ...s, subject: v }))} options={subjects} labels={Object.fromEntries(subjects.map((s) => [s, s]))} />
-              <TextField label="Topic / chapter" value={blForm.topic} onChange={(v) => setBlForm((s) => ({ ...s, topic: v }))} placeholder="e.g. Rotational Motion" />
-              <SelectField label="How strong are you?" value={blForm.strength} onChange={(v) => setBlForm((s) => ({ ...s, strength: v }))} options={["weak", "medium", "strong"]} labels={{ weak: "Weak", medium: "Medium", strong: "Strong" }} />
-              <DateField label="Target date" value={blForm.targetDate} onChange={(v) => setBlForm((s) => ({ ...s, targetDate: v }))} />
-              <button type="submit" style={{ padding: "12px 16px", borderRadius: 11, border: "none", background: "linear-gradient(135deg,#FF693D,#E0421F)", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, height: 42 }}>
-                <Plus size={15} /> Add
-              </button>
-            </form>
-
-            {backlog.length ? (
-              <motion.div style={{ display: "flex", flexDirection: "column", gap: 10 }}
-                initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.05 } } }}>
-                <AnimatePresence initial={false}>
-                {backlog.map((b) => {
-                  const st = STRENGTHS[b.strength] || STRENGTHS.weak;
-                  const date = blDate(b);
-                  const overdue = !b.done && date && date < todayIso;
-                  return (
-                    <motion.div key={b.id} layout
-                      variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-                      exit={{ opacity: 0, x: -14, transition: { duration: 0.18 } }}
-                      whileHover={{ x: 3 }}
-                      transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                      style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: b.done ? "#f8fafc" : overdue ? "#fff5f5" : "#fff", border: `1px solid ${overdue ? "#fecaca" : "#eef2f7"}`, borderRadius: 13, padding: "13px 15px", opacity: b.done ? 0.72 : 1 }}>
-                      <button onClick={() => toggleBacklog(b.id)} title={b.done ? "Mark as pending" : "Mark cleared"}
-                        style={{ width: 24, height: 24, borderRadius: 7, border: `1.5px solid ${b.done ? GREEN : "#cbd5e1"}`, background: b.done ? GREEN : "#fff", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                        {b.done && <CheckCircle2 size={16} color="#fff" />}
-                      </button>
-                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: subColor(b.subject), flexShrink: 0 }} />
-                      <div style={{ flex: 1, minWidth: 150 }}>
-                        <div style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 14, color: NAVY, textDecoration: b.done ? "line-through" : "none" }}>{b.topic}</div>
-                        <div style={{ fontSize: 12, color: MUTE }}>{shortName(b.subject)}</div>
-                      </div>
-                      <span style={{ background: `${st.color}14`, border: `1px solid ${st.color}40`, color: st.color, borderRadius: 50, padding: "4px 11px", fontSize: 11.5, fontWeight: 800 }}>{st.label}</span>
-                      {date && (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: overdue ? "#dc2626" : "#6b7280", fontWeight: overdue ? 800 : 600 }}>
-                          <CalendarDays size={13} /> {overdue ? "Overdue · " : "Target "}{fmtDay(date)}
-                        </span>
-                      )}
-                      <button onClick={() => removeBacklog(b.id)} title="Remove" style={{ width: 30, height: 30, borderRadius: 8, border: "1px solid #fee2e2", background: "var(--page-bg)", color: "#ef4444", display: "grid", placeItems: "center", cursor: "pointer", flexShrink: 0 }}>
-                        <Trash2 size={14} />
-                      </button>
-                    </motion.div>
-                  );
-                })}
-                </AnimatePresence>
-              </motion.div>
-            ) : (
-              <div style={{ textAlign: "center", padding: "26px 0", color: "#9ca3af", fontSize: 13.5 }}>
-                <BookOpen size={26} style={{ marginBottom: 8, opacity: .6 }} /><br />No backlog yet - add your pending chapters above.
               </div>
             )}
-          </div>
-        </Section>
 
-        {/* ── CBT TEST SERIES ── */}
-        <Section id="test-series" kicker="Daily · Weekly · Full tests" title="CBT Test Series" tColor="#0ea5a4"
-          sub="Attempt your mentor's uploaded tests in NTA-style CBT mode. They're auto-graded against the answer key the moment you submit, and your score flows into the performance stats below.">
-          <TestSeries plan={selectedPlan || urlPlan || undefined} />
-        </Section>
-
-        {/* ── BATCH COMMUNITY ── */}
-        <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#FF693D"
+            {/* ── TAB 7: BATCH COMMUNITY ── */}
+            {activeTab === "community" && (
+              <div>
+                        <Section id="community" kicker="Your batch, in one room" title="Batch Community" tColor="#FF693D"
           sub="Meet your batchmates and post doubts with photos & videos - peers and mentors reply, and the best ones get highlighted.">
           <Community plan={selectedPlan || urlPlan || undefined} onSwitchBatch={switchBatch} />
         </Section>
+              </div>
+            )}
 
-        {/* ── DAILY & WEEKLY REPORTS ── */}
-        <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
+            {/* ── TAB 8: DAILY & WEEKLY REPORTS ── */}
+            {activeTab === "reports" && (
+              <div>
+                        <Section id="parent-report" kicker="Parents stay in the loop" title="Daily & Weekly Reports" tColor={GREEN}
           sub="Your previous day's complete study report is auto-emailed to your parent every morning between 10:00 AM – 10:30 AM IST, and a weekly progress booklet every Sunday. You can also send an update anytime.">
 
           {/* ── WEEKLY PROGRESS BOOKLET ── */}
@@ -2244,26 +3454,12 @@ function DashboardBody({ urlPlan = "" }) {
           )}
 
         </Section>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-
-      <style>{`
-        @media (max-width: 980px) {
-          .md-feature-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .md-hero-line { display: none !important; }
-        }
-        @media (max-width: 900px) {
-          .md-booklet { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 760px) {
-          .md-feature-grid { grid-template-columns: 1fr !important; }
-          .md-track-grid { grid-template-columns: 1fr !important; }
-          .md-tools-grid { grid-template-columns: 1fr !important; }
-        }
-        .md-sticky-nav { scrollbar-width: none; -ms-overflow-style: none; }
-        .md-sticky-nav::-webkit-scrollbar { display: none; }
-        @keyframes spin{to{transform:rotate(360deg)}}
-      `}</style>
-    </section>
+    </div>
   );
 }
 
