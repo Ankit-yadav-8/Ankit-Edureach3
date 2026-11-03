@@ -62,39 +62,65 @@ const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const round1 = (n) => Math.round(Number(n || 0) * 10) / 10;
 const inr = (n) => Number(n || 0).toLocaleString("en-IN");
 
-/* ── subjects per exam track (JEE/NEET split Chemistry into 3) ─────── */
+/* ── subjects per exam track (JEE/NEET unified Chemistry) ─────── */
 function subjectsFor(exam) {
   const e = String(exam || "").toLowerCase();
   if (e.includes("foundation")) return ["Maths", "Science"];
-  if (e.includes("neet") && !e.includes("jee")) return ["Physics", "Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry", "Biology"];
-  return ["Physics", "Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry", "Maths"]; // JEE / generic
+  if (e.includes("neet") && !e.includes("jee")) return ["Physics", "Chemistry", "Biology"];
+  return ["Physics", "Chemistry", "Maths"]; // JEE / generic
 }
 const SUBJECT_COLORS = {
   Physics: "#6366f1",
-  "Physical Chemistry": "#14b8a6",
-  "Organic Chemistry": "#15a06e",
-  "Inorganic Chemistry": "#84cc16",
-  Chemistry: "#15a06e",
+  Chemistry: "#10b981",
+  "Physical Chemistry": "#10b981",
+  "Organic Chemistry": "#10b981",
+  "Inorganic Chemistry": "#10b981",
   Maths: "#FF693D",
   Biology: "#ec4899",
   Science: "#06b6d4",
 };
 const subColor = (s) => SUBJECT_COLORS[s] || "#6366f1";
 const SHORT = {
-  Physics: "Phy", "Physical Chemistry": "P.Chem", "Organic Chemistry": "O.Chem",
-  "Inorganic Chemistry": "I.Chem", Chemistry: "Chem", Maths: "Math", Biology: "Bio", Science: "Sci",
+  Physics: "Phy",
+  Chemistry: "Chem",
+  "Physical Chemistry": "Chem",
+  "Organic Chemistry": "Chem",
+  "Inorganic Chemistry": "Chem",
+  Maths: "Math",
+  Biology: "Bio",
+  Science: "Sci",
 };
 const shortName = (s) => SHORT[s] || s;
 // Recharts treats dots in a dataKey as a nested path, so chart keys must be
 // alphanumeric - labels can still be the pretty short names.
 const keyOf = (s) => String(s).replace(/[^a-zA-Z0-9]/g, "");
 
-/* subject hours/tasks for one day - tolerant of the old number-only shape */
+/* subject hours/tasks for one day - tolerant of the old number-only shape & rolls up legacy split chemistry */
 const subVal = (entry, s) => {
-  const v = entry?.subjects?.[s];
-  if (v == null) return { h: 0, t: 0 };
-  if (typeof v === "number") return { h: v, t: 0 };
-  return { h: Number(v.h) || 0, t: Number(v.t) || 0 };
+  if (!entry?.subjects) return { h: 0, t: 0 };
+  let h = 0, t = 0;
+  const direct = entry.subjects[s];
+  if (direct != null) {
+    if (typeof direct === "number") h += direct;
+    else {
+      h += Number(direct.h) || 0;
+      t += Number(direct.t) || 0;
+    }
+  }
+  // If querying "Chemistry", roll up any historical split parts
+  if (s === "Chemistry") {
+    for (const legKey of ["Physical Chemistry", "Organic Chemistry", "Inorganic Chemistry"]) {
+      const leg = entry.subjects[legKey];
+      if (leg != null) {
+        if (typeof leg === "number") h += leg;
+        else {
+          h += Number(leg.h) || 0;
+          t += Number(leg.t) || 0;
+        }
+      }
+    }
+  }
+  return { h: round1(h), t };
 };
 
 const STRENGTHS = {
@@ -880,12 +906,12 @@ function DashboardBody({ urlPlan = "" }) {
   /* ── strategies (fills the white space under the test form) ── */
   const strategies = useMemo(() => {
     const out = [];
-    if (lowestSubject) out.push({ icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${shortName(lowestSubject)} - it's your least-studied subject this week.` });
-    if (weakRanked[0]) out.push({ icon: Zap, color: "#FF693D", text: `Attack ${weakRanked[0][0]} first - your most recurring weak chapter. Aim for 30 PYQs this week.` });
-    if (latest && Number(latest.silly) >= 3) out.push({ icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck - you lost ~${latest.silly} marks to silly errors.` });
-    if (latest && acc(latest) < 80) out.push({ icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% - skip low-confidence questions to dodge negative marking.` });
-    out.push({ icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days - spaced revision beats re-reading." });
-    out.push({ icon: Hourglass, color: ORANGE, text: "Sit one full-length timed paper every week to build exam-day stamina & pacing." });
+    if (lowestSubject) out.push({ tag: "Subject Effort Balance", icon: Target, color: subColor(lowestSubject), text: `Balance your effort: add ~1 hr/day to ${lowestSubject} - it's your least-studied subject this week.` });
+    if (weakRanked[0]) out.push({ tag: "Priority Topic Attack", icon: Zap, color: "#FF693D", text: `Attack ${weakRanked[0][0]} first - your most recurring weak chapter. Aim for 30 PYQs this week.` });
+    if (latest && Number(latest.silly) >= 3) out.push({ tag: "Silly Error Audit", icon: Crosshair, color: "#ef4444", text: `Reserve the last 10 min of every paper to recheck - you lost ~${latest.silly} marks to silly errors.` });
+    if (latest && acc(latest) < 80) out.push({ tag: "Negative Marking Shield", icon: ShieldCheck, color: "#0891b2", text: `Accuracy is ${acc(latest)}% - skip low-confidence questions to dodge negative marking.` });
+    out.push({ tag: "Spaced Active Revision", icon: RotateCw, color: GREEN, text: "Revise within 24 hrs, then again at 7 days - spaced revision beats re-reading." });
+    out.push({ tag: "Exam Stamina & Pacing", icon: Hourglass, color: ORANGE, text: "Sit one full-length timed paper every week to build exam-day stamina & pacing." });
     return out.slice(0, 5);
   }, [lowestSubject, weakRanked, latest, thisWkH]);
 
@@ -2364,23 +2390,27 @@ function DashboardBody({ urlPlan = "" }) {
                     </div>
                     {todayEntry?.subjects && Object.keys(todayEntry.subjects).length > 0 && (
                       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-                        {Object.entries(todayEntry.subjects).map(([s, val]) => {
-                          const h = typeof val === "number" ? val : val?.h || 0;
-                          if (!h) return null;
+                        {subjects.map((s) => {
+                          const v = subVal(todayEntry, s);
+                          if (!v.h) return null;
                           return (
                             <span
                               key={s}
                               style={{
                                 fontSize: 11,
                                 fontWeight: 700,
-                                padding: "2px 8px",
+                                padding: "3px 9px",
                                 borderRadius: 6,
                                 background: "#f8fafc",
                                 border: "1px solid #e2e8f0",
                                 color: subColor(s),
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 4,
                               }}
                             >
-                              {s}: {h}h
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: subColor(s) }} />
+                              {s}: {v.h}h{v.t ? ` · ${v.t}✓` : ""}
                             </span>
                           );
                         })}
@@ -2563,7 +2593,7 @@ function DashboardBody({ urlPlan = "" }) {
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: "#9a3412", marginBottom: 12 }}>
                   {editingLog ? "Update today" : "Log today"} ({fmtDay(todayIso)}) · hours & tasks completed per subject
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(150px, 100%), 1fr))", gap: 10, marginBottom: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 12, marginBottom: 14 }}>
                   {subjects.map((s) => (
                     <SubjectDualField key={s} subject={s}
                       hours={logForm.subjects?.[s]?.h ?? ""} tasks={logForm.subjects?.[s]?.t ?? ""}
@@ -2685,18 +2715,92 @@ function DashboardBody({ urlPlan = "" }) {
             {activeTab === "analysis" && (
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                         <Section id="subject-analysis" kicker="Every subject counts" title="Subject-wise Analysis" tColor={ORANGE}
-          sub="See exactly where your hours and tasks go, compare day-by-day, and check this week against last week.">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
-            <ChartCard title="Study hours per subject · last 7 days" hint="Compare each subject day by day" accent={ORANGE}>
+          sub="Compare study velocity, weekly delta, and balance across Physics, Chemistry, and Maths.">
+          
+          {/* Top 3 Subject Performance Power Cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 14, marginBottom: 20 }}>
+            {subjects.map((s) => {
+              const now = round1(thisWkH[s]);
+              const was = round1(lastWkH[s]);
+              const d = round1(now - was);
+              const c = subColor(s);
+              const tasks = Math.round(thisWkT[s]);
+              const sharePct = subjectPieTotal > 0 ? Math.round((now / subjectPieTotal) * 100) : 0;
+              return (
+                <motion.div
+                  key={s}
+                  whileHover={{ y: -3, boxShadow: "0 10px 25px -8px rgba(0,0,0,0.08)" }}
+                  transition={{ duration: 0.18 }}
+                  style={{
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
+                    borderTop: `4px solid ${c}`,
+                    borderRadius: 16,
+                    padding: "16px 18px",
+                    boxShadow: "0 4px 16px rgba(15,23,42,0.04)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}25` }} />
+                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 14, color: NAVY }}>{s}</span>
+                    </div>
+                    <span style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: c,
+                      background: `${c}12`,
+                      padding: "3px 8px",
+                      borderRadius: 50,
+                    }}>
+                      {sharePct}% of study
+                    </span>
+                  </div>
+
+                  <div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                      <span style={{ fontFamily: SORA, fontWeight: 900, fontSize: 28, color: NAVY, lineHeight: 1 }}>{now}</span>
+                      <span style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13, color: MUTE }}>hrs</span>
+                    </div>
+                    {/* Progress track */}
+                    <div style={{ width: "100%", height: 6, background: "#f1f5f9", borderRadius: 4, marginTop: 10, overflow: "hidden" }}>
+                      <div style={{ width: `${Math.min(100, (now / Math.max(1, weekHours)) * 100)}%`, height: "100%", background: c, borderRadius: 4, transition: "width 0.5s ease" }} />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid #f1f5f9" }}>
+                    <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <Clock size={12} color={c} /> {round1(now / 7)}h / day
+                    </span>
+                    <span style={{ fontSize: 11.5, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <CheckCircle2 size={12} color={c} /> {tasks} tasks
+                    </span>
+                  </div>
+
+                  <div style={{ marginTop: -4 }}>
+                    <DeltaPill d={d} unit="h" subtext="vs last week" />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* 7-Day Trend Visualizations */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 18, marginBottom: 18 }}>
+            <ChartCard title="Study hours per subject · last 7 days" hint="Compare daily hours for Physics, Chemistry & Maths" accent={ORANGE}>
               <Trend data={subjectHourTrend} lines={subjectLines} height={230} fmt={(v) => `${v}h`} />
             </ChartCard>
-            <ChartCard title="Tasks completed per subject · last 7 days" hint="How many tasks you cleared, by subject" accent={ORANGE}>
+            <ChartCard title="Tasks completed per subject · last 7 days" hint="Total tasks and practice questions solved by subject" accent={ORANGE}>
               <Trend data={subjectTaskTrend} lines={subjectLines} height={230} />
             </ChartCard>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px, 100%), 1fr))", gap: 18, alignItems: "start" }} className="md-track-grid">
-            <ChartCard title="Time split this week" hint="Share of study hours per subject" accent={ORANGE}>
+          {/* Time Split Donut & Subject Equilibrium Audit */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 18, alignItems: "start" }} className="md-track-grid">
+            <ChartCard title="Time split this week" hint="Percentage share of total hours studied" accent={ORANGE}>
               {subjectPie.length ? (
                 <div className="md-donut-row" style={{ display: "grid", gridTemplateColumns: "minmax(150px,auto) minmax(0,1fr)", gap: 16, alignItems: "center" }}>
                   <CenterDonut
@@ -2712,56 +2816,62 @@ function DashboardBody({ urlPlan = "" }) {
               ) : <ChartHint text="Log today's subject hours to see your split." />}
             </ChartCard>
 
-            <ChartCard title="Subject breakdown" hint="Hours, tasks and weekly change per subject" accent={ORANGE}>
-              <motion.div
-                className="md-subject-grid"
-                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(140px, 100%), 1fr))", gap: 10 }}
-                initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
-                variants={{ show: { transition: { staggerChildren: 0.06 } } }}
-              >
+            <ChartCard title="Subject Equilibrium Audit" hint="AI balance check across subjects" accent="#10b981">
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {subjects.map((s) => {
-                  const now = round1(thisWkH[s]); const was = round1(lastWkH[s]);
-                  const d = round1(now - was);
+                  const now = round1(thisWkH[s]);
+                  const pctShare = subjectPieTotal > 0 ? Math.round((now / subjectPieTotal) * 100) : 0;
                   const c = subColor(s);
-                  const tasks = Math.round(thisWkT[s]);
                   return (
-                    // Clean, compact card: neutral surface with a single subject-coloured
-                    // accent (the dot + the number), so the grid reads calm, not rainbow.
-                    <motion.div key={s}
-                      variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } }}
-                      whileHover={{ y: -3 }}
-                      transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                      style={{ background: "var(--page-bg)", border: "1px solid #eef2f7", borderRadius: 14, padding: "12px 13px", boxShadow: "0 10px 26px -22px rgba(26,26,46,.5)", display: "flex", flexDirection: "column" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
-                        <span style={{ width: 9, height: 9, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}1f`, flexShrink: 0 }} />
-                        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 12.5, color: NAVY }}>{shortName(s)}</span>
+                    <div key={s} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, fontWeight: 700 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} />
+                          <span style={{ color: NAVY }}>{s}</span>
+                        </div>
+                        <span style={{ color: c }}>{now}h ({pctShare}%)</span>
                       </div>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                        <span style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 23, color: c, lineHeight: 1 }}>{now}</span>
-                        <span style={{ fontFamily: "Sora", fontWeight: 700, fontSize: 12.5, color: MUTE }}>hrs</span>
+                      <div style={{ width: "100%", height: 7, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ width: `${pctShare}%`, height: "100%", background: c, borderRadius: 4, transition: "width 0.5s ease" }} />
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 11px", marginTop: 8 }}>
-                        <span style={{ fontSize: 11, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          <CheckCircle2 size={11} color={c} /> {tasks} task{tasks === 1 ? "" : "s"}
-                        </span>
-                        <span style={{ fontSize: 11, color: MUTE, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          <Clock size={11} color={c} /> {round1(now / 7)}h/day
-                        </span>
-                      </div>
-                      <DeltaPill d={d} unit="h" subtext="vs last week" />
-                    </motion.div>
+                    </div>
                   );
                 })}
-              </motion.div>
+
+                <div style={{
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  marginTop: 4,
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 10,
+                }}>
+                  <Lightbulb size={16} color="#FF693D" style={{ flexShrink: 0, marginTop: 2 }} />
+                  <div style={{ fontSize: 12, color: "#475569", lineHeight: 1.55 }}>
+                    {lowestSubject && weekHours > 0 && thisWkH[lowestSubject] < weekHours * 0.22 ? (
+                      <>
+                        <strong style={{ color: NAVY }}>Effort imbalance detected:</strong> {lowestSubject} received only {subjectPieTotal > 0 ? Math.round((thisWkH[lowestSubject] / subjectPieTotal) * 100) : 0}% of your total time this week. Reallocate 45–60 min to {lowestSubject} daily to avoid score dips.
+                      </>
+                    ) : (
+                      <>
+                        <strong style={{ color: "#16a34a" }}>Healthy subject balance:</strong> Your hours are well distributed across {subjects.join(", ")}. Maintain this tempo for upcoming mock tests.
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
             </ChartCard>
           </div>
         </Section>
-                        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
+
+        {/* ── SECTION: TEST ANALYSIS & RANK ENGINE ── */}
+        <Section id="test-analysis" kicker="Every test counts" title="Test Analysis" tColor="#FF693D"
           sub={rankEnabled
             ? "Enter your marks, silly mistakes and weak chapters. Pick JEE Mains/Advanced to get a predicted rank - everything else is analysed automatically."
             : "Enter your marks, silly mistakes and weak chapters - we analyse accuracy, score and week-on-week change automatically."}>
-          {/* Nudge: no test logged in a week → ask if one was taken, then guide
-              them to log it. "No" simply snoozes it for the day. */}
+          {/* Nudge: no test logged in a week */}
           {showTestReminder && (
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", background: "linear-gradient(135deg,#fff5f1,#fff4ef)", border: "1px solid rgba(255,105,61,.28)", borderRadius: 14, padding: "13px 16px", marginBottom: 16 }}>
               {testAskStage === "ask" ? (
@@ -2795,69 +2905,180 @@ function DashboardBody({ urlPlan = "" }) {
               )}
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(330px, 100%), 1fr))", gap: 18 }}>
-            {/* left - input + reports + strategies */}
-            <div id="add-test-form" style={{ background: "var(--page-bg)", border: "1px solid rgba(255,105,61,.18)", borderRadius: 20, padding: "22px 22px 20px", boxShadow: "0 18px 44px -28px rgba(26,26,46,.4)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
-              <h3 style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.1rem", color: INK, margin: "0 0 14px" }}>Add a test result</h3>
 
-              {/* JEE-only test type toggle - Advanced logs both papers together */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: 20 }}>
+            {/* left column - Add Test Form + Rank Prediction */}
+            <div id="add-test-form" style={{ background: "#ffffff", border: "1.5px solid rgba(255,105,61,.2)", borderRadius: 20, padding: "22px", boxShadow: "0 12px 36px -15px rgba(26,26,46,.1)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${ORANGE},${GOLD})` }} />
+              
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 9, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                    <Trophy size={17} color="#FF693D" />
+                  </div>
+                  <div>
+                    <h3 style={{ fontFamily: INTER, fontWeight: 800, fontSize: 16, color: INK, margin: 0 }}>Add a test result</h3>
+                    <div style={{ fontSize: 11, color: MUTE, marginTop: 1 }}>CBT score breakdown & error analysis</div>
+                  </div>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 800, color: "#FF693D", background: "rgba(255,105,61,0.1)", border: "1px solid rgba(255,105,61,0.2)", borderRadius: 50, padding: "3px 9px", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                  AI Diagnostics
+                </span>
+              </div>
+
+              {/* JEE-only test type toggle */}
               {rankEnabled && (
-                <div style={{ display: "flex", gap: 7, marginBottom: 14, flexWrap: "wrap" }}>
-                  {[["main", "JEE Mains"], ["adv", "JEE Advanced"]].map(([val, lbl]) => (
-                    <button type="button" key={val} onClick={() => setTestType(val)}
-                      style={{ flex: "1 1 96px", padding: "9px 8px", borderRadius: 10, border: `1.5px solid ${testForm.type === val ? "#FF693D" : "#e5e7eb"}`, background: testForm.type === val ? "#FF693D10" : "#fff", color: testForm.type === val ? "#E0421F" : "#6b7280", fontWeight: 800, fontSize: 12.5, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                      <Trophy size={13} /> {lbl}
+                <div style={{ display: "flex", background: "#f1f5f9", padding: 4, borderRadius: 12, gap: 4, marginBottom: 14 }}>
+                  {[["main", "JEE Mains (300 Marks)"], ["adv", "JEE Advanced (360 Marks)"]].map(([val, lbl]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setTestType(val)}
+                      style={{
+                        flex: 1,
+                        padding: "8px 12px",
+                        borderRadius: 9,
+                        border: "none",
+                        background: testForm.type === val ? "#ffffff" : "transparent",
+                        color: testForm.type === val ? "#0f172a" : "#64748b",
+                        fontFamily: INTER,
+                        fontWeight: 700,
+                        fontSize: 11.5,
+                        cursor: "pointer",
+                        boxShadow: testForm.type === val ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 6,
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <Trophy size={12} color={testForm.type === val ? "#FF693D" : "#94a3b8"} />
+                      {lbl}
                     </button>
                   ))}
                 </div>
               )}
 
-              <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <TextField label="Test name" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" />
+              <form onSubmit={addTest} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                <TextField label="Test Name / Series" value={testForm.name} onChange={(v) => setTestForm((s) => ({ ...s, name: v }))} placeholder="e.g. Mock 4" icon={Award} />
 
                 {rankEnabled && isAdv(testForm.type) ? (
                   <>
-                    {/* both papers logged together - full exam is 6 hours (3h + 3h) */}
                     <div style={{ background: "#fff5f1", border: "1px solid #fecfbf", borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                       <Timer size={14} color="#E0421F" />
                       <span style={{ fontSize: 11.5, fontWeight: 800, color: "#E0421F" }}>Full exam · 6 hours total</span>
-                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 · 3h + Paper 2 · 3h - enter both papers below</span>
+                      <span style={{ fontSize: 11, color: "#FF693D" }}>Paper 1 (3h) + Paper 2 (3h) - enter both papers below</span>
                     </div>
 
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F" }}>Paper 1 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                      <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
-                      <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
-                      <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                        Paper 1 · Marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                        <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
+                        <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
+                        <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
+                      </div>
                     </div>
 
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F" }}>Paper 2 · marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                      <NumField label="Physics" value={testForm.mp2} onChange={(v) => setTestForm((s) => ({ ...s, mp2: v }))} placeholder="0" full />
-                      <NumField label="Chemistry" value={testForm.mc2} onChange={(v) => setTestForm((s) => ({ ...s, mc2: v }))} placeholder="0" full />
-                      <NumField label="Maths" value={testForm.mm2} onChange={(v) => setTestForm((s) => ({ ...s, mm2: v }))} placeholder="0" full />
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E0421F", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                        Paper 2 · Marks per section (out of {ADV_PAPER_SUB_MAX} each · {ADV_PAPER_TOTAL} total)
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                        <NumField label="Physics" value={testForm.mp2} onChange={(v) => setTestForm((s) => ({ ...s, mp2: v }))} placeholder="0" full />
+                        <NumField label="Chemistry" value={testForm.mc2} onChange={(v) => setTestForm((s) => ({ ...s, mc2: v }))} placeholder="0" full />
+                        <NumField label="Maths" value={testForm.mm2} onChange={(v) => setTestForm((s) => ({ ...s, mm2: v }))} placeholder="0" full />
+                      </div>
                     </div>
 
-                    {/* exam totals - editable because JEE Advanced's pattern changes every year */}
-                    <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.45 }}>JEE Advanced's total marks &amp; question count change every year - confirm yours below.</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                       <NumField label="Total marks of exam" value={testForm.advTotal} onChange={(v) => setTestForm((s) => ({ ...s, advTotal: v }))} placeholder={String(ADV_FULL_TOTAL)} full />
                       <NumField label="Total questions in exam" value={testForm.advQuestions} onChange={(v) => setTestForm((s) => ({ ...s, advQuestions: v }))} placeholder={String(ADV_FULL_QUESTIONS)} full />
                     </div>
-                    <SelectField label="Category" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} />
+                    <SelectField label="Category (Quota Pool)" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} icon={Users} />
                   </>
                 ) : rankEnabled && testForm.type === "main" ? (
                   <>
-                    <div style={{ fontSize: 11.5, fontWeight: 700, color: "#E0421F", marginTop: -2 }}>
-                      Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4 }}>
+                          Marks per section (out of {maxPerSubject(false)} each · total {maxTotal(false)})
+                        </span>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: (Number(testForm.mp)||0)+(Number(testForm.mc)||0)+(Number(testForm.mm)||0) > 0 ? "#FF693D" : "#94a3b8" }}>
+                          Total: {(Number(testForm.mp)||0) + (Number(testForm.mc)||0) + (Number(testForm.mm)||0)} / 300
+                        </span>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                        <div style={{ border: "1.5px solid rgba(99,102,241,0.25)", background: "#fbfbfe", borderRadius: 12, padding: "10px 10px 8px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#6366f1" }} />
+                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Physics</span>
+                            </div>
+                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#6366f1", background: "rgba(99,102,241,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                          </div>
+                          <input
+                            value={testForm.mp}
+                            onChange={(e) => setTestForm((s) => ({ ...s, mp: e.target.value }))}
+                            placeholder="0"
+                            inputMode="decimal"
+                            style={{
+                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
+                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                            }}
+                            onFocus={(e) => { e.target.style.borderColor = "#6366f1"; }}
+                            onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
+                          />
+                        </div>
+
+                        <div style={{ border: "1.5px solid rgba(16,185,129,0.25)", background: "#fbfefe", borderRadius: 12, padding: "10px 10px 8px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981" }} />
+                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Chemistry</span>
+                            </div>
+                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                          </div>
+                          <input
+                            value={testForm.mc}
+                            onChange={(e) => setTestForm((s) => ({ ...s, mc: e.target.value }))}
+                            placeholder="0"
+                            inputMode="decimal"
+                            style={{
+                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
+                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                            }}
+                            onFocus={(e) => { e.target.style.borderColor = "#10b981"; }}
+                            onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
+                          />
+                        </div>
+
+                        <div style={{ border: "1.5px solid rgba(255,105,61,0.25)", background: "#fffbfa", borderRadius: 12, padding: "10px 10px 8px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#FF693D" }} />
+                              <span style={{ fontSize: 11.5, fontWeight: 800, color: NAVY }}>Maths</span>
+                            </div>
+                            <span style={{ fontSize: 9.5, fontWeight: 700, color: "#FF693D", background: "rgba(255,105,61,0.1)", borderRadius: 4, padding: "1px 5px" }}>/ 100</span>
+                          </div>
+                          <input
+                            value={testForm.mm}
+                            onChange={(e) => setTestForm((s) => ({ ...s, mm: e.target.value }))}
+                            placeholder="0"
+                            inputMode="decimal"
+                            style={{
+                              width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid #e2e8f0",
+                              fontSize: 14, fontFamily: SORA, fontWeight: 800, color: NAVY, outline: "none", boxSizing: "border-box", background: "#fff"
+                            }}
+                            onFocus={(e) => { e.target.style.borderColor = "#FF693D"; }}
+                            onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                      <NumField label="Physics" value={testForm.mp} onChange={(v) => setTestForm((s) => ({ ...s, mp: v }))} placeholder="0" full />
-                      <NumField label="Chemistry" value={testForm.mc} onChange={(v) => setTestForm((s) => ({ ...s, mc: v }))} placeholder="0" full />
-                      <NumField label="Maths" value={testForm.mm} onChange={(v) => setTestForm((s) => ({ ...s, mm: v }))} placeholder="0" full />
-                    </div>
-                    <SelectField label="Category" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} />
+                    <SelectField label="Category (Quota Pool)" value={testForm.category} onChange={(v) => setTestForm((s) => ({ ...s, category: v }))} options={CATEGORIES} icon={Users} />
                   </>
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -2866,23 +3087,105 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
                 )}
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                  <NumField label="Correct" value={testForm.correct} onChange={(v) => setTestForm((s) => ({ ...s, correct: v }))} placeholder="64" full />
-                  <NumField label="Wrong" value={testForm.wrong} onChange={(v) => setTestForm((s) => ({ ...s, wrong: v }))} placeholder="14" full />
-                  <NumField label="Skipped" value={testForm.skipped} onChange={(v) => setTestForm((s) => ({ ...s, skipped: v }))} placeholder="12" full />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                  <NumField label="Silly mistakes" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
-                  <TextField label="Silly mistake topic" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
+                {/* Question Diagnostics Scorecard */}
+                <div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.4, display: "block", marginBottom: 6 }}>
+                    Question Diagnostics (Accuracy Scorecard)
+                  </span>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                    <div style={{ border: "1px solid #bbf7d0", background: "#f0fdf4", borderRadius: 10, padding: "8px 10px" }}>
+                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#166534", marginBottom: 4 }}>Correct (+4)</div>
+                      <input
+                        value={testForm.correct}
+                        onChange={(e) => setTestForm((s) => ({ ...s, correct: e.target.value }))}
+                        placeholder="64"
+                        inputMode="numeric"
+                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #bbf7d0", fontSize: 13.5, fontWeight: 700, color: "#166534", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                      />
+                    </div>
+                    <div style={{ border: "1px solid #fecaca", background: "#fef2f2", borderRadius: 10, padding: "8px 10px" }}>
+                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#991b1b", marginBottom: 4 }}>Wrong (-1)</div>
+                      <input
+                        value={testForm.wrong}
+                        onChange={(e) => setTestForm((s) => ({ ...s, wrong: e.target.value }))}
+                        placeholder="14"
+                        inputMode="numeric"
+                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #fecaca", fontSize: 13.5, fontWeight: 700, color: "#991b1b", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                      />
+                    </div>
+                    <div style={{ border: "1px solid #e2e8f0", background: "#f8fafc", borderRadius: 10, padding: "8px 10px" }}>
+                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "#475569", marginBottom: 4 }}>Skipped (0)</div>
+                      <input
+                        value={testForm.skipped}
+                        onChange={(e) => setTestForm((s) => ({ ...s, skipped: e.target.value }))}
+                        placeholder="12"
+                        inputMode="numeric"
+                        style={{ width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #cbd5e1", fontSize: 13.5, fontWeight: 700, color: "#475569", background: "#fff", outline: "none", boxSizing: "border-box" }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <SelectField label="Over-spent time on (quick pick)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, shortName(s)]))} />
-                <button type="submit" disabled={!testFormComplete()}
-                  style={{ marginTop: 4, padding: "13px", borderRadius: 12, border: "none", background: testFormComplete() ? "linear-gradient(135deg,#FF693D,#E0421F)" : "#ffc2b0", color: "#fff", fontFamily: "Sora", fontWeight: 800, fontSize: 14.5, cursor: testFormComplete() ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <Plus size={16} /> {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse & predict rank" : "Analyse this test"}
+                {/* Silly Mistakes & Quick Chips */}
+                <div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 10, marginBottom: 8 }}>
+                    <NumField label="Silly mistakes count" value={testForm.silly} onChange={(v) => setTestForm((s) => ({ ...s, silly: v }))} placeholder="e.g. 4" full />
+                    <TextField label="Silly mistake root cause" value={testForm.sillyTopic} onChange={(v) => setTestForm((s) => ({ ...s, sillyTopic: v }))} placeholder="e.g. Sign errors" />
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8" }}>Quick pick:</span>
+                    {["Calculation error", "Sign error", "Question misread", "Formula slip"].map((topic) => (
+                      <button
+                        key={topic}
+                        type="button"
+                        onClick={() => setTestForm((s) => ({ ...s, sillyTopic: topic }))}
+                        style={{
+                          background: testForm.sillyTopic === topic ? "#fff7ed" : "#f1f5f9",
+                          border: `1px solid ${testForm.sillyTopic === topic ? "#fed7aa" : "#e2e8f0"}`,
+                          borderRadius: 6,
+                          padding: "2px 8px",
+                          fontSize: 10,
+                          fontWeight: 600,
+                          color: testForm.sillyTopic === topic ? "#c2410c" : "#475569",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {topic}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <SelectField label="Time bottleneck (over-spent on)" value={testForm.overspent} onChange={(v) => setTestForm((s) => ({ ...s, overspent: v }))} options={["", ...subjects]} placeholders={{ "": "Select subject" }} labels={Object.fromEntries(subjects.map((s) => [s, s]))} icon={Timer} />
+                
+                <button
+                  type="submit"
+                  disabled={!testFormComplete()}
+                  style={{
+                    marginTop: 4,
+                    padding: "12px 18px",
+                    borderRadius: 12,
+                    border: "none",
+                    background: testFormComplete() ? "linear-gradient(135deg, #FF693D 0%, #E0421F 100%)" : "#fed7aa",
+                    color: "#ffffff",
+                    fontFamily: SORA,
+                    fontWeight: 800,
+                    fontSize: 13.5,
+                    cursor: testFormComplete() ? "pointer" : "not-allowed",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    boxShadow: testFormComplete() ? "0 8px 20px -6px rgba(255,105,61,0.5)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <Sparkles size={16} />
+                  {rankEnabled && (testForm.type === "main" || isAdv(testForm.type)) ? "Analyse Test & Predict Rank" : "Analyse Test Performance"}
                 </button>
+
                 {!testFormComplete() && (
-                  <div style={{ fontSize: 12, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", gap: 7, lineHeight: 1.45 }}>
+                  <div style={{ fontSize: 11.5, color: "#9a3412", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", gap: 7, lineHeight: 1.45 }}>
                     <AlertCircle size={14} color="#ea580c" style={{ flexShrink: 0 }} /> Fill in every field above - a test is only analysed once all details are entered.
                   </div>
                 )}
@@ -2890,19 +3193,31 @@ function DashboardBody({ urlPlan = "" }) {
 
               {/* improvement / decline report */}
               {latest && (
-                <div style={{ marginTop: 16, background: improvement == null ? "#f8fafc" : improvement >= 0 ? "#f0faf4" : "#fef2f2", border: `1px solid ${improvement == null ? "#e5e7eb" : improvement >= 0 ? "#bbf7d0" : "#fecaca"}`, borderRadius: 14, padding: "14px 16px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    {improvement == null ? <BarChart3 size={16} color="#64748b" />
-                      : improvement >= 0 ? <TrendingUp size={16} color="#16a34a" /> : <TrendingDown size={16} color="#dc2626" />}
-                    <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>
-                      {latest.name} · {pct(latest)}% · {acc(latest)}% accuracy
+                <div style={{
+                  marginTop: 16,
+                  background: improvement == null ? "#f8fafc" : improvement >= 0 ? "#f0fdf4" : "#fef2f2",
+                  border: `1px solid ${improvement == null ? "#e2e8f0" : improvement >= 0 ? "#bbf7d0" : "#fecaca"}`,
+                  borderRadius: 14,
+                  padding: "13px 16px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      {improvement == null ? <BarChart3 size={15} color="#64748b" />
+                        : improvement >= 0 ? <TrendingUp size={15} color="#16a34a" /> : <TrendingDown size={15} color="#dc2626" />}
+                      <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 13, color: INK }}>
+                        {latest.name} · {pct(latest)}% Score
+                      </span>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: acc(latest) >= 75 ? "#16a34a" : "#d97706", background: "#fff", padding: "2px 7px", borderRadius: 6, border: "1px solid #e2e8f0" }}>
+                      {acc(latest)}% Accuracy
                     </span>
                   </div>
-                  <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.5 }}>
                     {improvement == null
-                      ? "Add one more test and we'll show your improvement automatically."
+                      ? "Add one more test and we'll track your score trajectory automatically."
                       : improvement >= 0
-                        ? `Great work - your score is up ${improvement}% vs ${prev.name}. Keep the momentum going.`
+                        ? `Great momentum - your score is up ${improvement}% vs ${prev.name}. Keep this pacing steady.`
                         : `Your score dropped ${Math.abs(improvement)}% vs ${prev.name}. Review your weak topics with your mentor this week.`}
                   </div>
                 </div>
@@ -2918,28 +3233,88 @@ function DashboardBody({ urlPlan = "" }) {
               })()}
             </div>
 
-            {/* right - charts + strategies */}
+            {/* right column - charts + strategies */}
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <ChartCard title="Score trend" hint="Your marks across every test (vs 75% target)" accent="#FF693D">
                 <Trend data={scoreTrend} lines={[{ key: "you", label: "You", color: ORANGE }, { key: "target", label: "Target (75%)", color: "#94a3b8" }]} height={200} />
               </ChartCard>
+              
               <ChartCard title="Accuracy trend" hint="Correct ÷ attempted, test over test" accent="#22c55e">
                 <Trend data={accTrend} lines={[{ key: "accuracy", label: "Accuracy %", color: "#22c55e" }]} height={180} fmt={(v) => `${v}%`} />
               </ChartCard>
-              {/* strategies - grows to fill the column so the left (form + rank
-                  card) and right side finish at the same height */}
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "linear-gradient(135deg,#fffaf0,#fff)", border: `1px solid ${GOLD}44`, borderRadius: 18, padding: "18px 20px", boxShadow: "0 16px 40px -30px rgba(245,166,35,.8)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                  <Lightbulb size={18} color={GOLD} />
-                  <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 15, color: INK }}>Strategies to do better</span>
+
+              {/* Modern AI Diagnostic Strategies Panel */}
+              <div style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                background: "#ffffff",
+                border: "1.5px solid rgba(255,105,61,0.2)",
+                borderRadius: 20,
+                padding: "20px",
+                boxShadow: "0 8px 30px -10px rgba(15,23,42,0.06)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 9, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                      <Lightbulb size={17} color="#FF693D" />
+                    </div>
+                    <div>
+                      <span style={{ fontFamily: INTER, fontWeight: 800, fontSize: 15, color: INK }}>AI Mentorship Strategies</span>
+                      <div style={{ fontSize: 11, color: MUTE, marginTop: 1 }}>Tailored recommendations from your test trends</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 50, padding: "3px 9px" }}>
+                    Action Plan
+                  </span>
                 </div>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-around", gap: 12 }}>
+
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, justifyContent: "space-around" }}>
                   {strategies.map((st, i) => (
-                    <div key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
-                      <span style={{ width: 30, height: 30, borderRadius: 9, background: `${st.color}14`, border: `1px solid ${st.color}33`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        alignItems: "flex-start",
+                        padding: "10px 12px",
+                        borderRadius: 12,
+                        background: "#f8fafc",
+                        border: "1px solid #f1f5f9",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <span style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        background: `${st.color}14`,
+                        border: `1px solid ${st.color}30`,
+                        display: "grid",
+                        placeItems: "center",
+                        flexShrink: 0,
+                        marginTop: 2,
+                      }}>
                         <st.icon size={16} color={st.color} />
                       </span>
-                      <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 4 }}>{st.text}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {st.tag && (
+                          <span style={{
+                            fontSize: 9.5,
+                            fontWeight: 700,
+                            color: st.color,
+                            textTransform: "uppercase",
+                            letterSpacing: 0.5,
+                            display: "block",
+                            marginBottom: 3,
+                          }}>
+                            {st.tag}
+                          </span>
+                        )}
+                        <span style={{ fontSize: 12.5, color: "#334155", lineHeight: 1.5, fontWeight: 500 }}>
+                          {st.text}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -3495,75 +3870,205 @@ function ToolCard({ icon: Icon, color, title, desc, children }) {
 const rankTileVar = { hidden: { opacity: 0, y: 12, scale: 0.96 }, show: { opacity: 1, y: 0, scale: 1 } };
 
 function RankCard({ r, name }) {
-  const accent = "#E0421F";
+  const accent = "#FF693D";
   if (!r.ranked) {
     return (
-      <div style={{ marginTop: 16, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 14, padding: "14px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-          <Trophy size={16} color="#c2410c" />
-          <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 13.5, color: INK }}>{name} · {r.total} marks</span>
+      <div style={{
+        marginTop: 18,
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: 16,
+        padding: "16px 18px",
+        boxShadow: "0 4px 14px rgba(234,88,12,0.06)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 6 }}>
+          <Trophy size={17} color="#c2410c" />
+          <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14, color: INK }}>{name} · {r.total} marks</span>
         </div>
-        <div style={{ fontSize: 13, color: "#9a3412", lineHeight: 1.5 }}>
-          Below the qualifying cutoff{r.cutoffNeeded ? ` (need ~${r.cutoffNeeded} aggregate)` : ""}. Focus on clearing each subject's minimum first.
+        <div style={{ fontSize: 12.5, color: "#9a3412", lineHeight: 1.55 }}>
+          Below the qualifying cutoff{r.cutoffNeeded ? ` (need ~${r.cutoffNeeded} aggregate marks)` : ""}. Focus on scoring minimum qualifying marks in each subject first.
         </div>
       </div>
     );
   }
   const rng = (lo, hi) => `${inr(lo)} – ${inr(hi)}`;
   return (
-    <div style={{ marginTop: 16, background: "linear-gradient(135deg,#fff5f1,#fff)", border: `1px solid ${accent}33`, borderRadius: 14, padding: "16px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: (r.projected || (r.advanced && r.paper1 != null)) ? 4 : 10, flexWrap: "wrap" }}>
-        <Trophy size={17} color={accent} />
-        <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 14, color: INK }}>
-          Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 rank · {r.total}{r.examMax ? `/${r.examMax}` : ""} marks
+    <div style={{
+      marginTop: 18,
+      background: "linear-gradient(135deg, #0d1b3e 0%, #172554 100%)",
+      borderRadius: 18,
+      padding: "20px",
+      color: "#ffffff",
+      boxShadow: "0 20px 45px -18px rgba(13,27,62,0.5), 0 0 0 1px rgba(255,105,61,0.25)",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Background glow orb */}
+      <div style={{
+        position: "absolute",
+        top: -30,
+        right: -30,
+        width: 140,
+        height: 140,
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,105,61,0.3) 0%, transparent 70%)",
+        pointerEvents: "none",
+      }} />
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 14, position: "relative" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: "linear-gradient(135deg, #FF693D, #f59e0b)",
+            display: "grid",
+            placeItems: "center",
+            boxShadow: "0 4px 12px rgba(255,105,61,0.4)",
+          }}>
+            <Trophy size={18} color="#ffffff" />
+          </div>
+          <div>
+            <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 14.5, color: "#ffffff", letterSpacing: "-0.2px" }}>
+              Predicted {r.advanced ? "JEE Advanced" : "JEE Main"} 2026 Rank
+            </div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 1 }}>
+              {name} · <strong style={{ color: "#FF8A65" }}>{r.total}{r.examMax ? `/${r.examMax}` : ""} Marks</strong>
+            </div>
+          </div>
+        </div>
+
+        <span style={{
+          fontSize: 10.5,
+          fontWeight: 800,
+          color: "#22c55e",
+          background: "rgba(34,197,94,0.15)",
+          border: "1px solid rgba(34,197,94,0.3)",
+          borderRadius: 50,
+          padding: "3px 10px",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+        }}>
+          <Sparkles size={11} /> Qualified
         </span>
-        {r.paper && (
-          <span style={{ fontSize: 10.5, fontWeight: 800, color: accent, background: `${accent}14`, borderRadius: 50, padding: "2px 8px" }}>Paper {r.paper}</span>
-        )}
       </div>
+
       {r.advanced && r.paper1 != null && (
-        <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
-          Both papers combined - Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6-hour exam (3h + 3h).
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, marginBottom: 12 }}>
+          Both papers combined · Paper 1: {r.paper1}/{ADV_PAPER_TOTAL} · Paper 2: {r.paper2}/{ADV_PAPER_TOTAL}{r.questions ? ` · ${r.questions} questions` : ""} · 6h total.
         </div>
       )}
-      {r.projected && (
-        <div style={{ fontSize: 11, color: MUTE, lineHeight: 1.5, marginBottom: 10 }}>
-          Projected full-test rank from Paper {r.paper} ({r.paperMarks}/{ADV_PAPER_TOTAL}) - assumes a similar Paper {r.paper === 1 ? 2 : 1}. Log both papers for a sharper estimate.
-        </div>
-      )}
-      <motion.div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(110px, 100%), 1fr))", gap: 10, marginBottom: 10 }}
-        initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}
-        variants={{ show: { transition: { staggerChildren: 0.07 } } }}>
-        <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
-          <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}</div>
-          <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.advanced ? "CRL range" : "All-India CRL"}</div>
+
+      {/* Main KPI Stat Cards */}
+      <motion.div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(105px, 100%), 1fr))",
+          gap: 10,
+          marginBottom: 14,
+          position: "relative",
+        }}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={{ show: { transition: { staggerChildren: 0.07 } } }}
+      >
+        <motion.div
+          variants={rankTileVar}
+          style={{
+            background: "rgba(255,255,255,0.06)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 12,
+            padding: "12px 14px",
+          }}
+        >
+          <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#FF8A65", letterSpacing: "-0.5px" }}>
+            {r.advanced ? rng(r.crlLo ?? r.low, r.crlHi ?? r.high) : inr(r.crl)}
+          </div>
+          <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+            {r.advanced ? "CRL Range" : "All-India CRL"}
+          </div>
         </motion.div>
+
         {!r.isGeneral && r.categoryRank && (
-          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{inr(r.categoryRank)}</div>
-            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>{r.category} rank</div>
+          <motion.div
+            variants={rankTileVar}
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 12,
+              padding: "12px 14px",
+            }}
+          >
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#38bdf8", letterSpacing: "-0.5px" }}>
+              {inr(r.categoryRank)}
+            </div>
+            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              {r.category} Rank
+            </div>
           </motion.div>
         )}
+
         {r.percentile != null && !r.advanced && (
-          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{r.percentile}</div>
-            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>percentile</div>
+          <motion.div
+            variants={rankTileVar}
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 12,
+              padding: "12px 14px",
+            }}
+          >
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 18, color: "#4ade80", letterSpacing: "-0.5px" }}>
+              {r.percentile}
+            </div>
+            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Percentile
+            </div>
           </motion.div>
         )}
+
         {!r.advanced && (
-          <motion.div variants={rankTileVar} style={{ background: "var(--page-bg)", border: `1px solid ${accent}22`, borderRadius: 11, padding: "11px 12px" }}>
-            <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: 17, color: accent }}>{rng(r.low, r.high)}</div>
-            <div style={{ fontSize: 11, color: MUTE, marginTop: 2 }}>likely band</div>
+          <motion.div
+            variants={rankTileVar}
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 12,
+              padding: "12px 14px",
+            }}
+          >
+            <div style={{ fontFamily: SORA, fontWeight: 900, fontSize: 16, color: "#facc15", letterSpacing: "-0.5px" }}>
+              {rng(r.low, r.high)}
+            </div>
+            <div style={{ fontSize: 10.5, fontWeight: 600, color: "rgba(255,255,255,0.65)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Likely Band
+            </div>
           </motion.div>
         )}
       </motion.div>
+
       {r.advanced && r.branches?.length > 0 && (
-        <div style={{ fontSize: 12.5, color: "#374151", lineHeight: 1.55 }}>
-          <strong style={{ color: NAVY }}>Possible:</strong> {r.branches.join(" · ")}
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", lineHeight: 1.5, background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "8px 12px", marginBottom: 8 }}>
+          <strong style={{ color: "#38bdf8" }}>Possible Branches:</strong> {r.branches.join(" · ")}
         </div>
       )}
-      {r.advice && <div style={{ fontSize: 12, color: MUTE, lineHeight: 1.5, marginTop: 6 }}>{r.advice}</div>}
-      <div style={{ fontSize: 10.5, color: "#9ca3af", marginTop: 8 }}>Estimate only - actual rank depends on the official normalisation & shift difficulty.</div>
+
+      {r.advice && (
+        <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, marginTop: 4 }}>
+          {r.advice}
+        </div>
+      )}
+
+      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 10, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 8 }}>
+        AI model based on 2024–2025 normalized shift data. Actual rank depends on official NTA shift difficulty.
+      </div>
     </div>
   );
 }
@@ -3634,64 +4139,247 @@ function DeltaPill({ d, unit = "", subtext, lowerIsBetter = false }) {
 
 function SubjectDualField({ subject, hours, tasks, onHours, onTasks }) {
   const c = subColor(subject);
-  const inp = {
-    width: "100%", padding: "9px 10px", borderRadius: 9, border: "1.5px solid #e5e7eb",
-    fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box",
+  const handleAddHours = (delta) => {
+    const cur = Number(hours) || 0;
+    const next = round1(cur + delta);
+    onHours(String(next));
   };
   return (
-    <div style={{ border: `1px solid ${c}26`, borderRadius: 12, padding: "11px 12px", background: "var(--page-bg)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, fontSize: 12, fontWeight: 800, color: NAVY }}>
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} /> {subject}
+    <div style={{
+      border: `1.5px solid ${c}30`,
+      borderRadius: 14,
+      padding: "14px",
+      background: "#ffffff",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10,
+      transition: "all 0.15s ease",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <span style={{ width: 10, height: 10, borderRadius: "50%", background: c, boxShadow: `0 0 0 3px ${c}22` }} />
+          <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 13, color: NAVY }}>{subject}</span>
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {[0.5, 1, 2].map((add) => (
+            <button
+              key={add}
+              type="button"
+              onClick={() => handleAddHours(add)}
+              style={{
+                background: `${c}10`,
+                border: `1px solid ${c}30`,
+                borderRadius: 6,
+                padding: "2px 6px",
+                fontSize: 10.5,
+                fontWeight: 700,
+                color: c,
+                cursor: "pointer",
+              }}
+              title={`Add ${add}h`}
+            >
+              +{add}h
+            </button>
+          ))}
+        </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af" }}>Hours</span>
-          <input value={hours} onChange={(e) => onHours(e.target.value)} placeholder="2" inputMode="decimal" style={inp}
-            onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Hours</span>
+          <div style={{ position: "relative" }}>
+            <input
+              value={hours}
+              onChange={(e) => onHours(e.target.value)}
+              placeholder="0"
+              inputMode="decimal"
+              style={{
+                width: "100%",
+                padding: "8px 26px 8px 10px",
+                borderRadius: 8,
+                border: "1.5px solid #e2e8f0",
+                fontSize: 13.5,
+                fontFamily: SORA,
+                fontWeight: 700,
+                color: NAVY,
+                outline: "none",
+                boxSizing: "border-box",
+                transition: "border-color 0.15s",
+              }}
+              onFocus={(e) => { e.target.style.borderColor = c; }}
+              onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
+            />
+            <span style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>h</span>
+          </div>
         </label>
-        <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: "#9ca3af" }}>Tasks ✓</span>
-          <input value={tasks} onChange={(e) => onTasks(e.target.value)} placeholder="4" inputMode="numeric" style={inp}
-            onFocus={(e) => { e.target.style.borderColor = c; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Tasks ✓</span>
+          <div>
+            <input
+              value={tasks}
+              onChange={(e) => onTasks(e.target.value)}
+              placeholder="0"
+              inputMode="numeric"
+              style={{
+                width: "100%",
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: "1.5px solid #e2e8f0",
+                fontSize: 13.5,
+                fontFamily: SORA,
+                fontWeight: 700,
+                color: NAVY,
+                outline: "none",
+                boxSizing: "border-box",
+                transition: "border-color 0.15s",
+              }}
+              onFocus={(e) => { e.target.style.borderColor = c; }}
+              onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; }}
+            />
+          </div>
         </label>
       </div>
     </div>
   );
 }
 
-function NumField({ label, value, onChange, placeholder, full }) {
+function NumField({ label, value, onChange, placeholder, full, unit, icon: Icon, badge }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5, flex: full ? "none" : "1 1 110px", minWidth: 0 }}>
-      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} inputMode="decimal"
-        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
-        onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+    <label style={{ display: "flex", flexDirection: "column", gap: 4, flex: full ? "none" : "1 1 110px", minWidth: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
+        {badge && <span style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8" }}>{badge}</span>}
+      </div>
+      <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        {Icon && (
+          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={14} />
+          </span>
+        )}
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          inputMode="decimal"
+          style={{
+            width: "100%",
+            padding: Icon ? "9px 12px 9px 32px" : unit ? "9px 30px 9px 12px" : "9px 12px",
+            borderRadius: 10,
+            border: "1.5px solid #e2e8f0",
+            fontSize: 13.5,
+            fontFamily: SORA,
+            fontWeight: 700,
+            color: NAVY,
+            outline: "none",
+            boxSizing: "border-box",
+            background: "#ffffff",
+            transition: "all 0.15s ease",
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = ORANGE;
+            e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.12)";
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = "#e2e8f0";
+            e.target.style.boxShadow = "none";
+          }}
+        />
+        {unit && (
+          <span style={{ position: "absolute", right: 10, fontSize: 11, color: "#94a3b8", fontWeight: 600, pointerEvents: "none" }}>
+            {unit}
+          </span>
+        )}
+      </div>
     </label>
   );
 }
 
-function TextField({ label, value, onChange, placeholder }) {
+function TextField({ label, value, onChange, placeholder, icon: Icon }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
-      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
-        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box" }}
-        onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }} />
+    <label style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
+      <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        {Icon && (
+          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={14} />
+          </span>
+        )}
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          style={{
+            width: "100%",
+            padding: Icon ? "9px 12px 9px 32px" : "9px 12px",
+            borderRadius: 10,
+            border: "1.5px solid #e2e8f0",
+            fontSize: 13,
+            color: NAVY,
+            outline: "none",
+            boxSizing: "border-box",
+            background: "#ffffff",
+            transition: "all 0.15s ease",
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = ORANGE;
+            e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.12)";
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = "#e2e8f0";
+            e.target.style.boxShadow = "none";
+          }}
+        />
+      </div>
     </label>
   );
 }
 
-function SelectField({ label, value, onChange, options, labels, placeholders }) {
+function SelectField({ label, value, onChange, options, labels, placeholders, icon: Icon }) {
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
-      <span style={{ fontSize: 11.5, fontWeight: 700, color: "#6b7280" }}>{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, color: NAVY, outline: "none", boxSizing: "border-box", background: "var(--page-bg)", cursor: "pointer" }}
-        onFocus={(e) => { e.target.style.borderColor = ORANGE; }} onBlur={(e) => { e.target.style.borderColor = "#e5e7eb"; }}>
-        {options.map((o) => (
-          <option key={o} value={o}>{(placeholders && placeholders[o]) || (labels && labels[o]) || o}</option>
-        ))}
-      </select>
+    <label style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>{label}</span>
+      <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        {Icon && (
+          <span style={{ position: "absolute", left: 10, color: "#94a3b8", pointerEvents: "none" }}>
+            <Icon size={14} />
+          </span>
+        )}
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            width: "100%",
+            padding: Icon ? "9px 32px 9px 32px" : "9px 32px 9px 12px",
+            borderRadius: 10,
+            border: "1.5px solid #e2e8f0",
+            fontSize: 13,
+            fontWeight: 600,
+            color: NAVY,
+            outline: "none",
+            boxSizing: "border-box",
+            background: "#ffffff",
+            cursor: "pointer",
+            appearance: "none",
+            WebkitAppearance: "none",
+            transition: "all 0.15s ease",
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = ORANGE;
+            e.target.style.boxShadow = "0 0 0 3px rgba(255,105,61,0.12)";
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = "#e2e8f0";
+            e.target.style.boxShadow = "none";
+          }}
+        >
+          {options.map((o) => (
+            <option key={o} value={o}>{(placeholders && placeholders[o]) || (labels && labels[o]) || o}</option>
+          ))}
+        </select>
+        <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#94a3b8", fontSize: 11 }}>
+          ▼
+        </span>
+      </div>
     </label>
   );
 }
