@@ -1338,7 +1338,7 @@ function DashboardBody({ urlPlan = "" }) {
           text-align: left;
           background: transparent;
           color: #475569;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 600;
           transition: all 0.15s ease;
         }
@@ -1437,7 +1437,7 @@ function DashboardBody({ urlPlan = "" }) {
           max-width: 100% !important;
         }
         .student-main-content {
-          padding: 20px clamp(1rem, 2.5vw, 2.2rem) 80px;
+          padding: 16px clamp(0.8rem, 2vw, 1.8rem) 60px;
           flex: 1;
           max-width: 1400px;
           min-width: 0;
@@ -1638,10 +1638,10 @@ function DashboardBody({ urlPlan = "" }) {
                     </span>
                   </span>
                   <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                    <span style={{ fontFamily: SORA, fontWeight: 800, fontSize: 13.5, color: "#0f172a", lineHeight: 1.2 }}>
+                    <span style={{ fontFamily: INTER, fontWeight: 700, fontSize: 12.5, color: "#0f172a", lineHeight: 1.2 }}>
                       Campus Point
                     </span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+                    <span style={{ fontSize: 9.5, fontWeight: 600, color: ACCENT, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
                       Student Mentorship
                     </span>
                   </div>
@@ -1754,7 +1754,7 @@ function DashboardBody({ urlPlan = "" }) {
               <div style={{ marginBottom: 12, paddingBottom: 12, borderBottom: "1px solid #f1f5f9" }}>
                 {myBatches.length > 1 ? (
                   <>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 6px" }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 5px" }}>
                       Enrolled Batch
                     </div>
                     <select
@@ -1783,10 +1783,10 @@ function DashboardBody({ urlPlan = "" }) {
                   </>
                 ) : (
                   <div style={{ padding: "0 10px" }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 4 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 3 }}>
                       Enrolled Batch
                     </div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a", lineHeight: 1.3 }}>
+                    <div style={{ fontSize: 11.5, fontWeight: 600, color: "#0f172a", lineHeight: 1.3 }}>
                       {identity.batchLabel || planLabel}
                     </div>
                   </div>
@@ -1818,7 +1818,7 @@ function DashboardBody({ urlPlan = "" }) {
                 )}
               </div>
 
-              <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, padding: "0 10px 4px" }}>
                 Console Navigation
               </div>
 
@@ -1931,10 +1931,10 @@ function DashboardBody({ urlPlan = "" }) {
                   {initial}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontWeight: 700, fontSize: 12, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {user?.name || "Student"}
                   </div>
-                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontSize: 10.5, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {user?.email || identity.studentId || "Mentee"}
                   </div>
                 </div>
@@ -1949,13 +1949,13 @@ function DashboardBody({ urlPlan = "" }) {
                   border: "1px solid #e2e8f0",
                   background: "#f8fafc",
                   color: "#475569",
-                  fontSize: 13,
-                  fontWeight: 700,
+                  fontSize: 11.5,
+                  fontWeight: 600,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 8,
+                  gap: 7,
                   transition: "all 0.15s ease",
                   boxSizing: "border-box",
                   flexShrink: 0,
@@ -2010,45 +2010,23 @@ function DashboardBody({ urlPlan = "" }) {
             }}
           >
             <div>
-              <h1 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 18, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
+              <h1 style={{ fontFamily: INTER, fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0, lineHeight: 1.2 }}>
                 {currentNav?.label || "Student Console"}
               </h1>
-              <p style={{ fontSize: 12, color: "#64748b", margin: "2px 0 0" }}>
+              <p style={{ fontSize: 11, color: "#94a3b8", margin: "1px 0 0", fontWeight: 500 }}>
                 {currentNav?.desc || "Track your daily study, analysis, backlog and mentor guidance."}
               </p>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              {session?.meetLink && (
-                <button
-                  onClick={openMeetingRoom}
-                  style={{
-                    background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                    color: "#fff",
-                    border: "none",
-                    padding: "7px 14px",
-                    borderRadius: 50,
-                    fontWeight: 700,
-                    fontSize: 12,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    cursor: "pointer",
-                    boxShadow: "0 2px 8px rgba(255,105,61,0.25)",
-                  }}
-                >
-                  <Video size={13} />
-                  <span>Join 1-on-1 Meet</span>
-                </button>
-              )}
 
               <span
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 5,
-                  fontSize: 12,
-                  fontWeight: 700,
+                  gap: 4,
+                  fontSize: 11,
+                  fontWeight: 600,
                   color: "#c2410c",
                   background: "#fff7ed",
                   border: "1px solid #fed7aa",
@@ -2066,10 +2044,10 @@ function DashboardBody({ urlPlan = "" }) {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
-                    fontSize: 11.5,
-                    fontWeight: 700,
+                    fontSize: 10.5,
+                    fontWeight: 600,
                     fontFamily: "monospace",
-                    color: "#475569",
+                    color: "#64748b",
                     background: "#f1f5f9",
                     border: "1px solid #e2e8f0",
                     borderRadius: 6,
@@ -2086,14 +2064,14 @@ function DashboardBody({ urlPlan = "" }) {
           <main className="student-main-content">
             {/* ── TAB 1: CONSOLE OVERVIEW ── */}
             {activeTab === "overview" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {/* Welcome & Student Hero Card */}
                 <div
                   style={{
                     background: "linear-gradient(135deg, #ffffff 0%, #fff7ed 100%)",
                     border: "1px solid rgba(255,105,61,0.22)",
                     borderRadius: 20,
-                    padding: "28px 24px",
+                    padding: "22px 20px",
                     boxShadow: "0 4px 20px rgba(15,23,42,0.03)",
                     position: "relative",
                     overflow: "hidden",
@@ -2107,11 +2085,11 @@ function DashboardBody({ urlPlan = "" }) {
                           style={{
                             display: "inline-flex",
                             alignItems: "center",
-                            gap: 6,
-                            fontSize: 11.5,
-                            fontWeight: 800,
+                            gap: 5,
+                            fontSize: 10,
+                            fontWeight: 700,
                             borderRadius: 50,
-                            padding: "4px 12px",
+                            padding: "3px 10px",
                             color: identity.status === "expired" ? "#dc2626" : "#FF693D",
                             background: identity.status === "expired" ? "rgba(220,38,38,.08)" : "rgba(255,105,61,.1)",
                           }}
@@ -2123,16 +2101,16 @@ function DashboardBody({ urlPlan = "" }) {
                         </span>
 
                         {identity.batchLabel && (
-                          <span style={{ fontSize: 11.5, fontWeight: 700, color: "#475569", background: "#f1f5f9", padding: "4px 10px", borderRadius: 6 }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "3px 8px", borderRadius: 5 }}>
                             {identity.batchLabel}
                           </span>
                         )}
                       </div>
 
-                      <h2 style={{ fontFamily: SORA, fontWeight: 800, fontSize: "clamp(1.4rem, 2.5vw, 1.85rem)", color: "#0f172a", margin: "0 0 8px", lineHeight: 1.2 }}>
+                      <h2 style={{ fontFamily: INTER, fontWeight: 700, fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)", color: "#0f172a", margin: "0 0 6px", lineHeight: 1.25 }}>
                         Welcome back, <span style={{ color: "#FF693D" }}>{(user?.name || "Student").trim().split(/\s+/)[0]}</span> 👋
                       </h2>
-                      <p style={{ color: "#64748b", fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
+                      <p style={{ color: "#64748b", fontSize: 12, lineHeight: 1.55, margin: 0 }}>
                         Track your daily study hours, mock test scores, chapter sprint backlogs and weekly reports in one place.
                       </p>
 
@@ -2143,11 +2121,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#FF693D",
                             color: "#fff",
                             border: "none",
-                            padding: "10px 18px",
-                            borderRadius: 8,
-                            fontFamily: SORA,
-                            fontWeight: 700,
-                            fontSize: 13,
+                            padding: "7px 14px",
+                            borderRadius: 7,
+                            fontFamily: INTER,
+                            fontWeight: 600,
+                            fontSize: 11.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2164,11 +2142,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#fff",
                             color: "#0f172a",
                             border: "1px solid #e2e8f0",
-                            padding: "10px 18px",
-                            borderRadius: 8,
-                            fontFamily: SORA,
-                            fontWeight: 700,
-                            fontSize: 13,
+                            padding: "7px 14px",
+                            borderRadius: 7,
+                            fontFamily: INTER,
+                            fontWeight: 600,
+                            fontSize: 11.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2184,11 +2162,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#fff",
                             color: "#0f172a",
                             border: "1px solid #e2e8f0",
-                            padding: "10px 18px",
-                            borderRadius: 8,
-                            fontFamily: SORA,
-                            fontWeight: 700,
-                            fontSize: 13,
+                            padding: "7px 14px",
+                            borderRadius: 7,
+                            fontFamily: INTER,
+                            fontWeight: 600,
+                            fontSize: 11.5,
                             cursor: "pointer",
                             display: "inline-flex",
                             alignItems: "center",
@@ -2208,27 +2186,27 @@ function DashboardBody({ urlPlan = "" }) {
                           background: "#fff",
                           border: "1px solid #e2e8f0",
                           borderRadius: 14,
-                          padding: "14px 18px",
-                          minWidth: 220,
-                          maxWidth: 320,
+                          padding: "12px 14px",
+                          minWidth: 190,
+                          maxWidth: 280,
                           boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
                         }}
                       >
-                        <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>
                           Assigned Mentor
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <div
                             style={{
-                              width: 38,
-                              height: 38,
+                              width: 32,
+                              height: 32,
                               borderRadius: "50%",
                               background: "rgba(255,105,61,0.12)",
                               color: "#FF693D",
                               display: "grid",
                               placeItems: "center",
-                              fontWeight: 800,
-                              fontSize: 14,
+                              fontWeight: 700,
+                              fontSize: 12,
                               flexShrink: 0,
                               border: "1.5px solid rgba(255,105,61,0.25)",
                             }}
@@ -2236,74 +2214,50 @@ function DashboardBody({ urlPlan = "" }) {
                             {mentor.name?.charAt(0) || "M"}
                           </div>
                           <div>
-                            <div style={{ fontWeight: 800, fontSize: 13.5, color: "#0f172a" }}>{mentor.name}</div>
-                            <div style={{ fontSize: 11.5, color: "#64748b" }}>{mentor.college || "IIT / NIT Mentor"}</div>
+                            <div style={{ fontWeight: 700, fontSize: 12, color: "#0f172a" }}>{mentor.name}</div>
+                            <div style={{ fontSize: 10.5, color: "#94a3b8" }}>{mentor.college || "IIT / NIT Mentor"}</div>
                           </div>
                         </div>
-                        {session?.meetLink && (
-                          <button
-                            onClick={openMeetingRoom}
-                            style={{
-                              marginTop: 12,
-                              width: "100%",
-                              padding: "7px 12px",
-                              borderRadius: 6,
-                              border: "none",
-                              background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
-                              color: "#fff",
-                              fontSize: 11.5,
-                              fontWeight: 700,
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              gap: 6,
-                            }}
-                          >
-                            <Video size={13} />
-                            <span>Join 1-on-1 Call</span>
-                          </button>
-                        )}
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* 1-on-1 Mentor Session Card with Google Meet Link */}
+                {/* 1-on-1 Mentor Session Card */}
                 {session?.meetLink && (
                   <div
                     style={{
                       background: "#ffffff",
-                      borderRadius: 16,
-                      border: "1.5px solid rgba(255,105,61,0.28)",
-                      padding: "16px 20px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,105,61,0.2)",
+                      padding: "12px 16px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       gap: 16,
-                      boxShadow: "0 8px 24px -10px rgba(255,105,61,0.22)",
+                      boxShadow: "0 4px 14px -6px rgba(255,105,61,0.15)",
                       flexWrap: "wrap",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 220, flex: 1 }}>
                       <div
                         style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: 12,
+                          width: 36,
+                          height: 36,
+                          borderRadius: 10,
                           background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
                           display: "grid",
                           placeItems: "center",
                           color: "#fff",
                           flexShrink: 0,
-                          boxShadow: "0 4px 12px rgba(255,105,61,0.3)",
+                          boxShadow: "0 2px 8px rgba(255,105,61,0.2)",
                         }}
                       >
-                        <Video size={22} />
+                        <Video size={16} />
                       </div>
                       <div>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: "#FF693D", textTransform: "uppercase", letterSpacing: 0.4 }}>
                             1-on-1 Mentor Session
                           </span>
                           {session.dateLabel && (
@@ -2313,7 +2267,7 @@ function DashboardBody({ urlPlan = "" }) {
                           )}
                           {session.time && <span style={{ fontSize: 11, color: "#64748b" }}>• {session.time}</span>}
                         </div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>
+                        <div style={{ fontSize: 12.5, fontWeight: 600, color: "#0f172a", marginTop: 1 }}>
                           {session.topic || "Physics Strategy & Mock Test Analysis"}
                         </div>
                       </div>
@@ -2325,11 +2279,11 @@ function DashboardBody({ urlPlan = "" }) {
                         background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
                         color: "#ffffff",
                         border: "none",
-                        padding: "10px 20px",
+                        padding: "7px 14px",
                         borderRadius: 50,
-                        fontFamily: SORA,
-                        fontWeight: 800,
-                        fontSize: 13,
+                        fontFamily: INTER,
+                        fontWeight: 700,
+                        fontSize: 11.5,
                         cursor: "pointer",
                         display: "inline-flex",
                         alignItems: "center",
@@ -2357,31 +2311,31 @@ function DashboardBody({ urlPlan = "" }) {
                   }}
                 >
                   {/* 1. Habit Streak */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
-                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#fff7ed", display: "grid", placeItems: "center" }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Habit Streak</span>
+                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fff7ed", display: "grid", placeItems: "center" }}>
                         <Flame size={16} color="#ea580c" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
-                      {streak} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>days</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
+                      {streak} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>days</span>
                     </div>
-                    <div style={{ fontSize: 11.5, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10.5, color: streak > 0 ? "#15a06e" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
                       {streak > 0 ? "🔥 Consistency on track" : "Log today to build streak"}
                     </div>
                   </div>
 
                   {/* 2. Weekly Hours */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
-                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Weekly Study</span>
+                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
                         <Clock size={16} color="#15a06e" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
-                      {round1(weekHours)} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>/ 40 hrs</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
+                      {round1(weekHours)} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>/ 40 hrs</span>
                     </div>
                     <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 10, marginTop: 8, overflow: "hidden" }}>
                       <div style={{ width: `${Math.min(100, Math.round((weekHours / 40) * 100))}%`, height: "100%", background: "#15a06e", borderRadius: 10 }} />
@@ -2389,33 +2343,33 @@ function DashboardBody({ urlPlan = "" }) {
                   </div>
 
                   {/* 3. Tests Logged */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
-                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#eef2ff", display: "grid", placeItems: "center" }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Tests Logged</span>
+                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#eef2ff", display: "grid", placeItems: "center" }}>
                         <Trophy size={16} color="#6366f1" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
-                      {tests.length} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>tests</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
+                      {tests.length} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>tests</span>
                     </div>
-                    <div style={{ fontSize: 11.5, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10.5, color: tests.length > 0 ? "#6366f1" : "#94a3b8", fontWeight: 600, marginTop: 4 }}>
                       {tests.length > 0 ? `Latest: ${tests[0]?.scored || 0}/${tests[0]?.total || 300}` : "No tests added yet"}
                     </div>
                   </div>
 
                   {/* 4. Pending Backlog */}
-                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 15px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
-                      <div style={{ width: 30, height: 30, borderRadius: 8, background: "#fef2f2", display: "grid", placeItems: "center" }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Backlog</span>
+                      <div style={{ width: 26, height: 26, borderRadius: 6, background: "#fef2f2", display: "grid", placeItems: "center" }}>
                         <Rocket size={16} color="#ef4444" />
                       </div>
                     </div>
-                    <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 24, color: "#0f172a" }}>
-                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 14, fontWeight: 700, color: "#64748b" }}>topics</span>
+                    <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 20, color: "#0f172a" }}>
+                      {(Array.isArray(backlog) ? backlog.filter((b) => !b.done) : []).length} <span style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>topics</span>
                     </div>
-                    <div style={{ fontSize: 11.5, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
+                    <div style={{ fontSize: 10.5, color: backlog.length > 0 ? "#ef4444" : "#15a06e", fontWeight: 600, marginTop: 4 }}>
                       {backlog.length > 0 ? "Target dates active" : "Zero pending backlogs"}
                     </div>
                   </div>
@@ -2427,7 +2381,7 @@ function DashboardBody({ urlPlan = "" }) {
                     background: "#fff",
                     border: "1px solid #e2e8f0",
                     borderRadius: 16,
-                    padding: "20px 22px",
+                    padding: "16px 18px",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
                     display: "flex",
                     alignItems: "center",
@@ -2439,10 +2393,10 @@ function DashboardBody({ urlPlan = "" }) {
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                       <span style={{ width: 8, height: 8, borderRadius: "50%", background: todayEntry ? "#15a06e" : "#f59e0b" }} />
-                      <span style={{ fontSize: 12, fontWeight: 800, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
+                      <span style={{ fontSize: 10.5, fontWeight: 700, color: todayEntry ? "#15a06e" : "#d97706", textTransform: "uppercase", letterSpacing: 0.6 }}>
                         {todayEntry ? "Today's Study Logged" : "Today's Study Pending"}
                       </span>
-                      <span style={{ fontSize: 12, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
+                      <span style={{ fontSize: 10.5, color: "#94a3b8" }}>• {fmtDay(todayIso)}</span>
                     </div>
                     <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>
                       {todayEntry
@@ -2481,10 +2435,10 @@ function DashboardBody({ urlPlan = "" }) {
                       background: todayEntry ? "#f8fafc" : "#FF693D",
                       color: todayEntry ? "#0f172a" : "#fff",
                       border: todayEntry ? "1px solid #e2e8f0" : "none",
-                      padding: "9px 16px",
-                      borderRadius: 8,
-                      fontSize: 12.5,
-                      fontWeight: 700,
+                      padding: "7px 13px",
+                      borderRadius: 7,
+                      fontSize: 11,
+                      fontWeight: 600,
                       cursor: "pointer",
                       display: "inline-flex",
                       alignItems: "center",
@@ -2498,7 +2452,7 @@ function DashboardBody({ urlPlan = "" }) {
 
                 {/* Console Feature Navigation Grid (6 Cards) */}
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 12 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 10 }}>
                     Console Quick Access
                   </div>
                   <div
@@ -2519,11 +2473,11 @@ function DashboardBody({ urlPlan = "" }) {
                             background: "#ffffff",
                             border: "1px solid #e2e8f0",
                             borderRadius: 14,
-                            padding: "16px 18px",
+                            padding: "13px 14px",
                             cursor: "pointer",
                             display: "flex",
                             alignItems: "flex-start",
-                            gap: 14,
+                            gap: 12,
                             transition: "all 0.15s ease",
                             boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
                           }}
@@ -2540,9 +2494,9 @@ function DashboardBody({ urlPlan = "" }) {
                         >
                           <div
                             style={{
-                              width: 38,
-                              height: 38,
-                              borderRadius: 10,
+                              width: 30,
+                              height: 30,
+                              borderRadius: 8,
                               background: "#fff7ed",
                               color: "#FF693D",
                               display: "grid",
@@ -2553,10 +2507,10 @@ function DashboardBody({ urlPlan = "" }) {
                             <Icon size={18} />
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontFamily: SORA, fontWeight: 700, fontSize: 13.5, color: "#0f172a", marginBottom: 3 }}>
+                            <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 12, color: "#0f172a", marginBottom: 2 }}>
                               {item.label}
                             </div>
-                            <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.45 }}>
+                            <div style={{ fontSize: 10.5, color: "#94a3b8", lineHeight: 1.45 }}>
                               {item.desc}
                             </div>
                           </div>
