@@ -511,13 +511,13 @@ export const MENTORSHIP = {
       },
       {
         name: "Saket Kumar",
-        role: "Co-Founder & Operations Head, IIT Roorkee",
+        role: "Operations Head, IIT Roorkee",
         img: "/assets/team/saket.jpg",
         thought: "Execution turns plans into reality. Through strategic operations, we ensure every student gets the precise mentorship needed to overcome obstacles."
       },
       {
         name: "Mayank Singh",
-        role: "Co-Founder & Marketing Head, IIT Roorkee",
+        role: "Marketing Head, IIT Roorkee",
         img: "/assets/team/mayank.jpg",
         thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
       }

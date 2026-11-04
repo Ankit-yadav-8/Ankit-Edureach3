@@ -143,13 +143,13 @@ const QUALIFIER_MENTORS = [
   },
   {
     name: "Saket Kumar",
-    role: "Co-Founder & Operations Head, IIT Roorkee",
+    role: "Operations Head, IIT Roorkee",
     img: imgSaket,
     thought: "Execution turns plans into reality. Through strategic operations, we ensure every student gets the precise mentorship needed to overcome obstacles."
   },
   {
     name: "Mayank Singh",
-    role: "Co-Founder & Marketing Head, IIT Roorkee",
+    role: "Marketing Head, IIT Roorkee",
     img: imgMayank,
     thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
   }

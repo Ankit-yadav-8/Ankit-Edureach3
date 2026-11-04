@@ -52,24 +52,24 @@ const FOUNDERS = [
     name: "Mayank Singh",
     initials: "MS",
     photo: imgMayank,
-    role: "Co-Founder & Marketing Head",
+    role: "Marketing Head",
     accent: "#0EA5A4",
     badge: "Growth & Marketing",
     edu: "B.Tech Mechanical Engineering, IIT Roorkee",
     bio: "Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Point, I lead growth and marketing to ensure that every student gets the right guidance and resources.",
-    skills: ["Co-Founder", "Marketing", "Growth Strategy", "Community Building"],
+    skills: ["Marketing", "Growth Strategy", "Community Building"],
     socials: { linkedin: "#", instagram: "#", whatsapp: WA },
   },
   {
     name: "Saket Kumar",
     initials: "SK",
     photo: imgSaket,
-    role: "Co-Founder & Operations Head",
+    role: "Operations Head",
     accent: "#7C3AED",
     badge: "Operations & Strategy",
     edu: "B.Tech, IIT Roorkee",
     bio: "Hi, I'm Saket Kumar, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. As the Operations Head, I ensure the smooth execution of our platform and mentorship programs to help students overcome challenges.",
-    skills: ["Co-Founder", "Operations", "Strategy", "Execution"],
+    skills: ["Operations", "Strategy", "Execution"],
     socials: { linkedin: "#", instagram: "#", whatsapp: WA },
   },
 ];
@@ -387,7 +387,7 @@ export default function About() {
           <SectionHead icon={Trophy} eyebrow="The Founders" title="Who's behind Campus Point" sub="Two engineers from IIT Roorkee, building the tool every JEE aspirant deserves" />
           <div className="team-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
             {FOUNDERS.map((f, idx) => (
-              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel="Co-Founder" />
+              <TeamCard key={f.name} f={f} idx={idx} badgeIcon={Trophy} badgeLabel="Leadership" />
             ))}
           </div>
         </div>
@@ -446,8 +446,8 @@ export default function About() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginBottom: 64 }}>
               {[
                 ["Ankit Kumar", "Founder & CEO"],
-                ["Mayank Singh", "Co-Founder & Marketing Head"],
-                ["Saket Kumar", "Co-Founder & Operations Head"],
+                ["Mayank Singh", "Marketing Head"],
+                ["Saket Kumar", "Operations Head"],
               ].map(([name, role]) => (
                 <div key={name} style={{
                   display: "flex", flexDirection: "column", gap: 3,
@@ -534,7 +534,7 @@ export default function About() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
             {[
-              { icon: "🏆", title: "AIR 3846", sub: "Co-Founder's JEE Advanced rank - built this from lived experience", color: "#FF693D" },
+              { icon: "🏆", title: "AIR 3846", sub: "Founder's JEE Advanced rank - built this from lived experience", color: "#FF693D" },
               { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },
               { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students - the same IIT grind that shaped the platform", color: "#2EC4B6" },
             ].map(({ icon, title, sub, color }, i) => (
