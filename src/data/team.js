@@ -72,11 +72,21 @@ export const TEAM = [
     exam: "JEE Advanced",
     email: "campuspath6@gmail.com",
     bio: `Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Point, I lead growth and marketing to ensure that every student gets the right guidance and resources.`,
-    skills: ["Marketing", "Growth Strategy", "Community Building"],
+    skills: ["Marketing", "Growth Strategy", "Community Building", "Student Outreach", "Brand Partnerships", "Campaign Management"],
     projects: [
       {
-        name: "CampusPoint Portal",
-        desc: "End-to-end JEE college discovery platform covering 850+ institutes - IITs, NITs, IIITs, GFTIs and private - with filters, maps and comparisons.",
+        name: "Student Growth & Outreach Engine",
+        desc: "Scaled Campus Point organic student acquisition across 150+ coaching hubs, schools, and digital communities nationwide.",
+        tag: "Growth Strategy",
+      },
+      {
+        name: "JEE Aspirant Community Hub",
+        desc: "Built high-engagement WhatsApp and Telegram student networks for real-time exam updates, daily problem solving, and peer motivation.",
+        tag: "Community",
+      },
+      {
+        name: "Brand & Content Marketing Campaigns",
+        desc: "Directed student-centric counselling awareness campaigns, YouTube webinars, and strategic social guides reaching 50,000+ JEE aspirants.",
         tag: "Marketing",
       },
     ],
@@ -101,12 +111,22 @@ export const TEAM = [
     exam: "JEE Advanced",
     email: "campuspath6@gmail.com",
     bio: `Hi, I'm Saket Kumar, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. As the Operations Head, I ensure the smooth execution of our platform and mentorship programs to help students overcome challenges.`,
-    skills: ["Operations", "Strategy", "Execution"],
+    skills: ["Operations", "Strategy", "Execution", "Program Management", "Workflow Automation", "Student Success"],
     projects: [
       {
-        name: "CampusPoint Portal",
-        desc: "End-to-end JEE college discovery platform covering 850+ institutes - IITs, NITs, IIITs, GFTIs and private - with filters, maps and comparisons.",
+        name: "1-on-1 Mentorship Operations Framework",
+        desc: "Streamlined mentor-mentee matching, weekly video call schedules, and personalized progress milestone tracking across all active batches.",
         tag: "Operations",
+      },
+      {
+        name: "Cutoff Data & College Audit Pipeline",
+        desc: "Supervised data accuracy audits across 850+ colleges and multi-year JoSAA/CSAB rounds to ensure reliable rank prediction benchmarks.",
+        tag: "Data & Quality",
+      },
+      {
+        name: "Aspirant Helpdesk & Strategy Audits",
+        desc: "Designed diagnostic syllabus audit templates and fast-track resolution workflows to resolve student academic hurdles within 48 hours.",
+        tag: "Strategy",
       },
     ],
     socials: {
