@@ -421,10 +421,10 @@ export default function MentorTracking({ adminToken }) {
             <PieIcon size={18} color={ORANGE} />
           </div>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
+            <h2 style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", margin: 0, fontFamily: "Sora, sans-serif" }}>
               Mentor Tracking & Performance Analytics
             </h2>
-            <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
+            <p style={{ fontSize: 11, color: "#64748b", margin: 0 }}>
               Live server-side activity audits, login counts, task completions & comparative doughnut charts
             </p>
           </div>
@@ -709,39 +709,39 @@ export default function MentorTracking({ adminToken }) {
           gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
           gap: 14,
         }}>
-          <div style={{ background: "#ffffff", borderRadius: 14, padding: "14px 18px", border: "1px solid #f0e9e0" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Mentors</span>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+          <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #f0e9e0" }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Mentors</span>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 3 }}>
               {summary.totalMentors}
-              <span style={{ fontSize: 12, color: "#16a34a", fontWeight: 600, marginLeft: 6 }}>
+              <span style={{ fontSize: 10.5, color: "#16a34a", fontWeight: 600, marginLeft: 6 }}>
                 ({summary.activeMentorsCount} active)
               </span>
             </div>
           </div>
 
-          <div style={{ background: "#ffffff", borderRadius: 14, padding: "14px 18px", border: "1px solid #f0e9e0" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Mentor Logins</span>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+          <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #f0e9e0" }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Mentor Logins</span>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 3 }}>
               {summary.totalLoginsSum}
-              <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500, marginLeft: 6 }}>in period</span>
+              <span style={{ fontSize: 10.5, color: "#64748b", fontWeight: 500, marginLeft: 6 }}>in period</span>
             </div>
           </div>
 
-          <div style={{ background: "#ffffff", borderRadius: 14, padding: "14px 18px", border: "1px solid #f0e9e0" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Assigned Students</span>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+          <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #f0e9e0" }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Assigned Students</span>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 3 }}>
               {summary.totalAssignedStudentsSum}
-              <span style={{ fontSize: 12, color: "#2563eb", fontWeight: 600, marginLeft: 6 }}>
+              <span style={{ fontSize: 10.5, color: "#2563eb", fontWeight: 600, marginLeft: 6 }}>
                 ({summary.totalUniqueStudentsLoggedIn} logged in)
               </span>
             </div>
           </div>
 
-          <div style={{ background: "#ffffff", borderRadius: 14, padding: "14px 18px", border: "1px solid #f0e9e0" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Tasks Status</span>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 4 }}>
+          <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #f0e9e0" }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Tasks Status</span>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 3 }}>
               {summary.totalTasksCompletedSum}
-              <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500, marginLeft: 6 }}>
+              <span style={{ fontSize: 10.5, color: "#64748b", fontWeight: 500, marginLeft: 6 }}>
                 / {summary.totalTasksAssignedSum} ({summary.avgCompletionRate}%)
               </span>
             </div>

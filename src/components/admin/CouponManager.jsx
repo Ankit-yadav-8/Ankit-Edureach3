@@ -170,52 +170,52 @@ export default function CouponManager({ adminKey }) {
   return (
     <div style={{ animation: "admUp .4s cubic-bezier(.4,0,.2,1) both" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
-          <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "1.3rem", fontWeight: 800, margin: 0, color: "#0d1b3e", display: "flex", alignItems: "center", gap: 10 }}>
-            <Tag size={20} color={ORANGE} /> Coupon Manager
+          <h2 style={{ fontFamily: "Sora, sans-serif", fontSize: "1.15rem", fontWeight: 800, margin: 0, color: "#0d1b3e", display: "flex", alignItems: "center", gap: 8 }}>
+            <Tag size={18} color={ORANGE} /> Coupon Manager
           </h2>
-          <p style={{ color: "#6b7280", fontSize: 14, margin: "4px 0 0" }}>Create and manage flat-amount discount coupons for mentorship plans.</p>
+          <p style={{ color: "#6b7280", fontSize: 11.5, margin: "3px 0 0" }}>Create and manage flat-amount discount coupons for mentorship plans.</p>
         </div>
         {!adding && (
           <button onClick={() => setAdding(true)} disabled={busy}
-            style={{ display: "flex", alignItems: "center", gap: 6, background: ORANGE, color: "#fff", border: "none", padding: "10px 18px", borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: "pointer", boxShadow: "0 4px 14px rgba(255,105,61,0.3)" }}>
-            <Plus size={16} /> New Coupon
+            style={{ display: "flex", alignItems: "center", gap: 6, background: ORANGE, color: "#fff", border: "none", padding: "7px 14px", borderRadius: 8, fontWeight: 700, fontSize: 11.5, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,105,61,0.25)" }}>
+            <Plus size={14} /> New Coupon
           </button>
         )}
       </div>
 
       {err && (
-        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", color: "#dc2626", padding: "14px 18px", borderRadius: 12, fontSize: 13.5, fontWeight: 600, marginBottom: 24 }}>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", color: "#dc2626", padding: "10px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600, marginBottom: 20 }}>
           {err}
         </div>
       )}
 
       {/* Add Form */}
       {adding && (
-        <div style={{ background: "#fff", border: "1px solid #f0e9e0", borderRadius: 16, padding: "28px 32px", marginBottom: 32, boxShadow: "0 10px 30px -10px rgba(13,27,62,.06)" }}>
-          <h3 style={{ margin: "0 0 20px", fontSize: "1.15rem", fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0d1b3e" }}>Create New Coupon</h3>
+        <div style={{ background: "#fff", border: "1px solid #f0e9e0", borderRadius: 14, padding: "20px 24px", marginBottom: 24, boxShadow: "0 6px 20px -8px rgba(13,27,62,.04)" }}>
+          <h3 style={{ margin: "0 0 16px", fontSize: "1rem", fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0d1b3e" }}>Create New Coupon</h3>
           
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             <label style={{ display: "block" }}>
-              <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Coupon Code</span>
-              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. DIWALI3499" style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, textTransform: "uppercase", outline: "none", fontWeight: 700, color: "#111827", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
+              <span style={{ display: "block", fontSize: 10.5, fontWeight: 700, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Coupon Code</span>
+              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. DIWALI3499" style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, textTransform: "uppercase", outline: "none", fontWeight: 700, color: "#111827", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
             </label>
             <label style={{ display: "block" }}>
-              <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Discount Amount (₹)</span>
-              <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="e.g. 500" style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", fontWeight: 600, transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
+              <span style={{ display: "block", fontSize: 10.5, fontWeight: 700, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Discount Amount (₹)</span>
+              <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="e.g. 500" style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, outline: "none", fontWeight: 600, transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
             </label>
             <label style={{ display: "block" }}>
-              <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Valid Region</span>
-              <select value={region} onChange={(e) => setRegion(e.target.value)} style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", background: "#fff", fontWeight: 600, cursor: "pointer", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"}>
+              <span style={{ display: "block", fontSize: 10.5, fontWeight: 700, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Valid Region</span>
+              <select value={region} onChange={(e) => setRegion(e.target.value)} style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, outline: "none", background: "#fff", fontWeight: 600, cursor: "pointer", transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"}>
                 <option value="both">Both Indian & International</option>
                 <option value="indian">Indian Only</option>
                 <option value="international">International Only</option>
               </select>
             </label>
             <label style={{ display: "block" }}>
-              <span style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#6b7280", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Max Uses (optional)</span>
-              <input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Leave blank for unlimited" style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", fontWeight: 600, transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
+              <span style={{ display: "block", fontSize: 10.5, fontWeight: 700, color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Max Uses (optional)</span>
+              <input type="number" value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Leave blank for unlimited" style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, outline: "none", fontWeight: 600, transition: "border-color 0.2s" }} onFocus={(e) => e.target.style.borderColor = ORANGE} onBlur={(e) => e.target.style.borderColor = "#e5e7eb"} />
             </label>
           </div>
 

@@ -282,39 +282,39 @@ function MentorRow({ token, mentor, eligibleStudents = [], onChange, onDelete, o
         {/* Left Side: Identity */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 240, flex: 1 }}>
           <div style={{
-            width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: "grid", placeItems: "center",
+            width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "grid", placeItems: "center",
             background: mentor.active ? "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)" : "#cbd5e1",
-            color: "#ffffff", fontWeight: 800, fontSize: 15, fontFamily: "Sora, sans-serif",
-            boxShadow: mentor.active ? "0 4px 12px rgba(255,105,61,.28)" : "none",
+            color: "#ffffff", fontWeight: 800, fontSize: 13, fontFamily: "Sora, sans-serif",
+            boxShadow: mentor.active ? "0 3px 10px rgba(255,105,61,.24)" : "none",
           }}>
             {mentor.name?.charAt(0)?.toUpperCase() || "M"}
           </div>
 
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "Sora, sans-serif", fontSize: 14, fontWeight: 800, color: "#0f172a" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "Sora, sans-serif", fontSize: 13, fontWeight: 800, color: "#0f172a" }}>
                 {mentor.name}
               </span>
               <span style={{
-                fontSize: 10, fontWeight: 800,
+                fontSize: 9.5, fontWeight: 800,
                 color: mentor.active ? "#15803d" : RED,
                 background: mentor.active ? "#f0fdf4" : "#fef2f2",
                 border: `1px solid ${mentor.active ? "#bbf7d0" : "#fecaca"}`,
-                borderRadius: 6, padding: "1px 7px", textTransform: "uppercase", letterSpacing: 0.5,
+                borderRadius: 5, padding: "1px 6px", textTransform: "uppercase", letterSpacing: 0.5,
               }}>
                 {mentor.active ? "Active" : "Deactivated"}
               </span>
               {mentor.mustChangePassword && mentor.active && (
                 <span style={{
-                  fontSize: 10, fontWeight: 800, color: "#92400e", background: "#fffbeb",
-                  border: "1px solid #fde68a", borderRadius: 6, padding: "1px 7px",
+                  fontSize: 9.5, fontWeight: 800, color: "#92400e", background: "#fffbeb",
+                  border: "1px solid #fde68a", borderRadius: 5, padding: "1px 6px",
                 }}>
                   Pending 1st Login
                 </span>
               )}
             </div>
 
-            <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 2, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 2, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
               <span>{mentor.email}</span>
               {mentor.college && <span>• {mentor.college}</span>}
               {mentor.phone && <span>• {mentor.phone}</span>}

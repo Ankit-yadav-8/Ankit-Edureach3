@@ -40,9 +40,9 @@ const SUBJECTS_BY_EXAM = {
 
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "-");
 
-const card = { background: "var(--page-bg)", borderRadius: 16, border: "1px solid #f0e9e0", boxShadow: "0 8px 30px rgba(13,27,62,.06)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
-const lbl = { fontSize: 12, fontWeight: 700, color: MUTE, marginBottom: 6, display: "block" };
-const inp = { width: "100%", height: 40, padding: "0 12px", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: NAVY };
+const card = { background: "var(--page-bg)", borderRadius: 14, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.04)", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" };
+const lbl = { fontSize: 10.5, fontWeight: 700, color: MUTE, marginBottom: 4, display: "block" };
+const inp = { width: "100%", height: 34, padding: "0 10px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: NAVY };
 
 export default function TestUpload({ token }) {
   const [plan, setPlan] = useState(PLANS[0].key);

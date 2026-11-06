@@ -710,6 +710,42 @@ export default function Admin() {
           background: transparent !important;
         }
 
+        /* ── GLOBAL ADMIN TYPOGRAPHY (MATCHING STUDENT DASHBOARD COMPACT SCALE) ── */
+        .adm-suite-root {
+          font-size: 11.5px !important;
+          line-height: 1.45 !important;
+        }
+        .adm-suite-root h1 {
+          font-size: 1.25rem !important;
+          letter-spacing: -0.3px;
+        }
+        .adm-suite-root h2 {
+          font-size: 1.12rem !important;
+          letter-spacing: -0.2px;
+        }
+        .adm-suite-root h3 {
+          font-size: 0.92rem !important;
+          letter-spacing: -0.15px;
+        }
+        .adm-suite-root h4 {
+          font-size: 0.82rem !important;
+        }
+        .adm-suite-root input,
+        .adm-suite-root select,
+        .adm-suite-root textarea {
+          font-size: 11.5px !important;
+        }
+        .adm-suite-root table {
+          font-size: 11px !important;
+        }
+        .adm-suite-root th {
+          font-size: 9.5px !important;
+          letter-spacing: 0.4px;
+        }
+        .adm-suite-root td {
+          font-size: 11px !important;
+        }
+
         @keyframes admUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
         @keyframes admSpin { to { transform: rotate(360deg); } }
         .adm-fade { animation: admUp .3s cubic-bezier(.4,0,.2,1) both; }
@@ -729,16 +765,16 @@ export default function Admin() {
         .adm-nav-side-btn {
           display: flex;
           align-items: center;
-          gap: 11px;
+          gap: 10px;
           width: 100%;
-          padding: 9px 12px;
+          padding: 7px 11px;
           border-radius: 8px;
           border: 1px solid transparent;
           cursor: pointer;
           text-align: left;
           background: transparent;
           color: #475569;
-          font-size: 13px;
+          font-size: 11.5px;
           font-weight: 600;
           transition: all 0.15s ease;
           box-sizing: border-box;
@@ -1041,10 +1077,10 @@ export default function Admin() {
                     </span>
                   </span>
                   <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 13.5, color: "#0f172a", lineHeight: 1.2 }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 12.5, color: "#0f172a", lineHeight: 1.2 }}>
                       Campus Point
                     </span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: ORANGE, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+                    <span style={{ fontSize: 9.5, fontWeight: 700, color: ORANGE, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
                       Admin Console
                     </span>
                   </div>
@@ -1170,10 +1206,10 @@ export default function Admin() {
               }}
             >
               {NAV_GROUPS.map((group, gi) => (
-                <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   <div
                     style={{
-                      fontSize: 10,
+                      fontSize: 9.5,
                       fontWeight: 800,
                       color: "#94a3b8",
                       textTransform: "uppercase",
@@ -1195,7 +1231,7 @@ export default function Admin() {
                         }}
                         className={`adm-nav-side-btn ${active ? "active" : ""}`}
                       >
-                        <Icon size={17} color={active ? ORANGE : "#64748b"} />
+                        <Icon size={16} color={active ? ORANGE : "#64748b"} />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ lineHeight: 1.25 }}>{item.label}</div>
                         </div>
@@ -1204,9 +1240,9 @@ export default function Admin() {
                             style={{
                               background: active ? "rgba(255,105,61,0.15)" : "#f1f5f9",
                               color: active ? ORANGE : "#64748b",
-                              fontSize: 11,
+                              fontSize: 10,
                               fontWeight: 700,
-                              padding: "2px 7px",
+                              padding: "1px 6px",
                               borderRadius: 20,
                             }}
                           >
@@ -1218,9 +1254,9 @@ export default function Admin() {
                             style={{
                               background: active ? ORANGE : "#eff6ff",
                               color: active ? "#ffffff" : "#2563eb",
-                              fontSize: 10,
+                              fontSize: 9.5,
                               fontWeight: 800,
-                              padding: "2px 6px",
+                              padding: "1px 5px",
                               borderRadius: 4,
                             }}
                           >
@@ -1228,7 +1264,7 @@ export default function Admin() {
                           </span>
                         )}
                         {active && !item.count && !item.badge && (
-                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: ORANGE }} />
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: ORANGE }} />
                         )}
                       </button>
                     );
@@ -1310,15 +1346,15 @@ export default function Admin() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "2px 0", minWidth: 0 }}>
                 <div
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     borderRadius: "50%",
                     background: `${ORANGE}18`,
                     color: ORANGE,
                     display: "grid",
                     placeItems: "center",
                     fontWeight: 800,
-                    fontSize: 13.5,
+                    fontSize: 12,
                     flexShrink: 0,
                     border: `1.5px solid ${ORANGE}30`,
                   }}
@@ -1326,10 +1362,10 @@ export default function Admin() {
                   A
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontWeight: 800, fontSize: 12, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     Platform Admin
                   </div>
-                  <div style={{ fontSize: 11, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={primaryAdminEmail}>
+                  <div style={{ fontSize: 10.5, color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={primaryAdminEmail}>
                     {primaryAdminEmail}
                   </div>
                 </div>
@@ -1339,18 +1375,18 @@ export default function Admin() {
                 onClick={logout}
                 style={{
                   width: "100%",
-                  padding: "10px 14px",
+                  padding: "8px 12px",
                   borderRadius: 8,
                   border: "1px solid #e2e8f0",
                   background: "#f8fafc",
                   color: "#475569",
-                  fontSize: 13,
+                  fontSize: 11.5,
                   fontWeight: 700,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 8,
+                  gap: 7,
                   transition: "all .15s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -1403,75 +1439,94 @@ export default function Admin() {
             ) : tab === "users" ? (
               <>
                 {/* Users Stat Cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 14, marginBottom: 20 }}>
-                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
-                      <Users size={20} color={ORANGE} />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 12, marginBottom: 18 }}>
+                  <div style={{ background: "#ffffff", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(15,23,42,.02)" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+                      <Users size={18} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, color: "#0f172a", lineHeight: 1 }}>{total}</div>
-                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Total Student Signups</div>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, color: "#0f172a", lineHeight: 1 }}>{total}</div>
+                      <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 3, fontWeight: 500 }}>Total Student Signups</div>
                     </div>
                   </div>
 
-                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 10, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                      <Calendar size={20} color="#16a34a" />
+                  <div style={{ background: "#ffffff", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(15,23,42,.02)" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={18} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.createdAt);
                           const now = new Date();
                           return d.toDateString() === now.toDateString();
                         }).length}
                       </div>
-                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Joined Today</div>
+                      <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 3, fontWeight: 500 }}>Joined Today</div>
                     </div>
                   </div>
 
-                  <div style={{ background: "#ffffff", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(15,23,42,.03)" }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
-                      <Clock size={20} color={ORANGE} />
+                  <div style={{ background: "#ffffff", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(15,23,42,.02)" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}>
+                      <Clock size={18} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 22, lineHeight: 1, color: "#0f172a" }}>
+                      <div style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0f172a" }}>
                         {users.filter(u => {
                           const d = new Date(u.lastLogin);
                           const now = new Date();
                           return (now - d) < 24 * 60 * 60 * 1000;
                         }).length}
                       </div>
-                      <div style={{ fontSize: 11.5, color: "#64748b", marginTop: 4, fontWeight: 500 }}>Active in Last 24h</div>
+                      <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 3, fontWeight: 500 }}>Active in Last 24h</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Users Table */}
-                <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,.03)" }}>
-                  <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 1px 6px rgba(15,23,42,.02)" }}>
+                  <div style={{ padding: "12px 16px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 14, fontFamily: "Sora, sans-serif" }}>
+                      <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 12.5, fontFamily: "Sora, sans-serif" }}>
                         Registered Students Directory
                       </span>
-                      <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 8px", fontSize: 11, color: "#475569", fontWeight: 700 }}>
+                      <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 7px", fontSize: 10, color: "#475569", fontWeight: 700 }}>
                         {filtered.length}
                       </span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <input
+                        placeholder="Search student by name, phone, email, coaching…"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{ height: 32, padding: "0 10px", borderRadius: 7, border: "1.5px solid #cbd5e1", fontSize: 11.5, outline: "none", minWidth: 240, fontFamily: "inherit" }}
+                      />
+                      <button
+                        onClick={downloadCsv}
+                        style={{
+                          height: 32, padding: "0 12px", borderRadius: 7, border: "1px solid #e2e8f0",
+                          background: "#ffffff", color: "#334155", fontSize: 11.5, fontWeight: 700,
+                          cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6,
+                        }}
+                      >
+                        <Download size={13} />
+                        <span>Export CSV</span>
+                      </button>
                     </div>
                   </div>
 
                   {filtered.length === 0 ? (
-                    <div style={{ padding: "50px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+                    <div style={{ padding: "40px 20px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
                       {search ? "No students match your search." : "No signups yet."}
                     </div>
                   ) : (
                     <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
-                      <table style={{ width: "100%", minWidth: 950, borderCollapse: "collapse", fontSize: 12 }}>
+                      <table style={{ width: "100%", minWidth: 950, borderCollapse: "collapse", fontSize: 11 }}>
                         <thead>
                           <tr style={{ background: "#f8fafc", borderBottom: "1.5px solid #e2e8f0" }}>
                             {["#", "", "Student", "Email", "Phone", "Coaching", "Class", "Joined", "Last Login"].map((h, hi) => (
                               <th key={hi} style={{
-                                padding: "10px 14px", textAlign: "left", fontSize: 10.5,
+                                padding: "8px 12px", textAlign: "left", fontSize: 9.5,
                                 fontWeight: 800, color: "#64748b", letterSpacing: ".05em",
                                 textTransform: "uppercase", whiteSpace: "nowrap",
                               }}>{h}</th>
@@ -1488,55 +1543,55 @@ export default function Admin() {
                                   onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
                                   onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#f8fafc" : "transparent"}
                                 >
-                                  <td style={{ padding: "11px 14px", fontSize: 11, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>
+                                  <td style={{ padding: "9px 12px", fontSize: 10.5, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>
                                     {i + 1}
                                   </td>
-                                  <td style={{ padding: "11px 6px", width: 22, color: "#94a3b8" }}>
-                                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                                  <td style={{ padding: "9px 6px", width: 22, color: "#94a3b8" }}>
+                                    {isOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
                                   </td>
-                                  <td style={{ padding: "11px 14px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                                  <td style={{ padding: "9px 12px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                       <div style={{
-                                        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                                        width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
                                         background: avatarColor(u.name || u.phone),
                                         color: "#fff", display: "grid", placeItems: "center",
-                                        fontSize: 12, fontWeight: 800,
+                                        fontSize: 11, fontWeight: 800,
                                       }}>
                                         {avatar(u.name, u.phone)}
                                       </div>
-                                      <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 12.5 }}>
+                                      <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 11.5 }}>
                                         {u.name || "-"}
                                       </span>
                                     </div>
                                   </td>
-                                  <td style={{ padding: "11px 14px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
-                                      <Mail size={12} color="#94a3b8" />
+                                  <td style={{ padding: "9px 12px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 11 }}>
+                                      <Mail size={11} color="#94a3b8" />
                                       {u.email || "-"}
                                     </div>
                                   </td>
-                                  <td style={{ padding: "11px 14px" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
-                                      <Phone size={12} color="#94a3b8" />
+                                  <td style={{ padding: "9px 12px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 11 }}>
+                                      <Phone size={11} color="#94a3b8" />
                                       {u.phone || "-"}
                                     </div>
                                   </td>
-                                  <td style={{ padding: "11px 14px", fontSize: 12, color: "#475569" }}>
+                                  <td style={{ padding: "9px 12px", fontSize: 11, color: "#475569" }}>
                                     {u.coaching || <span style={{ color: "#cbd5e1" }}>-</span>}
                                   </td>
-                                  <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#0f172a", fontWeight: 700 }}>
-                                    <span style={{ background: "#f1f5f9", padding: "2px 7px", borderRadius: 5 }}>
+                                  <td style={{ padding: "9px 12px", fontSize: 10.5, color: "#0f172a", fontWeight: 700 }}>
+                                    <span style={{ background: "#f1f5f9", padding: "1px 6px", borderRadius: 4 }}>
                                       {u.studentClass || "-"}
                                     </span>
                                   </td>
-                                  <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#64748b", whiteSpace: "nowrap" }}>
+                                  <td style={{ padding: "9px 12px", fontSize: 10.5, color: "#64748b", whiteSpace: "nowrap" }}>
                                     {fmtDate(u.createdAt)}
                                   </td>
-                                  <td style={{ padding: "11px 14px" }}>
+                                  <td style={{ padding: "9px 12px" }}>
                                     <span style={{
-                                      fontSize: 11, color: "#334155",
-                                      background: "#f1f5f9", borderRadius: 6,
-                                      padding: "3px 7px", whiteSpace: "nowrap", fontWeight: 600,
+                                      fontSize: 10.5, color: "#334155",
+                                      background: "#f1f5f9", borderRadius: 5,
+                                      padding: "2px 6px", whiteSpace: "nowrap", fontWeight: 600,
                                     }}>
                                       {fmtDate(u.lastLogin)}
                                     </span>
@@ -1570,47 +1625,47 @@ export default function Admin() {
             ) : (
               <>
                 {/* Payments Stat Cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 16, marginBottom: 28 }}>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 18, padding: "20px 24px", color: "#fff", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 10px 30px rgba(60,42,102,.28)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
-                      <CreditCard size={22} color={ORANGE} />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))", gap: 12, marginBottom: 20 }}>
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#1a1d42 0%,#3c2a66 100%)", borderRadius: 14, padding: "14px 18px", color: "#fff", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 4px 14px rgba(60,42,102,.18)" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: `${ORANGE}33`, display: "grid", placeItems: "center" }}>
+                      <CreditCard size={19} color={ORANGE} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1 }}>{payTotal}</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,.55)", marginTop: 4 }}>Successful payments</div>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, lineHeight: 1 }}>{payTotal}</div>
+                      <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.65)", marginTop: 3 }}>Successful payments</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                      <IndianRupee size={22} color="#16a34a" />
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #f0e9e0", boxShadow: "0 2px 10px rgba(13,27,62,.03)" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <IndianRupee size={19} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0d1b3e" }}>
                         ₹{revenue.toLocaleString("en-IN")}
                       </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Total revenue</div>
+                      <div style={{ fontSize: 10.5, color: "#888", marginTop: 3 }}>Total revenue</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #f0e9e0", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
-                      <Calendar size={22} color="#16a34a" />
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fbf7f2)", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #f0e9e0", boxShadow: "0 2px 10px rgba(13,27,62,.03)" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: "#f0fdf4", display: "grid", placeItems: "center" }}>
+                      <Calendar size={19} color="#16a34a" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#0d1b3e" }}>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#0d1b3e" }}>
                         {payments.filter(p => new Date(p.createdAt).toDateString() === new Date().toDateString()).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Paid today</div>
+                      <div style={{ fontSize: 10.5, color: "#888", marginTop: 3 }}>Paid today</div>
                     </div>
                   </div>
-                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 18, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #fed7aa", boxShadow: "0 4px 18px rgba(13,27,62,.05)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "#ffedd5", display: "grid", placeItems: "center" }}>
-                      <Mail size={22} color="#ea580c" />
+                  <div className="adm-stat" style={{ background: "linear-gradient(135deg,#ffffff,#fff7ed)", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, border: "1px solid #fed7aa", boxShadow: "0 2px 10px rgba(13,27,62,.03)" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: "#ffedd5", display: "grid", placeItems: "center" }}>
+                      <Mail size={19} color="#ea580c" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.8rem", lineHeight: 1, color: "#ea580c" }}>
+                      <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 19, lineHeight: 1, color: "#ea580c" }}>
                         {payments.filter(p => !p.confirmationEmailSent).length}
                       </div>
-                      <div style={{ fontSize: 12, color: "#9a3412", marginTop: 4, fontWeight: 600 }}>Awaiting email approval</div>
+                      <div style={{ fontSize: 10.5, color: "#9a3412", marginTop: 3, fontWeight: 600 }}>Awaiting email approval</div>
                     </div>
                   </div>
                 </div>
@@ -1623,6 +1678,7 @@ export default function Admin() {
                   toggleRow={toggleRow}
                   onApproveEmail={handleApproveEmail}
                   approvingId={approvingId}
+                  onExport={downloadPaymentsCsv}
                 />
               </>
             )}
@@ -1635,7 +1691,7 @@ export default function Admin() {
 }
 
 /* ── Payments tab: successful enrolments only ─────────────────────── */
-function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId }) {
+function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApproveEmail, approvingId, onExport }) {
   const totalAmount = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
   const approvedCount = payments.filter((p) => p.confirmationEmailSent).length;
   const pendingCount = payments.length - approvedCount;
@@ -1644,37 +1700,52 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
 
-      <div style={{ background: "#ffffff", borderRadius: 16, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 2px 10px rgba(15,23,42,0.03)" }}>
+      <div style={{ background: "#ffffff", borderRadius: 14, border: "1px solid #f0e9e0", overflow: "hidden", boxShadow: "0 1px 6px rgba(15,23,42,0.02)" }}>
         {/* Search bar */}
-        <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ padding: "12px 16px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 14, fontFamily: "Sora, sans-serif" }}>
+            <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 12.5, fontFamily: "Sora, sans-serif" }}>
               Successful Enrollments & Payments
             </span>
-            <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 8px", fontSize: 11, color: "#475569", fontWeight: 700 }}>
+            <span style={{ background: "#f1f5f9", borderRadius: 12, padding: "2px 7px", fontSize: 10, color: "#475569", fontWeight: 700 }}>
               {payments.length}
             </span>
           </div>
-          <input
-            placeholder="Search student, email, phone or plan…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ height: 34, padding: "0 12px", borderRadius: 8, border: "1.5px solid #cbd5e1", fontSize: 12, outline: "none", minWidth: 240, fontFamily: "inherit" }}
-          />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <input
+              placeholder="Search student, email, phone or plan…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ height: 32, padding: "0 10px", borderRadius: 7, border: "1.5px solid #cbd5e1", fontSize: 11.5, outline: "none", minWidth: 240, fontFamily: "inherit" }}
+            />
+            {onExport && (
+              <button
+                onClick={onExport}
+                style={{
+                  height: 32, padding: "0 12px", borderRadius: 7, border: "1px solid #e2e8f0",
+                  background: "#ffffff", color: "#334155", fontSize: 11.5, fontWeight: 700,
+                  cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6,
+                }}
+              >
+                <Download size={13} />
+                <span>Export CSV</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {payments.length === 0 ? (
-          <div style={{ padding: "50px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+          <div style={{ padding: "40px 20px", textAlign: "center", color: "#94a3b8", fontSize: 12 }}>
             {search ? "No payments match your search." : "No successful payments recorded yet."}
           </div>
         ) : (
           <div className="cp-custom-scroll" style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", minWidth: 980, borderCollapse: "collapse", fontSize: 12 }}>
+            <table style={{ width: "100%", minWidth: 980, borderCollapse: "collapse", fontSize: 11 }}>
               <thead>
                 <tr style={{ background: "#f8fafc", borderBottom: "1.5px solid #e2e8f0" }}>
                   {["#", "", "Customer", "Email", "Phone", "Plan", "Amount", "Email Approval", "Status", "Paid On"].map((h, hi) => (
                     <th key={hi} style={{
-                      padding: "10px 14px", textAlign: "left", fontSize: 10.5,
+                      padding: "8px 12px", textAlign: "left", fontSize: 9.5,
                       fontWeight: 800, color: "#64748b", letterSpacing: ".05em",
                       textTransform: "uppercase", whiteSpace: "nowrap",
                     }}>{h}</th>
@@ -1692,45 +1763,45 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
                         onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
                         onMouseLeave={e => e.currentTarget.style.background = isOpen ? "#f8fafc" : "transparent"}
                       >
-                        <td style={{ padding: "11px 14px", fontSize: 11, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>{i + 1}</td>
-                        <td style={{ padding: "11px 6px", width: 22, color: "#94a3b8" }}>
-                          {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        <td style={{ padding: "9px 12px", fontSize: 10.5, color: "#94a3b8", fontFamily: "monospace", width: 36 }}>{i + 1}</td>
+                        <td style={{ padding: "9px 6px", width: 22, color: "#94a3b8" }}>
+                          {isOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
                         </td>
-                        <td style={{ padding: "11px 14px" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                        <td style={{ padding: "9px 12px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                             <div style={{
-                              width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                              width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
                               background: avatarColor(p.name || p.phone),
                               color: "#fff", display: "grid", placeItems: "center",
-                              fontSize: 12, fontWeight: 800,
+                              fontSize: 11, fontWeight: 800,
                             }}>
                               {avatar(p.name, p.phone)}
                             </div>
-                            <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 12.5 }}>{p.name || "-"}</span>
+                            <span style={{ fontWeight: 700, color: "#0f172a", fontSize: 11.5 }}>{p.name || "-"}</span>
                           </div>
                         </td>
-                        <td style={{ padding: "11px 14px" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
-                            <Mail size={12} color="#94a3b8" />{p.email || "-"}
+                        <td style={{ padding: "9px 12px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 11 }}>
+                            <Mail size={11} color="#94a3b8" />{p.email || "-"}
                           </div>
                         </td>
-                        <td style={{ padding: "11px 14px" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 12 }}>
-                            <Phone size={12} color="#94a3b8" />{p.phone || "-"}
+                        <td style={{ padding: "9px 12px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569", fontSize: 11 }}>
+                            <Phone size={11} color="#94a3b8" />{p.phone || "-"}
                           </div>
                         </td>
-                        <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#475569" }}>{p.planLabel || p.plan || "-"}</td>
-                        <td style={{ padding: "11px 14px", fontSize: 12.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }}>
+                        <td style={{ padding: "9px 12px", fontSize: 11, color: "#475569" }}>{p.planLabel || p.plan || "-"}</td>
+                        <td style={{ padding: "9px 12px", fontSize: 11.5, color: "#0f172a", fontWeight: 800, whiteSpace: "nowrap" }}>
                           ₹{Number(p.amount || 0).toLocaleString("en-IN")}
                         </td>
-                        <td style={{ padding: "11px 14px" }} onClick={(e) => e.stopPropagation()}>
+                        <td style={{ padding: "9px 12px" }} onClick={(e) => e.stopPropagation()}>
                           {p.confirmationEmailSent ? (
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap" }}>
-                              <CheckCircle2 size={12} /> Approved
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 5, padding: "2px 7px", whiteSpace: "nowrap" }}>
+                              <CheckCircle2 size={11} /> Approved
                             </span>
                           ) : (
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                              <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "#b45309", background: "#fef3c7", borderRadius: 6, padding: "2px 7px", whiteSpace: "nowrap" }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 700, color: "#b45309", background: "#fef3c7", borderRadius: 5, padding: "2px 6px", whiteSpace: "nowrap" }}>
                                 <Clock size={10} /> Pending
                               </span>
                               <button
@@ -1741,9 +1812,9 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
                                   background: "linear-gradient(135deg, #FF693D 0%, #ea580c 100%)",
                                   color: "#fff",
                                   border: "none",
-                                  padding: "3px 9px",
-                                  borderRadius: 6,
-                                  fontSize: 11,
+                                  padding: "2px 8px",
+                                  borderRadius: 5,
+                                  fontSize: 10.5,
                                   fontWeight: 700,
                                   cursor: approvingId === p._id ? "not-allowed" : "pointer",
                                   display: "inline-flex",
@@ -1758,12 +1829,12 @@ function PaymentsTable({ payments, search, setSearch, expanded, toggleRow, onApp
                             </div>
                           )}
                         </td>
-                        <td style={{ padding: "11px 14px" }}>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap" }}>
-                            <CheckCircle2 size={12} /> Paid
+                        <td style={{ padding: "9px 12px" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, color: "#15803d", background: "#dcfce7", borderRadius: 5, padding: "2px 7px", whiteSpace: "nowrap" }}>
+                            <CheckCircle2 size={11} /> Paid
                           </span>
                         </td>
-                        <td style={{ padding: "11px 14px", fontSize: 11.5, color: "#64748b", whiteSpace: "nowrap" }}>{fmtDate(p.createdAt)}</td>
+                        <td style={{ padding: "9px 12px", fontSize: 10.5, color: "#64748b", whiteSpace: "nowrap" }}>{fmtDate(p.createdAt)}</td>
                       </tr>
                       {isOpen && (
                         <tr style={{ borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>

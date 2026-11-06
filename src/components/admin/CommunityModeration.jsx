@@ -91,32 +91,32 @@ export default function CommunityModeration({ token }) {
   };
 
   const btn = (bg, color, border) => ({
-    display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 9,
-    border: border || "1.5px solid #e5e7eb", background: bg, color, cursor: "pointer", fontSize: 12.5, fontWeight: 700,
+    display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 11px", borderRadius: 8,
+    border: border || "1.5px solid #e5e7eb", background: bg, color, cursor: "pointer", fontSize: 11, fontWeight: 700,
   });
 
   return (
     <div>
       {/* Announcement composer */}
-      <div style={{ background: "var(--page-bg)", border: `1px solid ${ORANGE}33`, borderRadius: 16, padding: "18px 20px", marginBottom: 18 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12 }}>
-          <span style={{ width: 36, height: 36, borderRadius: 10, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}><Megaphone size={18} color={ORANGE} /></span>
+      <div style={{ background: "var(--page-bg)", border: `1px solid ${ORANGE}33`, borderRadius: 14, padding: "14px 18px", marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+          <span style={{ width: 32, height: 32, borderRadius: 8, background: `${ORANGE}15`, display: "grid", placeItems: "center" }}><Megaphone size={16} color={ORANGE} /></span>
           <div>
-            <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 15 }}>Post a pinned announcement</div>
-            <div style={{ fontSize: 12, color: MUTE }}>Shows as a highlighted post at the top of that batch's community.</div>
+            <div style={{ fontFamily: "Sora", fontWeight: 800, color: NAVY, fontSize: 13.5 }}>Post a pinned announcement</div>
+            <div style={{ fontSize: 11, color: MUTE }}>Shows as a highlighted post at the top of that batch's community.</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-start" }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "flex-start" }}>
           <select value={annPlan} onChange={(e) => setAnnPlan(e.target.value)}
-            style={{ height: 40, padding: "0 12px", borderRadius: 9, border: "1.5px solid #e5e7eb", fontSize: 13, color: NAVY, fontWeight: 600, minWidth: 200 }}>
+            style={{ height: 34, padding: "0 10px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, color: NAVY, fontWeight: 600, minWidth: 180 }}>
             <option value="">Select batch…</option>
             {batches.map((b) => <option key={b.plan} value={b.plan}>{b.batchLabel}</option>)}
           </select>
           <textarea value={annText} onChange={(e) => setAnnText(e.target.value)} rows={2} placeholder="Write your announcement…"
-            style={{ flex: 1, minWidth: 240, padding: "10px 12px", borderRadius: 9, border: "1.5px solid #e5e7eb", fontSize: 13.5, resize: "vertical", fontFamily: "inherit" }} />
+            style={{ flex: 1, minWidth: 240, padding: "8px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb", fontSize: 11.5, resize: "vertical", fontFamily: "inherit" }} />
           <button onClick={postAnnouncement} disabled={annBusy}
-            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#FF693D)`, "#fff", "none"), height: 40, padding: "0 16px" }}>
-            {annBusy ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={14} />} Post & pin
+            style={{ ...btn(`linear-gradient(135deg,${ORANGE},#FF693D)`, "#fff", "none"), height: 34, padding: "0 14px", fontSize: 11.5 }}>
+            {annBusy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={13} />} Post & pin
           </button>
         </div>
         {annMsg && <div style={{ fontSize: 12.5, marginTop: 8, fontWeight: 600, color: annMsg.startsWith("✓") ? "#16a34a" : "#dc2626" }}>{annMsg}</div>}

@@ -321,21 +321,21 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
         gap: 12,
       }}>
         <div>
-          <div style={{ fontSize: 11.5, color: "#64748b", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
             <span>Welcome back, Admin</span>
             <span role="img" aria-label="wave">👋</span>
           </div>
           <h1 style={{
             fontFamily: "Sora, sans-serif",
-            fontSize: 18,
+            fontSize: 15,
             fontWeight: 800,
             color: "#0f172a",
-            margin: "4px 0 0",
-            letterSpacing: -0.3,
+            margin: "3px 0 0",
+            letterSpacing: -0.2,
           }}>
             Here&apos;s what&apos;s happening with Campus Point
           </h1>
-          <p style={{ fontSize: 11.5, color: "#64748b", margin: "3px 0 0" }}>
+          <p style={{ fontSize: 11, color: "#64748b", margin: "2px 0 0" }}>
             Track mentors, students, tasks and overall platform activity in one place.
           </p>
         </div>
@@ -417,10 +417,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               <Users size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Total Students</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: "#64748b" }}>Total Students</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
@@ -430,14 +430,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5 }}>
             <span style={{
               color: "#16a34a",
               fontWeight: 700,
               background: "#f0fdf4",
               padding: "1px 6px",
               borderRadius: 5,
-              fontSize: 10.5,
+              fontSize: 10,
             }}>
               Registered
             </span>
@@ -471,10 +471,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               <UserCheck size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Active Mentors</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: "#64748b" }}>Active Mentors</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
@@ -484,14 +484,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5 }}>
             <span style={{
               color: "#2563eb",
               fontWeight: 700,
               background: "#eff6ff",
               padding: "1px 6px",
               borderRadius: 5,
-              fontSize: 10.5,
+              fontSize: 10,
             }}>
               Verified
             </span>
@@ -525,10 +525,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               <Layers size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Assigned Students</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: "#64748b" }}>Assigned Students</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
@@ -538,14 +538,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5 }}>
             <span style={{
               color: "#059669",
               fontWeight: 700,
               background: "#ecfdf5",
               padding: "1px 6px",
               borderRadius: 5,
-              fontSize: 10.5,
+              fontSize: 10,
             }}>
               Assigned
             </span>
@@ -579,10 +579,10 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               <CheckCircle2 size={19} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Tasks Completed</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: "#64748b" }}>Tasks Completed</div>
               <div style={{
                 fontFamily: "Sora, sans-serif",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 800,
                 color: "#0f172a",
                 lineHeight: 1.15,
@@ -592,14 +592,14 @@ export default function AdminOverview({ adminToken, dateRange = "30d", onNavigat
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5 }}>
             <span style={{
               color: "#7c3aed",
               fontWeight: 700,
               background: "#f5f3ff",
               padding: "1px 6px",
               borderRadius: 5,
-              fontSize: 10.5,
+              fontSize: 10,
             }}>
               Completed
             </span>
