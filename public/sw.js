@@ -1,6 +1,6 @@
 /* Minimal service worker — caches the app shell for offline/installable PWA.
    Paths are relative so it works under the GitHub Pages repo subpath. */
-const CACHE = "edureach-v15";
+const CACHE = "edureach-v16";
 const SHELL = ["/", "/index.html", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -38,10 +38,12 @@ self.addEventListener("fetch", (e) => {
           if (res && res.status < 400) return res;
           const cached = (await caches.match("/index.html")) || (await caches.match("./index.html")) || (await caches.match("/"));
           if (cached) return cached;
-          return res;
+          return res || new Response("", { status: 404 });
         } catch (err) {
-          const cached = (await caches.match("/index.html")) || (await caches.match("./index.html")) || (await caches.match("/"));
-          if (cached) return cached;
+          try {
+            const cached = (await caches.match("/index.html")) || (await caches.match("./index.html")) || (await caches.match("/"));
+            if (cached) return cached;
+          } catch {}
           return new Response(
             '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Campus Point · Offline</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;text-align:center;padding:40px 16px;color:#0f172a;"><h2 style="margin:0 0 8px;">Network connection issue</h2><p style="color:#64748b;margin:0 0 16px;">Please check your connection and refresh.</p><button onclick="location.reload()" style="background:#FF693D;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;">Retry</button></body></html>',
             { status: 200, headers: { "Content-Type": "text/html" } }
@@ -55,9 +57,9 @@ self.addEventListener("fetch", (e) => {
   // Static assets (JS, CSS, images, fonts)
   e.respondWith(
     (async () => {
-      const cached = await caches.match(request);
-      if (cached) return cached;
       try {
+        const cached = await caches.match(request);
+        if (cached) return cached;
         const res = await fetch(request);
         if (res && res.status === 200) {
           const ct = res.headers.get("content-type") || "";
@@ -66,9 +68,9 @@ self.addEventListener("fetch", (e) => {
             caches.open(CACHE).then((c) => c.put(request, copy)).catch(() => {});
           }
         }
-        return res;
+        return res || new Response("", { status: 404 });
       } catch (err) {
-        // Guarantee respondWith never resolves to undefined
+        // Guarantee respondWith never resolves to undefined or uncaught rejection
         return new Response("", { status: 408, statusText: "Network Timeout" });
       }
     })()
