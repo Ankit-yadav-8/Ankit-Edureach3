@@ -64,15 +64,15 @@ const lastNDays = (entries, n) => {
 /* ── Small pieces ───────────────────────────── */
 function Stat({ icon: Icon, label, value, sub, tone = ACCENT }) {
   return (
-    <div style={{ background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 12, padding: "13px 15px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
-        <span style={{ display: "grid", placeItems: "center", width: 26, height: 26, borderRadius: 8, background: `${tone}18`, color: tone }}>
-          <Icon size={14} />
+    <div className="mentor-stat-card" style={{ background: "var(--sky)", border: "1px solid var(--line)", borderRadius: 12, padding: "12px 14px", minWidth: 0, boxSizing: "border-box" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+        <span style={{ display: "grid", placeItems: "center", width: 24, height: 24, borderRadius: 7, background: `${tone}18`, color: tone, flexShrink: 0 }}>
+          <Icon size={13} />
         </span>
-        <span style={{ fontSize: 11.5, color: "var(--muted)" }}>{label}</span>
+        <span style={{ fontSize: 11.5, color: "var(--muted)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
       </div>
-      <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 21, color: "var(--navy)", lineHeight: 1.1 }}>{value}</div>
-      {sub && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>{sub}</div>}
+      <div style={{ fontFamily: SORA, fontWeight: 800, fontSize: 20, color: "var(--navy)", lineHeight: 1.1 }}>{value}</div>
+      {sub && <div style={{ fontSize: 10.5, color: "var(--muted)", marginTop: 4, lineHeight: 1.25, overflow: "hidden", textOverflow: "ellipsis" }}>{sub}</div>}
     </div>
   );
 }
@@ -1151,8 +1151,8 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
       </div>
 
       <div className="card" style={{ minHeight: 340, width: "100%", maxWidth: "100%", boxSizing: "border-box" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 16 }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <h3 style={{ fontFamily: SORA, fontWeight: 800, fontSize: 17, color: "var(--navy)", margin: 0 }}>
                 {section.label}
@@ -1175,55 +1175,56 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
                 </span>
               )}
             </div>
-            <p style={{ fontSize: 12, color: "var(--muted)", margin: "3px 0 0" }}>
-              {section.blurb}
-              {synced && <> · <span title={new Date(updatedAt).toLocaleString()}>student last synced {synced}</span></>}
-            </p>
-          </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-            {onOpenEmail && (
-              <button
-                type="button"
-                onClick={onOpenEmail}
-                title="Send direct email to this student"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  padding: "5px 11px",
-                  borderRadius: 8,
-                  border: "1px solid #fed7aa",
-                  background: "#fff7ed",
-                  color: ACCENT,
-                  fontSize: 11.5,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  marginRight: 4,
-                }}
-              >
-                <Mail size={12} /> Email {student?.name?.split(" ")[0] || "Student"}
-              </button>
-            )}
-            <span style={{ fontSize: 11.5, color: "var(--muted)", marginRight: 2 }}>{i + 1} / {SECTIONS.length}</span>
-            {[[ChevronLeft, -1], [ChevronRight, 1]].map(([Ic, d]) => {
-              const disabled = d < 0 ? i === 0 : i === SECTIONS.length - 1;
-              return (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+              {onOpenEmail && (
                 <button
-                  key={d} onClick={() => go(d)} disabled={disabled}
-                  aria-label={d < 0 ? "Previous section" : "Next section"}
+                  type="button"
+                  onClick={onOpenEmail}
+                  title="Send direct email to this student"
                   style={{
-                    width: 30, height: 30, borderRadius: 8, display: "grid", placeItems: "center",
-                    border: "1px solid var(--line)", background: "#fff",
-                    cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.4 : 1,
-                    color: "var(--navy)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "5px 11px",
+                    borderRadius: 8,
+                    border: "1px solid #fed7aa",
+                    background: "#fff7ed",
+                    color: ACCENT,
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    marginRight: 4,
                   }}
                 >
-                  <Ic size={15} />
+                  <Mail size={12} /> Email {student?.name?.split(" ")[0] || "Student"}
                 </button>
-              );
-            })}
+              )}
+              <span style={{ fontSize: 11.5, color: "var(--muted)", marginRight: 2 }}>{i + 1} / {SECTIONS.length}</span>
+              {[[ChevronLeft, -1], [ChevronRight, 1]].map(([Ic, d]) => {
+                const disabled = d < 0 ? i === 0 : i === SECTIONS.length - 1;
+                return (
+                  <button
+                    key={d} onClick={() => go(d)} disabled={disabled}
+                    aria-label={d < 0 ? "Previous section" : "Next section"}
+                    style={{
+                      width: 30, height: 30, borderRadius: 8, display: "grid", placeItems: "center",
+                      border: "1px solid var(--line)", background: "#fff",
+                      cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.4 : 1,
+                      color: "var(--navy)",
+                    }}
+                  >
+                    <Ic size={15} />
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          <p style={{ fontSize: 12, color: "var(--muted)", margin: "6px 0 0", width: "100%", lineHeight: 1.45 }}>
+            {section.blurb}
+            {synced && <> · <span title={new Date(updatedAt).toLocaleString()}>student last synced {synced}</span></>}
+          </p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -1321,12 +1322,20 @@ export default function StudentReport({ progress, tests, tasks, updatedAt, onSav
           }
           .mentor-stats {
             grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+          }
+          .mentor-stat-card {
+            padding: 10px 11px !important;
           }
         }
 
         @media (max-width: 480px) {
           .mentor-stats {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+          }
+          .mentor-stat-card {
+            padding: 9px 10px !important;
           }
         }
       `}</style>
