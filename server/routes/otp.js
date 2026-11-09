@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import Otp from "../models/Otp.js";
 import { sendOtpEmail } from "../utils/mailer.js";
 import { signStudentToken } from "../utils/tokens.js";
+import { trackStudentActiveSession } from "../utils/studentActivity.js";
 
 const router = express.Router();
 const sign = signStudentToken;
@@ -89,6 +90,7 @@ router.post("/verify", async (req, res) => {
     if (otp.name && !user.name) user.name = otp.name;
     await user.save();
     await otp.deleteOne();
+    trackStudentActiveSession({ userId: user._id, email: user.email, activityType: "otp_login", req }).catch(() => {});
     res.json({ token: sign(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
   } catch (e) {
     console.error("[OTP VERIFY ERROR]", e.message);

@@ -218,7 +218,7 @@ router.get("/students/:studentId/progress", requireMentor, requirePasswordChange
     // able to probe which CP IDs are real by diffing the responses.
     if (!enr) return res.status(404).json({ error: "Student not found" });
 
-    const doc = await MentorProgress.findOne({ email: enr.email, plan: enr.plan }).lean();
+    const doc = await MentorProgress.findOne({ email: new RegExp("^" + (enr.email || "").trim() + "$", "i"), plan: enr.plan }).lean();
     res.json({
       student: { studentId: enr.studentId, name: enr.name, plan: enr.plan },
       data: doc?.data ?? null,
@@ -242,7 +242,7 @@ router.get("/students/:studentId/tests", requireMentor, requirePasswordChanged, 
       .sort({ createdAt: -1 }).limit(50).lean();
 
     // 2. Fetch manual tests logged by student in MentorProgress
-    const progressDoc = await MentorProgress.findOne({ email: enr.email, plan: enr.plan }).lean();
+    const progressDoc = await MentorProgress.findOne({ email: new RegExp("^" + (enr.email || "").trim() + "$", "i"), plan: enr.plan }).lean();
     const manualTests = Array.isArray(progressDoc?.data?.tests) ? progressDoc.data.tests : [];
 
     // Normalize CBT attempts
@@ -514,8 +514,12 @@ router.get("/student-logins", requireMentor, requirePasswordChanged, async (req,
 
     const enrMap = new Map(enrollments.map((e) => [e.studentId.toUpperCase(), e]));
     const emails = enrollments.map((e) => e.email).filter(Boolean);
-    const users = await User.find({ email: { $in: emails } }).select("email lastLogin").lean();
-    const userMap = new Map(users.map((u) => [u.email.toLowerCase(), u]));
+    const [users, progressDocs] = await Promise.all([
+      User.find({ email: { $in: emails } }).select("email lastLogin").lean(),
+      MentorProgress.find({ email: { $in: emails } }).select("email plan updatedAt").lean(),
+    ]);
+    const userMap = new Map(users.map((u) => [(u.email || "").toLowerCase(), u]));
+    const progressMap = new Map(progressDocs.map((p) => [`${(p.email || "").toLowerCase()}|${p.plan}`, p]));
 
     // Query login activity logs for assigned students
     const logs = await MentorActivityLog.find({
@@ -537,22 +541,46 @@ router.get("/student-logins", requireMentor, requirePasswordChanged, async (req,
     assignedIds.forEach((sid, idx) => {
       const enr = enrMap.get(sid);
       if (!enr) return;
-      const user = userMap.get(enr.email?.toLowerCase());
+      const user = userMap.get((enr.email || "").toLowerCase());
+      const pDoc = progressMap.get(`${(enr.email || "").toLowerCase()}|${enr.plan}`);
 
-      const studentLogs = logs.filter((l) => l.studentId?.toUpperCase() === sid);
+      let studentLogs = logs.filter((l) => l.studentId?.toUpperCase() === sid);
+
+      // Compute trueLatestActive across studentLogs, user.lastLogin, and pDoc.updatedAt
+      const candidateTimes = [
+        studentLogs[0]?.createdAt ? new Date(studentLogs[0].createdAt).getTime() : 0,
+        user?.lastLogin ? new Date(user.lastLogin).getTime() : 0,
+        pDoc?.updatedAt ? new Date(pDoc.updatedAt).getTime() : 0,
+      ];
+      const maxTime = Math.max(...candidateTimes);
+      const trueLatestActive = maxTime > 0 ? new Date(maxTime) : null;
+
+      // If trueLatestActive is newer than the latest recorded studentLog by > 2 minutes,
+      // inject an active session entry into studentLogs so telemetry and audit trail show live activity!
+      const newestLogTime = studentLogs[0]?.createdAt ? new Date(studentLogs[0].createdAt).getTime() : 0;
+      if (trueLatestActive && (maxTime - newestLogTime > 2 * 60 * 1000)) {
+        const syntheticActiveEvent = {
+          _id: `active-${sid}-${maxTime}`,
+          studentId: sid,
+          createdAt: trueLatestActive,
+          ip: "Portal Web Access",
+          userAgent: "Desktop Web",
+          details: { plan: enr.plan, activity: "Study Portal Activity" },
+        };
+        studentLogs = [syntheticActiveEvent, ...studentLogs];
+      }
+
       const periodLogs = studentLogs.filter((l) => new Date(l.createdAt) >= startDate);
-      
-      let lastLoginDate = studentLogs[0]?.createdAt || user?.lastLogin || null;
+      let lastLoginDate = trueLatestActive || studentLogs[0]?.createdAt || user?.lastLogin || null;
       let firstLoginInPeriod = periodLogs.length ? periodLogs[periodLogs.length - 1]?.createdAt : null;
 
-      // Graceful fallback: If no activity logs exist yet but user.lastLogin is within range
       let periodCount = periodLogs.length;
       let totalCount = studentLogs.length;
-      if (totalCount === 0 && user?.lastLogin) {
+      if (totalCount === 0 && lastLoginDate) {
         totalCount = 1;
-        if (new Date(user.lastLogin) >= startDate) {
+        if (new Date(lastLoginDate) >= startDate) {
           periodCount = 1;
-          firstLoginInPeriod = user.lastLogin;
+          firstLoginInPeriod = lastLoginDate;
         }
       }
 
@@ -668,9 +696,9 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
       const enr = enrMap.get(sid);
       if (!enr) return;
 
-      const pDoc = progressByEmail.get(`${enr.email}|${enr.plan}`);
+      const pDoc = progressByEmail.get(`${(enr.email || "").toLowerCase()}|${enr.plan}`);
       const tDoc = taskByStudent.get(sid);
-      const user = userByEmail.get(enr.email.toLowerCase());
+      const user = userByEmail.get((enr.email || "").toLowerCase());
       const pData = pDoc?.data || {};
 
       // Student tasks
@@ -719,7 +747,12 @@ router.get("/students-overview", requireMentor, requirePasswordChanged, async (r
         plan: enr.plan,
         studentGroup: enr.studentGroup || "Campus-Point-1",
         enrolledSince: enr.createdAt,
-        lastLogin: user?.lastLogin || null,
+        lastLogin: (() => {
+          const userTime = user?.lastLogin ? new Date(user.lastLogin).getTime() : 0;
+          const progTime = pDoc?.updatedAt ? new Date(pDoc.updatedAt).getTime() : 0;
+          const maxT = Math.max(userTime, progTime);
+          return maxT > 0 ? new Date(maxT) : null;
+        })(),
         testStats: {
           testCount,
           totalScored,

@@ -18,6 +18,7 @@ import MentorProgress from "../models/MentorProgress.js";
 import Mentor from "../models/Mentor.js";
 import { requireAuth } from "../middleware/auth.js";
 import { sendMail } from "../utils/mailer.js";
+import { trackStudentActiveSession } from "../utils/studentActivity.js";
 
 const router = express.Router();
 
@@ -653,10 +654,22 @@ router.get("/my-session", requireAuth, async (req, res) => {
 
 router.get("/progress", requireAuth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("email").lean();
+    const user = await User.findById(req.user.id).select("email lastLogin").lean();
     const email = (user?.email || "").toLowerCase();
     const plan = String(req.query.plan || "default").trim();
     if (!email) return res.json({ data: null });
+
+    // Periodically touch user last active if last login was over 15 min ago
+    if (!user.lastLogin || (Date.now() - new Date(user.lastLogin).getTime() > 15 * 60 * 1000)) {
+      trackStudentActiveSession({
+        userId: req.user.id,
+        email,
+        activityType: "portal_sync",
+        details: { plan },
+        req,
+      }).catch(() => {});
+    }
+
     const doc = await MentorProgress.findOne({ email, plan }).lean();
     res.json({ data: doc?.data ?? null, updatedAt: doc?.updatedAt || null });
   } catch (e) {
@@ -678,6 +691,20 @@ router.put("/progress", requireAuth, async (req, res) => {
       { email, plan, data },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     ).lean();
+
+    // Immediately record active student session and attribute to assigned mentors
+    trackStudentActiveSession({
+      userId: req.user.id,
+      email,
+      activityType: "study_log_update",
+      details: {
+        plan,
+        entriesCount: Array.isArray(data?.entries) ? data.entries.length : 0,
+        testsCount: Array.isArray(data?.tests) ? data.tests.length : 0,
+      },
+      req,
+    }).catch(() => {});
+
     res.json({ ok: true, updatedAt: doc.updatedAt });
   } catch (e) {
     console.error("[mentorship/progress PUT]", e.message);

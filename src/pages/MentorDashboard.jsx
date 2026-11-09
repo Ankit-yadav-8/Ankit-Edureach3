@@ -741,13 +741,16 @@ export default function MentorDashboard() {
     };
   }, [token, mentor]);
 
-  // Load single student data
+  // Load single student data + auto-sync on focus/visibility change
   useEffect(() => {
     if (!token || !activeId) return;
     let cancelled = false;
-    setLoadingStudent(true);
-    setErr("");
-    (async () => {
+
+    const loadData = async (isBackground = false) => {
+      if (!isBackground) {
+        setLoadingStudent(true);
+        setErr("");
+      }
       try {
         const [p, t, k] = await Promise.all([
           apiMentorStudentProgress(token, activeId),
@@ -762,13 +765,35 @@ export default function MentorDashboard() {
           updatedAt: p.updatedAt,
         });
       } catch (e) {
-        if (!cancelled) setErr(e.message || "Could not load this student's data");
+        if (!cancelled && !isBackground) setErr(e.message || "Could not load this student's data");
       } finally {
-        if (!cancelled) setLoadingStudent(false);
+        if (!cancelled && !isBackground) setLoadingStudent(false);
       }
-    })();
+    };
+
+    loadData(false);
+
+    // Auto-refresh whenever mentor focuses window / tab becomes visible
+    const onFocus = () => {
+      if (document.visibilityState === "visible") {
+        loadData(true);
+      }
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
+    // Periodic poll every 30s while mentor is viewing this student
+    const pollInterval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadData(true);
+      }
+    }, 30000);
+
     return () => {
       cancelled = true;
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+      clearInterval(pollInterval);
     };
   }, [token, activeId]);
 

@@ -127,6 +127,26 @@ export default function StudentLoginTracking({
 
   useEffect(() => {
     fetchLogins(range);
+
+    const onFocus = () => {
+      if (document.visibilityState === "visible") {
+        fetchLogins(range);
+      }
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        fetchLogins(range);
+      }
+    }, 25000);
+
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+      clearInterval(interval);
+    };
   }, [token, range]);
 
   // Student list combining API results or prop fallback

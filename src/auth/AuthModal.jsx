@@ -428,6 +428,10 @@ export default function AuthModal() {
   const set = (k, v) => {
     setF(s => ({ ...s, [k]: v }));
     if (fe[k]) setFe(s => ({ ...s, [k]: "" }));
+    if (banner.text && /too many/i.test(banner.text)) {
+      setBanner({ type: "", text: "" });
+      try { sessionStorage.removeItem("cp:authLoginLock"); } catch {}
+    }
   };
 
   const go = (m) => {
@@ -436,6 +440,7 @@ export default function AuthModal() {
     setSlowNet(false);
     setNotReg(false);
     setCopied(false);
+    try { sessionStorage.removeItem("cp:authLoginLock"); } catch {}
     setMode(m);
   };
 
@@ -488,7 +493,7 @@ export default function AuthModal() {
       let friendly;
       if (is429) {
         friendly = "Too many requests. Please wait a moment and try again.";
-        try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 60000)); } catch {}
+        try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 15000)); } catch {}
       } else {
         let fails = 0;
         try {
@@ -496,8 +501,8 @@ export default function AuthModal() {
           sessionStorage.setItem("cp:authLoginFails", String(fails));
         } catch {}
         if (fails >= 5) {
-          try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 60000)); } catch {}
-          friendly = "Too many requests. Please wait 1 minute and try again.";
+          try { sessionStorage.setItem("cp:authLoginLock", String(Date.now() + 15000)); } catch {}
+          friendly = "Too many requests. Please wait a moment and try again.";
         } else {
           friendly = msg.includes("timed out") || msg.includes("AbortError")
             ? "Server is taking too long. It may be waking up - try again in a few seconds."

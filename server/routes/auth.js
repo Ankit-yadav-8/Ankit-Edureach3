@@ -10,6 +10,7 @@ import MentorActivityLog from "../models/MentorActivityLog.js";
 import { requireAuth } from "../middleware/auth.js";
 import { signStudentToken } from "../utils/tokens.js";
 import { sendPasswordResetEmail, sendVerificationTokenEmail } from "../utils/mailer.js";
+import { trackStudentActiveSession } from "../utils/studentActivity.js";
 
 const forgotLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -108,69 +109,12 @@ router.post("/login", async (req, res) => {
     }
 
     // Authenticated activity tracking: record student login and attribute to assigned mentors
-    (async () => {
-      try {
-        const enrollments = await Enrollment.find({ email: user.email, status: "paid" })
-          .select("studentId plan name")
-          .lean();
-        const clientIp = req.ip || "";
-        const clientUa = String(req.headers["user-agent"] || "").slice(0, 300);
-
-        if (enrollments && enrollments.length > 0) {
-          for (const enr of enrollments) {
-            if (!enr.studentId) continue;
-
-            // De-duplicate: avoid spamming multiple login events within 5 minutes for the same student
-            const recentLog = await MentorActivityLog.findOne({
-              action: "student_login",
-              studentId: enr.studentId,
-              createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
-            });
-            if (recentLog) continue;
-
-            // Prefer enrolled student's name
-            const studentName = enr.name || user.name || "Student";
-            const studentRegion = enr.region || user.region || "Indian";
-
-            const mentors = await Mentor.find({ students: enr.studentId, active: true })
-              .select("_id name email")
-              .lean();
-            if (mentors.length > 0) {
-              for (const m of mentors) {
-                await MentorActivityLog.create({
-                  mentorId: m._id,
-                  mentorName: m.name,
-                  mentorEmail: m.email,
-                  studentId: enr.studentId,
-                  studentName,
-                  userId: user._id,
-                  region: studentRegion,
-                  action: "student_login",
-                  details: { plan: enr.plan, region: studentRegion },
-                  ip: clientIp,
-                  userAgent: clientUa,
-                });
-              }
-            } else {
-              await MentorActivityLog.create({
-                studentId: enr.studentId,
-                studentName,
-                userId: user._id,
-                region: studentRegion,
-                action: "student_login",
-                details: { plan: enr.plan, region: studentRegion, unassigned: true },
-                ip: clientIp,
-                userAgent: clientUa,
-              });
-            }
-          }
-        }
-        // Note: Free-tier users who are not enrolled in mentorship do NOT create
-        // MentorActivityLog entries, preventing phantom student login records.
-      } catch (err) {
-        console.error("[auth/student-login-log]", err.message);
-      }
-    })();
+    trackStudentActiveSession({
+      userId: user._id,
+      email: user.email,
+      activityType: "password_login",
+      req,
+    }).catch((err) => console.error("[auth/student-login-log]", err.message));
   } catch (e) { console.error("[auth/login]", e.message); res.status(500).json({ error: "Could not log in. Please try again." }); }
 });
 

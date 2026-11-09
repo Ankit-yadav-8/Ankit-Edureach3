@@ -142,40 +142,110 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
+// Real client IP resolver behind reverse proxies (Cloudflare, Render, Nginx, Vercel)
+function getClientIp(req) {
+  const cf = req.headers["cf-connecting-ip"];
+  if (cf && typeof cf === "string") return cf.split(",")[0].trim();
+  const real = req.headers["x-real-ip"];
+  if (real && typeof real === "string") return real.split(",")[0].trim();
+  const fwd = req.headers["x-forwarded-for"];
+  if (fwd && typeof fwd === "string") {
+    const first = fwd.split(",")[0].trim();
+    if (first) return first;
+  }
+  return req.ip || req.socket?.remoteAddress || "127.0.0.1";
+}
+
 const rl = (opts) => rateLimit({
   standardHeaders: true,   // emit RateLimit-* + Retry-After headers
   legacyHeaders: false,
   message: { error: "Too many requests. Please wait a moment and try again." },
+  keyGenerator: (req) => getClientIp(req),
+  validate: { trustProxy: false, xForwardedForHeader: false },
   ...opts,
 });
 
-// Dedicated strict rate limiter for login endpoints (10 attempts per 15 min per IP)
-const loginLimiter     = rl({ windowMs: 15 * 60 * 1000, max: 10, message: { error: "Too many requests. Please wait a moment and try again." } });
-// Tight limit on credential/code endpoints to blunt brute-force & abuse.
-const authLimiter      = rl({ windowMs: 15 * 60 * 1000, max: 30 });
-// Strict general gate for admin routes to stop automated scanning
-const adminGateLimiter = rl({ windowMs: 15 * 60 * 1000, max: 20, message: { error: "Admin access rate limit reached — please wait a moment." } });
-// Generous per-minute limit for read/payment traffic — enough for normal use,
-// low enough to stop scraping or admin-key guessing.
-const apiLimiter       = rl({ windowMs: 60 * 1000, max: 120 });
+// Dedicated login rate limiter: 60 attempts per 15 min per IP,
+// AND skipSuccessfulRequests: true so legitimate successful logins NEVER count against the limit!
+const loginLimiter = rl({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  skipSuccessfulRequests: true,
+  message: { error: "Too many login attempts. Please wait a moment and try again." },
+});
+
+// Rate limiter for signup (30 per hour)
+const signupLimiter = rl({
+  windowMs: 60 * 60 * 1000,
+  max: 30,
+  skipSuccessfulRequests: true,
+  message: { error: "Too many accounts created. Please try again later." },
+});
+
+// Rate limiter for password resets (20 per 15 min)
+const passwordResetLimiter = rl({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: "Too many password reset requests. Please wait a moment." },
+});
+
+// Rate limiter for OTP send (25 requests per 15 min)
+const otpSendLimiter = rl({
+  windowMs: 15 * 60 * 1000,
+  max: 25,
+  message: { error: "Too many OTP requests. Please wait a moment and try again." },
+});
+
+// Rate limiter for OTP verify (50 requests per 15 min, skips successful requests)
+const otpVerifyLimiter = rl({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  skipSuccessfulRequests: true,
+  message: { error: "Too many incorrect OTP attempts. Please wait a moment and try again." },
+});
+
+// Strict general gate for admin routes to stop automated scanning (100 per 15 min)
+const adminGateLimiter = rl({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: "Admin access rate limit reached — please wait a moment." },
+});
+
+// Generous per-minute limit for authenticated traffic / browsing (300 requests/minute)
+const apiLimiter = rl({
+  windowMs: 60 * 1000,
+  max: 300,
+  message: { error: "Too many requests. Please wait a moment." },
+});
 
 app.get("/", (_req, res) => res.send("EduReach API ✅"));
 
 // ── Health-check (used by Render keep-alive & external monitors) ─────────────
 app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 
+// Specific credential action rate limiting:
 app.use("/api/auth/login", loginLimiter);
+app.use("/api/auth/signup", signupLimiter);
+app.use("/api/auth/forgot", passwordResetLimiter);
+app.use("/api/auth/verify-reset-otp", passwordResetLimiter);
+app.use("/api/auth/reset", passwordResetLimiter);
 app.use("/api/mentor/login", loginLimiter);
-app.use("/api/auth", authLimiter, authRoutes);
-app.use("/api/otp", authLimiter, otpRoutes);
+app.use("/api/otp/send", otpSendLimiter);
+app.use("/api/otp/verify", otpVerifyLimiter);
+
+// General auth & OTP endpoints take apiLimiter (300/min) so /me, /profile, /refresh are never choked
+app.use("/api/auth", apiLimiter, authRoutes);
+app.use("/api/otp", apiLimiter, otpRoutes);
+
 // Mounted BEFORE /api/admin: Express matches prefixes in order, so the broader
 // /api/admin mount would otherwise catch these first and subject mentor
 // management (ordinary data traffic) to the strict login rate limit.
 app.use("/api/admin/mentors", apiLimiter, adminMentorRoutes);
 app.use("/api/admin/analytics", apiLimiter, adminAnalyticsRoutes);
 app.use("/api/admin", adminGateLimiter, adminRoutes);
-// Mentor login is a credential endpoint, so it takes the strict auth limiter.
-app.use("/api/mentor", authLimiter, mentorRoutes);
+
+// Mentor portal routes take apiLimiter (300/min) so mentors are never blocked during normal workflow
+app.use("/api/mentor", apiLimiter, mentorRoutes);
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/cutoffs", apiLimiter, cutoffRoutes);
 app.use("/api/payment", apiLimiter, paymentRoutes);
