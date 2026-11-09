@@ -165,16 +165,18 @@ const rl = (opts) => rateLimit({
   ...opts,
 });
 
-// Dedicated login rate limiter: 60 attempts per 15 min per IP,
-// AND skipSuccessfulRequests: true so legitimate successful logins NEVER count against the limit!
+// Dedicated login rate limiter: evaluates per (IP + Account Email)
+// - skipSuccessfulRequests: true means successful logins NEVER count against the quota!
+// - Keyed per user account so students sharing the same hostel/coaching Wi-Fi never block each other!
 const loginLimiter = rl({
   windowMs: 15 * 60 * 1000,
   max: 60,
   skipSuccessfulRequests: true,
-  message: { error: "Too many login attempts. Please wait a moment and try again." },
+  keyGenerator: (req) => `${getClientIp(req)}_${String(req.body?.email || "").toLowerCase().trim()}`,
+  message: { error: "Too many login attempts for this account. Please wait a moment and try again." },
 });
 
-// Rate limiter for signup (30 per hour)
+// Rate limiter for signup (30 per hour per IP)
 const signupLimiter = rl({
   windowMs: 60 * 60 * 1000,
   max: 30,
@@ -182,25 +184,28 @@ const signupLimiter = rl({
   message: { error: "Too many accounts created. Please try again later." },
 });
 
-// Rate limiter for password resets (20 per 15 min)
+// Rate limiter for password resets (20 per 15 min per account)
 const passwordResetLimiter = rl({
   windowMs: 15 * 60 * 1000,
   max: 20,
+  keyGenerator: (req) => `${getClientIp(req)}_${String(req.body?.email || "").toLowerCase().trim()}`,
   message: { error: "Too many password reset requests. Please wait a moment." },
 });
 
-// Rate limiter for OTP send (25 requests per 15 min)
+// Rate limiter for OTP send (25 requests per 15 min per account)
 const otpSendLimiter = rl({
   windowMs: 15 * 60 * 1000,
   max: 25,
+  keyGenerator: (req) => `${getClientIp(req)}_${String(req.body?.email || "").toLowerCase().trim()}`,
   message: { error: "Too many OTP requests. Please wait a moment and try again." },
 });
 
-// Rate limiter for OTP verify (50 requests per 15 min, skips successful requests)
+// Rate limiter for OTP verify (50 requests per 15 min per account, skips successful requests)
 const otpVerifyLimiter = rl({
   windowMs: 15 * 60 * 1000,
   max: 50,
   skipSuccessfulRequests: true,
+  keyGenerator: (req) => `${getClientIp(req)}_${String(req.body?.email || "").toLowerCase().trim()}`,
   message: { error: "Too many incorrect OTP attempts. Please wait a moment and try again." },
 });
 
