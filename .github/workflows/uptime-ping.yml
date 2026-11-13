@@ -22,3 +22,4 @@ jobs:
           else
             echo "Backend returned status $RESPONSE_CODE (waking up or offline)"
           fi
+

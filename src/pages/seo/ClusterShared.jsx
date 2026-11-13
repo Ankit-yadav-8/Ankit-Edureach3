@@ -203,9 +203,6 @@ export function ClusterPricing({
               <span className="mj-tier-flag">🇮🇳</span>
               <span className="mj-tier-kicker">INDIAN STUDENTS</span>
               <span className="mj-tier-sub">{sublabel}</span>
-              <span style={{ fontSize: "0.85rem", opacity: 0.95, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700 }}>
-                {exam === "JEE Main & Advanced 2027" ? "Till JEE Mains" : exam}
-              </span>
               <div className="mj-tier-amt">₹{indianPlan.amount.toLocaleString("en-IN")}</div>
               <div className="mj-tier-old">₹{indianPlan.old.toLocaleString("en-IN")}</div>
               <div style={{ marginTop: 16, padding: "8px 12px", background: "rgba(0,0,0,0.18)", borderRadius: 8, fontSize: "0.75rem", lineHeight: 1.4, fontWeight: 600, color: "rgba(255,255,255,0.95)" }}>
@@ -251,9 +248,6 @@ export function ClusterPricing({
               <span className="mj-tier-flag">🌍</span>
               <span className="mj-tier-kicker">NRI & INTERNATIONAL</span>
               <span className="mj-tier-sub">1 Year Full Mentorship</span>
-              <span style={{ fontSize: "0.85rem", opacity: 0.95, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700 }}>
-                Till JEE Mains & Advanced
-              </span>
               <div className="mj-tier-amt">₹{intlPlan.amount.toLocaleString("en-IN")}</div>
               <div className="mj-tier-old">₹{intlPlan.old.toLocaleString("en-IN")}</div>
               <div style={{ marginTop: 16, padding: "8px 12px", background: "rgba(255,255,255,0.1)", borderRadius: 8, fontSize: "0.75rem", lineHeight: 1.4, fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>
