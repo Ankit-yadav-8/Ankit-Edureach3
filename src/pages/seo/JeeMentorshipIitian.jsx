@@ -162,52 +162,6 @@ export default function JeeMentorshipIitian() {
           </div>
         </section>
 
-        {/* Featured Mentor Cohort */}
-        <section className="scp-section">
-          <div className="scp-section-header">
-            <span className="scp-kicker">IIT Roorkee Leadership</span>
-            <h2 className="scp-h2">Meet the Mentors Behind CampusPoint</h2>
-            <p className="scp-section-sub">
-              Built by IIT Roorkee students and alumni who understand how to take serious aspirants from average mock scores to dream ranks:
-            </p>
-          </div>
-
-          <div className="scp-grid-3">
-            <div className="scp-card" style={{ borderTop: "4px solid var(--scp-brand)" }}>
-              <h3 className="scp-card-h3">Aman · IIT Delhi</h3>
-              <p style={{ fontSize: "0.85rem", color: "var(--scp-brand)", fontWeight: 700, margin: "0 0 10px" }}>
-                JEE Advanced AIR 642 · Maths Specialist
-              </p>
-              <p className="scp-card-p">
-                Specializes in transforming students who fear Mathematics by breaking down calculus, vectors, and coordinate geometry into intuitive geometric shortcuts.
-              </p>
-              <span style={{ fontSize: "0.8rem", color: "var(--scp-faint)", fontWeight: 600 }}>Mentored 120+ Aspirants</span>
-            </div>
-
-            <div className="scp-card" style={{ borderTop: "4px solid var(--scp-emerald)" }}>
-              <h3 className="scp-card-h3">Saneh · IIT Roorkee</h3>
-              <p style={{ fontSize: "0.85rem", color: "var(--scp-emerald)", fontWeight: 700, margin: "0 0 10px" }}>
-                JEE Advanced Top Ranker · Physics Coach
-              </p>
-              <p className="scp-card-p">
-                Master of Rotational Motion, Electrodynamics, and multi-concept problem solving. Passionate about eliminating silly mistakes in JEE tests.
-              </p>
-              <span style={{ fontSize: "0.8rem", color: "var(--scp-faint)", fontWeight: 600 }}>Mentored 150+ Aspirants</span>
-            </div>
-
-            <div className="scp-card" style={{ borderTop: "4px solid var(--scp-violet)" }}>
-              <h3 className="scp-card-h3">Saket · IIT Roorkee</h3>
-              <p style={{ fontSize: "0.85rem", color: "var(--scp-violet)", fontWeight: 700, margin: "0 0 10px" }}>
-                JEE Main 99.8%ile · Strategy Lead
-              </p>
-              <p className="scp-card-p">
-                Expert in speed-accuracy optimization, Chemistry NCERT retention frameworks, and 8-month intensive dropper recovery blueprints.
-              </p>
-              <span style={{ fontSize: "0.8rem", color: "var(--scp-faint)", fontWeight: 600 }}>Mentored 180+ Aspirants</span>
-            </div>
-          </div>
-        </section>
-
         <ClusterPricing
           planKey="mentor-jee-2027-6m"
           exam="Mentorship by IITians"
