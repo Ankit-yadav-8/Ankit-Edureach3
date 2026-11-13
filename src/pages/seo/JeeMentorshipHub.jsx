@@ -121,7 +121,7 @@ export default function JeeMentorshipHub() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Why 1-to-1 Guidance Outperforms Coaching Batches</span>
-            <h2 className="scp-h2">The 5 Core Pillars of CampusPoint JEE Mentorship</h2>
+            <h2 className="scp-h2">5 Core Pillars of JEE Mentorship</h2>
             <p className="scp-section-sub">
               Large coaching institutes deliver lectures to 200+ students at once, but nobody checks if you understood the concepts, completed homework, or why your test score dropped. Here is how our personalized JEE mentorship program fixes the preparation gap.
             </p>
@@ -218,7 +218,7 @@ export default function JeeMentorshipHub() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Head-to-Head Comparison</span>
-            <h2 className="scp-h2">CampusPoint JEE Mentorship vs Traditional Coaching</h2>
+            <h2 className="scp-h2">1-on-1 Mentorship vs Coaching</h2>
             <p className="scp-section-sub">
               See why hundreds of JEE aspirants transition to dedicated personal mentorship to supercharge their preparation.
             </p>

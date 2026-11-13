@@ -125,7 +125,7 @@ export default function JeeMentorshipMain() {
         <section className="scp-section" id="blueprint">
           <div className="scp-section-header" style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 36px" }}>
             <span className="scp-kicker">Precision Score Optimization</span>
-            <h2 className="scp-h2">The 3 Core Pillars of JEE Main Mentorship</h2>
+            <h2 className="scp-h2">3 Core Pillars of JEE Main Prep</h2>
             <p className="scp-section-sub">
               Scoring 200+ in JEE Main requires rapid recall, calculation speed, and zero silly mistakes. Here is how your mentor optimizes your score:
             </p>
@@ -246,7 +246,7 @@ export default function JeeMentorshipMain() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions on JEE Main Mentorship</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>

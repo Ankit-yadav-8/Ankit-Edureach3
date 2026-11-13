@@ -117,7 +117,7 @@ export default function JeeMentorshipDroppers() {
         <section className="scp-section" id="dropper-blueprint">
           <div className="scp-section-header">
             <span className="scp-kicker">Diagnosing The Drop Year</span>
-            <h2 className="scp-h2">Why Most Droppers Fail & How We Fix It</h2>
+            <h2 className="scp-h2">4 Traps Every Dropper Must Avoid</h2>
             <p className="scp-section-sub">
               More than 60% of droppers score the same or worse in their second attempt because they take the same generic coaching classes, re-watch basic lectures, and suffer from mid-year burnout.
             </p>

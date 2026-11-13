@@ -127,7 +127,7 @@ export default function JeePrepStrategy() {
         <section className="scp-section" id="subject-strategies">
           <div className="scp-section-header">
             <span className="scp-kicker">Subject-by-Subject Blueprint</span>
-            <h2 className="scp-h2">Subject Playbooks: Physics, Chemistry & Mathematics</h2>
+            <h2 className="scp-h2">Subject-Wise Master Playbooks</h2>
             <p className="scp-section-sub">
               Each subject in JEE tests a completely distinct cognitive skill. Treating all three subjects with the same study method leads to mediocre scores:
             </p>
@@ -185,7 +185,7 @@ export default function JeePrepStrategy() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Exam-Day Execution</span>
-            <h2 className="scp-h2">The 3-Pass Paper Solving Protocol</h2>
+            <h2 className="scp-h2">3-Pass Exam Solving Protocol</h2>
             <p className="scp-section-sub">
               How elite rankers structure their 180 minutes inside the computer-based exam hall:
             </p>
@@ -233,7 +233,7 @@ export default function JeePrepStrategy() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions on JEE Strategy</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>

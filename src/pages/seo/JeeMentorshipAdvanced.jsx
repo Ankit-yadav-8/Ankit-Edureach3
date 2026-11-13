@@ -117,7 +117,7 @@ export default function JeeMentorshipAdvanced() {
         <section className="scp-section" id="advanced-framework">
           <div className="scp-section-header">
             <span className="scp-kicker">First-Principles Thinking</span>
-            <h2 className="scp-h2">What Does It Take to Crack JEE Advanced?</h2>
+            <h2 className="scp-h2">Cracking JEE Advanced</h2>
             <p className="scp-section-sub">
               JEE Advanced is not won by solving 500 easy MCQs. It is won by sitting with 10 challenging, unfamiliar problems for 30 minutes each and reasoning through them without looking at solutions.
             </p>
@@ -172,7 +172,7 @@ export default function JeeMentorshipAdvanced() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Marks vs Rank Reality in JEE Advanced</span>
-            <h2 className="scp-h2">You Do Not Need 80% to Enter IIT</h2>
+            <h2 className="scp-h2">Marks vs Rank in JEE Advanced</h2>
             <p className="scp-section-sub">
               Unlike school exams or JEE Main where percentiles require 75-80% marks, in JEE Advanced, scoring just 45% to 55% historically secures an All India Rank under 3,000!
             </p>
@@ -233,7 +233,7 @@ export default function JeeMentorshipAdvanced() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions on JEE Advanced Mentorship</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>

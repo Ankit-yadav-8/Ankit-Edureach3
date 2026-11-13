@@ -117,7 +117,7 @@ export default function JeePrepBacklog() {
         <section className="scp-section" id="backlog-system">
           <div className="scp-section-header">
             <span className="scp-kicker">The Core Rule</span>
-            <h2 className="scp-h2">The 70-30 Golden Rule of JEE Backlog Management</h2>
+            <h2 className="scp-h2">The 70-30 Backlog Formula</h2>
             <p className="scp-section-sub">
               Almost every student who panics about backlogs commits the fatal error of skipping ongoing lectures to catch up on old topics. Here is how our mentors prevent that vicious cycle:
             </p>

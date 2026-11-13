@@ -119,7 +119,7 @@ export default function JeeMentorshipTestAnalysis() {
         <section className="scp-section" id="system">
           <div className="scp-section-header">
             <span className="scp-kicker">CampusPoint Test Intelligence</span>
-            <h2 className="scp-h2">The 8-Step Mock Test Analysis Loop</h2>
+            <h2 className="scp-h2">8-Step Test Analysis Loop</h2>
             <p className="scp-section-sub">
               This is the exact methodology top IITians use to consistently improve their ranks across every mock test:
             </p>

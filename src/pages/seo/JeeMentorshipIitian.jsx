@@ -112,7 +112,7 @@ export default function JeeMentorshipIitian() {
         <section className="scp-section" id="mentors">
           <div className="scp-section-header">
             <span className="scp-kicker">Authentic Experience Matters</span>
-            <h2 className="scp-h2">Why Learning from an IITian Changes Everything</h2>
+            <h2 className="scp-h2">Why Mentorship by IITians Works</h2>
             <p className="scp-section-sub">
               Cracking JEE Advanced is 50% knowledge and 50% psychological execution. An IITian mentor has walked the exact path and understands the nuance between theoretical advice and what actually works inside the exam hall.
             </p>

@@ -117,7 +117,7 @@ export default function JeeMentorshipClass11() {
         <section className="scp-section" id="class-11-roadmap">
           <div className="scp-section-header">
             <span className="scp-kicker">Avoid The Common Pitfalls</span>
-            <h2 className="scp-h2">Why 70% of JEE Aspirants Ruin Their Prep in Class 11</h2>
+            <h2 className="scp-h2">Overcoming the Class 11 Shock</h2>
             <p className="scp-section-sub">
               Students who scored 95%+ in Class 10 board exams frequently panic when their first coaching test score is 35/100. Understanding how to handle this shift is the single biggest predictor of eventual IIT selection.
             </p>
@@ -172,7 +172,7 @@ export default function JeeMentorshipClass11() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Foundation Priorities</span>
-            <h2 className="scp-h2">High-Yield Class 11 Chapters That Decide Your IIT Rank</h2>
+            <h2 className="scp-h2">High-Yield Class 11 Chapters</h2>
             <p className="scp-section-sub">
               Your mentor ensures absolute mastery in these keystone topics before moving to Class 12:
             </p>
@@ -220,7 +220,7 @@ export default function JeeMentorshipClass11() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions for Class 11 Aspirants</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>

@@ -197,12 +197,9 @@ export function ClusterPricing({
   return (
     <section id="pricing" className="mj-pricing-section">
       <div className="scp-container">
-        <div style={{ textAlign: "center", maxWidth: 660, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", maxWidth: 660, margin: "0 auto 36px" }}>
           <span className="scp-kicker">Simple, Transparent Pricing</span>
           <h2 className="scp-h2">Choose your plan. Start at ₹3,499.</h2>
-          <p className="scp-section-sub" style={{ margin: "12px auto 0" }}>
-            Comprehensive 1-on-1 mentorship by verified IIT Roorkee rankers. Pick your region and lock in your seat today.
-          </p>
         </div>
 
         <div className="mj-pricing-grid">
@@ -333,12 +330,9 @@ export function ClusterFounders() {
   return (
     <section className="scp-section">
       <div className="scp-container">
-        <div className="scp-section-header" style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 36px" }}>
+        <div className="scp-section-header">
           <span className="scp-kicker">Guidance From Verified IITians</span>
-          <h2 className="scp-h2">Founded & Mentored by IIT Roorkee Students</h2>
-          <p className="scp-section-sub">
-            Learn from rankers who conquered the modern NTA computer-based exam format and know exactly what it takes to crack IIT:
-          </p>
+          <h2 className="scp-h2">Mentorship by IIT Roorkee Rankers</h2>
         </div>
 
         <div className="scp-grid-3">

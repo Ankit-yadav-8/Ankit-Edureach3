@@ -116,7 +116,7 @@ export default function JeePrepStudyPlan() {
         <section className="scp-section" id="daily-schedule">
           <div className="scp-section-header">
             <span className="scp-kicker">High-Performance Routine</span>
-            <h2 className="scp-h2">The 8-Hour Master Daily Schedule for JEE Aspirants</h2>
+            <h2 className="scp-h2">Master 8-Hour Daily Schedule</h2>
             <p className="scp-section-sub">
               This routine is built around ultradian focus rhythms (90-120 minute deep work sprints) to maximize problem-solving retention without mental exhaustion:
             </p>
@@ -171,7 +171,7 @@ export default function JeePrepStudyPlan() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Habits of Toppers</span>
-            <h2 className="scp-h2">The 3 Golden Rules of a Winning JEE Study Plan</h2>
+            <h2 className="scp-h2">3 Golden Rules for Study Plans</h2>
             <p className="scp-section-sub">
               Why the best timetable fails if these behavioral systems are not in place:
             </p>
@@ -234,7 +234,7 @@ export default function JeePrepStudyPlan() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions About JEE Study Plans</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>

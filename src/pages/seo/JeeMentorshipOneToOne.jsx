@@ -112,7 +112,7 @@ export default function JeeMentorshipOneToOne() {
         <section className="scp-section" id="why-one-on-one">
           <div className="scp-section-header">
             <span className="scp-kicker">Individualized Acceleration</span>
-            <h2 className="scp-h2">Why 1-to-1 Personal Attention is Non-Negotiable</h2>
+            <h2 className="scp-h2">Why 1-to-1 Guidance Wins</h2>
             <p className="scp-section-sub">
               Every student has unique strengths and weaknesses. A student who struggles with Rotational Dynamics but excels in Calculus should not follow the same cookie-cutter schedule as everyone else in their coaching center.
             </p>
@@ -167,7 +167,7 @@ export default function JeeMentorshipOneToOne() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">The Workflow</span>
-            <h2 className="scp-h2">How Your 1-on-1 Mentorship Operates Every Week</h2>
+            <h2 className="scp-h2">Weekly 1-on-1 Mentorship Routine</h2>
             <p className="scp-section-sub">
               A structured routine that guarantees constant forward momentum throughout your JEE preparation:
             </p>

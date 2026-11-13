@@ -110,7 +110,7 @@ export default function JeePrepHub() {
         <section className="scp-section" id="guides">
           <div className="scp-section-header">
             <span className="scp-kicker">Core Pillars</span>
-            <h2 className="scp-h2">Essential JEE Preparation Modules</h2>
+            <h2 className="scp-h2">Essential Preparation Modules</h2>
             <p className="scp-section-sub">
               Explore our in-depth guides designed to fix every common bottleneck in JEE preparation:
             </p>

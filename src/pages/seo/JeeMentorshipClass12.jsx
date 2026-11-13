@@ -117,7 +117,7 @@ export default function JeeMentorshipClass12() {
         <section className="scp-section" id="dual-strategy">
           <div className="scp-section-header">
             <span className="scp-kicker">The Class 12 Juggling Act</span>
-            <h2 className="scp-h2">How to Conquer Boards & JEE Without Burning Out</h2>
+            <h2 className="scp-h2">Balancing Boards & JEE in Class 12</h2>
             <p className="scp-section-sub">
               Class 12 is intense. Between coaching lectures, board practicals, pre-boards, and fear of unresolved Class 11 backlogs, having a dedicated IITian mentor ensures you never lose direction.
             </p>
@@ -235,7 +235,7 @@ export default function JeeMentorshipClass12() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">FAQ</span>
-            <h2 className="scp-h2">Frequently Asked Questions for Class 12 Aspirants</h2>
+            <h2 className="scp-h2">Frequently Asked Questions</h2>
           </div>
           <ClusterFaq items={faqs} />
         </section>
