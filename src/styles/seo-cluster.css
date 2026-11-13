@@ -27,7 +27,7 @@
 }
 
 .scp-container {
-  max-width: 1140px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -36,19 +36,22 @@
 .scp-cluster-nav {
   position: relative;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--mj-line);
   border-bottom: 1px solid var(--mj-line);
-  box-shadow: 0 2px 12px rgba(27, 27, 36, 0.04);
+  box-shadow: 0 4px 16px -8px rgba(27, 27, 36, 0.05);
+  padding: 22px 0;
 }
 
 .scp-cluster-nav-inner {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   overflow-x: auto;
-  padding: 12px 0;
+  padding: 4px 12px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -61,35 +64,37 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 16px;
+  padding: 9px 20px;
   border-radius: 50px;
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   font-weight: 700;
   font-family: 'Space Grotesk', 'Sora', sans-serif;
   color: var(--mj-body);
   background: var(--mj-card);
   text-decoration: none;
   border: 1px solid var(--mj-line);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 0.84, 0.32, 1);
   white-space: nowrap;
 }
 .scp-nav-chip:hover {
   border-color: var(--mj-coral);
   color: var(--mj-coral-dk);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(255, 105, 61, 0.25);
 }
 .scp-nav-chip.active {
   background: var(--mj-ink);
   color: #FFFFFF;
   border-color: var(--mj-ink);
+  box-shadow: 0 6px 18px -4px rgba(27, 27, 36, 0.35);
 }
 
 /* ── Hero Section (Matches JEE 2027 Mentorship Page) ───────────── */
 .mj-hero-seo {
   position: relative;
-  padding: clamp(130px, 13vw, 160px) 0 clamp(60px, 7vw, 84px);
+  padding: clamp(110px, 11vw, 130px) 0 clamp(64px, 7vw, 84px);
   overflow: hidden;
-  border-bottom: 1px solid var(--mj-line);
   background: var(--mj-paper);
 }
 
@@ -135,7 +140,7 @@
 .mj-hero-inner {
   position: relative;
   z-index: 2;
-  max-width: 1040px;
+  max-width: 940px;
   margin: 0 auto;
   text-align: center;
 }
@@ -166,11 +171,11 @@
   position: relative;
   font-family: 'Sora', sans-serif;
   font-weight: 800;
-  font-size: clamp(2.3rem, 5.2vw, 4.2rem);
-  line-height: 1.1;
+  font-size: clamp(2.4rem, 5.8vw, 4.6rem);
+  line-height: 1.08;
   letter-spacing: -0.03em;
   color: var(--mj-ink);
-  margin: 0 auto 20px;
+  margin: 0 auto 0;
   max-width: 920px;
 }
 
@@ -202,19 +207,19 @@
 }
 
 .mj-hero-sub {
-  font: 400 clamp(1.02rem, 1.5vw, 1.2rem)/1.62 'DM Sans', sans-serif;
+  font: 400 clamp(1.04rem, 1.55vw, 1.25rem)/1.62 'DM Sans', sans-serif;
   color: var(--mj-body);
-  max-width: 720px;
-  margin: 0 auto 34px;
+  max-width: 680px;
+  margin: 24px auto 36px;
 }
 
 .mj-hero-cta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 15px;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 
 .mj-btn-glow {
@@ -268,7 +273,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px 32px;
+  gap: 16px 28px;
   flex-wrap: wrap;
   margin-top: 10px;
 }

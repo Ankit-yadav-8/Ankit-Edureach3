@@ -179,7 +179,9 @@ export default function InteractiveJourneyRoadmap({
   title = "Interactive Roadmap to JEE Mains 2027 Success",
   subtitle = "Click on any milestone along the winding path to inspect weekly tactical plans, high-yield chapters, and IITian mentor audit checklists.",
   milestones = DEFAULT_JEE_MILESTONES,
-  planKey = "mentor-jee-2027-6m"
+  planKey = "mentor-jee-2027-6m",
+  isHero = false,
+  kicker = "Plan • Prepare • Practice • Perform"
 }) {
   const { open: openEnrol } = useEnrol();
   const [selectedMilestone, setSelectedMilestone] = useState(null);
@@ -187,17 +189,30 @@ export default function InteractiveJourneyRoadmap({
   const waveD = "M 75,52 C 180,10 370,80 490,68 C 610,56 610,24 700,38 C 790,52 820,70 910,58 C 1000,46 1030,16 1100,28";
 
   return (
-    <section className="ijr-section" id="interactive-roadmap">
+    <section className={`ijr-section ${isHero ? "ijr-section--hero" : ""}`} id={isHero ? "hero" : "interactive-roadmap"}>
+      {isHero && (
+        <div className="mj-hero-bg" aria-hidden="true">
+          <span className="mj-orb mj-orb-a" />
+          <span className="mj-orb mj-orb-b" />
+        </div>
+      )}
       <div className="scp-container">
         {/* Section Header */}
         <div className="ijr-header">
           <span className="ijr-kicker">
-            <Sparkles size={14} /> Plan • Prepare • Practice • Perform
+            <Sparkles size={14} /> {kicker}
           </span>
-          <h2 className="ijr-h2">
-            A Structured Roadmap to Prepare Smart,{" "}
-            <span className="ijr-h2-accent">Track Progress & Crack JEE</span>
-          </h2>
+          {isHero ? (
+            <h1 className="ijr-h2 ijr-h2--hero">
+              A Structured Roadmap to Prepare Smart,{" "}
+              <span className="ijr-h2-accent">Track Progress & Crack JEE</span>
+            </h1>
+          ) : (
+            <h2 className="ijr-h2">
+              A Structured Roadmap to Prepare Smart,{" "}
+              <span className="ijr-h2-accent">Track Progress & Crack JEE</span>
+            </h2>
+          )}
           <p className="ijr-sub">{subtitle}</p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
@@ -322,6 +337,7 @@ export default function InteractiveJourneyRoadmap({
       </div>
 
       {/* ── INTERACTIVE PHASE INSPECTOR MODAL ─────────────────────── */}
+      {/* ── COMPACT MODAL INSPECTOR WINDOW ─────────────────────────────── */}
       <AnimatePresence>
         {selectedMilestone && (
           <motion.div
@@ -333,27 +349,28 @@ export default function InteractiveJourneyRoadmap({
           >
             <motion.div
               className="ijr-modal"
-              initial={{ scale: 0.94, y: 24, opacity: 0 }}
+              initial={{ scale: 0.94, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.94, y: 24, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              exit={{ scale: 0.94, y: 20, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 350, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="ijr-modal-header">
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <div
                     style={{
-                      width: 42,
-                      height: 42,
-                      borderRadius: 12,
+                      width: 36,
+                      height: 36,
+                      borderRadius: 10,
                       background: selectedMilestone.theme,
                       display: "grid",
                       placeItems: "center",
                       color: "#FFFFFF",
                       fontFamily: "Space Grotesk, sans-serif",
                       fontWeight: 800,
-                      fontSize: "1.15rem"
+                      fontSize: "1rem",
+                      flexShrink: 0
                     }}
                   >
                     {selectedMilestone.num}
@@ -361,27 +378,29 @@ export default function InteractiveJourneyRoadmap({
                   <div>
                     <span
                       style={{
-                        fontSize: "0.74rem",
+                        fontSize: "0.72rem",
                         fontWeight: 800,
                         textTransform: "uppercase",
-                        letterSpacing: "0.08em",
+                        letterSpacing: "0.07em",
                         fontFamily: "Space Grotesk, sans-serif",
-                        color: selectedMilestone.theme
+                        color: selectedMilestone.theme,
+                        display: "block"
                       }}
                     >
                       Milestone {selectedMilestone.num} · {selectedMilestone.week}
                     </span>
-                    <h2
+                    <h3
                       style={{
-                        margin: "2px 0 0",
-                        fontSize: "1.32rem",
+                        margin: 0,
+                        fontSize: "1.2rem",
                         fontWeight: 800,
                         fontFamily: "Sora, sans-serif",
-                        color: "#1B1B24"
+                        color: "#1B1B24",
+                        lineHeight: 1.25
                       }}
                     >
                       {selectedMilestone.title}
-                    </h2>
+                    </h3>
                   </div>
                 </div>
 
@@ -391,95 +410,70 @@ export default function InteractiveJourneyRoadmap({
                   onClick={() => setSelectedMilestone(null)}
                   aria-label="Close modal"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
 
-              {/* Modal Body */}
+              {/* Modal Body - Sleek, Compact & Focused */}
               <div className="ijr-modal-body">
-                <p style={{ fontSize: "1.02rem", lineHeight: 1.65, color: "#374151", margin: "0 0 20px" }}>
+                <p className="ijr-modal-desc">
                   {selectedMilestone.fullDescription}
                 </p>
 
-                <div className="ijr-modal-grid-2">
-                  {/* Action Tasks */}
-                  <div className="ijr-pane">
-                    <h4 className="ijr-pane-title">
-                      <Target size={15} /> Key Milestones & Daily Checklist
-                    </h4>
-                    <ul className="ijr-checklist">
-                      {selectedMilestone.tasks.map((task, ti) => (
-                        <li key={ti} className="ijr-checklist-item">
-                          <CheckCircle2 size={16} color={selectedMilestone.theme} style={{ flexShrink: 0, marginTop: 2 }} />
-                          <span>{task}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {/* Key Action Checklist (Top 3 Actionable Items) */}
+                <div className="ijr-pane-compact">
+                  <h4 className="ijr-pane-title">
+                    <Target size={14} /> Key Action Checklist
+                  </h4>
+                  <ul className="ijr-checklist">
+                    {selectedMilestone.tasks.slice(0, 3).map((task, ti) => (
+                      <li key={ti} className="ijr-checklist-item">
+                        <CheckCircle2 size={15} color={selectedMilestone.theme} style={{ flexShrink: 0, marginTop: 2 }} />
+                        <span>{task}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                  {/* Reference Material */}
-                  <div className="ijr-pane">
-                    <h4 className="ijr-pane-title">
-                      <BookOpen size={15} /> Verified Reference Material
-                    </h4>
-                    <ul className="ijr-checklist">
-                      {selectedMilestone.resources.map((res, ri) => (
-                        <li key={ri} className="ijr-checklist-item">
-                          <Award size={16} color="#FF693D" style={{ flexShrink: 0, marginTop: 2 }} />
-                          <span>{res}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div style={{ marginTop: 20, padding: "12px 14px", background: "#F4F1EA", borderRadius: 12, fontSize: "0.82rem", lineHeight: 1.45, color: "#54525C" }}>
-                      💡 <strong>Pro Tip:</strong> Avoid buying duplicate question banks. Master these core resources thoroughly before testing other sources.
+                {/* Compact Mentor Insight */}
+                {selectedMilestone.mentorSecret && (
+                  <div className="ijr-mentor-secret-compact">
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                      <Zap size={14} color="#FF693D" />
+                      <span style={{ fontSize: "0.75rem", fontWeight: 800, fontFamily: "Space Grotesk, sans-serif", color: "#D8512A", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        IITian Mentor Secret
+                      </span>
                     </div>
+                    <p style={{ margin: 0, fontSize: "0.86rem", lineHeight: 1.5, color: "#1B1B24", fontStyle: "italic" }}>
+                      "{selectedMilestone.mentorSecret}"
+                    </p>
                   </div>
-                </div>
-
-                {/* Mentor Secret Card */}
-                <div className="ijr-mentor-secret">
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                    <Zap size={18} color="#FF693D" />
-                    <span style={{ fontSize: "0.82rem", fontWeight: 800, fontFamily: "Space Grotesk, sans-serif", color: "#D8512A", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                      IIT Roorkee Mentor Secret
-                    </span>
-                  </div>
-                  <p style={{ margin: 0, fontSize: "0.92rem", lineHeight: 1.6, color: "#1B1B24", fontStyle: "italic" }}>
-                    "{selectedMilestone.mentorSecret}"
-                  </p>
-                </div>
+                )}
               </div>
 
-              {/* Modal Footer with Live Razorpay & WhatsApp Controls */}
+              {/* Modal Footer - Compact & Direct Actions */}
               <div className="ijr-modal-footer">
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.85rem", color: "#54525C" }}>
-                  <Sparkles size={16} color="#FF693D" />
-                  <span>Execute this phase with your personal IITian mentor</span>
-                </div>
+                <a
+                  href={`https://wa.me/${WA_NUMBER}?text=Hi%20CampusPoint,%20I%20have%20questions%20about%20Milestone%20${selectedMilestone.id}:%20${encodeURIComponent(selectedMilestone.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mj-btn-glass"
+                  style={{ padding: "9px 16px", fontSize: "0.82rem" }}
+                >
+                  Discuss on WhatsApp <Phone size={13} />
+                </a>
 
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <a
-                    href={`https://wa.me/${WA_NUMBER}?text=Hi%20CampusPoint,%20I%20have%20questions%20about%20Milestone%20${selectedMilestone.id}:%20${encodeURIComponent(selectedMilestone.title)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mj-btn-glass"
-                    style={{ padding: "10px 18px", fontSize: "0.88rem" }}
-                  >
-                    Discuss on WhatsApp <Phone size={14} />
-                  </a>
-
-                  <button
-                    type="button"
-                    className="mj-btn-glow"
-                    style={{ padding: "10px 22px", fontSize: "0.88rem" }}
-                    onClick={() => {
-                      setSelectedMilestone(null);
-                      openEnrol(planKey);
-                    }}
-                  >
-                    Enroll in Mentorship · ₹3,499 <ArrowRight size={15} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="mj-btn-glow"
+                  style={{ padding: "9px 18px", fontSize: "0.84rem" }}
+                  onClick={() => {
+                    setSelectedMilestone(null);
+                    openEnrol(planKey);
+                  }}
+                >
+                  Enroll · ₹3,499 <ArrowRight size={14} />
+                </button>
               </div>
             </motion.div>
           </motion.div>

@@ -60,9 +60,6 @@ export function ClusterNav({ currentPath }) {
     <nav className="scp-cluster-nav" aria-label="JEE Mentorship & Prep Cluster">
       <div className="scp-container">
         <div className="scp-cluster-nav-inner">
-          <span style={{ fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--mj-muted)", marginRight: 6, flexShrink: 0, fontFamily: "Space Grotesk, sans-serif" }}>
-            Topic Cluster:
-          </span>
           {CLUSTER_PAGES.map((item) => {
             const isActive = currentPath === item.path;
             return (
@@ -83,13 +80,16 @@ export function ClusterNav({ currentPath }) {
 }
 
 /**
- * Clean, bold, world-class Hero (tags, preview cards, and verbose lines removed).
+ * Clean, bold, world-class Hero (Matches signature Mentorship Journal layout).
  */
 export function ClusterHero({
+  badge = "Built by IITians",
   title,
   titlePrefix = "Personalized",
   accentWord = "JEE Mentorship",
   titleSuffix = "Program",
+  subtitle,
+  description,
   planKey = "mentor-jee-2027-6m",
   bullets = [
     "1-on-1 Verified IIT Roorkee Mentor",
@@ -99,6 +99,7 @@ export function ClusterHero({
 }) {
   const { open: openEnrol } = useEnrol();
   const plan = MENTOR_PLANS[planKey] || { amount: 3499 };
+  const subtext = subtitle || description || "Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT students to turn your IIT dream into a real rank.";
 
   return (
     <header className="mj-hero-seo">
@@ -109,6 +110,12 @@ export function ClusterHero({
 
       <div className="scp-container">
         <div className="mj-hero-inner">
+          {badge && (
+            <div className="mj-hero-pill">
+              <span className="mj-dot" /> {badge}
+            </div>
+          )}
+
           <h1 className="mj-hero-h1">
             {title ? (
               title
@@ -126,7 +133,13 @@ export function ClusterHero({
             )}
           </h1>
 
-          <div className="mj-hero-cta" style={{ marginTop: 28, marginBottom: 24 }}>
+          {subtext && (
+            <p className="mj-hero-sub">
+              {subtext}
+            </p>
+          )}
+
+          <div className="mj-hero-cta">
             <button
               type="button"
               className="mj-btn-glow"
@@ -151,7 +164,7 @@ export function ClusterHero({
               className="mj-btn-glass"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
-              Talk to Mentor <Phone size={16} />
+              Know About Plans <Phone size={16} />
             </a>
           </div>
 

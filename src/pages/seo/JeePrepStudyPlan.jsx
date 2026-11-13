@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
-  ClusterHero,
+
   ClusterPricing,
   ClusterFounders,
   ClusterCta,
@@ -102,23 +102,14 @@ export default function JeePrepStudyPlan() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        badge="⏰ SCIENTIFIC DAILY & WEEKLY TIME MANAGEMENT"
-        titlePrefix="Personalized"
-        accentWord="JEE Study Plan"
-        titleSuffix="& Daily Timetable"
-        description="Stop wasting hours wondering what to study each day. Follow a proven, high-yield daily routine designed by IITians that balances Physics, Chemistry, and Maths, systematically clears backlogs, and ensures consistent revision."
-        planKey="mentor-jee-2027-6m"
-      />
-
-      <ClusterNav currentPath={currentPath} />
-
       <InteractiveJourneyRoadmap
-        title="Interactive Weekly Study Plan & Milestones"
+        isHero={true}
         subtitle="Click each milestone on the road to inspect daily study hours, high-yield topics, and test analysis protocols."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Daily Schedule Structure */}
