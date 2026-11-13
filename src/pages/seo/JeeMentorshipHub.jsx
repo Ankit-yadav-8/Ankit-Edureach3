@@ -34,28 +34,57 @@ export default function JeeMentorshipHub() {
   const faqs = [
     {
       q: "What is the CampusPoint JEE Mentorship Program?",
-      a: "The CampusPoint JEE Mentorship Program provides dedicated 1-to-1 personal guidance by top IITians (from IIT Roorkee and top IITs) for students preparing for JEE Main and JEE Advanced. Unlike traditional coaching that offers one-size-fits-all lectures, our mentorship provides daily customized study plans, question-level test error analysis, weekly strategy reviews, backlog recovery, and 24/7 WhatsApp doubt guidance."
+      a: "The CampusPoint JEE Mentorship Program provides dedicated 1-to-1 personal guidance by top IITians (from IIT Roorkee and premier IITs) for students preparing for JEE Main and JEE Advanced. Unlike traditional coaching with 200+ batch sizes, our mentorship provides daily customized study plans, question-level test error autopsy, weekly 1-on-1 strategy video reviews, the 70-30 backlog formula, and 24/7 WhatsApp guidance."
     },
     {
-      q: "How does a 1-to-1 JEE mentor help improve my percentile?",
-      a: "Most students fail to clear JEE not due to lack of material, but due to lack of direction, unmanaged backlogs, and repeating the same test mistakes. An IITian mentor analyzes your exact weak topics from mock tests, builds a daily realistic schedule tailored to your pace, keeps you accountable via daily study logs, and fine-tunes your exam-temperament to reliably jump 40-70 marks."
+      q: "Which is the best mentorship program for JEE Main & Advanced?",
+      a: "CampusPoint is rated the #1 JEE Mentorship program (4.9/5 from 260+ enrolled aspirants) because mentors are verified IIT Roorkee and top IIT rankers who cleared JEE under recent NTA patterns. Rather than generic topper advice, students get individualized question-level test diagnostics, daily schedule tracking, and direct WhatsApp access to their mentor."
     },
     {
-      q: "Is this program suitable for Class 11, Class 12, and Droppers?",
-      a: "Yes. We have customized mentorship tracks for each stage: Class 11 foundation & school-coaching balance, Class 12 board-plus-JEE coordination and October syllabus finish, and an intensive 8-month high-yield recovery track for Droppers/Repeaters."
+      q: "How does a 1-to-1 JEE mentor help increase mock test scores by 40–70 marks?",
+      a: "Most students study 8–10 hours daily but stay stuck at score plateaus (e.g., 110–140 marks) due to negative marking slips, poor question filtering, and untested silly mistakes. An IITian mentor analyzes your computer-based test question-by-question, classifies every mark lost into conceptual vs execution error, and assigns targeted 30-problem fix decks for the coming week."
     },
     {
-      q: "How does CampusPoint test analysis differ from coaching test series?",
-      a: "Coaching test series only give you a score and rank. CampusPoint's diagnostic engine analyzes your exam question-by-question: time spent per question, accuracy in high-yield vs low-yield concepts, silly mistakes vs conceptual gaps, and unattempted questions. Your mentor then drafts a personalized corrective plan for the following week."
+      q: "Is this JEE mentorship program suitable for Class 11, Class 12, and Droppers?",
+      a: "Yes. We have customized mentorship tracks: Class 11 foundation & school-coaching balance, Class 12 board-plus-JEE coordination and syllabus completion by October, and an intensive high-yield recovery track for Droppers and repeaters."
     },
     {
-      q: "What is the cost of the JEE Mentorship Program?",
+      q: "How does CampusPoint test error autopsy differ from coaching test series?",
+      a: "Coaching test series only give you a score and rank. CampusPoint's diagnostic engine analyzes your exam question-by-question: time spent per question, accuracy in high-yield vs low-yield concepts, silly slips vs conceptual gaps, and unattempted traps. Your mentor then drafts a personalized corrective plan for the following week."
+    },
+    {
+      q: "What is the cost of the CampusPoint JEE Mentorship Program?",
       a: "Our comprehensive JEE Mentorship program is priced transparently at ₹3,499 valid till JEE Mains (or 6 months of daily intensive 1-on-1 guidance), with zero hidden renewal fees."
     }
   ];
 
   const jsonLd = [
     getOrganizationSchema(),
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "CampusPoint 1-on-1 JEE Mentorship Program",
+      "image": "https://campuspoint.in/icons/icon-512x512.png",
+      "description": "Comprehensive 1-to-1 JEE mentorship by verified IIT Roorkee rankers. Daily personalized study plans, question-level mock test error autopsy, 70-30 backlog formula, and 24/7 WhatsApp guidance.",
+      "brand": {
+        "@type": "Brand",
+        "name": "CampusPoint"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "bestRating": "5",
+        "ratingCount": "264",
+        "reviewCount": "182"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "3499",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://campuspoint.in/jee-mentorship"
+      }
+    },
     {
       "@context": "https://schema.org",
       "@type": "EducationalOccupationalProgram",
@@ -72,7 +101,7 @@ export default function JeeMentorshipHub() {
         "price": "3499",
         "priceCurrency": "INR",
         "availability": "https://schema.org/InStock",
-        "url": "https://campuspoint.in/mentorship/jee-2027"
+        "url": "https://campuspoint.in/jee-mentorship"
       }
     },
     {
@@ -94,8 +123,8 @@ export default function JeeMentorshipHub() {
   return (
     <div className="seo-cluster-page">
       <Seo
-        title="JEE Mentorship Program | Personalized JEE Preparation"
-        description="Get personalized JEE mentorship with 1-to-1 guidance, structured study plans, weekly progress reviews, test analysis, backlog support and preparation strategy for JEE Main and JEE Advanced."
+        title="Best JEE Mentorship Program 2026–2027 | 1-on-1 Guidance by IITians - CampusPoint"
+        description="Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers. Daily personalized study plans, question-level mock test error autopsy, 70-30 backlog formula & 24/7 WhatsApp guidance. Enroll at ₹3,499."
         path={currentPath}
         keywords={keywords}
         breadcrumbs={[

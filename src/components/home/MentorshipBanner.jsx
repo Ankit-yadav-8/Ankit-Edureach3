@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CL, clEyebrow } from "./clTheme.js";
 import { Sparkles, ArrowRight, Video, Target, MessageCircle, CheckCircle2 } from "lucide-react";
@@ -59,10 +59,8 @@ export default function MentorshipBanner() {
               Stop guessing your prep strategy. Get paired with an IITian mentor 1-on-1 till JEE Mains 2027. Receive personalized daily targets, live doubt resolution, and proven frameworks to maximize your score.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
-              <motion.button
-                whileHover={{ y: -3, boxShadow: `0 12px 24px rgba(255,105,61,0.3)` }}
-                whileTap={{ y: 0 }}
-                onClick={() => nav("/mentorship/jee-2027")}
+              <Link
+                to="/jee-mentorship"
                 style={{
                   background: CL.coral,
                   color: "#FFFFFF",
@@ -76,15 +74,16 @@ export default function MentorshipBanner() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 10,
+                  textDecoration: "none",
                   boxShadow: `0 6px 16px rgba(255,105,61,0.25)`,
                   transition: "background 0.2s ease"
                 }}
               >
-                Enroll in Mentorship · ₹3,499
+                Enroll in JEE Mentorship · ₹3,499
                 <ArrowRight size={18} />
-              </motion.button>
-              <button
-                onClick={() => nav("/jee-mentorship")}
+              </Link>
+              <Link
+                to="/jee-mentorship"
                 style={{
                   background: "#FFFFFF",
                   color: CL.ink,
@@ -98,11 +97,12 @@ export default function MentorshipBanner() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
+                  textDecoration: "none",
                   transition: "all 0.2s ease"
                 }}
               >
-                Explore JEE Mentorship Hub
-              </button>
+                Explore JEE Mentorship Program
+              </Link>
             </div>
           </div>
 

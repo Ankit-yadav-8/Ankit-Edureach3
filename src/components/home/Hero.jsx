@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Target, Users } from "lucide-react";
 
@@ -208,21 +208,21 @@ export default function Hero({ onSearch }) {
 
           {/* action buttons */}
           <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
-            <button
-              onClick={() => nav("/mentorship/jee-2027")}
+            <Link
+              to="/jee-mentorship"
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
                 width: isMobile ? "100%" : undefined, maxWidth: isMobile ? 360 : undefined, minWidth: !isMobile ? 200 : undefined, 
                 padding: isMobile ? "16px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
-                background: CORAL, border: "none", color: "#fff",
+                background: CORAL, border: "none", color: "#fff", textDecoration: "none",
                 fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 15 : 16,
                 boxShadow: `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`, transition: "all .2s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 14px rgba(0,0,0,0.25), inset -6px -6px 14px rgba(255,255,255,0.35)`; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`; }}
             >
-              Explore Mentorship <Target size={16} />
-            </button>
+              Explore JEE Mentorship <Target size={16} />
+            </Link>
             <button
               onClick={() => nav("/community")}
               style={{

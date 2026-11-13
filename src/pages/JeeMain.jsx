@@ -482,6 +482,53 @@ export default function JeeMain() {
       {/* #cutoffs anchor kept for the "Top Cutoffs" sub-nav pill */}
       <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
 
+      {/* ── Contextual Internal Link Banner to JEE Mentorship ── */}
+      <div style={{ maxWidth: 1140, margin: "28px auto 0", padding: "0 16px" }}>
+        <div style={{
+          background: "linear-gradient(135deg, rgba(255, 105, 61, 0.08) 0%, #FFFFFF 100%)",
+          border: "1.5px solid #FFD6C4",
+          borderRadius: 18,
+          padding: "20px 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 16,
+          boxShadow: "0 4px 16px rgba(255, 105, 61, 0.06)"
+        }}>
+          <div>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#D8512A", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF693D" }} /> 1-on-1 Mentorship by IITians
+            </div>
+            <h3 style={{ margin: "0 0 4px", fontSize: "1.15rem", fontWeight: 800, color: "#111827", fontFamily: "var(--font-heading, sans-serif)" }}>
+              Need a Personal Mentor to Guarantee a 99+ Percentile in JEE Main?
+            </h3>
+            <p style={{ margin: 0, fontSize: "0.88rem", color: "#64748B", maxWidth: 640, lineHeight: 1.5 }}>
+              Pair 1-on-1 with verified IIT Roorkee rankers. Get customized daily study plans, question-level mock error autopsies, and the proven 70-30 backlog formula.
+            </p>
+          </div>
+          <Link
+            to="/jee-mentorship"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: "#FF693D",
+              color: "#FFFFFF",
+              fontWeight: 700,
+              fontSize: "0.88rem",
+              padding: "12px 22px",
+              borderRadius: 50,
+              textDecoration: "none",
+              boxShadow: "0 2px 8px rgba(255, 105, 61, 0.25)",
+              flexShrink: 0
+            }}
+          >
+            Explore JEE Mentorship Program <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+
       {/* ── Marks vs Percentile Table ── */}
       <div style={{ background: "transparent", paddingBottom: 40 }}>
         <Block id="marks-vs-percentile" eyebrow="Analysis" title="JEE Main Marks vs Percentile vs Rank (Expected 2026)"

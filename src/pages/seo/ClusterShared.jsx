@@ -105,11 +105,6 @@ export function ClusterHero({
 
   return (
     <header className="mj-hero-seo">
-      <div className="mj-hero-bg" aria-hidden="true">
-        <span className="mj-orb mj-orb-a" />
-        <span className="mj-orb mj-orb-b" />
-      </div>
-
       <div className="scp-container">
         <div className="mj-hero-inner">
           {badge && (

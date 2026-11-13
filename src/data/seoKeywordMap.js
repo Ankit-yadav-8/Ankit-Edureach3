@@ -8,9 +8,9 @@ export const SEO_KEYWORD_MAP = {
   // ── 1. Pillar: Main JEE Mentorship Page ─────────────────────
   "/jee-mentorship": {
     path: "/jee-mentorship",
-    h1: "Personalized JEE Mentorship Program",
-    title: "JEE Mentorship Program | Personalized JEE Preparation",
-    description: "Get personalized JEE mentorship with 1-to-1 guidance, structured study plans, weekly progress reviews, test analysis, backlog support and preparation strategy.",
+    h1: "Personalized 1-on-1 JEE Mentorship Program by Verified IITians",
+    title: "Best JEE Mentorship Program 2026–2027 | 1-on-1 Guidance by IITians - CampusPoint",
+    description: "Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers. Daily personalized study plans, question-level mock test error autopsy, 70-30 backlog formula & 24/7 WhatsApp guidance. Enroll at ₹3,499.",
     searchIntent: "Commercial / Investigative",
     primaryKeyword: "JEE mentorship",
     targetKeywords: [

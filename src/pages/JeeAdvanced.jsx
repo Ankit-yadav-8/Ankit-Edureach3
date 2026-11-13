@@ -606,6 +606,53 @@ export default function JeeAdvanced() {
       {/* #cutoffs anchor kept for the "IIT Cutoffs" sub-nav pill */}
       <div id="cutoffs" style={{ scrollMarginTop: 90 }} />
 
+      {/* ── Contextual Internal Link Banner to JEE Mentorship ── */}
+      <div style={{ maxWidth: 1140, margin: "28px auto 0", padding: "0 16px" }}>
+        <div style={{
+          background: "linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, #FFFFFF 100%)",
+          border: "1.5px solid #DDD6FE",
+          borderRadius: 18,
+          padding: "20px 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 16,
+          boxShadow: "0 4px 16px rgba(124, 58, 237, 0.06)"
+        }}>
+          <div>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#7C3AED", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#7C3AED" }} /> Top Ranker Mentorship
+            </div>
+            <h3 style={{ margin: "0 0 4px", fontSize: "1.15rem", fontWeight: 800, color: "#111827", fontFamily: "var(--font-heading, sans-serif)" }}>
+              Aiming for an Under-1000 AIR in JEE Advanced?
+            </h3>
+            <p style={{ margin: 0, fontSize: "0.88rem", color: "#64748B", maxWidth: 640, lineHeight: 1.5 }}>
+              Learn directly from IIT Roorkee and top IIT rankers who solved tricky multi-concept problems under real exam pressure. 1-on-1 weekly reviews and mistake autopsies.
+            </p>
+          </div>
+          <Link
+            to="/jee-mentorship"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: "#7C3AED",
+              color: "#FFFFFF",
+              fontWeight: 700,
+              fontSize: "0.88rem",
+              padding: "12px 22px",
+              borderRadius: 50,
+              textDecoration: "none",
+              boxShadow: "0 2px 8px rgba(124, 58, 237, 0.25)",
+              flexShrink: 0
+            }}
+          >
+            Explore JEE Mentorship Program <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+
       {/* ── Rank Predictor ── */}
       <Block id="rank" eyebrow="Tool 1" title="JEE Advanced Rank Predictor"
         sub="Enter your expected marks for Paper 1 and Paper 2 to estimate your All India Rank.">

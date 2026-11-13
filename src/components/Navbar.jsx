@@ -77,7 +77,7 @@ const RESOURCES_NAV = [
 
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
 const MENTORSHIP_NAV = [
-  { label: "JEE Mentorship Hub", to: "/jee-mentorship",        icon: Sparkles, tag: "1-on-1 IITian Guidance & Cluster" },
+  { label: "JEE Mentorship Program", to: "/jee-mentorship",        icon: Sparkles, tag: "1-on-1 IITian Guidance & Strategy" },
   { label: "JEE & NEET 2027",    to: "/mentorship/jee-2027",    icon: Trophy,   tag: "₹3,499 · Till JEE Mains 2027" },
   { label: "JEE & NEET 2028",    to: "/mentorship/jee-2028",    icon: Award,    tag: "₹3,499 · 6 Months" },
   { label: "JEE Preparation Hub",to: "/jee-preparation",       icon: Target,   tag: "Study plans, backlogs & roadmaps" },
@@ -212,7 +212,7 @@ export default function Navbar({ onSearch }) {
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
     { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/jee-advanced-analysis", "/neet-strategy", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
+    { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/jee-mentorship", match: (p) => p.startsWith("/mentorship") || p.startsWith("/jee-mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
     { label: "Blog", icon: FileText, to: "/blog", match: (p) => p.startsWith("/blog") },
   ];
