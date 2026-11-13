@@ -70,19 +70,13 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mj-hero-h1">
-              {isNeet ? (
-                <>
-                  Personalized<br />
-                  <span className="mj-hero-accent">NEET Mentorship</span><br />
-                  by Top Medical Toppers
-                </>
-              ) : (
-                <>
-                  Personalized<br />
-                  <span className="mj-hero-accent">JEE Mentorship</span><br />
-                  by Verified IITians
-                </>
-              )}
+              The mentorship built<br />for{" "}
+              <span className="mj-hero-accent">
+                {exam}.
+                <svg className="mj-hero-uline" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M5 9 C 78 3, 244 3, 315 8" />
+                </svg>
+              </span>
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
@@ -1793,14 +1787,14 @@ export default function Mentorship() {
       <Seo
         rawTitle={
           variant === "jee-2027"
-            ? "JEE Mentorship Program 2026–2027 by IITians | 1-on-1 Guidance – CampusPoint"
+            ? "JEE 2027 Mentorship by IITians (Till JEE Main 2027) · ₹3,499 | Campus Point"
             : variant === "jee-2028"
-            ? "JEE Mentorship for Class 11 (2028 Batch) by IITians | CampusPoint"
-            : "NEET Mentorship Program 2027 by Doctors & Toppers | CampusPoint"
+            ? "JEE 2028 Mentorship by IITians (Class 11 Foundation & Prep) · ₹3,499 | Campus Point"
+            : "NEET 2027 Mentorship by Top Medical Students & Toppers · ₹3,499 | Campus Point"
         }
         description={
           variant === "jee-2027"
-            ? "Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers till JEE Mains. Daily personalized study plans, 70-30 backlog formula, mock test error autopsy & 24/7 WhatsApp guidance. Enroll at ₹3,499."
+            ? "1-on-1 IIT JEE 2027 mentorship by IIT Roorkee & IIT Bombay rankers till JEE Mains 2027. Personal daily study plans, 24/7 doubt solving, weekly test analysis & Kota modules. Enroll at ₹3,499."
             : variant === "jee-2028"
             ? "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls. 6-Month Plan at ₹3,499."
             : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance. Starts at ₹3,499."
