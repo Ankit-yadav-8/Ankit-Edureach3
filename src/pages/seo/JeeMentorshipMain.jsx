@@ -10,6 +10,7 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
+  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -111,6 +112,13 @@ export default function JeeMentorshipMain() {
       />
 
       <ClusterNav currentPath={currentPath} />
+
+      <InteractiveJourneyRoadmap
+        title="Interactive 1-on-1 Roadmap for JEE Main 2027"
+        subtitle="Work with your IITian mentor across these 6 strategic milestones. Click any phase to inspect your weekly deliverables."
+        planKey="mentor-jee-2027-6m"
+        targetExam="JEE Main 2027"
+      />
 
       <main className="scp-container" id="details">
         {/* Core Strategy Breakdown */}

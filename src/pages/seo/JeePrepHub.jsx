@@ -10,6 +10,7 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
+  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -96,6 +97,13 @@ export default function JeePrepHub() {
       />
 
       <ClusterNav currentPath={currentPath} />
+
+      <InteractiveJourneyRoadmap
+        title="Interactive JEE 2027 Master Preparation Roadmap"
+        subtitle="Explore the complete 6-stage journey from syllabus breakdown to peak exam temperament. Click any milestone to open."
+        planKey="mentor-jee-2027-6m"
+        targetExam="JEE Main 2027"
+      />
 
       <main className="scp-container" id="details">
         {/* Core Preparation Pillars */}

@@ -10,6 +10,7 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
+  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -111,6 +112,13 @@ export default function JeePrepStudyPlan() {
       />
 
       <ClusterNav currentPath={currentPath} />
+
+      <InteractiveJourneyRoadmap
+        title="Interactive Weekly Study Plan & Milestones"
+        subtitle="Click each milestone on the road to inspect daily study hours, high-yield topics, and test analysis protocols."
+        planKey="mentor-jee-2027-6m"
+        targetExam="JEE Main 2027"
+      />
 
       <main className="scp-container" id="details">
         {/* Daily Schedule Structure */}

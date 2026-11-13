@@ -10,6 +10,7 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
+  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -113,6 +114,13 @@ export default function JeePrepStrategy() {
       />
 
       <ClusterNav currentPath={currentPath} />
+
+      <InteractiveJourneyRoadmap
+        title="Interactive Roadmap to JEE Preparation Strategy"
+        subtitle="Click on any milestone along the winding mountain path to open the weekly execution guide, book recommendations, and mentor secrets."
+        planKey="mentor-jee-2027-6m"
+        targetExam="JEE Main 2027"
+      />
 
       <main className="scp-container" id="details">
         {/* Subject Tactical Playbooks */}

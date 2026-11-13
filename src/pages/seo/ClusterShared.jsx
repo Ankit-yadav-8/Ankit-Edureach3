@@ -21,6 +21,7 @@ import {
 import { useEnrol } from "../../components/EnrolModal.jsx";
 import { MENTOR_PLANS } from "../../data/mentorship.js";
 import "../../styles/seo-cluster.css";
+export { default as InteractiveJourneyRoadmap } from "../../components/roadmap/InteractiveJourneyRoadmap.jsx";
 
 const WA_NUMBER = "918118826194";
 
