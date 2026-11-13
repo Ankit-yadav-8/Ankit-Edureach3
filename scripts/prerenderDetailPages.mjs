@@ -73,12 +73,10 @@ function replaceMeta(html, { title, description, canonical, jsonLd, bodyContent 
     res = res.replace(/<\/head>/i, `${jsonLdScript}</head>`);
   }
 
-  // Inject semantic initial HTML into <div id="root">...</div>
+  // Inject semantic initial HTML into <noscript> so it never causes a 1-second FOUC flash for real users, while preserving 100% crawlability for SEO bots
   if (bodyContent) {
-    res = res.replace(
-      /<div id="root">[\s\S]*?<\/body>/i,
-      `<div id="root">\n${bodyContent}\n  </div>\n</body>`
-    );
+    const noscriptBlock = `\n  <noscript>\n    <div class="seo-crawl-fallback">\n${bodyContent}\n    </div>\n  </noscript>\n`;
+    res = res.replace(/<\/body>/i, `${noscriptBlock}</body>`);
   }
 
   return res;

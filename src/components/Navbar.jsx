@@ -176,6 +176,8 @@ export default function Navbar({ onSearch }) {
       else if (to.startsWith("/private-universities")) p = import("../pages/PrivateUnis.jsx");
       else if (to.startsWith("/blog")) p = import("../pages/Blog.jsx");
       else if (to.startsWith("/mentorship")) p = import("../pages/Mentorship.jsx");
+      else if (to.startsWith("/jee-mentorship")) p = import("../pages/seo/JeeMentorshipHub.jsx");
+      else if (to.startsWith("/jee-preparation")) p = import("../pages/seo/JeePrepHub.jsx");
       else if (to.startsWith("/tools")) p = import("../pages/Tools.jsx");
       else if (to.startsWith("/map")) p = import("../pages/CollegeMap.jsx");
       else if (to.startsWith("/community")) p = import("../pages/PublicCommunity.jsx");
