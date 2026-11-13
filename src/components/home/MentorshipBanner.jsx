@@ -60,7 +60,7 @@ export default function MentorshipBanner() {
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
               <Link
-                to="/jee-mentorship"
+                to="/mentorship/jee-2027"
                 style={{
                   background: CL.coral,
                   color: "#FFFFFF",
@@ -79,11 +79,11 @@ export default function MentorshipBanner() {
                   transition: "background 0.2s ease"
                 }}
               >
-                Enroll in JEE Mentorship · ₹3,499
+                Enroll in Mentorship · ₹3,499
                 <ArrowRight size={18} />
               </Link>
               <Link
-                to="/jee-mentorship"
+                to="/mentorship/jee-2028"
                 style={{
                   background: "#FFFFFF",
                   color: CL.ink,
@@ -101,7 +101,7 @@ export default function MentorshipBanner() {
                   transition: "all 0.2s ease"
                 }}
               >
-                Explore JEE Mentorship Program
+                Explore JEE 2028 Batch
               </Link>
             </div>
           </div>

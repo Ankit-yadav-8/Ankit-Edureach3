@@ -56,6 +56,11 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
   return (
     <section className="mj-hero">
+      <div className="mj-hero-bg" aria-hidden="true">
+        <span className="mj-orb mj-orb-a" />
+        <span className="mj-orb mj-orb-b" />
+      </div>
+
       <div className="mj-wrap mj-hero-inner">
         <div className="mj-hero-center">
           <VariantTabs variant={variant} />
@@ -67,11 +72,15 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
             <h1 className="mj-hero-h1">
               {isNeet ? (
                 <>
-                  Personalized <span className="mj-hero-accent">NEET Mentorship</span><br />by Top Medical Toppers
+                  Personalized<br />
+                  <span className="mj-hero-accent">NEET Mentorship</span><br />
+                  by Top Medical Toppers
                 </>
               ) : (
                 <>
-                  Personalized <span className="mj-hero-accent">JEE Mentorship</span><br />by Verified IITians
+                  Personalized<br />
+                  <span className="mj-hero-accent">JEE Mentorship</span><br />
+                  by Verified IITians
                 </>
               )}
             </h1>

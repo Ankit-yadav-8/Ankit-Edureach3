@@ -88,7 +88,7 @@ export function ClusterHero({
   title,
   titlePrefix = "Personalized",
   accentWord = "JEE Mentorship",
-  titleSuffix = "Program",
+  titleSuffix = "by Verified IITians",
   subtitle,
   description,
   planKey = "mentor-jee-2027-6m",
@@ -112,13 +112,10 @@ export function ClusterHero({
               title
             ) : (
               <>
-                {titlePrefix}{" "}
+                {titlePrefix}<br />
                 <span className="mj-hero-accent">
                   {accentWord}
-                  <svg className="mj-hero-uline" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M5 9 C 78 3, 244 3, 315 8" />
-                  </svg>
-                </span>{" "}
+                </span><br />
                 {titleSuffix}
               </>
             )}

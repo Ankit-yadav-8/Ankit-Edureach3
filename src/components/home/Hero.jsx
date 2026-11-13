@@ -209,7 +209,7 @@ export default function Hero({ onSearch }) {
           {/* action buttons */}
           <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
             <Link
-              to="/jee-mentorship"
+              to="/mentorship/jee-2027"
               style={{
                 display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
                 width: isMobile ? "100%" : undefined, maxWidth: isMobile ? 360 : undefined, minWidth: !isMobile ? 200 : undefined, 
@@ -221,7 +221,7 @@ export default function Hero({ onSearch }) {
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 14px rgba(0,0,0,0.25), inset -6px -6px 14px rgba(255,255,255,0.35)`; }}
               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`; }}
             >
-              Explore JEE Mentorship <Target size={16} />
+              Explore Mentorship <Target size={16} />
             </Link>
             <button
               onClick={() => nav("/community")}
