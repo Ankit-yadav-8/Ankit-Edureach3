@@ -1028,6 +1028,7 @@ function Pricing({ plan, exam, openEnrol }) {
       key: keys.indian,
       label: "INDIAN STUDENTS",
       sublabel: isJee2027 ? "Till JEE Mains 2027" : (pInd?.duration || "6 Months"),
+      planTag: isJee2027 ? "Till JEE Mains" : exam,
       flag: "🇮🇳",
       amount: pInd?.amount || 3499,
       old: pInd?.old || 5999,
@@ -1040,6 +1041,7 @@ function Pricing({ plan, exam, openEnrol }) {
       key: keys.intl,
       label: "INTERNATIONAL STUDENTS",
       sublabel: "1 Year",
+      planTag: "1 Year · Till JEE Advanced",
       flag: "🌍",
       amount: pi?.amount || 13999,
       old: pi?.old || 24999,
@@ -1072,7 +1074,7 @@ function Pricing({ plan, exam, openEnrol }) {
                 <span className="mj-tier-flag">{c.flag}</span>
                 <span className="mj-tier-kicker">{c.label}</span>
                 <span className="mj-tier-sub">{c.sublabel}</span>
-                <span className="mj-tier-plan">{exam}</span>
+                <span className="mj-tier-plan">{c.planTag || exam}</span>
                 <div className="mj-tier-amt">₹{c.amount.toLocaleString("en-IN")}</div>
                 <div className="mj-tier-old">₹{c.old.toLocaleString("en-IN")}</div>
                 {c.note && <div style={{ marginTop: "16px", padding: "8px 12px", background: "rgba(0,0,0,0.15)", borderRadius: "8px", fontSize: "0.75rem", lineHeight: 1.4, fontWeight: 600, color: "rgba(255,255,255,0.9)", border: "1px solid rgba(255,255,255,0.1)" }}>{c.note}</div>}

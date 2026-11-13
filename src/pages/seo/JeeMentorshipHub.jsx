@@ -362,7 +362,7 @@ export default function JeeMentorshipHub() {
         {/* Conversion CTA Block */}
         <ClusterPricing
           planKey="mentor-jee-2027-6m"
-          exam="JEE Main & Advanced 2027"
+          exam="Till JEE Mains"
           sublabel="Till JEE Mains 2027"
         />
 
