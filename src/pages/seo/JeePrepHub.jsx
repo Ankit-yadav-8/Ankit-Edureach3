@@ -99,8 +99,8 @@ export default function JeePrepHub() {
       <ClusterNav currentPath={currentPath} />
 
       <InteractiveJourneyRoadmap
-        title="Interactive JEE 2027 Master Preparation Roadmap"
-        subtitle="Explore the complete 6-stage journey from syllabus breakdown to peak exam temperament. Click any milestone to open."
+        title="Master JEE Preparation Roadmap"
+        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />

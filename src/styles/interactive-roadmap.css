@@ -1,25 +1,24 @@
 /* ============================================================
    interactive-roadmap.css — World-Class Winding Road Journey
-   Inspired by CampusPoint's AdmissionTimeline & Apple Guided Tours.
-   Aesthetic, fluid, responsive, glassmorphic, and interactive.
+   Clean, light, modern, responsive, and distraction-free.
+   Zero fuzzy glow animations, crisp contrast & smooth layout.
    ============================================================ */
 
 .ijr-section {
   position: relative;
-  padding: 50px 0 70px;
-  overflow: hidden;
+  padding: 44px 0 64px;
   background: var(--page-bg, #FCFBF9);
   border-bottom: 1px solid #E4DED2;
 }
 
 .ijr-section--hero {
-  padding: clamp(112px, 11vw, 130px) 0 clamp(60px, 7vw, 80px);
+  padding: clamp(96px, 10vw, 120px) 0 clamp(50px, 6vw, 70px);
 }
 
 .ijr-header {
   text-align: center;
-  max-width: 780px;
-  margin: 0 auto 32px;
+  max-width: 680px;
+  margin: 0 auto 28px;
   position: relative;
   z-index: 2;
 }
@@ -27,51 +26,59 @@
 .ijr-kicker {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
+  gap: 7px;
+  padding: 5px 14px;
   border-radius: 50px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: #FFE7DE;
+  background: #FFF0EB;
   color: #D8512A;
-  border: 1px solid #F6CDBE;
-  margin-bottom: 14px;
+  border: 1px solid #FFD6C4;
+  margin-bottom: 12px;
+}
+
+.ijr-kicker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF693D;
+  display: inline-block;
 }
 
 .ijr-h2 {
   font-family: 'Sora', sans-serif;
-  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-size: clamp(1.65rem, 3.2vw, 2.2rem);
   font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   color: #1B1B24;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .ijr-h2--hero {
-  font-size: clamp(2.3rem, 5.2vw, 3.8rem);
-  line-height: 1.12;
-  margin-bottom: 16px;
+  font-size: clamp(1.85rem, 3.6vw, 2.5rem);
+  line-height: 1.18;
+  margin-bottom: 12px;
 }
 
 .ijr-h2-accent {
-  background: linear-gradient(96deg, #E5401A 0%, #FF7A45 52%, #FF9E6B 100%);
+  background: linear-gradient(96deg, #E5401A 0%, #FF693D 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: #FF693D;
 }
 
 .ijr-sub {
   font-family: 'DM Sans', sans-serif;
-  font-size: 1.02rem;
-  line-height: 1.6;
+  font-size: 0.96rem;
+  line-height: 1.55;
   color: #54525C;
-  margin: 0 auto 18px;
-  max-width: 640px;
+  margin: 0 auto 16px;
+  max-width: 580px;
 }
 
 /* ── Wavy Progress Rail (Desktop > 900px) ───────────────────────── */
@@ -123,7 +130,7 @@
 .ijr-node-pill--now {
   color: #FFFFFF;
   background: #FF693D;
-  box-shadow: 0 6px 16px rgba(255, 105, 61, 0.4);
+  box-shadow: 0 2px 8px rgba(28, 28, 40, 0.12);
 }
 .ijr-node-pill--done {
   color: #54525C;
@@ -143,7 +150,7 @@
   transition: transform 0.2s;
 }
 .ijr-dot:hover {
-  transform: scale(1.18);
+  transform: scale(1.14);
 }
 .ijr-dot--done {
   width: 28px;
@@ -151,7 +158,7 @@
   background: #FFFFFF;
   border: 2px solid #FF693D;
   color: #FF693D;
-  box-shadow: 0 4px 12px rgba(255, 105, 61, 0.25);
+  box-shadow: 0 2px 6px rgba(28, 28, 40, 0.08);
 }
 .ijr-dot--soon {
   width: 20px;
@@ -160,11 +167,11 @@
   border: 2px dashed #8C877E;
 }
 .ijr-dot--now {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   background: #FF693D;
   color: #FFFFFF;
-  box-shadow: 0 8px 24px rgba(255, 105, 61, 0.5);
+  box-shadow: 0 3px 10px rgba(28, 28, 40, 0.14);
 }
 .ijr-dot-core {
   width: 12px;
@@ -175,23 +182,9 @@
   z-index: 2;
 }
 
+/* Pulsing rings removed for clean, distraction-free aesthetic */
 .ijr-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid #FF693D;
-  opacity: 0;
-}
-.ijr-ring-1 {
-  animation: ijrRing 2.4s ease-out infinite;
-}
-.ijr-ring-2 {
-  animation: ijrRing 2.4s ease-out infinite 1.2s;
-}
-
-@keyframes ijrRing {
-  0%   { transform: scale(1);   opacity: 0.8; }
-  100% { transform: scale(2.8); opacity: 0; }
+  display: none;
 }
 
 /* ── Milestone Cards Grid ──────────────────────────────────────── */
@@ -212,20 +205,20 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 10px 24px -14px rgba(27, 27, 36, 0.08);
+  box-shadow: 0 4px 14px -6px rgba(27, 27, 36, 0.06);
   cursor: pointer;
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s, border-color 0.24s;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
 }
 
 .ijr-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 40px -16px rgba(255, 105, 61, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px -8px rgba(28, 28, 40, 0.12);
   border-color: #FF693D;
 }
 
 .ijr-card--live {
   border: 2px solid #FF693D;
-  box-shadow: 0 14px 34px -12px rgba(255, 105, 61, 0.35);
+  box-shadow: 0 8px 20px -8px rgba(28, 28, 40, 0.1);
   background: #FFFDFC;
 }
 
@@ -305,6 +298,28 @@
   color: #FF693D;
 }
 
+/* ── Primary Action Button (Zero Glow, Clean Solid) ─────────────── */
+.ijr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: none;
+  background: #FF693D;
+  color: #FFFFFF;
+  font: 700 0.88rem/1 'Space Grotesk', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 105, 61, 0.25);
+  transition: background 0.16s, transform 0.16s;
+  text-decoration: none;
+}
+.ijr-btn-primary:hover {
+  background: #E55328;
+  transform: translateY(-1px);
+}
+
 /* ── Responsive adjustments for Roadmap ───────────────────────── */
 @media (max-width: 1024px) {
   .ijr-cards {
@@ -331,26 +346,44 @@
 .ijr-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(12, 14, 20, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  z-index: 999999; /* Highest z-index above all navigation */
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999999; /* Highest z-index above all navigation */
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   overflow-y: auto;
-  padding: clamp(80px, 10vh, 100px) 16px 30px;
+  padding: 20px 16px;
 }
 
 .ijr-modal {
   position: relative;
   background: #FFFFFF;
-  border-radius: 22px;
+  border-radius: 20px;
   width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35);
+  max-width: 500px;
+  max-height: min(88vh, 600px);
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.3);
   border: 1px solid #E4DED2;
+  overflow: hidden;
+}
+
+.ijr-modal-window {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 620px;
+  max-height: min(90vh, 640px);
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #E5E7EB;
   overflow: hidden;
 }
 
@@ -386,11 +419,13 @@
 }
 
 .ijr-modal-body {
-  padding: 20px 22px;
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .ijr-modal-desc {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.55;
   color: #4B5563;
   margin: 0 0 16px;
@@ -400,7 +435,7 @@
   background: #FCFBF9;
   border: 1px solid #E4DED2;
   border-radius: 14px;
-  padding: 16px 18px;
+  padding: 14px 16px;
 }
 
 .ijr-pane-title {
@@ -408,7 +443,7 @@
   align-items: center;
   gap: 7px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -422,14 +457,14 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 
 .ijr-checklist-item {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  font-size: 0.86rem;
+  gap: 8px;
+  font-size: 0.84rem;
   line-height: 1.45;
   color: #1B1B24;
 }
@@ -438,8 +473,8 @@
   background: #FFF5F0;
   border: 1px solid #FFD6C4;
   border-radius: 14px;
-  padding: 14px 16px;
-  margin-top: 14px;
+  padding: 12px 14px;
+  margin-top: 12px;
 }
 
 .ijr-modal-footer {
@@ -454,39 +489,45 @@
 }
 
 @media (max-width: 600px) {
-  .ijr-modal {
+  .ijr-modal-backdrop {
+    padding: 12px;
+    align-items: center;
+  }
+  .ijr-modal,
+  .ijr-modal-window {
     max-width: 100%;
+    max-height: 86vh;
     border-radius: 18px;
   }
   .ijr-modal-header {
     padding: 14px 16px;
   }
   .ijr-modal-body {
-    padding: 16px;
+    padding: 14px 16px;
   }
   .ijr-modal-desc {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     margin-bottom: 12px;
   }
   .ijr-pane-compact {
     padding: 12px 14px;
   }
   .ijr-checklist-item {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
   .ijr-mentor-secret-compact {
     padding: 10px 12px;
     margin-top: 10px;
   }
   .ijr-mentor-secret-compact p {
-    font-size: 0.82rem !important;
+    font-size: 0.8rem !important;
   }
   .ijr-modal-footer {
     padding: 12px 16px;
     justify-content: stretch;
   }
   .ijr-modal-footer .mj-btn-glass,
-  .ijr-modal-footer .mj-btn-glow {
+  .ijr-modal-footer .ijr-btn-primary {
     flex: 1 1 auto;
     justify-content: center;
     padding: 10px 14px !important;

@@ -103,7 +103,7 @@ export default function JeeMentorshipMain() {
 
       <InteractiveJourneyRoadmap
         isHero={true}
-        subtitle="Work with your IITian mentor across these 6 strategic milestones. Click any phase to inspect your weekly deliverables."
+        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />

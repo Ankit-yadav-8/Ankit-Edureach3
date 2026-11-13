@@ -104,7 +104,7 @@ export default function JeePrepStudyPlan() {
 
       <InteractiveJourneyRoadmap
         isHero={true}
-        subtitle="Click each milestone on the road to inspect daily study hours, high-yield topics, and test analysis protocols."
+        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />
