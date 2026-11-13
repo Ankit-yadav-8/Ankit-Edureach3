@@ -1787,16 +1787,20 @@ export default function Mentorship() {
       <Seo
         rawTitle={
           variant === "jee-2027"
-            ? "JEE 2027 Mentorship by IITians (Till JEE Main 2027) · ₹3,499 | Campus Point"
+            ? "JEE Mentorship Program 2026–2027 by IITians | 1-on-1 Guidance – CampusPoint"
             : variant === "jee-2028"
-            ? "JEE 2028 Mentorship by IITians (Class 11 Foundation & Prep) · ₹3,499 | Campus Point"
-            : "NEET 2027 Mentorship by Top Medical Students & Toppers · ₹3,499 | Campus Point"
+            ? "JEE Mentorship for Class 11 (2028 Batch) by IITians | CampusPoint"
+            : variant === "foundation"
+            ? "Class 9 & 10 Foundation Mentorship by IITians | CampusPoint"
+            : "NEET Mentorship Program 2027 by Doctors & Toppers | CampusPoint"
         }
         description={
           variant === "jee-2027"
-            ? "1-on-1 IIT JEE 2027 mentorship by IIT Roorkee & IIT Bombay rankers till JEE Mains 2027. Personal daily study plans, 24/7 doubt solving, weekly test analysis & Kota modules. Enroll at ₹3,499."
+            ? "Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers till JEE Mains. Daily personalized study plans, 70-30 backlog formula, mock test error autopsy & 24/7 WhatsApp guidance. Enroll at ₹3,499."
             : variant === "jee-2028"
             ? "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls. 6-Month Plan at ₹3,499."
+            : variant === "foundation"
+            ? "1-on-1 Foundation mentorship for Class 9 and 10 students by IITians. Build early conceptual clarity for Olympiads, NTSE & JEE/NEET foundation. Starts at ₹3,499."
             : "Prepare for NEET 2027 with 1-on-1 mentorship by top medical college MBBS toppers. Daily NCERT targets, mock test analysis & personal guidance. Starts at ₹3,499."
         }
         path={`/mentorship/${variant}`}
