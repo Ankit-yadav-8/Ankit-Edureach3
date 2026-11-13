@@ -65,9 +65,6 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
         <div className="mj-hero-center">
           <VariantTabs variant={variant} />
           
-          <Reveal className="mj-hero-pill" style={{ marginTop: "32px" }}>
-            <span className="mj-dot" /> Built by IITians
-          </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mj-hero-h1">
               The mentorship built<br />for{" "}
