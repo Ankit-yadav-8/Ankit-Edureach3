@@ -578,9 +578,6 @@ async function main() {
           <a href="/jee-mentorship" style="color: #64748B; text-decoration: none;">JEE Mentorship</a>
           ${page.subPath !== "jee-mentorship" ? `&rsaquo; <span style="color: #111827;">${escapeHtml(page.h1)}</span>` : ""}
         </nav>
-        <div style="display: inline-block; background: #FFF0EB; border: 1px solid #FFD6C4; color: #D8512A; font-weight: 700; font-size: 12px; padding: 4px 14px; border-radius: 999px; margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase;">
-          &bull; 1-on-1 IITian Mentorship &bull; Verified IIT Roorkee Mentors
-        </div>
         <h1 style="font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: #111827; margin: 0 0 16px; line-height: 1.2;">
           ${escapeHtml(page.h1)}
         </h1>

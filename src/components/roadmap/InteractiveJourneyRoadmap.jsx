@@ -388,9 +388,6 @@ export default function InteractiveJourneyRoadmap({
             </div>
           </div>
 
-          <span className="ijr-kicker">
-            <span className="ijr-kicker-dot" /> {kicker}
-          </span>
           {isHero ? (
             <h1 className="ijr-h2 ijr-h2--hero">
               {title === "Roadmap to Crack JEE" || title === "Interactive Roadmap to JEE Mains Success" ? (
