@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   UserCheck,
@@ -50,6 +53,7 @@ export default function JeeMentorshipHub() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
     {
       "@context": "https://schema.org",
       "@type": "EducationalOccupationalProgram",
@@ -83,22 +87,7 @@ export default function JeeMentorshipHub() {
     }
   ];
 
-  const keywords = [
-    "JEE mentorship",
-    "JEE mentorship program",
-    "JEE mentor",
-    "JEE preparation mentorship",
-    "personalized JEE mentorship",
-    "online JEE mentorship",
-    "JEE mentoring",
-    "JEE personal mentor",
-    "JEE guidance",
-    "JEE preparation guidance",
-    "JEE academic mentor",
-    "JEE study mentor",
-    "JEE strategy mentor",
-    "JEE mentor for students"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -388,3 +377,4 @@ export default function JeeMentorshipHub() {
     </div>
   );
 }
+

@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   BookOpen,
@@ -38,6 +41,12 @@ export default function JeePrepHub() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Master Your JEE Preparation with Proven Frameworks",
+      description: "The ultimate JEE preparation hub. Access proven daily study plans, scientific backlog recovery systems, subject tactical guides, and 1-to-1 IITian mentorship.",
+      path: "/jee-preparation"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -59,17 +68,7 @@ export default function JeePrepHub() {
     }
   ];
 
-  const keywords = [
-    "JEE preparation",
-    "JEE preparation plan",
-    "JEE study plan",
-    "JEE preparation strategy",
-    "JEE backlog",
-    "JEE preparation guide",
-    "how to prepare for JEE",
-    "JEE preparation for students",
-    "JEE preparation timetable"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-preparation"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -242,3 +241,4 @@ export default function JeePrepHub() {
     </div>
   );
 }
+

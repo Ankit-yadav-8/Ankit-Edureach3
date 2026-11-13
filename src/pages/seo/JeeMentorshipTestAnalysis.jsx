@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   BarChart3,
@@ -44,6 +47,12 @@ export default function JeeMentorshipTestAnalysis() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Precision JEE Test Analysis & Mistake Tracking",
+      description: "Master JEE mock test analysis with our 8-step question-level error tracking system. Eliminate negative marks, analyze time-spent bottlenecks, and improve by 40+ marks.",
+      path: "/jee-mentorship/test-analysis"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -75,23 +84,7 @@ export default function JeeMentorshipTestAnalysis() {
     }
   ];
 
-  const keywords = [
-    "JEE test analysis",
-    "JEE mock test analysis",
-    "JEE test performance analysis",
-    "JEE test analysis report",
-    "JEE performance analysis",
-    "JEE test score analysis",
-    "JEE mistake analysis",
-    "JEE question analysis",
-    "JEE weak topic analysis",
-    "JEE weak chapter analysis",
-    "JEE accuracy analysis",
-    "JEE time management analysis",
-    "JEE test strategy",
-    "JEE test review",
-    "JEE paper analysis"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/test-analysis"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -301,3 +294,4 @@ export default function JeeMentorshipTestAnalysis() {
     </div>
   );
 }
+

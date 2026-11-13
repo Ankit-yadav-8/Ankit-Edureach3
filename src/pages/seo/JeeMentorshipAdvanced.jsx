@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   Compass,
@@ -42,6 +45,12 @@ export default function JeeMentorshipAdvanced() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Elite JEE Advanced Mentorship by Top IITians",
+      description: "Crack IIT JEE with 1-to-1 JEE Advanced mentorship by top IITians. Master multi-concept problems, partial marking tactics, Paper 1 & 2 stamina, and topper roadmaps.",
+      path: "/jee-mentorship/jee-advanced"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,22 +82,7 @@ export default function JeeMentorshipAdvanced() {
     }
   ];
 
-  const keywords = [
-    "JEE Advanced mentorship",
-    "JEE Advanced mentor",
-    "JEE Advanced preparation mentor",
-    "JEE Advanced mentorship program",
-    "JEE Advanced online mentorship",
-    "JEE Advanced guidance",
-    "JEE Advanced personal mentor",
-    "JEE Advanced preparation strategy",
-    "JEE Advanced study plan",
-    "JEE Advanced test analysis",
-    "JEE Advanced performance analysis",
-    "JEE Advanced mentor online",
-    "JEE Advanced preparation guidance",
-    "IIT JEE Advanced mentorship"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/jee-advanced"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -272,3 +266,4 @@ export default function JeeMentorshipAdvanced() {
     </div>
   );
 }
+

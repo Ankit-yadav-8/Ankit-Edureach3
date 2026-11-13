@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   GraduationCap,
@@ -42,6 +45,12 @@ export default function JeeMentorshipClass12() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Personalized Class 12 JEE Mentorship & Strategy",
+      description: "Ace Class 12 boards and JEE Main/Advanced together. 1-to-1 IITian mentorship, October syllabus finish, dual-track Class 11 revision, and pre-board management.",
+      path: "/jee-mentorship/class-12"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,21 +82,7 @@ export default function JeeMentorshipClass12() {
     }
   ];
 
-  const keywords = [
-    "JEE mentorship for class 12",
-    "JEE mentor for class 12",
-    "class 12 JEE mentorship",
-    "class 12 JEE mentor",
-    "JEE preparation class 12",
-    "class 12 JEE study plan",
-    "class 12 JEE strategy",
-    "JEE preparation guidance class 12",
-    "class 12 JEE backlog",
-    "class 12 JEE revision",
-    "JEE board and JEE preparation",
-    "JEE Main class 12 preparation",
-    "JEE Advanced class 12 preparation"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/class-12"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -273,3 +268,4 @@ export default function JeeMentorshipClass12() {
     </div>
   );
 }
+

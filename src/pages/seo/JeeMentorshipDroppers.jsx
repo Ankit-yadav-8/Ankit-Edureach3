@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   RefreshCw,
@@ -42,6 +45,12 @@ export default function JeeMentorshipDroppers() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Specialized JEE Droppers Mentorship & Repeaters Plan",
+      description: "Comprehensive JEE dropper mentorship for serious repeaters. Get personal IITian guidance, 8-month intensive timetable, mistake audit, and daily accountability.",
+      path: "/jee-mentorship/droppers"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,24 +82,7 @@ export default function JeeMentorshipDroppers() {
     }
   ];
 
-  const keywords = [
-    "JEE dropper mentorship",
-    "JEE dropper mentor",
-    "JEE dropper mentorship program",
-    "JEE dropper preparation",
-    "JEE dropper strategy",
-    "JEE dropper study plan",
-    "JEE dropper timetable",
-    "JEE dropper guidance",
-    "JEE dropper online mentorship",
-    "JEE dropper personal mentor",
-    "JEE preparation for droppers",
-    "JEE repeaters mentorship",
-    "JEE repeater mentor",
-    "JEE repeater preparation strategy",
-    "JEE second attempt strategy",
-    "JEE drop year strategy"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/droppers"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -266,3 +258,4 @@ export default function JeeMentorshipDroppers() {
     </div>
   );
 }
+

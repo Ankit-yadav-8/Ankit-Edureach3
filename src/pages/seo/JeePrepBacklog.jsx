@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   AlertTriangle,
@@ -42,6 +45,12 @@ export default function JeePrepBacklog() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "How to Clear JEE Backlogs Without Panic",
+      description: "Learn how to clear JEE backlogs without destroying your current preparation. The proven 70-30 backlog rule, priority chapter triage matrix, and mentor recovery plans.",
+      path: "/jee-preparation/backlog"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,25 +82,7 @@ export default function JeePrepBacklog() {
     }
   ];
 
-  const keywords = [
-    "JEE backlog",
-    "JEE backlog strategy",
-    "JEE backlog management",
-    "how to complete JEE backlog",
-    "how to clear JEE backlog",
-    "JEE backlog study plan",
-    "JEE backlog recovery",
-    "JEE backlog preparation",
-    "JEE backlog mentor",
-    "JEE backlog mentorship",
-    "how to manage JEE backlog",
-    "JEE syllabus backlog",
-    "physics backlog JEE",
-    "chemistry backlog JEE",
-    "maths backlog JEE",
-    "JEE backlog timetable",
-    "JEE backlog revision strategy"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-preparation/backlog"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -285,3 +276,4 @@ export default function JeePrepBacklog() {
     </div>
   );
 }
+

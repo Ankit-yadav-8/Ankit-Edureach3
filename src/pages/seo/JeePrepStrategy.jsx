@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   Compass,
@@ -44,6 +47,12 @@ export default function JeePrepStrategy() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Comprehensive JEE Preparation Strategy & Master Guide",
+      description: "Master the proven JEE preparation strategy used by top IITians. Subject-wise tactical playbooks for Physics, Chemistry & Maths, PYQ analysis, and topper frameworks.",
+      path: "/jee-preparation/strategy"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -75,16 +84,7 @@ export default function JeePrepStrategy() {
     }
   ];
 
-  const keywords = [
-    "JEE preparation strategy",
-    "JEE strategy",
-    "how to crack JEE",
-    "JEE Main and Advanced strategy",
-    "subject wise JEE strategy",
-    "time management for JEE",
-    "topper strategy for JEE",
-    "JEE roadmap"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-preparation/strategy"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -258,3 +258,4 @@ export default function JeePrepStrategy() {
     </div>
   );
 }
+

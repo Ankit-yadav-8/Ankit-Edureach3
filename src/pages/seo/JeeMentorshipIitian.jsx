@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   Award,
@@ -42,6 +45,7 @@ export default function JeeMentorshipIitian() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
     {
       "@context": "https://schema.org",
       "@type": "EducationalOccupationalProgram",
@@ -73,23 +77,7 @@ export default function JeeMentorshipIitian() {
     }
   ];
 
-  const keywords = [
-    "IITian JEE mentor",
-    "IITian mentor for JEE",
-    "JEE mentor from IIT",
-    "JEE mentorship by IITians",
-    "JEE mentorship from IITians",
-    "IIT student JEE mentor",
-    "IIT student mentor for JEE",
-    "IITian guidance for JEE",
-    "IITian JEE guidance",
-    "JEE preparation by IITians",
-    "JEE guidance by IITians",
-    "IIT mentor for JEE preparation",
-    "JEE mentor IIT Roorkee",
-    "IIT Roorkee JEE mentor",
-    "JEE mentorship IIT Roorkee"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/iitian-mentor"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -266,3 +254,4 @@ export default function JeeMentorshipIitian() {
     </div>
   );
 }
+

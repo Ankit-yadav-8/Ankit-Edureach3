@@ -222,3 +222,58 @@ export function ClusterRelated({ currentPath, selectedPaths = [] }) {
     </div>
   );
 }
+
+
+/**
+ * Standardized Schema.org Organization Graph for CampusPoint
+ */
+export function getOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": "https://campuspoint.in/#organization",
+    "name": "CampusPoint",
+    "url": "https://campuspoint.in",
+    "logo": "https://campuspoint.in/cplogo.svg",
+    "sameAs": [
+      "https://www.linkedin.com/company/college-parichay/",
+      "https://www.instagram.com/CampusPoint",
+      "https://www.youtube.com/@CampusPoint-2626"
+    ]
+  };
+}
+
+/**
+ * Standardized Schema.org Article Graph for Educational Guides & Roadmaps
+ */
+export function getArticleSchema({
+  headline,
+  description,
+  path,
+  datePublished = "2026-01-10T08:00:00+05:30",
+  dateModified = "2026-11-14T00:00:00+05:30"
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": `https://campuspoint.in${path}`,
+    "headline": headline,
+    "description": description,
+    "image": "https://campuspoint.in/cplogo.svg",
+    "author": {
+      "@type": "Organization",
+      "name": "CampusPoint IITian Mentor Network",
+      "url": "https://campuspoint.in"
+    },
+    "publisher": {
+      "@type": "EducationalOrganization",
+      "name": "CampusPoint",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://campuspoint.in/cplogo.svg"
+      }
+    },
+    "datePublished": datePublished,
+    "dateModified": dateModified
+  };
+}

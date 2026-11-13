@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   Calendar,
@@ -42,6 +45,12 @@ export default function JeePrepStudyPlan() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Personalized JEE Study Plan & Daily Timetable",
+      description: "Master your JEE preparation with a personalized study plan and timetable. Daily routines, weekly progress reviews, spaced repetition revision, and mentor accountability.",
+      path: "/jee-preparation/study-plan"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,26 +82,7 @@ export default function JeePrepStudyPlan() {
     }
   ];
 
-  const keywords = [
-    "JEE study plan",
-    "JEE preparation plan",
-    "JEE study schedule",
-    "JEE timetable",
-    "JEE preparation timetable",
-    "JEE daily schedule",
-    "JEE weekly study plan",
-    "JEE monthly study plan",
-    "personalized JEE study plan",
-    "personalized JEE timetable",
-    "JEE study plan with mentor",
-    "JEE preparation schedule",
-    "JEE revision schedule",
-    "JEE chapter wise study plan",
-    "JEE subject wise study plan",
-    "JEE backlog study plan",
-    "JEE revision plan",
-    "JEE test preparation plan"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-preparation/study-plan"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -278,3 +268,4 @@ export default function JeePrepStudyPlan() {
     </div>
   );
 }
+

@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   BookOpen,
@@ -42,6 +45,12 @@ export default function JeeMentorshipClass11() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Personalized Class 11 JEE Mentorship & Foundation",
+      description: "Master Class 11 with 1-to-1 JEE mentorship by top IITians. Overcome the 10th-to-11th transition, prevent backlogs, balance school, and build a rock-solid foundation.",
+      path: "/jee-mentorship/class-11"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,21 +82,7 @@ export default function JeeMentorshipClass11() {
     }
   ];
 
-  const keywords = [
-    "JEE mentorship for class 11",
-    "JEE mentor for class 11",
-    "JEE preparation class 11",
-    "JEE preparation guidance class 11",
-    "class 11 JEE mentor",
-    "class 11 JEE mentorship program",
-    "JEE study plan class 11",
-    "JEE timetable class 11",
-    "JEE strategy class 11",
-    "JEE preparation strategy class 11",
-    "class 11 IIT JEE preparation",
-    "class 11 JEE backlog",
-    "class 11 JEE revision plan"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/class-11"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -258,3 +253,4 @@ export default function JeeMentorshipClass11() {
     </div>
   );
 }
+

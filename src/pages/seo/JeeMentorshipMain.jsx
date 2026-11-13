@@ -1,4 +1,5 @@
 import React from "react";
+import { SEO_KEYWORD_MAP } from "../../data/seoKeywordMap.js";
 import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
@@ -6,7 +7,9 @@ import {
   ClusterHero,
   ClusterCta,
   ClusterFaq,
-  ClusterRelated
+  ClusterRelated,
+  getOrganizationSchema,
+  getArticleSchema
 } from "./ClusterShared.jsx";
 import {
   Zap,
@@ -42,6 +45,12 @@ export default function JeeMentorshipMain() {
   ];
 
   const jsonLd = [
+    getOrganizationSchema(),
+    getArticleSchema({
+      headline: "Dedicated JEE Main Mentorship & 1-on-1 Guidance",
+      description: "Master JEE Main with 1-to-1 IITian mentorship. Get personalized study plans, speed & accuracy drills, test analysis, PYQ roadmaps, and 99 percentile strategies.",
+      path: "/jee-mentorship/jee-main"
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -73,24 +82,7 @@ export default function JeeMentorshipMain() {
     }
   ];
 
-  const keywords = [
-    "JEE Main mentorship",
-    "JEE Main mentor",
-    "JEE Main preparation mentor",
-    "JEE Main mentorship program",
-    "JEE Main online mentorship",
-    "JEE Main personal mentor",
-    "JEE Main guidance",
-    "JEE Main preparation guidance",
-    "JEE Main study plan mentor",
-    "JEE Main strategy mentor",
-    "JEE Main test analysis",
-    "JEE Main performance analysis",
-    "JEE Main preparation strategy",
-    "JEE Main personalized study plan",
-    "JEE Main 2027 mentorship",
-    "JEE Main 2028 mentorship"
-  ];
+  const keywords = SEO_KEYWORD_MAP["/jee-mentorship/jee-main"].targetKeywords;
 
   return (
     <div className="seo-cluster-page">
@@ -293,3 +285,4 @@ export default function JeeMentorshipMain() {
     </div>
   );
 }
+
