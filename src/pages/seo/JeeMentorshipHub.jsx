@@ -149,7 +149,7 @@ export default function JeeMentorshipHub() {
         <section className="scp-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Why 1-to-1 Guidance Outperforms Coaching Batches</span>
-            <h2 className="scp-h2">5 Core Pillars of JEE Mentorship</h2>
+            <h2 className="scp-h2">6 Core Pillars of JEE Mentorship</h2>
             <p className="scp-section-sub">
               Large coaching institutes deliver lectures to 200+ students at once, but nobody checks if you understood the concepts, completed homework, or why your test score dropped. Here is how our personalized JEE mentorship program fixes the preparation gap.
             </p>

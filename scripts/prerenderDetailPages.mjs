@@ -387,30 +387,6 @@ async function main() {
       sub: "Stop getting lost in giant batches. Get paired 1-on-1 with an IIT Roorkee mentor who designs your daily study schedule, analyzes every mock test error, clears backlogs, and guides your step-by-step strategy for JEE Main & JEE Advanced."
     },
     {
-      subPath: "mentorship",
-      title: "JEE Mentorship Program 2026–2027 by IITians | 1-on-1 Guidance – CampusPoint",
-      description: "Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers till JEE Mains. Daily personalized study plans, 70-30 backlog formula, mock test error autopsy & 24/7 WhatsApp guidance. Enroll at ₹3,499.",
-      canonical: `${SITE}/mentorship`,
-      h1: "Personalized 1-on-1 JEE Mentorship by Verified IITians",
-      sub: "Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT students to turn your IIT dream into a real rank."
-    },
-    {
-      subPath: "mentorship/jee-2027",
-      title: "JEE Mentorship Program 2026–2027 by IITians | 1-on-1 Guidance – CampusPoint",
-      description: "Get 1-on-1 JEE Mentorship by verified IIT Roorkee rankers till JEE Mains. Daily personalized study plans, 70-30 backlog formula, mock test error autopsy & 24/7 WhatsApp guidance. Enroll at ₹3,499.",
-      canonical: `${SITE}/mentorship/jee-2027`,
-      h1: "Personalized 1-on-1 JEE Mentorship by Verified IITians",
-      sub: "Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT students to turn your IIT dream into a real rank."
-    },
-    {
-      subPath: "mentorship/jee-2028",
-      title: "JEE Mentorship for Class 11 (2028 Batch) by IITians | CampusPoint",
-      description: "Personalized 1-on-1 IITian mentorship for JEE 2028 aspirants. Master Class 11 concepts, eliminate backlogs, daily schedules & 1-on-1 mentor calls. 6-Month Plan at ₹3,499.",
-      canonical: `${SITE}/mentorship/jee-2028`,
-      h1: "Personalized 1-on-1 Class 11 JEE Mentorship (2028 Batch)",
-      sub: "Build a rock-solid Class 11 foundation, balance school exams, and eliminate backlogs with 1-on-1 guidance from verified IITians."
-    },
-    {
       subPath: "jee-mentorship/1-to-1",
       title: "1-on-1 JEE Mentorship by Verified IITians | Personal Mentoring – CampusPoint",
       description: "Experience genuine 1-on-1 JEE mentorship by top IITians. Private weekly video calls, customized daily study plans, 24/7 WhatsApp guidance, and individual error reviews.",
@@ -571,35 +547,58 @@ async function main() {
     };
 
     const bodyContent = `
-    <header style="background: #FCFBF9; border-bottom: 1px solid #E4DED2; padding: 60px 20px 44px; font-family: sans-serif; text-align: center;">
-      <div style="max-width: 900px; margin: 0 auto;">
-        <nav style="font-size: 13px; color: #64748B; margin-bottom: 16px;">
+    <!-- Announcement TopBar -->
+    <div style="background:#FF693D; color:#fff; font-size:12px; font-weight:700; padding:8px 16px; text-align:center; letter-spacing:0.04em; font-family:sans-serif;">
+      Built by IITians &bull; Trusted by Aspirants
+    </div>
+
+    <!-- Main Navbar -->
+    <header style="background:#FFFFFF; border-bottom:1px solid #E4DED2; padding:12px 24px; font-family:sans-serif;">
+      <div style="max-width:1160px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:32px; height:32px; border-radius:8px; background:#FF693D; display:grid; place-items:center; color:#fff; font-weight:800; font-size:12px;">CP</div>
+          <span style="font-weight:800; font-size:17px; color:#1C1C28;">Campus Point</span>
+        </div>
+        <nav style="display:flex; gap:18px; font-size:13.5px; font-weight:600; color:#4B5563;">
+          <a href="/jee-main" style="color:inherit; text-decoration:none;">JEE</a>
+          <a href="/neet" style="color:inherit; text-decoration:none;">NEET</a>
+          <a href="/jee-mentorship" style="color:#FF693D; text-decoration:none; font-weight:700;">Mentorship</a>
+          <a href="/colleges" style="color:inherit; text-decoration:none;">Colleges</a>
+          <a href="/tools" style="color:inherit; text-decoration:none;">Tools</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section style="background: #FCFBF9; border-bottom: 1px solid #E4DED2; padding: 72px 20px 56px; font-family: sans-serif; text-align: center;">
+      <div style="max-width: 920px; margin: 0 auto;">
+        <nav style="font-size: 13px; color: #64748B; margin-bottom: 20px;">
           <a href="/" style="color: #64748B; text-decoration: none;">Home</a> &rsaquo;
           <a href="/jee-mentorship" style="color: #64748B; text-decoration: none;">JEE Mentorship</a>
           ${page.subPath !== "jee-mentorship" ? `&rsaquo; <span style="color: #111827;">${escapeHtml(page.h1)}</span>` : ""}
         </nav>
-        <h1 style="font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: #111827; margin: 0 0 16px; line-height: 1.2;">
+        <h1 style="font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; color: #111827; margin: 0 auto 20px; line-height: 1.15; letter-spacing: -0.02em;">
           ${escapeHtml(page.h1)}
         </h1>
-        <p style="font-size: 1.05rem; color: #4B5563; margin: 0 auto 28px; max-width: 760px; line-height: 1.6;">
+        <p style="font-size: 1.1rem; color: #4B5563; margin: 0 auto 32px; max-width: 760px; line-height: 1.6;">
           ${escapeHtml(page.sub)}
         </p>
         <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
-          <a href="/jee-mentorship" style="background: #FF693D; color: #fff; padding: 14px 28px; border-radius: 50px; font-weight: 700; font-size: 15px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+          <a href="/jee-mentorship" style="background: #FF693D; color: #fff; padding: 14px 30px; border-radius: 50px; font-weight: 700; font-size: 15px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 10px 24px -8px rgba(255,105,61,0.5);">
             Enroll in JEE Mentorship &bull; ₹3,499 &rarr;
           </a>
-          <a href="https://wa.me/918118826194?text=Hi%20CampusPoint,%20I%20want%20to%20know%20more%20about%20JEE%20Mentorship" target="_blank" rel="noopener noreferrer" style="background: #FFFFFF; color: #1F2937; border: 1px solid #E5E7EB; padding: 14px 24px; border-radius: 50px; font-weight: 600; font-size: 15px; text-decoration: none;">
+          <a href="https://wa.me/918118826194?text=Hi%20CampusPoint,%20I%20want%20to%20know%20more%20about%20JEE%20Mentorship" target="_blank" rel="noopener noreferrer" style="background: #FFFFFF; color: #1F2937; border: 1px solid #E5E7EB; padding: 14px 26px; border-radius: 50px; font-weight: 600; font-size: 15px; text-decoration: none;">
             Talk to Mentor on WhatsApp
           </a>
         </div>
       </div>
-    </header>
+    </section>
 
     <main style="max-width: 1100px; margin: 40px auto; padding: 0 20px; font-family: sans-serif; color: #1F2937;">
-      <!-- 5 Core Pillars -->
+      <!-- 6 Core Pillars -->
       <section style="background: #FFFFFF; border-radius: 18px; border: 1px solid #E5E7EB; padding: 32px 28px; margin-bottom: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
         <h2 style="font-size: 1.5rem; font-weight: 800; color: #111827; margin-top: 0; margin-bottom: 20px;">
-          5 Core Pillars of CampusPoint 1-on-1 JEE Mentorship
+          6 Core Pillars of CampusPoint 1-on-1 JEE Mentorship
         </h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
           <div style="background: #F8FAFC; padding: 20px; border-radius: 14px; border: 1px solid #E2E8F0;">

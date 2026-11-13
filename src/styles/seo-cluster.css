@@ -93,7 +93,7 @@
 /* ── Hero Section (Matches JEE 2027 Mentorship Page) ───────────── */
 .mj-hero-seo {
   position: relative;
-  padding: clamp(110px, 11vw, 130px) 0 clamp(64px, 7vw, 84px);
+  padding: clamp(140px, 14vw, 168px) 0 clamp(64px, 7vw, 84px);
   overflow: hidden;
   background: var(--mj-paper);
 }
@@ -748,7 +748,7 @@
 
 @media (max-width: 640px) {
   .mj-hero-seo {
-    padding: 124px 0 50px;
+    padding: 138px 0 46px;
   }
   .mj-hero-h1 {
     font-size: 1.95rem;
