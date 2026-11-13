@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useEnrol } from "../../components/EnrolModal.jsx";
 import { MENTOR_PLANS } from "../../data/mentorship.js";
+import JeeBatchSelectModal from "../../components/roadmap/JeeBatchSelectModal.jsx";
 import "../../styles/seo-cluster.css";
 export { default as InteractiveJourneyRoadmap } from "../../components/roadmap/InteractiveJourneyRoadmap.jsx";
 
@@ -98,6 +99,7 @@ export function ClusterHero({
   ]
 }) {
   const { open: openEnrol } = useEnrol();
+  const [showBatchModal, setShowBatchModal] = useState(false);
   const plan = MENTOR_PLANS[planKey] || { amount: 3499 };
   const subtext = subtitle || description || "Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT students to turn your IIT dream into a real rank.";
 
@@ -143,7 +145,7 @@ export function ClusterHero({
             <button
               type="button"
               className="mj-btn-glow"
-              onClick={() => openEnrol(planKey)}
+              onClick={() => setShowBatchModal(true)}
             >
               Get Started · ₹{plan.amount.toLocaleString("en-IN")} <ArrowRight size={18} />
             </button>
@@ -177,6 +179,12 @@ export function ClusterHero({
           </div>
         </div>
       </div>
+
+      {/* Target Batch Selection Modal (JEE 2027 vs JEE 2028) */}
+      <JeeBatchSelectModal
+        isOpen={showBatchModal}
+        onClose={() => setShowBatchModal(false)}
+      />
     </header>
   );
 }

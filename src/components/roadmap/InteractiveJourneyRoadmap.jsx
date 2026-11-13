@@ -21,6 +21,7 @@ import {
   GraduationCap
 } from "lucide-react";
 import { useEnrol } from "../EnrolModal.jsx";
+import JeeBatchSelectModal from "./JeeBatchSelectModal.jsx";
 import "../../styles/interactive-roadmap.css";
 
 const WA_NUMBER = "918118826194";
@@ -166,6 +167,141 @@ export const DEFAULT_JEE_MILESTONES = [
   }
 ];
 
+export const DEFAULT_JEE_2028_MILESTONES = [
+  {
+    id: 1,
+    num: "1",
+    phase: "done",
+    statusLabel: "Done",
+    title: "Class 10 to 11 Jump",
+    week: "Weeks 1–4",
+    theme: "#3B82F6",
+    bullets: [
+      "Master vector & calculus math basics",
+      "Bridge the 10th to 11th difficulty jump",
+      "Fix 6-8 hr daily non-school routine"
+    ],
+    fullDescription: "The syllabus jump from Class 10 to 11 catches 90% of students off guard. Build mathematical tools (vectors, differentiation, integration) first before starting physics mechanics.",
+    tasks: [
+      "Master basic differentiation and integration rules used in kinematics",
+      "Build a disciplined 6-hour daily self-study timetable balancing school and coaching",
+      "Identify high-weightage Class 11 foundational topics in Physics, Chem & Maths"
+    ],
+    resources: ["Class 11 Foundation Roadmap PDF", "Basic Math for Physics Toolkit", "NCERT Baseline Check"],
+    mentorSecret: "Ankit Kumar (AIR 3846 CRL): The biggest mistake in Class 11 is underestimating the volume of content. Never let a single day's homework slide into tomorrow."
+  },
+  {
+    id: 2,
+    num: "2",
+    phase: "done",
+    statusLabel: "Done",
+    title: "Core Mechanics & Bonding",
+    week: "Weeks 5–12",
+    theme: "#0EA5E9",
+    bullets: [
+      "Kinematics & Newton's Laws (NLM)",
+      "Chemical Bonding & Periodic Properties",
+      "Trigonometry & Quadratic Equations"
+    ],
+    fullDescription: "These three chapters form the backbone of the entire 2-year JEE syllabus. Every subsequent topic in Class 12 relies on mechanics and chemical bonding clarity.",
+    tasks: [
+      "Solve H.C. Verma kinematics and NLM exercise problems with free-body diagrams",
+      "Read NCERT Chemical Bonding three times and memorize hybridization structures",
+      "Solve 30 objective questions daily from standard coaching module sheets"
+    ],
+    resources: ["H.C. Verma Vol 1", "NCERT Chemistry Vol 1", "Coaching Level-1 Problem Banks"],
+    mentorSecret: "Saket Kumar (IIT Roorkee): If you don't master Chemical Bonding and FBDs in Class 11, Organic Chemistry and Rotational Motion will feel impossible later."
+  },
+  {
+    id: 3,
+    num: "3",
+    phase: "done",
+    statusLabel: "Done",
+    title: "Backlog Defense & PYQs",
+    week: "Weeks 13–20",
+    theme: "#10B981",
+    bullets: [
+      "Zero-backlog weekly buffer days",
+      "Rotational Motion & Thermodynamics",
+      "Standard 5-year JEE Main PYQ checks"
+    ],
+    fullDescription: "Class 11 mid-terms are where backlogs typically begin. Use the 70-30 rule: 70% time on ongoing chapters, 30% time strictly on clearing pending module exercises.",
+    tasks: [
+      "Reserve Sunday mornings as a 4-hour dedicated backlog elimination sprint",
+      "Solve official JEE Main PYQs for all completed chapters",
+      "Maintain a physical Error Autopsy Notebook for every failed numerical"
+    ],
+    resources: ["Marks App PYQ Filter", "Class 11 Backlog Tracker", "Weekly Milestone Log"],
+    mentorSecret: "Mayank Singh (IIT Roorkee): Backlogs are normal, but unorganized backlogs are fatal. Make a list of pending chapters and kill them one by one every Sunday."
+  },
+  {
+    id: 4,
+    num: "4",
+    phase: "live",
+    statusLabel: "Active Phase",
+    title: "Class 11 Part-Tests",
+    week: "Weeks 21–28",
+    theme: "#F59E0B",
+    bullets: [
+      "Bi-weekly 3-hour CBT mock exams",
+      "Eliminate negative marking (-1 slips)",
+      "Time allocation: 50m C / 60m P / 70m M"
+    ],
+    fullDescription: "Start taking timed full-length CBT tests on Class 11 chapters. Build exam temperament, question selection strategy, and the habit of leaving trap questions early.",
+    tasks: [
+      "Attempt 3-hour computer-based mock tests on alternate Sundays",
+      "Analyze time spent per question and eliminate silly calculation mistakes",
+      "Review mistakes with your IITian mentor within 24 hours of every test"
+    ],
+    resources: ["Official CBT Exam Simulator", "Negative Marking Reduction Audit Sheet"],
+    mentorSecret: "Ankit Kumar (IIT Roorkee): Never judge a test only by score. Judge it by whether you made mistakes on questions you actually knew how to solve."
+  },
+  {
+    id: 5,
+    num: "5",
+    phase: "upcoming",
+    statusLabel: "Upcoming",
+    title: "School + JEE Balance",
+    week: "Weeks 29–36",
+    theme: "#8B5CF6",
+    bullets: [
+      "Class 11 annual school exam prep",
+      "NCERT subjective theory derivations",
+      "Organic Chemistry basics (GOC)"
+    ],
+    fullDescription: "Score 85%+ in Class 11 school exams while keeping JEE problem-solving sharp. Write out full derivations for school and practice objective PYQs in parallel.",
+    tasks: [
+      "Write formal physics derivations by hand for school theory papers",
+      "Master General Organic Chemistry (GOC) reaction mechanisms completely",
+      "Maintain 1-on-1 weekly mentor check-ins to stay accountable during exam month"
+    ],
+    resources: ["NCERT Exemplar Solutions", "GOC Reaction Flowcharts", "1-on-1 Mentor Review Log"],
+    mentorSecret: "Saket Kumar (IIT Roorkee): GOC is the gateway to the entire Class 12 Organic Chemistry syllabus. Understand inductive and resonance effects deeply."
+  },
+  {
+    id: 6,
+    num: "6",
+    phase: "goal",
+    statusLabel: "Goal 🏆",
+    title: "Class 12 Launchpad",
+    week: "April 2028 Goal",
+    theme: "#EC4899",
+    bullets: [
+      "Complete Class 11 grand revision",
+      "Formula quick-recap flash cards",
+      "Target: AIR < 1000 in JEE 2028"
+    ],
+    fullDescription: "Enter Class 12 with 100% of Class 11 revised and zero pending backlogs. You will be in the top 1% of serious aspirants nationwide ready to dominate JEE 2028.",
+    tasks: [
+      "Finish single-page formula recap sheets for all Class 11 chapters",
+      "Take the Class 11 full-syllabus benchmark assessment with your mentor",
+      "Set up your Class 12 strategic roadmap and 24-month JEE 2028 target"
+    ],
+    resources: ["Class 11 Grand Formula Booklet", "Class 12 Launch Schedule", "CampusPoint IITian Mentor Roadmap"],
+    mentorSecret: "Mayank Singh (IIT Roorkee): Aspirants who finish Class 11 with clear concepts and zero backlogs have a 10x higher probability of cracking top-1000 ranks in JEE Advanced."
+  }
+];
+
 const RAIL_NODES = [
   { x: 75,  y: 52 },
   { x: 280, y: 26 },
@@ -176,15 +312,20 @@ const RAIL_NODES = [
 ];
 
 export default function InteractiveJourneyRoadmap({
-  title = "Interactive Roadmap to JEE Mains 2027 Success",
+  title = "Interactive Roadmap to JEE Mains Success",
   subtitle = "Click on any milestone along the winding path to inspect weekly tactical plans, high-yield chapters, and IITian mentor audit checklists.",
-  milestones = DEFAULT_JEE_MILESTONES,
+  milestones: customMilestones,
   planKey = "mentor-jee-2027-6m",
   isHero = false,
   kicker = "Plan • Prepare • Practice • Perform"
 }) {
   const { open: openEnrol } = useEnrol();
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+  const [batchYear, setBatchYear] = useState("2027");
+  const [showBatchModal, setShowBatchModal] = useState(false);
+
+  const milestones = customMilestones || (batchYear === "2028" ? DEFAULT_JEE_2028_MILESTONES : DEFAULT_JEE_MILESTONES);
+  const activePlanKey = batchYear === "2028" ? "mentor-jee-2028-6m" : (planKey || "mentor-jee-2027-6m");
 
   const waveD = "M 75,52 C 180,10 370,80 490,68 C 610,56 610,24 700,38 C 790,52 820,70 910,58 C 1000,46 1030,16 1100,28";
 
@@ -199,6 +340,59 @@ export default function InteractiveJourneyRoadmap({
       <div className="scp-container">
         {/* Section Header */}
         <div className="ijr-header">
+          {/* Target Year Batch Switcher */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              background: "rgba(255, 255, 255, 0.92)",
+              border: "1px solid rgba(220, 215, 205, 0.85)",
+              borderRadius: 50,
+              padding: "4px 5px",
+              boxShadow: "0 2px 10px rgba(28, 28, 40, 0.05)",
+              gap: 4
+            }}>
+              <button
+                type="button"
+                onClick={() => setBatchYear("2027")}
+                style={{
+                  padding: "6px 16px",
+                  borderRadius: 50,
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  fontFamily: "var(--font-heading, sans-serif)",
+                  cursor: "pointer",
+                  border: "none",
+                  background: batchYear === "2027" ? "#1C1C28" : "transparent",
+                  color: batchYear === "2027" ? "#fff" : "rgba(28,28,40,0.65)",
+                  boxShadow: batchYear === "2027" ? "0 2px 8px rgba(28,28,40,0.18)" : "none",
+                  transition: "all 0.2s"
+                }}
+              >
+                🎓 JEE 2027 Target
+              </button>
+              <button
+                type="button"
+                onClick={() => setBatchYear("2028")}
+                style={{
+                  padding: "6px 16px",
+                  borderRadius: 50,
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  fontFamily: "var(--font-heading, sans-serif)",
+                  cursor: "pointer",
+                  border: "none",
+                  background: batchYear === "2028" ? "#1C1C28" : "transparent",
+                  color: batchYear === "2028" ? "#fff" : "rgba(28,28,40,0.65)",
+                  boxShadow: batchYear === "2028" ? "0 2px 8px rgba(28,28,40,0.18)" : "none",
+                  transition: "all 0.2s"
+                }}
+              >
+                🚀 JEE 2028 Target
+              </button>
+            </div>
+          </div>
+
           <span className="ijr-kicker">
             <Sparkles size={14} /> {kicker}
           </span>
@@ -469,7 +663,7 @@ export default function InteractiveJourneyRoadmap({
                   style={{ padding: "9px 18px", fontSize: "0.84rem" }}
                   onClick={() => {
                     setSelectedMilestone(null);
-                    openEnrol(planKey);
+                    setShowBatchModal(true);
                   }}
                 >
                   Enroll · ₹3,499 <ArrowRight size={14} />
@@ -479,6 +673,12 @@ export default function InteractiveJourneyRoadmap({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Target Batch Selector (JEE 2027 vs JEE 2028) */}
+      <JeeBatchSelectModal
+        isOpen={showBatchModal}
+        onClose={() => setShowBatchModal(false)}
+      />
     </section>
   );
 }

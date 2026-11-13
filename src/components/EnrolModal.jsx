@@ -147,7 +147,8 @@ const EMPTY = {
 };
 
 function EnrolModal({ plan, onClose }) {
-  const activePlanKey = resolvePlanKey(plan);
+  const [currentPlan, setCurrentPlan] = useState(() => resolvePlanKey(plan));
+  const activePlanKey = currentPlan;
   const meta = PLAN_META[activePlanKey] || PLAN_META["mentor-jee-2027-6m"] || PLAN_META["josaa"];
   const isMentorship = meta.kind === "mentorship";
   // Pre-fill contact details straight from the logged-in account - the student
@@ -322,6 +323,62 @@ function EnrolModal({ plan, onClose }) {
 
             {/* ── Form ── */}
             <div style={{ padding: "22px 28px 26px", maxHeight: "min(62vh, 560px)", overflowY: "auto" }}>
+              {/* Target Batch Switcher for JEE Mentorship */}
+              {isMentorship && (activePlanKey.includes("2027") || activePlanKey.includes("2028")) && (
+                <div style={{ marginBottom: 18, background: "#f8fafc", padding: "12px", borderRadius: 14, border: "1px solid #e2e8f0" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "#64748b", marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span>Select Target Exam Batch:</span>
+                    <span style={{ color: "#D8512A", fontWeight: 700 }}>₹3,499</span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCurrentPlan(meta.region === "international" ? "mentor-jee-2027-intl" : "mentor-jee-2027-6m");
+                      }}
+                      style={{
+                        padding: "10px 12px",
+                        borderRadius: 10,
+                        border: activePlanKey.includes("2027") ? "2px solid #FF693D" : "1px solid #cbd5e1",
+                        background: activePlanKey.includes("2027") ? "rgba(255,105,61,0.08)" : "#fff",
+                        color: activePlanKey.includes("2027") ? "#D8512A" : "#475569",
+                        fontWeight: 700,
+                        fontSize: "0.88rem",
+                        cursor: "pointer",
+                        textAlign: "center",
+                        boxShadow: activePlanKey.includes("2027") ? "0 2px 10px rgba(255,105,61,0.15)" : "none",
+                        transition: "all 0.2s"
+                      }}
+                    >
+                      🎓 JEE 2027
+                      <div style={{ fontSize: "0.72rem", fontWeight: 500, color: "#64748b", marginTop: 2 }}>Till JEE Mains 2027</div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCurrentPlan(meta.region === "international" ? "mentor-jee-2028-intl" : "mentor-jee-2028-6m");
+                      }}
+                      style={{
+                        padding: "10px 12px",
+                        borderRadius: 10,
+                        border: activePlanKey.includes("2028") ? "2px solid #FF693D" : "1px solid #cbd5e1",
+                        background: activePlanKey.includes("2028") ? "rgba(255,105,61,0.08)" : "#fff",
+                        color: activePlanKey.includes("2028") ? "#D8512A" : "#475569",
+                        fontWeight: 700,
+                        fontSize: "0.88rem",
+                        cursor: "pointer",
+                        textAlign: "center",
+                        boxShadow: activePlanKey.includes("2028") ? "0 2px 10px rgba(255,105,61,0.15)" : "none",
+                        transition: "all 0.2s"
+                      }}
+                    >
+                      🚀 JEE 2028
+                      <div style={{ fontSize: "0.72rem", fontWeight: 500, color: "#64748b", marginTop: 2 }}>Class 11 & 2-Year</div>
+                    </button>
+                  </div>
+                </div>
+              )}
               {topError && (
                 <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", padding: "10px 12px", borderRadius: 10, fontSize: 13.5, marginBottom: 14, fontWeight: 600 }}>
                   {topError}
