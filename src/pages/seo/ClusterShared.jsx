@@ -83,15 +83,13 @@ export function ClusterNav({ currentPath }) {
 }
 
 /**
- * Glassmorphic Hero matching the signature JEE 2027 Mentorship Page.
+ * Clean, bold, world-class Hero (tags, preview cards, and verbose lines removed).
  */
 export function ClusterHero({
-  badge = "🔥 Mentorship by IITians · Limited Seats",
   title,
   titlePrefix = "Personalized",
   accentWord = "JEE Mentorship",
   titleSuffix = "Program",
-  description = "Get paired 1-on-1 with an IIT Roorkee top ranker. Receive daily customized study plans, question-level mock error autopsies, and backlog clearance to secure your IIT seat.",
   planKey = "mentor-jee-2027-6m",
   bullets = [
     "1-on-1 Verified IIT Roorkee Mentor",
@@ -111,10 +109,6 @@ export function ClusterHero({
 
       <div className="scp-container">
         <div className="mj-hero-inner">
-          <div className="mj-hero-pill">
-            <span className="mj-dot" /> {badge}
-          </div>
-
           <h1 className="mj-hero-h1">
             {title ? (
               title
@@ -132,9 +126,7 @@ export function ClusterHero({
             )}
           </h1>
 
-          <p className="mj-hero-sub">{description}</p>
-
-          <div className="mj-hero-cta">
+          <div className="mj-hero-cta" style={{ marginTop: 28, marginBottom: 24 }}>
             <button
               type="button"
               className="mj-btn-glow"
@@ -169,31 +161,6 @@ export function ClusterHero({
                 <i /> {b}
               </span>
             ))}
-          </div>
-
-          {/* 3 Signature Glassmorphic Feature Cards from Mentorship */}
-          <div className="mj-hero-cards">
-            <div className="mj-gcard">
-              <div className="mj-gcard-ic">
-                <GraduationCap size={22} />
-              </div>
-              <h3>1-on-1 IIT Roorkee Mentors</h3>
-              <p>Paired directly with verified rankers (AIR 3846 CRL, top percentiles) who cracked JEE Advanced themselves.</p>
-            </div>
-            <div className="mj-gcard">
-              <div className="mj-gcard-ic">
-                <Calendar size={22} />
-              </div>
-              <h3>Daily Telemetry & Study Log</h3>
-              <p>Custom daily study targets, active streak tracking, and 10:30 PM nightly accountability check-ins on WhatsApp.</p>
-            </div>
-            <div className="mj-gcard">
-              <div className="mj-gcard-ic">
-                <BarChart3 size={22} />
-              </div>
-              <h3>Question-Level Error Autopsy</h3>
-              <p>Evaluate time spent per question, eliminate silly slips and negative marks, and remediate weak topics weekly.</p>
-            </div>
           </div>
         </div>
       </div>
@@ -444,29 +411,31 @@ export function ClusterFaq({ items = [] }) {
 }
 
 /**
- * Related Cluster Navigation Cards.
+ * Related Cluster Navigation Cards (Always exactly 3 centered cards, no lower text line).
  */
 export function ClusterRelated({ currentPath, selectedPaths = [] }) {
   const pool = selectedPaths.length > 0
-    ? CLUSTER_PAGES.filter((p) => selectedPaths.includes(p.path))
-    : CLUSTER_PAGES.filter((p) => p.path !== currentPath).slice(0, 4);
+    ? CLUSTER_PAGES.filter((p) => selectedPaths.includes(p.path)).slice(0, 3)
+    : CLUSTER_PAGES.filter((p) => p.path !== currentPath).slice(0, 3);
 
   return (
-    <div className="scp-grid-2">
+    <div className="scp-grid-3">
       {pool.map((page) => (
-        <Link key={page.path} to={page.path} className="scp-card" style={{ textDecoration: "none" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--mj-coral)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Related Topic
+        <Link
+          key={page.path}
+          to={page.path}
+          className="scp-card"
+          style={{ textDecoration: "none", display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontSize: "0.74rem", fontWeight: 800, color: "var(--mj-coral)", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "Space Grotesk, sans-serif" }}>
+              Related Strategy
             </span>
             <ChevronRight size={16} color="var(--mj-coral)" />
           </div>
-          <h4 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--mj-ink)", margin: "0 0 6px", fontFamily: "Sora, sans-serif" }}>
+          <h4 style={{ fontSize: "1.08rem", fontWeight: 800, color: "var(--mj-ink)", margin: 0, fontFamily: "Sora, sans-serif", lineHeight: 1.35 }}>
             {page.label}
           </h4>
-          <span style={{ fontSize: "0.85rem", color: "var(--mj-muted)" }}>
-            Explore full framework & guidance →
-          </span>
         </Link>
       ))}
     </div>

@@ -123,15 +123,15 @@ export default function JeeMentorshipMain() {
       <main className="scp-container" id="details">
         {/* Core Strategy Breakdown */}
         <section className="scp-section" id="blueprint">
-          <div className="scp-section-header">
+          <div className="scp-section-header" style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 36px" }}>
             <span className="scp-kicker">Precision Score Optimization</span>
-            <h2 className="scp-h2">The 4 Pillars of CampusPoint JEE Main Mentorship</h2>
+            <h2 className="scp-h2">The 3 Core Pillars of JEE Main Mentorship</h2>
             <p className="scp-section-sub">
-              Scoring 200+ in JEE Main requires a very different approach than JEE Advanced. While Advanced tests multi-concept depth, Main tests rapid recall, calculation speed, and zero silly mistakes.
+              Scoring 200+ in JEE Main requires rapid recall, calculation speed, and zero silly mistakes. Here is how your mentor optimizes your score:
             </p>
           </div>
 
-          <div className="scp-grid-2">
+          <div className="scp-grid-3">
             <div className="scp-card">
               <div className="scp-card-icon brand">
                 <Target size={22} />
@@ -141,9 +141,9 @@ export default function JeeMentorshipMain() {
                 We engineer your score breakdown with statistical certainty:
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item"><strong>Chemistry (75-85 Marks):</strong> 40 minutes target. 100% NCERT line-by-line coverage for Inorganic & Organic ensures quick, sure marks.</li>
-                <li className="scp-card-list-item"><strong>Physics (70-80 Marks):</strong> Formula sheets, direct application numericals, and modern physics + semiconductor scoring boosters.</li>
-                <li className="scp-card-list-item"><strong>Mathematics (45-55 Marks):</strong> Aggressive question filtration. Solving 12-14 high-confidence questions in 60 minutes guarantees 99%ile in Maths.</li>
+                <li className="scp-card-list-item"><strong>Chemistry (75–85):</strong> 40m target. NCERT Inorganic & Organic mastery.</li>
+                <li className="scp-card-list-item"><strong>Physics (70–80):</strong> Formula sheets, direct numericals & modern physics.</li>
+                <li className="scp-card-list-item"><strong>Maths (45–55):</strong> Cherry-picking 12–14 high-confidence problems.</li>
               </ul>
             </div>
 
@@ -156,9 +156,9 @@ export default function JeeMentorshipMain() {
                 Your mentor coaches you to solve the paper in 3 distinct rounds:
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item"><strong>Round 1 (0 to 60 mins):</strong> Solve 30-35 easy, direct recall questions across all 3 subjects without calculation heavy traps.</li>
-                <li className="scp-card-list-item"><strong>Round 2 (60 to 140 mins):</strong> Tackle moderate multi-step questions where the pathway is known.</li>
-                <li className="scp-card-list-item"><strong>Round 3 (140 to 180 mins):</strong> Re-check calculations, verify numericals, and attempt 4-5 harder questions.</li>
+                <li className="scp-card-list-item"><strong>Round 1 (0 to 60m):</strong> 30–35 easy, direct recall questions across all 3 subjects.</li>
+                <li className="scp-card-list-item"><strong>Round 2 (60 to 140m):</strong> Tackle moderate multi-step questions.</li>
+                <li className="scp-card-list-item"><strong>Round 3 (140 to 180m):</strong> Re-check calculations & attempt 4–5 harder questions.</li>
               </ul>
             </div>
 
@@ -166,28 +166,14 @@ export default function JeeMentorshipMain() {
               <div className="scp-card-icon violet">
                 <BarChart size={22} />
               </div>
-              <h3 className="scp-card-h3">3. Mock Test Error Diagnostics</h3>
+              <h3 className="scp-card-h3">3. Test Diagnostics & Rank Alignment</h3>
               <p className="scp-card-p">
-                After every mock test, your mentor analyzes:
+                Weekly mistake autopsy paired with JoSAA college cutoffs:
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item">Unforced calculation errors vs conceptual gaps</li>
-                <li className="scp-card-list-item">Questions where more than 3 minutes were spent with 0 marks returned</li>
-                <li className="scp-card-list-item">Categorizing wrong attempts into a targeted 7-day correction plan</li>
-              </ul>
-            </div>
-
-            <div className="scp-card">
-              <div className="scp-card-icon amber">
-                <TrendingUp size={22} />
-              </div>
-              <h3 className="scp-card-h3">4. Rank Prediction & JoSAA Cutoff Alignment</h3>
-              <p className="scp-card-p">
-                Understand your college destination early:
-              </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item">Directly check your projected rank using our <Link to="/jee-main" style={{ color: "var(--scp-brand)", fontWeight: 600 }}>JEE Main Rank Predictor</Link>.</li>
-                <li className="scp-card-list-item">Align current mock marks with top NITs (Trichy, Surathkal, Warangal) and IIIT Computer Science cutoffs.</li>
+                <li className="scp-card-list-item">Isolate unforced calculation errors vs genuine concept gaps.</li>
+                <li className="scp-card-list-item">Eliminate questions where &gt;3 mins were spent with 0 marks.</li>
+                <li className="scp-card-list-item">Align mock percentiles with top NIT (Trichy, Surathkal) cutoffs.</li>
               </ul>
             </div>
           </div>

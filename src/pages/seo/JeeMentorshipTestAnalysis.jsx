@@ -182,15 +182,15 @@ export default function JeeMentorshipTestAnalysis() {
 
         {/* The 4 Mistake Categories */}
         <section className="scp-section">
-          <div className="scp-section-header">
+          <div className="scp-section-header" style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 36px" }}>
             <span className="scp-kicker">Eliminating Score Leaks</span>
-            <h2 className="scp-h2">The 4 Types of Marks Lost in JEE Mocks</h2>
+            <h2 className="scp-h2">The 3 Primary Types of Marks Lost in JEE Mocks</h2>
             <p className="scp-section-sub">
-              When students score 120/300, they believe they need to learn 180 marks worth of new physics, chemistry, and maths. In reality, over 50 marks are lost to preventable tactical blunders:
+              Over 50 marks are lost to preventable tactical blunders rather than lack of study hours. Here is how your mentor stops score leakage:
             </p>
           </div>
 
-          <div className="scp-grid-2">
+          <div className="scp-grid-3">
             <div className="scp-card">
               <div className="scp-card-icon brand">
                 <AlertTriangle size={22} />
@@ -200,8 +200,8 @@ export default function JeeMentorshipTestAnalysis() {
                 You knew the formula, understood the concept, but made a basic sign error, multiplied wrongly, or marked Option B instead of C.
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Maintaining a handwritten Error Diary reviewed before every mock.</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Standardizing 4-quadrant structured rough work.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Maintaining a handwritten Error Diary reviewed before every mock.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Standardizing 4-quadrant structured rough work.</li>
               </ul>
             </div>
 
@@ -211,25 +211,11 @@ export default function JeeMentorshipTestAnalysis() {
               </div>
               <h3 className="scp-card-h3">2. Time-Trap Sinks (-20 to -35 Marks)</h3>
               <p className="scp-card-p">
-                Spending 7 to 9 minutes on a single ego-driven problem in Mathematics, leaving 6 easy questions in Physics completely unread at the end of the paper.
+                Spending 7 to 9 minutes on a single ego-driven problem in Mathematics, leaving 6 easy questions in Physics completely unread.
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Strict 2.5-minute cutoff rule trained by your mentor.</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Compulsory Round 1 scan through all questions.</li>
-              </ul>
-            </div>
-
-            <div className="scp-card">
-              <div className="scp-card-icon amber">
-                <FileSearch size={22} />
-              </div>
-              <h3 className="scp-card-h3">3. Reading & Trap Mistakes (-10 to -15 Marks)</h3>
-              <p className="scp-card-p">
-                Misreading "which statement is INCORRECT" as correct, or ignoring units like cm vs meters and Joules vs kiloJoules.
-              </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Pen-tracing keywords during question reading.</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Writing down given units explicitly on rough sheets.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Strict 2.5-minute cutoff rule trained by your mentor.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Compulsory Round 1 scan through all questions.</li>
               </ul>
             </div>
 
@@ -237,13 +223,13 @@ export default function JeeMentorshipTestAnalysis() {
               <div className="scp-card-icon emerald">
                 <TrendingUp size={22} />
               </div>
-              <h3 className="scp-card-h3">4. True Conceptual Gaps (The Genuine Re-Study Zone)</h3>
+              <h3 className="scp-card-h3">3. Reading & Conceptual Traps (-15 to -20 Marks)</h3>
               <p className="scp-card-p">
-                Only questions falling into this bucket require opening textbooks or watching lecture videos. Separating genuine gaps from silly slips saves 15+ hours of wasted revision weekly!
+                Misreading "which statement is INCORRECT" as correct, or ignoring units like cm vs meters and Joules vs kJ.
               </p>
               <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: 10 targeted PYQs on that exact micro-topic.</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Solution: Mentor explanation of first-principles concept.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Pen-tracing keywords during question reading.</li>
+                <li className="scp-card-list-item"><CheckCircle2 size={16} /> 10 targeted PYQs on each flagged micro-topic.</li>
               </ul>
             </div>
           </div>

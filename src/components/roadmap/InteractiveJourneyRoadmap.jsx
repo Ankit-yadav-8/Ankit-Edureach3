@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Check,
   CheckCircle2,
   ChevronRight,
   Sparkles,
@@ -15,6 +16,7 @@ import {
   Trophy,
   Flame,
   Clock,
+  Calendar,
   Layers,
   GraduationCap
 } from "lucide-react";
@@ -27,11 +29,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 1,
     num: "1",
+    phase: "done",
+    statusLabel: "Done",
     title: "Understand the Exam",
-    shortTitle: "Syllabus & Pattern",
     week: "Weeks 1–2",
     theme: "#3B82F6",
-    bgLight: "#EFF6FF",
     bullets: [
       "Official NTA syllabus & pattern",
       "Negative marking math (+4 / -1)",
@@ -50,11 +52,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 2,
     num: "2",
+    phase: "done",
+    statusLabel: "Done",
     title: "Build Strong Basics",
-    shortTitle: "Concept Clarity & NCERT",
     week: "Weeks 1–8",
     theme: "#0EA5E9",
-    bgLight: "#F0F9FF",
     bullets: [
       "100% NCERT thoroughness",
       "First-principles derivations",
@@ -73,11 +75,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 3,
     num: "3",
+    phase: "done",
+    statusLabel: "Done",
     title: "Practice & Analyze",
-    shortTitle: "Mock Tests & PYQs",
     week: "Weeks 9–16",
     theme: "#10B981",
-    bgLight: "#ECFDF5",
     bullets: [
       "5-Year official PYQ bank",
       "Part-syllabus mock exams",
@@ -96,11 +98,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 4,
     num: "4",
+    phase: "live",
+    statusLabel: "Live · Target Phase",
     title: "Revise Strategically",
-    shortTitle: "70-30 Backlog Clearance",
     week: "Weeks 17–20",
     theme: "#8B5CF6",
-    bgLight: "#F5F3FF",
     bullets: [
       "70-30 backlog formula",
       "Flash formula card decks",
@@ -119,11 +121,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 5,
     num: "5",
+    phase: "soon",
+    statusLabel: "Upcoming",
     title: "Boost Performance",
-    shortTitle: "Full CBT Mock Drills",
     week: "Weeks 21–24",
     theme: "#F59E0B",
-    bgLight: "#FFFBEB",
     bullets: [
       "15+ Full-length CBTs",
       "3-Pass paper solving",
@@ -142,11 +144,11 @@ export const DEFAULT_JEE_MILESTONES = [
   {
     id: 6,
     num: "6",
+    phase: "soon",
+    statusLabel: "Goal 🏆",
     title: "Be Exam Ready",
-    shortTitle: "Final Sprint & Rank Lock",
     week: "April 2027",
     theme: "#EC4899",
-    bgLight: "#FDF2F8",
     bullets: [
       "Peak exam temperament",
       "Complete formula re-runs",
@@ -164,17 +166,25 @@ export const DEFAULT_JEE_MILESTONES = [
   }
 ];
 
+const RAIL_NODES = [
+  { x: 75,  y: 52 },
+  { x: 280, y: 26 },
+  { x: 490, y: 68 },
+  { x: 700, y: 38 },
+  { x: 910, y: 58 },
+  { x: 1100, y: 28 }
+];
+
 export default function InteractiveJourneyRoadmap({
-  kicker = "PLAN • PREPARE • PRACTICE • PERFORM",
   title = "Interactive Roadmap to JEE Mains 2027 Success",
   subtitle = "Click on any milestone along the winding path to inspect weekly tactical plans, high-yield chapters, and IITian mentor audit checklists.",
   milestones = DEFAULT_JEE_MILESTONES,
-  planKey = "mentor-jee-2027-6m",
-  summitLabel = "JEE Mains 2027 Success",
-  targetExam = "JEE Main & Advanced 2027"
+  planKey = "mentor-jee-2027-6m"
 }) {
   const { open: openEnrol } = useEnrol();
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+
+  const waveD = "M 75,52 C 180,10 370,80 490,68 C 610,56 610,24 700,38 C 790,52 820,70 910,58 C 1000,46 1030,16 1100,28";
 
   return (
     <section className="ijr-section" id="interactive-roadmap">
@@ -182,7 +192,7 @@ export default function InteractiveJourneyRoadmap({
         {/* Section Header */}
         <div className="ijr-header">
           <span className="ijr-kicker">
-            <Sparkles size={14} /> {kicker}
+            <Sparkles size={14} /> Plan • Prepare • Practice • Perform
           </span>
           <h2 className="ijr-h2">
             A Structured Roadmap to Prepare Smart,{" "}
@@ -191,192 +201,127 @@ export default function InteractiveJourneyRoadmap({
           <p className="ijr-sub">{subtitle}</p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-            <span className="ijr-helper-pill">
-              <Compass size={16} color="#FF693D" /> Click any milestone to open full execution guide
-            </span>
-            <span className="ijr-helper-pill">
-              <Award size={16} color="#10B981" /> Formulated by IIT Roorkee Rankers
+            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#D8512A", display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <Compass size={15} /> Click any milestone to open full execution guide
             </span>
           </div>
         </div>
 
-        {/* ── DESKTOP WINDING ROAD STAGE (> 920px) ───────────────── */}
-        <div className="ijr-desktop-view">
-          {/* Summit Goal Pill */}
-          <div className="ijr-summit">
-            <span className="ijr-summit-trophy">🏆</span>
-            <div>
-              <p className="ijr-summit-title">{summitLabel}</p>
-              <span className="ijr-summit-sub">Dream IIT / NIT Admission</span>
-            </div>
-          </div>
+        {/* ── WAVY PROGRESS RAIL (DESKTOP > 900px) ────────────────── */}
+        <div className="ijr-rail-wrap" aria-hidden="true">
+          <svg className="ijr-wave" viewBox="0 0 1180 90" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="coralGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#D8512A" />
+                <stop offset="60%" stopColor="#FF693D" />
+                <stop offset="100%" stopColor="#FFA07A" />
+              </linearGradient>
+            </defs>
 
-          {/* Student Avatar on Lookout */}
-          <div className="ijr-student-avatar">
-            <div className="ijr-student-icon">
-              <GraduationCap size={22} />
-            </div>
-            <div>
-              <p style={{ margin: 0, fontWeight: 800, fontSize: "0.88rem", color: "#1B1B24", fontFamily: "Sora, sans-serif" }}>
-                JEE Aspirant
-              </p>
-              <span style={{ fontSize: "0.75rem", color: "#FF693D", fontWeight: 700 }}>
-                Start Your Journey →
-              </span>
-            </div>
-          </div>
+            {/* Base track */}
+            <path d={waveD} fill="none" stroke="#E4DED2" strokeWidth="4" strokeLinecap="round" />
 
-          {/* Winding Highway SVG */}
-          <div className="ijr-road-svg-wrap" aria-hidden="true">
-            <svg
-              className="ijr-road-svg"
-              viewBox="0 0 1140 460"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <linearGradient id="roadGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#252936" />
-                  <stop offset="50%" stopColor="#32384A" />
-                  <stop offset="100%" stopColor="#1E222D" />
-                </linearGradient>
-                <filter id="roadShadow" x="-10%" y="-10%" width="120%" height="130%">
-                  <feDropShadow dx="0" dy="16" stdDeviation="12" floodColor="#0F172A" floodOpacity="0.25" />
-                </filter>
-              </defs>
+            {/* Glowing progress line */}
+            <motion.path
+              d={waveD}
+              fill="none"
+              stroke="url(#coralGrad)"
+              strokeWidth="4"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, ease: [0.4, 0, 0.2, 1] }}
+            />
 
-              {/* Asphalt Road Base */}
-              <path
-                d="M 60,390 C 180,390 220,180 390,200 C 560,220 590,380 770,350 C 920,320 960,110 1080,90"
-                fill="none"
-                stroke="url(#roadGradient)"
-                strokeWidth="74"
-                strokeLinecap="round"
-                filter="url(#roadShadow)"
-              />
+            {/* Light pulse flow running along line */}
+            <path className="ijr-flow" d={waveD} fill="none" stroke="#FFF0EA" strokeWidth="4" strokeLinecap="round" />
+          </svg>
 
-              {/* Road Shoulder Highlights */}
-              <path
-                d="M 60,390 C 180,390 220,180 390,200 C 560,220 590,380 770,350 C 920,320 960,110 1080,90"
-                fill="none"
-                stroke="#475569"
-                strokeWidth="76"
-                strokeLinecap="round"
-                opacity="0.3"
-              />
+          {/* Interactive Nodes along the wave */}
+          {milestones.map((m, i) => {
+            const node = RAIL_NODES[i] || { x: (i + 1) * 180, y: 45 };
+            const isLive = m.phase === "live";
+            const isDone = m.phase === "done";
 
-              {/* Center Dashed Highway Line */}
-              <path
-                d="M 60,390 C 180,390 220,180 390,200 C 560,220 590,380 770,350 C 920,320 960,110 1080,90"
-                fill="none"
-                stroke="#FCD34D"
-                strokeWidth="4"
-                strokeDasharray="14 12"
-                strokeLinecap="round"
-                opacity="0.85"
-              />
-            </svg>
-          </div>
-
-          {/* 6 Milestone Cards Grid */}
-          <div className="ijr-milestones-track">
-            {milestones.map((m) => (
-              <motion.div
+            return (
+              <div
                 key={m.id}
-                className={`ijr-card ${selectedMilestone?.id === m.id ? "active" : ""}`}
-                style={{ borderTop: `4px solid ${m.theme}` }}
-                whileHover={{ y: -6, transition: { duration: 0.18 } }}
-                whileTap={{ scale: 0.98 }}
+                className="ijr-node"
+                style={{ left: `${(node.x / 1180) * 100}%`, top: node.y }}
                 onClick={() => setSelectedMilestone(m)}
               >
-                <div>
-                  <div className="ijr-card-head">
-                    <span className="ijr-badge-num" style={{ background: m.theme }}>
-                      {m.num}
-                    </span>
-                    <span
-                      className="ijr-badge-week"
-                      style={{ background: m.bgLight, color: m.theme }}
-                    >
-                      {m.week}
-                    </span>
-                  </div>
+                {isLive && <span className="ijr-node-pill ijr-node-pill--now">Now</span>}
+                {isDone && i === 2 && <span className="ijr-node-pill ijr-node-pill--done">Done</span>}
 
-                  <h3 className="ijr-card-title">{m.title}</h3>
+                {isDone && (
+                  <span className="ijr-dot ijr-dot--done">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                )}
 
-                  <ul className="ijr-card-bullets">
-                    {m.bullets.map((b, bi) => (
-                      <li key={bi} className="ijr-card-bullet-item">
-                        <CheckCircle2 size={13} color={m.theme} />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {isLive && (
+                  <span className="ijr-dot ijr-dot--now">
+                    <span className="ijr-ring ijr-ring-1" />
+                    <span className="ijr-ring ijr-ring-2" />
+                    <span className="ijr-dot-core" />
+                  </span>
+                )}
 
-                <div className="ijr-card-action">
-                  <span>Open Full Guide</span>
-                  <ChevronRight size={14} />
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                {!isDone && !isLive && (
+                  <span className="ijr-dot ijr-dot--soon">
+                    <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#8C877E" }}>{m.num}</span>
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── MOBILE SERPENTINE STEPPER (<= 920px) ───────────────── */}
-        <div className="ijr-mobile-view">
-          <div className="ijr-mobile-spine" />
-
+        {/* ── 6 MILESTONE CARDS GRID ──────────────────────────────── */}
+        <div className="ijr-cards">
           {milestones.map((m) => (
-            <div key={m.id} className="ijr-mobile-step">
-              <div
-                className="ijr-mobile-node"
-                style={{ background: m.theme }}
-                onClick={() => setSelectedMilestone(m)}
-              >
-                {m.num}
-              </div>
-
-              <div
-                className={`ijr-mobile-card ${selectedMilestone?.id === m.id ? "active" : ""}`}
-                style={{ borderLeft: `4px solid ${m.theme}` }}
-                onClick={() => setSelectedMilestone(m)}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <motion.div
+              key={m.id}
+              className={`ijr-card ${m.phase === "live" ? "ijr-card--live" : ""}`}
+              style={{ borderTop: `4px solid ${m.theme}` }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelectedMilestone(m)}
+            >
+              <div>
+                <div className="ijr-card-head">
                   <span
-                    style={{
-                      fontSize: "0.72rem",
-                      fontWeight: 800,
-                      fontFamily: "Space Grotesk, sans-serif",
-                      color: m.theme,
-                      textTransform: "uppercase"
-                    }}
+                    className={`ijr-card-phase-pill ijr-card-phase-pill--${m.phase}`}
+                    style={m.phase === "live" ? { background: "#FFE7DE", color: "#D8512A" } : undefined}
                   >
-                    {m.week}
+                    {m.statusLabel}
                   </span>
-                  <span style={{ fontSize: "0.74rem", fontWeight: 700, color: "#FF693D", display: "flex", alignItems: "center", gap: 3 }}>
-                    Details <ChevronRight size={13} />
-                  </span>
+                  <span className="ijr-card-time">{m.week}</span>
                 </div>
 
-                <h3 style={{ fontSize: "1rem", fontWeight: 800, color: "#1B1B24", margin: "0 0 8px", fontFamily: "Sora, sans-serif" }}>
-                  {m.title}
-                </h3>
+                <h3 className="ijr-card-title">{m.title}</h3>
 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5 }}>
+                <ul className="ijr-card-bullets">
                   {m.bullets.map((b, bi) => (
-                    <li key={bi} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.82rem", color: "#54525C" }}>
-                      <CheckCircle2 size={13} color={m.theme} style={{ flexShrink: 0 }} />
+                    <li key={bi} className="ijr-card-bullet-item">
+                      <CheckCircle2 size={13} color={m.theme} style={{ flexShrink: 0, marginTop: 1 }} />
                       <span>{b}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
+
+              <div className="ijr-card-action">
+                <span>Open Full Guide</span>
+                <ChevronRight size={14} />
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* ── INTERACTIVE PHASE INSPECTOR MODAL / DRAWER ───────────── */}
+      {/* ── INTERACTIVE PHASE INSPECTOR MODAL ─────────────────────── */}
       <AnimatePresence>
         {selectedMilestone && (
           <motion.div
@@ -388,27 +333,27 @@ export default function InteractiveJourneyRoadmap({
           >
             <motion.div
               className="ijr-modal"
-              initial={{ scale: 0.92, y: 30, opacity: 0 }}
+              initial={{ scale: 0.94, y: 24, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.92, y: 30, opacity: 0 }}
+              exit={{ scale: 0.94, y: 24, opacity: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Sticky Header */}
+              {/* Modal Header */}
               <div className="ijr-modal-header">
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div
                     style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 14,
+                      width: 42,
+                      height: 42,
+                      borderRadius: 12,
                       background: selectedMilestone.theme,
                       display: "grid",
                       placeItems: "center",
                       color: "#FFFFFF",
                       fontFamily: "Space Grotesk, sans-serif",
                       fontWeight: 800,
-                      fontSize: "1.2rem"
+                      fontSize: "1.15rem"
                     }}
                   >
                     {selectedMilestone.num}
@@ -429,7 +374,7 @@ export default function InteractiveJourneyRoadmap({
                     <h2
                       style={{
                         margin: "2px 0 0",
-                        fontSize: "1.35rem",
+                        fontSize: "1.32rem",
                         fontWeight: 800,
                         fontFamily: "Sora, sans-serif",
                         color: "#1B1B24"
@@ -457,7 +402,7 @@ export default function InteractiveJourneyRoadmap({
                 </p>
 
                 <div className="ijr-modal-grid-2">
-                  {/* Column 1: Action Tasks */}
+                  {/* Action Tasks */}
                   <div className="ijr-pane">
                     <h4 className="ijr-pane-title">
                       <Target size={15} /> Key Milestones & Daily Checklist
@@ -472,7 +417,7 @@ export default function InteractiveJourneyRoadmap({
                     </ul>
                   </div>
 
-                  {/* Column 2: Recommended Resources */}
+                  {/* Reference Material */}
                   <div className="ijr-pane">
                     <h4 className="ijr-pane-title">
                       <BookOpen size={15} /> Verified Reference Material
