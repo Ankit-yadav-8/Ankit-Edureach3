@@ -12,8 +12,9 @@
     "neetblogs": "node scripts/genNeetBlogs.mjs",
     "prebuild": "node scripts/genSitemap.mjs",
     "build": "vite build",
+    "postbuild": "node scripts/prerenderDetailPages.mjs",
     "prerender": "node scripts/prerender.mjs",
-    "build:prod": "vite build && node scripts/prerender.mjs",
+    "build:prod": "vite build && node scripts/prerender.mjs && node scripts/prerenderDetailPages.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

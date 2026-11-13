@@ -40,6 +40,61 @@
       "source": "/josaa-cutoff",
       "destination": "/cutoffs",
       "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-kushinagar",
+      "destination": "/neet-colleges/autonomous-state-medical-college-kushinagar",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-akbarpur-kanpur",
+      "destination": "/neet-colleges/autonomous-state-medical-college-akbarpur-kanpur",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-and-hospital-auraiya",
+      "destination": "/neet-colleges/autonomous-state-medical-college-and-hospital-auraiya",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-and-hospital-gonda",
+      "destination": "/neet-colleges/autonomous-state-medical-college-and-hospital-gonda",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-and-hospital-lakhimpuri-kheri",
+      "destination": "/neet-colleges/autonomous-state-medical-college-and-hospital-lakhimpuri-kheri",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-and-hospital-kaushambi",
+      "destination": "/neet-colleges/autonomous-state-medical-college-and-hospital-kaushambi",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/autonomous-state-edical-college-sonebhadra",
+      "destination": "/neet-colleges/autonomous-state-medical-college-sonebhadra",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/kmc-medical-college-and-pradeshhospital-maharajganj-uttar-pradesh",
+      "destination": "/neet-colleges/kmc-medical-college-and-hospital-maharajganj-uttar-pradesh",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/mahatma-vidur-pradesahutonomous-state-medical-college",
+      "destination": "/neet-colleges/mahatma-vidur-autonomous-state-medical-college-bijnor",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/shri-gorakshnath-medical-pradeschollege-hospital-and-arogya-dham-gorakhpur-up",
+      "destination": "/neet-colleges/shri-gorakshnath-medical-college-hospital-and-arogya-dham-gorakhpur-up",
+      "permanent": true
+    },
+    {
+      "source": "/neet-colleges/santiniketan-medical-colle-ge-bolpur-west-bengal",
+      "destination": "/neet-colleges/santiniketan-medical-college-bolpur-west-bengal",
+      "permanent": true
     }
   ],
   "rewrites": [

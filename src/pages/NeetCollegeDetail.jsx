@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   MapPin, ArrowLeft, Stethoscope, Building2, Users, CalendarDays,
@@ -15,6 +15,11 @@ export default function NeetCollegeDetail() {
   const { slug } = useParams();
   const nav = useNavigate();
   const college = NEET_BY_SLUG[slug];
+
+  // If reached via an alias/typo slug, 301 replace-navigate to the canonical URL
+  if (college && college.slug !== slug) {
+    return <Navigate to={`/neet-colleges/${college.slug}`} replace />;
+  }
 
   const similar = useMemo(
     () => (college ? neetByState(college.state).filter((c) => c.slug !== college.slug).slice(0, 6) : []),
