@@ -1,0 +1,24 @@
+name: Render Backend Synthetic Uptime Ping
+
+on:
+  schedule:
+    # Runs every 10 minutes to prevent Render free-tier spun-down / cold starts
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-backend:
+    name: Ping /health Endpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Hit Backend Health Check
+        run: |
+          echo "Pinging Render backend at https://ankit-edureach3.onrender.com/health"
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 --retry 2 https://ankit-edureach3.onrender.com/health || echo "000")
+          echo "Received HTTP status code: $RESPONSE_CODE"
+          if [ "$RESPONSE_CODE" -ge 200 ] && [ "$RESPONSE_CODE" -lt 400 ]; then
+            echo "Backend is warm and healthy (Status $RESPONSE_CODE)"
+          else
+            echo "Backend returned status $RESPONSE_CODE (waking up or offline)"
+          fi
