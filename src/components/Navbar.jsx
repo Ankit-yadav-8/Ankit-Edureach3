@@ -231,9 +231,9 @@ export default function Navbar({ onSearch }) {
           position: "fixed", top: 34, left: 0, right: 0, zIndex: 1000,
           height: 64,
           width: "100%",
-          background: "var(--page-bg)",
-          borderBottom: "2px solid #111827",
-          boxShadow: "0 4px 0 #111827",
+          background: "#FFF4DA",
+          borderBottom: "1.5px solid #111827",
+          boxShadow: "0 1.5px 0 #111827",
           transition: "box-shadow .3s ease",
         }}
       >
