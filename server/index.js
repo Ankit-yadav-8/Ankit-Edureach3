@@ -40,6 +40,9 @@ for (const secret of REQUIRED_SECRETS) {
     }
   }
 }
+if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32 && process.env.NODE_ENV === "production") {
+  console.warn("⚠️  SECURITY WARNING: JWT_SECRET should be at least 32 characters long for maximum cryptographic entropy.");
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,21 +68,30 @@ app.use((_req, res, next) => {
   next();
 });
 
+// Helper to capture raw incoming request bytes for cryptographic webhook signature verification
+const parseJson = (limit) => express.json({
+  limit,
+  verify: (req, _res, buf) => {
+    req.rawBody = buf;
+  },
+});
+
 // The AI proxy carries chat history (and optionally uploaded note text), so it
 // needs a roomier body than the rest of the API — parse it first, then the
 // strict 16kb parser below becomes a no-op for these requests.
-app.use("/api/ai", express.json({ limit: "2mb" }));
+app.use("/api/ai", parseJson("2mb"));
 
 // Test papers carry many parsed questions, so they need a roomier body than the
 // strict 16kb parser below (which then no-ops for these requests).
-app.use("/api/tests", express.json({ limit: "2mb" }));
+app.use("/api/tests", parseJson("2mb"));
 
 // The mentorship dashboard sync stores a whole study-data blob (logs, tests,
 // backlog, tasks), which can exceed 16kb — parse it with a roomier limit first.
-app.use("/api/mentorship", express.json({ limit: "512kb" }));
+app.use("/api/mentorship", parseJson("512kb"));
 
 // Reject oversized payloads early — these endpoints only ever take small JSON.
-app.use(express.json({ limit: "16kb" }));
+// Captures rawBody on payment routes for webhook signature verification.
+app.use(parseJson("16kb"));
 
 // Sanitize all request payloads to prevent NoSQL query operator injection
 app.use(sanitizeNoSql);

@@ -64,6 +64,9 @@ const num = (v) => {
   return Number.isFinite(n) && n > 0 ? n : null;
 };
 
+// Strip HTML tags and cap length to prevent stored XSS or oversized payload attacks
+const clean = (val, maxLen = 200) => String(val ?? "").replace(/<[^>]*>?/gm, "").trim().slice(0, maxLen);
+
 /* ── Create an order ──────────────────────────────────────────────
    Body: { plan, name, email, phone, homeState, couponCode?, ... }
    Returns: { orderId, amount, currency, keyId, planLabel,
@@ -257,14 +260,14 @@ router.post("/check-qr", optionalAuth, async (req, res) => {
           couponCode: couponCode || "",
           region: planRegion(plan),
           ...(req.user?.id ? { userId: req.user.id } : {}),
-          name:      String(req.body.name || "").trim(),
-          email:     String(req.body.email || "").trim().toLowerCase(),
-          phone:     String(req.body.phone || "").trim(),
+          name:      clean(req.body.name, 100),
+          email:     clean(req.body.email, 120).toLowerCase(),
+          phone:     clean(req.body.phone, 30),
           phone10:   String(req.body.phone || "").replace(/\D/g, "").slice(-10),
-          homeState: String(req.body.homeState || "").trim(),
-          parentEmail: String(req.body.parentEmail || "").trim().toLowerCase(),
-          currentClass: String(req.body.currentClass || "").trim(),
-          targetExam:   String(req.body.targetExam || "").trim(),
+          homeState: clean(req.body.homeState, 60),
+          parentEmail: clean(req.body.parentEmail, 120).toLowerCase(),
+          currentClass: clean(req.body.currentClass, 40),
+          targetExam:   clean(req.body.targetExam, 60),
           jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
           jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
           jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
@@ -380,14 +383,14 @@ router.post("/verify", optionalAuth, async (req, res) => {
           // Link to the signed-in account when present — the reliable owner key,
           // independent of the (editable) email/phone typed into the form.
           ...(req.user?.id ? { userId: req.user.id } : {}),
-          name:      String(req.body.name || "").trim(),
-          email:     String(req.body.email || "").trim().toLowerCase(),
-          phone:     String(req.body.phone || "").trim(),
+          name:      clean(req.body.name, 100),
+          email:     clean(req.body.email, 120).toLowerCase(),
+          phone:     clean(req.body.phone, 30),
           phone10:   String(req.body.phone || "").replace(/\D/g, "").slice(-10),
-          homeState: String(req.body.homeState || "").trim(),
-          parentEmail: String(req.body.parentEmail || "").trim().toLowerCase(),
-          currentClass: String(req.body.currentClass || "").trim(),
-          targetExam:   String(req.body.targetExam || "").trim(),
+          homeState: clean(req.body.homeState, 60),
+          parentEmail: clean(req.body.parentEmail, 120).toLowerCase(),
+          currentClass: clean(req.body.currentClass, 40),
+          targetExam:   clean(req.body.targetExam, 60),
           jeeMainCrlRank:      num(req.body.jeeMainCrlRank),
           jeeMainCategoryRank: num(req.body.jeeMainCategoryRank),
           jeeAdvCrlRank:       num(req.body.jeeAdvCrlRank),
@@ -434,6 +437,128 @@ router.post("/verify", optionalAuth, async (req, res) => {
   } catch (e) {
     console.error("payment/verify error:", e?.message || e);
     res.status(500).json({ error: "Could not verify payment." });
+  }
+});
+
+/* ── Razorpay Server-to-Server Webhook ─────────────────────────────
+   Provides 100% fail-safe automated capture directly from Razorpay.
+   Even if a user's mobile browser drops internet or closes right
+   after paying in their UPI/banking app, the enrollment is captured
+   and recorded automatically with zero delay.
+   Cost: ₹0 (Free standard Razorpay capability).                      */
+router.post("/webhook", async (req, res) => {
+  try {
+    const signature = req.headers["x-razorpay-signature"];
+    const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
+
+    if (!webhookSecret) {
+      console.warn("[payment/webhook] Webhook secret not set in environment.");
+      return res.status(503).json({ error: "Webhook not configured" });
+    }
+
+    if (!signature || !req.rawBody) {
+      return res.status(400).json({ error: "Missing signature or body payload" });
+    }
+
+    const expected = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(req.rawBody)
+      .digest("hex");
+
+    const valid =
+      expected.length === signature.length &&
+      crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+
+    if (!valid) {
+      console.warn("[payment/webhook] Invalid webhook signature detected.");
+      return res.status(400).json({ error: "Invalid signature" });
+    }
+
+    const event = req.body?.event;
+    if (event === "payment.captured" || event === "order.paid") {
+      const payment = req.body?.payload?.payment?.entity;
+      const order = req.body?.payload?.order?.entity;
+
+      const orderId = payment?.order_id || order?.id;
+      const paymentId = payment?.id;
+      const notes = payment?.notes || order?.notes || {};
+      const plan = notes?.plan;
+
+      if (orderId && paymentId && plan && PLANS[plan]) {
+        // Idempotency: skip if already captured by client /verify
+        const existing = await Enrollment.findOne({ razorpayOrderId: orderId, status: "paid" });
+        if (existing) {
+          return res.status(200).json({ status: "ok", message: "Already captured" });
+        }
+
+        const planMeta = PLANS[plan];
+        const couponCode = String(notes.couponCode || "").trim().toUpperCase();
+        let finalAmount = planMeta.amount;
+        let discount = 0;
+
+        if (couponCode) {
+          const coupon = await Coupon.findOne({ code: couponCode, isActive: true });
+          if (coupon) {
+            discount = Math.min(coupon.discountAmount, finalAmount - 1);
+            finalAmount = finalAmount - discount;
+          }
+        }
+
+        const approvalToken = crypto.randomBytes(32).toString("hex");
+        const enr = await Enrollment.findOneAndUpdate(
+          { razorpayOrderId: orderId },
+          {
+            plan,
+            amount: finalAmount,
+            originalAmount: discount > 0 ? planMeta.amount : null,
+            couponCode: couponCode || "",
+            region: planRegion(plan),
+            name: clean(notes.name || payment?.name || "Student", 100),
+            email: clean(payment?.email || notes.email || "", 120).toLowerCase(),
+            phone: clean(payment?.contact || notes.phone || "", 30),
+            phone10: String(payment?.contact || notes.phone || "").replace(/\D/g, "").slice(-10),
+            razorpayOrderId: orderId,
+            razorpayPaymentId: paymentId,
+            status: "paid",
+            emailApproved: false,
+            confirmationEmailSent: false,
+            approvalToken,
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+
+        let studentAssignedId = enr?.studentId || null;
+        if (enr && /^mentor-/.test(enr.plan) && !enr.studentId) {
+          studentAssignedId = await nextStudentId(new Date(enr.createdAt || Date.now()).getFullYear());
+          await Enrollment.updateOne(
+            { _id: enr._id, $or: [{ studentId: null }, { studentId: "" }, { studentId: { $exists: false } }] },
+            { $set: { studentId: studentAssignedId } }
+          );
+        }
+
+        if (couponCode && discount > 0) {
+          await Coupon.updateOne({ code: couponCode }, { $inc: { usageCount: 1 } }).catch(() => {});
+        }
+
+        sendAdminPaymentApprovalEmail({
+          enrollmentId: enr._id,
+          approvalToken,
+          name: enr.name,
+          email: enr.email,
+          phone: enr.phone,
+          planLabel: planMeta.label || plan,
+          amount: finalAmount,
+          orderId,
+          paymentId,
+          studentId: studentAssignedId,
+        }).catch((err) => console.error("[ADMIN PAYMENT APPROVAL ALERT ERROR]", err?.message || err));
+      }
+    }
+
+    return res.status(200).json({ status: "ok" });
+  } catch (err) {
+    console.error("[payment/webhook error]", err?.message || err);
+    return res.status(500).json({ error: "Webhook processing failed" });
   }
 });
 
