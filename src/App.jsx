@@ -20,7 +20,6 @@ import Home from "./pages/Home.jsx";
    imports, so one 2.6 MB chunk had to parse before the homepage could paint. */
 const JeeMain = lazyRetry(() => import("./pages/JeeMain.jsx"));
 const JeeAdvanced = lazyRetry(() => import("./pages/JeeAdvanced.jsx"));
-const JeeAdvancedAnalysis = lazyRetry(() => import("./pages/JeeAdvancedAnalysis.jsx"));
 const JeeAdvancedResult = lazyRetry(() => import("./pages/JeeAdvancedResult.jsx"));
 const Colleges = lazyRetry(() => import("./pages/Colleges.jsx"));
 const CollegeDetail = lazyRetry(() => import("./pages/CollegeDetail.jsx"));
@@ -73,8 +72,6 @@ const CampusPointAI = lazyRetry(() => import("./pages/CampusPointAI.jsx"));
 const CampusFests = lazyRetry(() => import("./pages/CampusFests.jsx"));
 const Class11 = lazyRetry(() => import("./pages/Class11.jsx"));
 const Class12 = lazyRetry(() => import("./pages/Class12.jsx"));
-const JeeStrategy = lazyRetry(() => import("./pages/JeeStrategy.jsx"));
-const NeetStrategy = lazyRetry(() => import("./pages/NeetStrategy.jsx"));
 // JEE Mentorship & Preparation SEO Topic Cluster
 const JeeMentorshipHub = lazyRetry(() => import("./pages/seo/JeeMentorshipHub.jsx"));
 const JeeMentorshipMain = lazyRetry(() => import("./pages/seo/JeeMentorshipMain.jsx"));
@@ -237,7 +234,6 @@ export default function App() {
           <Route path="/" element={<Home onSearch={() => setSearchOpen(true)} />} />
           <Route path="/jee-main" element={<JeeMain />} />
           <Route path="/jee-advanced" element={<JeeAdvanced />} />
-          <Route path="/jee-advanced-analysis" element={<JeeAdvancedAnalysis />} />
           <Route path="/jee-advanced-result-2026" element={<JeeAdvancedResult />} />
           <Route path="/colleges" element={<Colleges />} />
           <Route path="/colleges/:slug" element={<CollegeDetail />} />
@@ -248,8 +244,7 @@ export default function App() {
           <Route path="/compare" element={<Compare />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/reviews" element={<Reviews />} />
-          {/* /jee-analysis retired - its weightage/difficulty content moved into the JEE strategy page */}
-          <Route path="/jee-analysis" element={<Navigate to="/jee-strategy" replace />} />
+          <Route path="/jee-analysis" element={<Navigate to="/jee-main" replace />} />
           <Route path="/shortlist" element={<Shortlist />} />
           <Route path="/for-you" element={<ForYou />} />
           <Route path="/josaa-2026" element={<Josaa2026 />} />
@@ -293,8 +288,6 @@ export default function App() {
           <Route path="/campus-fests" element={<CampusFests />} />
           <Route path="/class-11" element={<Class11 />} />
           <Route path="/class-12" element={<Class12 />} />
-          <Route path="/jee-strategy" element={<JeeStrategy />} />
-          <Route path="/neet-strategy" element={<NeetStrategy />} />
 
           {/* JEE Mentorship Topical Cluster */}
           <Route path="/jee-mentorship" element={<JeeMentorshipHub />} />

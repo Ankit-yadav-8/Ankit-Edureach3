@@ -69,9 +69,6 @@ const RESOURCES_NAV = [
   { label: "Campus Point AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
   { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
-  { label: "Exam Strategy - JEE", to: "/jee-strategy", icon: Zap, tag: "Toppers' roadmap, tips & tricks" },
-  { label: "JEE Advanced Chapter Analysis", to: "/jee-advanced-analysis", icon: BarChart3, tag: "80 chapters ranked by weightage & priority" },
-  { label: "Exam Strategy - NEET", to: "/neet-strategy", icon: FlaskConical, tag: "Time-management & accuracy hacks" },
   { label: "Other Entrance Exams", to: "/other-exams", icon: Compass, tag: "BITSAT, VITEEE, state CETs & 30+ more" },
 ];
 
@@ -183,8 +180,6 @@ export default function Navbar({ onSearch }) {
       else if (to.startsWith("/map")) p = import("../pages/CollegeMap.jsx");
       else if (to.startsWith("/community")) p = import("../pages/PublicCommunity.jsx");
       else if (to.startsWith("/campus-notes")) p = import("../pages/CampusNotes.jsx");
-      else if (to.startsWith("/jee-strategy")) p = import("../pages/JeeStrategy.jsx");
-      else if (to.startsWith("/neet-strategy")) p = import("../pages/NeetStrategy.jsx");
       if (p && typeof p.catch === "function") {
         p.catch(() => {});
       }
@@ -210,7 +205,7 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
-    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/jee-strategy", "/jee-advanced-analysis", "/neet-strategy", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
+    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
     { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/jee-mentorship", match: (p) => p.startsWith("/mentorship") || p.startsWith("/jee-mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },

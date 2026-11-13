@@ -3,7 +3,7 @@
   "redirects": [
     {
       "source": "/jee-analysis",
-      "destination": "/jee-strategy",
+      "destination": "/jee-main",
       "permanent": true
     },
     {
