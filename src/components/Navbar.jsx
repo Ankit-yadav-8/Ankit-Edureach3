@@ -237,8 +237,8 @@ export default function Navbar({ onSearch }) {
           height: 64,
           width: "100%",
           background: "var(--page-bg)",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.03)" : "none",
+          borderBottom: "2px solid #111827",
+          boxShadow: "0 4px 0 #111827",
           transition: "box-shadow .3s ease",
         }}
       >
