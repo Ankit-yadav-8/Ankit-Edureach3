@@ -77,10 +77,11 @@ const RESOURCES_NAV = [
 
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
 const MENTORSHIP_NAV = [
-  { label: "JEE & NEET 2027",   to: "/mentorship/jee-2027",   icon: Trophy,   tag: "₹3,499 · Till JEE Mains 2027" },
-  { label: "JEE & NEET 2028",   to: "/mentorship/jee-2028",   icon: Award,    tag: "₹3,499 · 6 Months" },
-  { label: "Foundation (9–10)", to: "/mentorship/foundation", icon: BookOpen, tag: "₹3,499 · Class 9 & 10" },
-  // { label: "ARIA Voice Tutor",  to: "/ai-tutor",              icon: Mic,      tag: "Free · Voice-activated learning" },
+  { label: "JEE Mentorship Hub", to: "/jee-mentorship",        icon: Sparkles, tag: "1-on-1 IITian Guidance & Cluster" },
+  { label: "JEE & NEET 2027",    to: "/mentorship/jee-2027",    icon: Trophy,   tag: "₹3,499 · Till JEE Mains 2027" },
+  { label: "JEE & NEET 2028",    to: "/mentorship/jee-2028",    icon: Award,    tag: "₹3,499 · 6 Months" },
+  { label: "JEE Preparation Hub",to: "/jee-preparation",       icon: Target,   tag: "Study plans, backlogs & roadmaps" },
+  { label: "Foundation (9–10)",  to: "/mentorship/foundation",  icon: BookOpen, tag: "₹3,499 · Class 9 & 10" },
 ];
 
 const COLLEGES = [

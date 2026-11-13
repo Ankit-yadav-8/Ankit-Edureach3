@@ -61,6 +61,47 @@ Pattern: **Title ≤ 60 chars, Meta ≤ 155 chars, one H1, descriptive H2s, FAQ 
 
 ---
 
+## 1.5. JEE Mentorship Topical Cluster Architecture (Rank #1 Playbook)
+
+To systematically rank #1 on Google for head commercial queries like `"JEE mentorship"`, `"JEE mentorship program"`, and `"1 on 1 JEE mentor"`, CampusPoint operates a topical cluster rather than stuffing keywords onto a single page:
+
+```
+campuspoint.in/
+│
+├── /jee-mentorship/ (Pillar Page — Authority Hub)
+│   ├── /jee-mentorship/jee-main/ (Speed & 99%ile Strategy)
+│   ├── /jee-mentorship/jee-advanced/ (Multi-Concept Depth & IITian Prep)
+│   ├── /jee-mentorship/droppers/ (8-Month Recovery Roadmap & Repeater Triage)
+│   ├── /jee-mentorship/1-to-1/ (Private Video Calls & Adaptive Pacing)
+│   ├── /jee-mentorship/iitian-mentor/ (Mentorship by IIT Roorkee Rankers)
+│   ├── /jee-mentorship/test-analysis/ (8-Step Question Error Diagnostics)
+│   ├── /jee-mentorship/class-11/ (Foundation Building & Slump Prevention)
+│   └── /jee-mentorship/class-12/ (Boards + JEE October Syllabus Finish)
+│
+├── /jee-preparation/ (Preparation Pillar Hub)
+│   ├── /jee-preparation/study-plan/ (Daily 8-Hr & 1-7-21 Spaced Timetables)
+│   ├── /jee-preparation/backlog/ (The 70-30 Golden Rule of Backlog Recovery)
+│   └── /jee-preparation/strategy/ (Subject Playbooks & 3-Pass Exam Solving)
+│
+└── /mentorship/jee-2027 (Conversion Engine · ₹3,499)
+```
+
+### Keyword Clusters Mapped to Dedicated Pages:
+1. **Pillar `/jee-mentorship`**: `JEE mentorship`, `JEE mentorship program`, `JEE mentor`, `personalized JEE mentorship`, `online JEE mentorship`, `JEE personal mentor`, `JEE guidance`, `JEE preparation guidance`.
+2. **`/jee-mentorship/1-to-1`**: `1 on 1 JEE mentorship`, `1-to-1 JEE mentorship`, `one to one JEE mentorship`, `personal JEE mentor`, `private JEE mentor`, `individual JEE mentor`.
+3. **`/jee-mentorship/iitian-mentor`**: `IITian JEE mentor`, `JEE mentor from IIT`, `JEE mentorship by IITians`, `IIT student JEE mentor`, `IIT Roorkee JEE mentor`.
+4. **`/jee-mentorship/jee-main`**: `JEE Main mentorship`, `JEE Main mentor`, `JEE Main preparation mentor`, `JEE Main test analysis`, `JEE Main 99 percentile strategy`.
+5. **`/jee-mentorship/jee-advanced`**: `JEE Advanced mentorship`, `IIT JEE Advanced mentorship`, `JEE Advanced preparation strategy`, `JEE Advanced study plan`.
+6. **`/jee-mentorship/droppers`**: `JEE dropper mentorship`, `JEE dropper mentor`, `JEE dropper study plan`, `JEE repeater mentor`, `drop year strategy`.
+7. **`/jee-mentorship/test-analysis`**: `JEE test analysis`, `JEE mock test analysis`, `JEE mistake analysis`, `JEE accuracy analysis`, `question level test analysis`.
+8. **`/jee-mentorship/class-11`**: `JEE mentorship for class 11`, `class 11 JEE mentor`, `JEE study plan class 11`, `class 11 JEE backlog`.
+9. **`/jee-mentorship/class-12`**: `JEE mentorship for class 12`, `class 12 JEE mentor`, `JEE board and JEE preparation`, `class 12 JEE study plan`.
+10. **`/jee-preparation/study-plan`**: `JEE study plan`, `JEE preparation timetable`, `JEE daily schedule`, `personalized JEE study plan`, `1-7-21 spaced repetition`.
+11. **`/jee-preparation/backlog`**: `JEE backlog`, `how to clear JEE backlog`, `70-30 backlog rule`, `JEE backlog study plan`, `physics backlog JEE`.
+12. **`/jee-preparation/strategy`**: `JEE preparation strategy`, `JEE strategy`, `how to crack JEE`, `subject wise JEE strategy`, `topper strategy for JEE`.
+
+---
+
 ## 2. Google visibility & branding (show all profiles for "CampusPoint")
 
 Google shows your official profiles under a brand search when it can link them to one entity. The mechanism:

@@ -58,30 +58,52 @@ export default function MentorshipBanner() {
             }}>
               Stop guessing your prep strategy. Get paired with an IITian mentor 1-on-1 till JEE Mains 2027. Receive personalized daily targets, live doubt resolution, and proven frameworks to maximize your score.
             </p>
-            <motion.button
-              whileHover={{ y: -3, boxShadow: `0 12px 24px rgba(255,105,61,0.3)` }}
-              whileTap={{ y: 0 }}
-              onClick={() => nav("/mentorship/jee-2027")}
-              style={{
-                background: CL.coral,
-                color: "#FFFFFF",
-                border: "none",
-                padding: "16px 36px",
-                borderRadius: 999,
-                fontSize: 16,
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "'Inter', sans-serif",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 12,
-                boxShadow: `0 6px 16px rgba(255,105,61,0.25)`,
-                transition: "background 0.2s ease"
-              }}
-            >
-              Explore JEE 2027 Mentorship · ₹3,499
-              <ArrowRight size={20} />
-            </motion.button>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
+              <motion.button
+                whileHover={{ y: -3, boxShadow: `0 12px 24px rgba(255,105,61,0.3)` }}
+                whileTap={{ y: 0 }}
+                onClick={() => nav("/mentorship/jee-2027")}
+                style={{
+                  background: CL.coral,
+                  color: "#FFFFFF",
+                  border: "none",
+                  padding: "16px 32px",
+                  borderRadius: 999,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "'Inter', sans-serif",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  boxShadow: `0 6px 16px rgba(255,105,61,0.25)`,
+                  transition: "background 0.2s ease"
+                }}
+              >
+                Enroll in Mentorship · ₹3,499
+                <ArrowRight size={18} />
+              </motion.button>
+              <button
+                onClick={() => nav("/jee-mentorship")}
+                style={{
+                  background: "#FFFFFF",
+                  color: CL.ink,
+                  border: `1px solid ${CL.line}`,
+                  padding: "15px 26px",
+                  borderRadius: 999,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontFamily: "'Inter', sans-serif",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  transition: "all 0.2s ease"
+                }}
+              >
+                Explore JEE Mentorship Hub
+              </button>
+            </div>
           </div>
 
           {/* Right Animated UI Content */}

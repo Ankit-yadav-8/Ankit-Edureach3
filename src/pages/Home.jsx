@@ -96,6 +96,12 @@ export default function Home({ onSearch }) {
           {
             "@type": "SiteNavigationElement",
             "position": 1,
+            "name": "JEE Mentorship Program",
+            "url": "https://campuspoint.in/jee-mentorship"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
             "name": "JEE Main Rank Predictor",
             "url": "https://campuspoint.in/jee-main"
           },
@@ -149,9 +155,21 @@ export default function Home({ onSearch }) {
   return (
     <>
       <Seo
-        rawTitle="Campus Point – JEE 2027 Mentorship by IITians, Rank Predictor & College Cutoffs"
-        description="Crack JEE & NEET with 1-on-1 IITian mentorship (Till JEE Mains 2027 at ₹3,499). Predict your JEE Main & Advanced rank, explore JoSAA cutoffs, and compare 100+ colleges."
+        rawTitle="CampusPoint – JEE Mentorship by IITians, Rank Predictor & College Cutoffs"
+        description="Get personalized 1-on-1 JEE mentorship by top IITians (₹3,499 till JEE Mains). Custom daily study plans, question-level test analysis, backlog eradication, JEE rank predictors, and JoSAA cutoffs."
         path="/"
+        keywords={[
+          "JEE mentorship",
+          "JEE mentorship program",
+          "1 on 1 JEE mentor",
+          "IITian JEE mentor",
+          "personalized JEE mentorship",
+          "JEE preparation mentorship",
+          "online JEE mentorship",
+          "JEE rank predictor",
+          "JoSAA cutoffs",
+          "IIT Roorkee mentorship"
+        ]}
         jsonLd={jsonLd}
       />
 

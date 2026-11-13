@@ -37,6 +37,20 @@ const TOOL_LINKS = [
   ["Scholarships & Loans", "/scholarships"],
   ["My Shortlist", "/shortlist"],
 ];
+const MENTORSHIP_LINKS = [
+  ["JEE Mentorship Program", "/jee-mentorship"],
+  ["1-on-1 Mentorship", "/jee-mentorship/1-to-1"],
+  ["IITian Mentors", "/jee-mentorship/iitian-mentor"],
+  ["JEE Main Mentorship", "/jee-mentorship/jee-main"],
+  ["JEE Advanced Mentorship", "/jee-mentorship/jee-advanced"],
+  ["Droppers Mentorship", "/jee-mentorship/droppers"],
+  ["Mock Test Analysis", "/jee-mentorship/test-analysis"],
+  ["Class 11 Mentorship", "/jee-mentorship/class-11"],
+  ["Class 12 Mentorship", "/jee-mentorship/class-12"],
+  ["JEE Study Plan & Timetable", "/jee-preparation/study-plan"],
+  ["Clear JEE Backlogs", "/jee-preparation/backlog"],
+  ["JEE Preparation Strategy", "/jee-preparation/strategy"],
+];
 const COMPANY_LINKS = [
   ["About Us", "/about"],
   ["Blog", "/blog"],
@@ -242,6 +256,12 @@ export default function Footer() {
         @media (max-width: 960px) {
           .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
+        @media (max-width: 1100px) {
+          .footer-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem !important; }
+        }
+        @media (max-width: 640px) {
+          .footer-grid { grid-template-columns: 1fr !important; gap: 1.8rem !important; }
+        }
         @keyframes cpFloatOrb1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px,80px) scale(1.15); } }
         @keyframes cpFloatOrb2 { 0% { transform: translate(0,0) scale(1.1); } 100% { transform: translate(-80px,-60px) scale(0.9); } }
       `}</style>
@@ -255,8 +275,8 @@ export default function Footer() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.4fr 1fr 1fr 1fr",
-            gap: "2.5rem",
+            gridTemplateColumns: "1.3fr 1fr 1fr 1.1fr 1fr",
+            gap: "2rem",
           }}
           className="footer-grid"
         >
@@ -314,6 +334,7 @@ export default function Footer() {
           </div>
           <Col title="Other Exams" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />
+          <Col title="JEE Mentorship" links={MENTORSHIP_LINKS} />
           <Col title="Company" links={COMPANY_LINKS} />
         </div>
 

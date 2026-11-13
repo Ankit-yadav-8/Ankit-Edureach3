@@ -75,6 +75,20 @@ const Class11 = lazyRetry(() => import("./pages/Class11.jsx"));
 const Class12 = lazyRetry(() => import("./pages/Class12.jsx"));
 const JeeStrategy = lazyRetry(() => import("./pages/JeeStrategy.jsx"));
 const NeetStrategy = lazyRetry(() => import("./pages/NeetStrategy.jsx"));
+// JEE Mentorship & Preparation SEO Topic Cluster
+const JeeMentorshipHub = lazyRetry(() => import("./pages/seo/JeeMentorshipHub.jsx"));
+const JeeMentorshipMain = lazyRetry(() => import("./pages/seo/JeeMentorshipMain.jsx"));
+const JeeMentorshipAdvanced = lazyRetry(() => import("./pages/seo/JeeMentorshipAdvanced.jsx"));
+const JeeMentorshipDroppers = lazyRetry(() => import("./pages/seo/JeeMentorshipDroppers.jsx"));
+const JeeMentorshipTestAnalysis = lazyRetry(() => import("./pages/seo/JeeMentorshipTestAnalysis.jsx"));
+const JeeMentorshipOneToOne = lazyRetry(() => import("./pages/seo/JeeMentorshipOneToOne.jsx"));
+const JeeMentorshipIitian = lazyRetry(() => import("./pages/seo/JeeMentorshipIitian.jsx"));
+const JeeMentorshipClass11 = lazyRetry(() => import("./pages/seo/JeeMentorshipClass11.jsx"));
+const JeeMentorshipClass12 = lazyRetry(() => import("./pages/seo/JeeMentorshipClass12.jsx"));
+const JeePrepStudyPlan = lazyRetry(() => import("./pages/seo/JeePrepStudyPlan.jsx"));
+const JeePrepBacklog = lazyRetry(() => import("./pages/seo/JeePrepBacklog.jsx"));
+const JeePrepStrategy = lazyRetry(() => import("./pages/seo/JeePrepStrategy.jsx"));
+const JeePrepHub = lazyRetry(() => import("./pages/seo/JeePrepHub.jsx"));
 // const AiTutor = lazyRetry(() => import("./pages/AiTutor.jsx"));
 import CompareTray from "./components/CompareTray.jsx";
 import WhatsAppButton from "./components/WhatsAppButton.jsx";
@@ -281,6 +295,24 @@ export default function App() {
           <Route path="/class-12" element={<Class12 />} />
           <Route path="/jee-strategy" element={<JeeStrategy />} />
           <Route path="/neet-strategy" element={<NeetStrategy />} />
+
+          {/* JEE Mentorship Topical Cluster */}
+          <Route path="/jee-mentorship" element={<JeeMentorshipHub />} />
+          <Route path="/jee-mentorship/jee-main" element={<JeeMentorshipMain />} />
+          <Route path="/jee-mentorship/jee-advanced" element={<JeeMentorshipAdvanced />} />
+          <Route path="/jee-mentorship/droppers" element={<JeeMentorshipDroppers />} />
+          <Route path="/jee-mentorship/test-analysis" element={<JeeMentorshipTestAnalysis />} />
+          <Route path="/jee-mentorship/1-to-1" element={<JeeMentorshipOneToOne />} />
+          <Route path="/jee-mentorship/iitian-mentor" element={<JeeMentorshipIitian />} />
+          <Route path="/jee-mentorship/class-11" element={<JeeMentorshipClass11 />} />
+          <Route path="/jee-mentorship/class-12" element={<JeeMentorshipClass12 />} />
+
+          {/* JEE Preparation Topical Cluster */}
+          <Route path="/jee-preparation" element={<JeePrepHub />} />
+          <Route path="/jee-preparation/study-plan" element={<JeePrepStudyPlan />} />
+          <Route path="/jee-preparation/backlog" element={<JeePrepBacklog />} />
+          <Route path="/jee-preparation/strategy" element={<JeePrepStrategy />} />
+
           {/* <Route path="/ai-tutor" element={<AiTutor />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
