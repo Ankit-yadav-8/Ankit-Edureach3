@@ -402,3 +402,4 @@ export function getKeywordMeta(path) {
   const cleanPath = path ? path.replace(/\/+$/, "") || "/" : "/";
   return SEO_KEYWORD_MAP[cleanPath] || null;
 }
+

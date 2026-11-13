@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -84,27 +86,16 @@ export default function JeePrepHub() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="THE COMPREHENSIVE JEE PREPARATION HUB"
-        title={
-          <>
-            Master Your <span className="brand-accent">JEE Preparation</span> with Proven Frameworks
-          </>
-        }
+        badge="🌟 THE COMPREHENSIVE JEE PREPARATION HUB"
+        titlePrefix="Master Your"
+        accentWord="JEE Preparation"
+        titleSuffix="with Proven Frameworks"
         description="Everything you need to conquer JEE Main and JEE Advanced: structured daily study plans, the 70-30 backlog recovery formula, subject playbooks, and 1-on-1 IITian mentorship."
-        stats={[
-          { value: "3 Pillars", label: "Study Plan, Backlog, Strategy", color: "brand" },
-          { value: "100%", label: "Updated for JEE 2027/28", color: "emerald" },
-          { value: "1,000+", label: "Students Guided", color: "violet" },
-          { value: "1-on-1", label: "IITian Mentorship Available", color: "brand" }
-        ]}
-        ctaText="Join Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="Browse Preparation Guides"
-        secondaryLink="#guides"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Preparation Pillars */}
@@ -205,12 +196,13 @@ export default function JeePrepHub() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Supercharge Your Preparation with an IITian Mentor"
-          subtitle="Frameworks are great, but daily personal accountability is what delivers ranks. Get assigned an IIT Roorkee mentor to guide your journey to IIT."
-          primaryText="Start Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Preparation & Mentorship"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

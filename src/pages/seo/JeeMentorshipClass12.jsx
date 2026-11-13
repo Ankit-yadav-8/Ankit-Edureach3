@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeeMentorshipClass12() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="BOARDS + JEE MAIN & ADVANCED · JEE 2027"
-        title={
-          <>
-            Personalized <span className="brand-accent">Class 12 JEE Mentorship</span> & Strategy
-          </>
-        }
+        badge="📚 BOARDS + JEE MAIN & ADVANCED · JEE 2027"
+        titlePrefix="Personalized"
+        accentWord="Class 12 JEE Mentorship"
+        titleSuffix="& Strategy"
         description="Master Class 12 without getting overwhelmed by board exams and Class 11 backlogs. Work 1-on-1 with an IITian mentor to complete your syllabus by October, revise Class 11, and secure 99%ile on your first attempt."
-        stats={[
-          { value: "Oct 31", label: "Syllabus Finish Milestone", color: "brand" },
-          { value: "Dual Track", label: "Class 12 + 11 Parallel Plan", color: "emerald" },
-          { value: "90%+ Boards", label: "Integrated NCERT Prep", color: "violet" },
-          { value: "1-on-1", label: "Personal IITian Mentor", color: "brand" }
-        ]}
-        ctaText="Enroll in Class 12 Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View Dual Strategy"
-        secondaryLink="#dual-strategy"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Class 12 Challenges */}
@@ -232,12 +223,13 @@ export default function JeeMentorshipClass12() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Crack JEE on Your Very First Attempt in Class 12"
-          subtitle="Don't take a drop year by default. Work 1-on-1 with an IIT Roorkee mentor to complete your syllabus early, balance board exams, and enter IIT right after school."
-          primaryText="Start Class 12 Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="Class 12 Boards + JEE 2027"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

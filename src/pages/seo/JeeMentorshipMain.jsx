@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeeMentorshipMain() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="TARGET 99+ PERCENTILE IN JEE MAIN"
-        title={
-          <>
-            Dedicated <span className="brand-accent">JEE Main Mentorship</span> & 1-on-1 Guidance
-          </>
-        }
+        badge="🎯 TARGET 99+ PERCENTILE · SPEED & ACCURACY"
+        titlePrefix="Dedicated"
+        accentWord="JEE Main Mentorship"
+        titleSuffix="& 1-on-1 Strategy"
         description="Crack the 99 percentile barrier in JEE Main. Work with a verified IITian mentor to master question selection, eliminate negative marks, master high-yield NCERT chemistry, and analyze full-length mock tests."
-        stats={[
-          { value: "99+ %ile", label: "Strategic Target Benchmark", color: "brand" },
-          { value: "200+ Marks", label: "Optimized Score Model", color: "emerald" },
-          { value: "10-Yr PYQs", label: "Structured Trend Mapping", color: "violet" },
-          { value: "1-on-1", label: "Personalized Strategy Calls", color: "brand" }
-        ]}
-        ctaText="Join JEE Main Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View 99%ile Blueprint"
-        secondaryLink="#blueprint"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Strategy Breakdown */}
@@ -249,12 +240,13 @@ export default function JeeMentorshipMain() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Secure Your 99 Percentile in JEE Main"
-          subtitle="Get a dedicated IITian mentor who has scored 99.5+ percentile themselves. We craft your daily plan, monitor study hours, and review every test attempt till the exam day."
-          primaryText="Start JEE Main Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Main 2027"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

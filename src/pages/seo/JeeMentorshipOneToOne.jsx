@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -94,27 +96,16 @@ export default function JeeMentorshipOneToOne() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="TRUE INDIVIDUAL 1-TO-1 ATTENTION"
-        title={
-          <>
-            Private <span className="brand-accent">1-on-1 JEE Mentorship</span> by Verified IITians
-          </>
-        }
+        badge="⚡ TRUE INDIVIDUAL 1-TO-1 ATTENTION"
+        titlePrefix="Private"
+        accentWord="1-on-1 JEE Mentorship"
+        titleSuffix="by Verified IITians"
         description="No 200-student batches. No generic motivational speeches. Just you and your personal IITian mentor working together daily to engineer your rank in JEE Main and Advanced."
-        stats={[
-          { value: "1 : 1", label: "Student-to-Mentor Ratio", color: "brand" },
-          { value: "Weekly", label: "Private 1-on-1 Video Calls", color: "emerald" },
-          { value: "24 / 7", label: "Direct WhatsApp Connectivity", color: "violet" },
-          { value: "₹3,499", label: "Complete Program Access", color: "brand" }
-        ]}
-        ctaText="Book Your 1-on-1 Mentor · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="Why 1-on-1 Works"
-        secondaryLink="#why-one-on-one"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Why 1-to-1 Beats Batch Coaching */}
@@ -217,12 +208,13 @@ export default function JeeMentorshipOneToOne() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Get Matched with Your Personal IITian Mentor"
-          subtitle="Stop feeling lost in the crowd. Secure your dedicated 1-on-1 mentor from IIT Roorkee and get personalized guidance that directly moves your JEE rank."
-          primaryText="Start 1-on-1 Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="1-on-1 Personal JEE Mentorship"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

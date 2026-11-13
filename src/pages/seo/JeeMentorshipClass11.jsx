@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeeMentorshipClass11() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="BUILD A ROCK-SOLID FOUNDATION · JEE 2028"
-        title={
-          <>
-            Personalized <span className="brand-accent">Class 11 JEE Mentorship</span> & Foundation
-          </>
-        }
+        badge="🚀 BUILD A ROCK-SOLID FOUNDATION · JEE 2028"
+        titlePrefix="Personalized"
+        accentWord="Class 11 JEE Mentorship"
+        titleSuffix="& Foundation"
         description="Don't let the Class 11 shock derail your IIT dreams. Work 1-on-1 with an IITian mentor to master Mechanics, Bonding, and Calculus, balance school with coaching, and keep your prep completely backlog-free."
-        stats={[
-          { value: "Class 11", label: "Foundation Focus", color: "brand" },
-          { value: "0 Backlogs", label: "Target Clearance Discipline", color: "emerald" },
-          { value: "School + JEE", label: "Harmonized Timetable", color: "violet" },
-          { value: "1-on-1", label: "Dedicated IITian Mentor", color: "brand" }
-        ]}
-        ctaText="Enroll in Class 11 Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2028"
-        secondaryText="View Class 11 Roadmap"
-        secondaryLink="#class-11-roadmap"
+        planKey="mentor-jee-2028-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* The Class 11 Reality */}
@@ -217,12 +208,13 @@ export default function JeeMentorshipClass11() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Start Class 11 on the Right Track with an IITian Mentor"
-          subtitle="Don't wait until Class 12 to panic about backlogs. Build a solid conceptual foundation, balance school effortlessly, and develop the study habits of a top ranker."
-          primaryText="Enroll in Class 11 Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2028"
+        <ClusterPricing
+          planKey="mentor-jee-2028-6m"
+          exam="Class 11 Foundation (JEE 2028)"
+          sublabel="2-Year Foundation · 6 Months"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

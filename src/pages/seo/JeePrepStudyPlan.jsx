@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeePrepStudyPlan() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="SCIENTIFIC DAILY & WEEKLY TIME MANAGEMENT"
-        title={
-          <>
-            Personalized <span className="brand-accent">JEE Study Plan</span> & Daily Timetable
-          </>
-        }
+        badge="⏰ SCIENTIFIC DAILY & WEEKLY TIME MANAGEMENT"
+        titlePrefix="Personalized"
+        accentWord="JEE Study Plan"
+        titleSuffix="& Daily Timetable"
         description="Stop wasting hours wondering what to study each day. Follow a proven, high-yield daily routine designed by IITians that balances Physics, Chemistry, and Maths, systematically clears backlogs, and ensures consistent revision."
-        stats={[
-          { value: "8-10 Hrs", label: "Optimized Daily Self-Study", color: "brand" },
-          { value: "1-7-21", label: "Spaced Repetition System", color: "emerald" },
-          { value: "60-80 Qs", label: "Daily Problem Target", color: "violet" },
-          { value: "1-on-1", label: "Custom Mentor Scheduling", color: "brand" }
-        ]}
-        ctaText="Get a Custom Study Plan with Mentor · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View Daily Routine"
-        secondaryLink="#daily-schedule"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Daily Schedule Structure */}
@@ -232,12 +223,13 @@ export default function JeePrepStudyPlan() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Get a 100% Custom Study Plan from an IITian"
-          subtitle="Don't rely on generic internet timetables. Your dedicated IITian mentor builds a custom daily schedule based on your school hours, coaching schedule, and target percentile."
-          primaryText="Build My Custom Study Plan · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Study Plan & Mentorship"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -101,27 +103,16 @@ export default function JeeMentorshipTestAnalysis() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="SCIENTIFIC QUESTION ERROR DIAGNOSTICS"
-        title={
-          <>
-            Precision <span className="brand-accent">JEE Test Analysis</span> & Mistake Tracking
-          </>
-        }
+        badge="📊 SCIENTIFIC QUESTION ERROR DIAGNOSTICS"
+        titlePrefix="Precision"
+        accentWord="JEE Test Analysis"
+        titleSuffix="& Mistake Tracking"
         description="Don't just look at your score and feel depressed. Break down your exam question-by-question: time spent per problem, silly slips vs concept gaps, and turn negative marks into guaranteed points with your IITian mentor."
-        stats={[
-          { value: "8-Step", label: "Diagnostic Review Engine", color: "brand" },
-          { value: "-15 to -30", label: "Negative Marks Eliminated", color: "emerald" },
-          { value: "+40-55", label: "Avg Score Growth in 4 Mocks", color: "violet" },
-          { value: "1-on-1", label: "Weekly Mentor Test Audit", color: "brand" }
-        ]}
-        ctaText="Enroll in Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View 8-Step System"
-        secondaryLink="#system"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* The 8-Step Test Engine */}
@@ -258,12 +249,13 @@ export default function JeeMentorshipTestAnalysis() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Turn Your Mock Test Mistakes into a 99 Percentile Score"
-          subtitle="Stop giving tests blindly. Work with an IIT Roorkee mentor who conducts question-level autopsies of your mocks, identifies time bottlenecks, and guarantees consistent score jumps."
-          primaryText="Start Mentorship & Test Analysis · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Mock Test Analysis"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

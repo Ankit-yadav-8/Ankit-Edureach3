@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -94,27 +96,16 @@ export default function JeeMentorshipIitian() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="AUTHENTIC IIT ROORKEE & TOP IITIAN GUIDANCE"
-        title={
-          <>
-            Genuine <span className="brand-accent">JEE Mentorship by IITians</span> & Top Rankers
-          </>
-        }
+        badge="🎓 AUTHENTIC IIT ROORKEE & TOP IITIAN GUIDANCE"
+        titlePrefix="Genuine"
+        accentWord="JEE Mentorship by IITians"
+        titleSuffix="& Top Rankers"
         description="Stop taking advice from people who never cleared the modern JEE. Get guided 1-on-1 by verified IITians from IIT Roorkee and top institutes who conquered the same exam you are preparing for."
-        stats={[
-          { value: "100%", label: "Verified IIT Credentials", color: "brand" },
-          { value: "Top 1%", label: "All India Rankers", color: "emerald" },
-          { value: "IIT Roorkee", label: "Core Mentor Network", color: "violet" },
-          { value: "₹3,499", label: "Till JEE Mains 2027", color: "brand" }
-        ]}
-        ctaText="Connect with an IITian Mentor · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View Mentor Profiles"
-        secondaryLink="#mentors"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Why Learn from an IITian */}
@@ -218,12 +209,13 @@ export default function JeeMentorshipIitian() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Start Your Journey with an IITian Mentor Today"
-          subtitle="Get paired 1-on-1 with an IIT Roorkee ranker who will design your personal daily schedule, monitor your progress, and guide your strategy till JEE Mains 2027."
-          primaryText="Enroll with IITian Mentor · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="Mentorship by IITians"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

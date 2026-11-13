@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeePrepBacklog() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="SCIENTIFIC 70-30 BACKLOG ERADICATION FORMULA"
-        title={
-          <>
-            How to Clear <span className="brand-accent">JEE Backlogs</span> Without Panic
-          </>
-        }
+        badge="🛡️ SCIENTIFIC 70-30 BACKLOG ERADICATION"
+        titlePrefix="How to Clear"
+        accentWord="JEE Backlogs"
+        titleSuffix="Without Panic"
         description="Don't let backlogs kill your confidence. Learn the exact 70-30 recovery system used by top IITians to clear months of pending syllabus while staying 100% on track with ongoing coaching classes."
-        stats={[
-          { value: "70 / 30", label: "Ongoing vs Backlog Ratio", color: "brand" },
-          { value: "60 Days", label: "Average Recovery Sprint", color: "emerald" },
-          { value: "Tier 1-3", label: "Smart Chapter Triage", color: "violet" },
-          { value: "1-on-1", label: "Mentor Accountability", color: "brand" }
-        ]}
-        ctaText="Get Mentor Backlog Roadmap · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View 70-30 System"
-        secondaryLink="#backlog-system"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* The 70-30 Rule */}
@@ -240,12 +231,13 @@ export default function JeePrepBacklog() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Eliminate Your Backlogs with an IITian Mentor"
-          subtitle="Don't let pending chapters overwhelm you. Your personal IITian mentor triages your syllabus, schedules your daily 70-30 balance, and ensures you finish on time."
-          primaryText="Clear My Backlogs · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Backlog Clearance & Mentorship"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

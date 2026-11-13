@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeeMentorshipDroppers() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="DROP YEAR RECOVERY & 99%ILE ROADMAP"
-        title={
-          <>
-            Specialized <span className="brand-accent">JEE Droppers Mentorship</span> & Repeaters Plan
-          </>
-        }
+        badge="🔥 DROP YEAR RECOVERY & 99%ILE ROADMAP"
+        titlePrefix="Specialized"
+        accentWord="JEE Droppers Mentorship"
+        titleSuffix="& Repeaters Plan"
         description="Your drop year is your second and most focused chance. Don't repeat the mistakes of your previous attempt. Get a dedicated IITian mentor who creates your 8-month recovery roadmap, tracks daily study hours, and keeps your motivation unwavering."
-        stats={[
-          { value: "8 Months", label: "Intensive Syllabus Cycle", color: "brand" },
-          { value: "+60-80", label: "Avg Marks Jump in Drop Year", color: "emerald" },
-          { value: "Daily", label: "Nightly Study Check-ins", color: "violet" },
-          { value: "1-on-1", label: "Dedicated IITian Mentor", color: "brand" }
-        ]}
-        ctaText="Enroll in Droppers Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="View Dropper Blueprint"
-        secondaryLink="#dropper-blueprint"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Dropper Problems Solved */}
@@ -222,12 +213,13 @@ export default function JeeMentorshipDroppers() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Make Your Drop Year Count with an IITian Mentor"
-          subtitle="Don't spend another year wondering what went wrong. Get personalized daily schedules, rigorous test error audits, and continuous motivation from mentors who achieved top ranks."
-          primaryText="Join Droppers Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Droppers / Repeaters 2027"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

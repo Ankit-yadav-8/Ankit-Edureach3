@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -99,27 +101,16 @@ export default function JeeMentorshipAdvanced() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="CRACK THE TOP 1% · IIT ADMISSION"
-        title={
-          <>
-            Elite <span className="brand-accent">JEE Advanced Mentorship</span> by Top IITians
-          </>
-        }
+        badge="🏆 CRACK THE TOP 1% · IIT ADMISSION"
+        titlePrefix="Elite"
+        accentWord="JEE Advanced Mentorship"
+        titleSuffix="by Top IITians"
         description="Master the depth, rigor, and multi-concept problem solving demanded by IIT JEE Advanced. Get guided 1-on-1 by mentors from IIT Roorkee and top IITs who scored top ranks."
-        stats={[
-          { value: "Top 5000", label: "Target Rank Cohort", color: "brand" },
-          { value: "Paper 1 & 2", label: "Full Simulation Training", color: "emerald" },
-          { value: "Multi-Concept", label: "Deep Problem Frameworks", color: "violet" },
-          { value: "1-on-1", label: "Personal IITian Mentors", color: "brand" }
-        ]}
-        ctaText="Enroll in Advanced Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="Explore Advanced Strategy"
-        secondaryLink="#advanced-framework"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Methodology */}
@@ -230,12 +221,13 @@ export default function JeeMentorshipAdvanced() {
           </p>
         </section>
 
-        <ClusterCta
-          title="Prepare for IIT with Mentors Who Already Cracked It"
-          subtitle="Stop relying on generic coaching notes. Get paired 1-on-1 with an IIT Roorkee mentor to master JEE Advanced problem solving, high-conviction decision making, and test stamina."
-          primaryText="Start JEE Advanced Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Advanced 2027"
+          sublabel="Till JEE Advanced 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

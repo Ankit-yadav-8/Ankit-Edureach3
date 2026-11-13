@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -103,27 +105,16 @@ export default function JeeMentorshipHub() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="COMPREHENSIVE JEE MENTORSHIP PROGRAM"
-        title={
-          <>
-            Personalized <span className="brand-accent">JEE Mentorship Program</span>
-          </>
-        }
-        description="Stop getting lost in giant batches. Get assigned a personal IITian mentor from IIT Roorkee who designs your daily study schedule, analyzes every mock test error, clears backlogs, and guides your step-by-step strategy for JEE Main & JEE Advanced."
-        stats={[
-          { value: "1-on-1", label: "Dedicated IITian Mentor", color: "brand" },
-          { value: "1,000+", label: "Aspirants Mentored", color: "emerald" },
-          { value: "4.9 / 5", label: "Student & Parent Rating", color: "violet" },
-          { value: "₹3,499", label: "Till JEE Mains Access", color: "brand" }
-        ]}
-        ctaText="Join JEE Mentorship · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="Explore Mentorship Cluster"
-        secondaryLink="#cluster-topics"
+        badge="🔥 1-ON-1 IITIAN MENTORSHIP · LIMITED SEATS"
+        titlePrefix="Personalized"
+        accentWord="JEE Mentorship"
+        titleSuffix="Program"
+        description="Stop getting lost in giant batches. Get paired 1-on-1 with an IIT Roorkee mentor who designs your daily study schedule, analyzes every mock test error, clears backlogs, and guides your step-by-step strategy for JEE Main & JEE Advanced."
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Pillars Section */}
@@ -341,12 +332,13 @@ export default function JeeMentorshipHub() {
         </section>
 
         {/* Conversion CTA Block */}
-        <ClusterCta
-          title="Ready to Transform Your JEE Preparation with an IITian Mentor?"
-          subtitle="Join over 1,000+ students who improved their scores by 40-70 marks with CampusPoint personalized 1-on-1 mentorship. Real guidance, daily accountability, and affordable pricing."
-          primaryText="Enroll in JEE Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Main & Advanced 2027"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">

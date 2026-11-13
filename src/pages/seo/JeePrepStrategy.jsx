@@ -5,6 +5,8 @@ import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
   ClusterHero,
+  ClusterPricing,
+  ClusterFounders,
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
@@ -101,27 +103,16 @@ export default function JeePrepStrategy() {
         jsonLd={jsonLd}
       />
 
-      <ClusterNav currentPath={currentPath} />
-
       <ClusterHero
-        badge="TOPPER FRAMEWORKS & EXAM TACTICS"
-        title={
-          <>
-            Comprehensive <span className="brand-accent">JEE Preparation Strategy</span> & Master Guide
-          </>
-        }
+        badge="🧭 TOPPER FRAMEWORKS & EXAM TACTICS"
+        titlePrefix="Comprehensive"
+        accentWord="JEE Preparation Strategy"
+        titleSuffix="& Master Roadmap"
         description="Master both JEE Main and JEE Advanced with systematic subject-wise playbooks, proven PYQ roadmaps, book recommendations, and exam temperament tactics formulated by IIT Roorkee rankers."
-        stats={[
-          { value: "3 Subjects", label: "Tactical Execution Guides", color: "brand" },
-          { value: "15+ Years", label: "PYQ Pattern Insights", color: "emerald" },
-          { value: "3-Pass", label: "Paper Solving Technique", color: "violet" },
-          { value: "1-on-1", label: "Mentor Strategy Reviews", color: "brand" }
-        ]}
-        ctaText="Get Personalized Strategy · ₹3,499"
-        ctaLink="/mentorship/jee-2027"
-        secondaryText="Explore Subject Playbooks"
-        secondaryLink="#subject-strategies"
+        planKey="mentor-jee-2027-6m"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Subject Tactical Playbooks */}
@@ -222,12 +213,13 @@ export default function JeePrepStrategy() {
           </div>
         </section>
 
-        <ClusterCta
-          title="Fine-Tune Your Strategy with an IITian Mentor"
-          subtitle="Strategy without personalized accountability is useless. Your personal IITian mentor analyzes your study habits, tracks your mock errors, and fine-tunes your approach every week."
-          primaryText="Start Mentorship · ₹3,499"
-          primaryLink="/mentorship/jee-2027"
+        <ClusterPricing
+          planKey="mentor-jee-2027-6m"
+          exam="JEE Main & Advanced Strategy"
+          sublabel="Till JEE Mains 2027"
         />
+
+        <ClusterFounders />
 
         {/* FAQs */}
         <section className="scp-section">
