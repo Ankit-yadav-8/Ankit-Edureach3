@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
-  ClusterHero,
   ClusterPricing,
   ClusterFounders,
   ClusterCta,
@@ -102,23 +101,14 @@ export default function JeeMentorshipMain() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        badge="🎯 TARGET 99+ PERCENTILE · SPEED & ACCURACY"
-        titlePrefix="Dedicated"
-        accentWord="JEE Main Mentorship"
-        titleSuffix="& 1-on-1 Strategy"
-        description="Crack the 99 percentile barrier in JEE Main. Work with a verified IITian mentor to master question selection, eliminate negative marks, master high-yield NCERT chemistry, and analyze full-length mock tests."
-        planKey="mentor-jee-2027-6m"
-      />
-
-      <ClusterNav currentPath={currentPath} />
-
       <InteractiveJourneyRoadmap
-        title="Interactive 1-on-1 Roadmap for JEE Main 2027"
+        isHero={true}
         subtitle="Work with your IITian mentor across these 6 strategic milestones. Click any phase to inspect your weekly deliverables."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />
+
+      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Core Strategy Breakdown */}
