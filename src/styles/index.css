@@ -200,14 +200,14 @@ input,select,textarea { font-family:inherit; }
   position:sticky;
   top:0;
   z-index:200;
-  background:#FFF4DA !important;
+  background:#FFFFFF !important;
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
-  border-bottom:1.5px solid #111827;
+  border-bottom:1px solid rgba(0,0,0,.08);
   width:100%;
   max-width:100%;
   overflow:hidden;
-  box-shadow:0 1.5px 0 #111827;
+  box-shadow:0 1px 16px rgba(0,0,0,.03);
 }
 .navbar-inner {
   display:flex;
