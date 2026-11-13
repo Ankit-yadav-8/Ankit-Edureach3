@@ -102,7 +102,6 @@ export default function JeeMentorshipClass12() {
       />
 
       <ClusterHero
-        badge="📚 BOARDS + JEE MAIN & ADVANCED · JEE 2027"
         titlePrefix="Personalized"
         accentWord="Class 12 JEE Mentorship"
         titleSuffix="& Strategy"

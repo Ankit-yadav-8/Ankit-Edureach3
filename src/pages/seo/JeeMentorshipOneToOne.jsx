@@ -97,7 +97,6 @@ export default function JeeMentorshipOneToOne() {
       />
 
       <ClusterHero
-        badge="⚡ TRUE INDIVIDUAL 1-TO-1 ATTENTION"
         titlePrefix="Private"
         accentWord="1-on-1 JEE Mentorship"
         titleSuffix="by Verified IITians"

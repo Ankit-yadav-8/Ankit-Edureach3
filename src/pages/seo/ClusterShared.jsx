@@ -107,12 +107,6 @@ export function ClusterHero({
     <header className="mj-hero-seo">
       <div className="scp-container">
         <div className="mj-hero-inner">
-          {badge && (
-            <div className="mj-hero-pill">
-              <span className="mj-dot" /> {badge}
-            </div>
-          )}
-
           <h1 className="mj-hero-h1">
             {title ? (
               title

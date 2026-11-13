@@ -105,7 +105,6 @@ export default function JeePrepStrategy() {
       />
 
       <ClusterHero
-        badge="🧭 TOPPER FRAMEWORKS & EXAM TACTICS"
         titlePrefix="Comprehensive"
         accentWord="JEE Preparation Strategy"
         titleSuffix="& Master Roadmap"

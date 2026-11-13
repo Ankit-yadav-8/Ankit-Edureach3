@@ -104,7 +104,6 @@ export default function JeeMentorshipTestAnalysis() {
       />
 
       <ClusterHero
-        badge="📊 SCIENTIFIC QUESTION ERROR DIAGNOSTICS"
         titlePrefix="Precision"
         accentWord="JEE Test Analysis"
         titleSuffix="& Mistake Tracking"

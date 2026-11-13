@@ -97,7 +97,6 @@ export default function JeeMentorshipIitian() {
       />
 
       <ClusterHero
-        badge="🎓 AUTHENTIC IIT ROORKEE & TOP IITIAN GUIDANCE"
         titlePrefix="Genuine"
         accentWord="JEE Mentorship by IITians"
         titleSuffix="& Top Rankers"

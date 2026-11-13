@@ -102,7 +102,6 @@ export default function JeePrepBacklog() {
       />
 
       <ClusterHero
-        badge="🛡️ SCIENTIFIC 70-30 BACKLOG ERADICATION"
         titlePrefix="How to Clear"
         accentWord="JEE Backlogs"
         titleSuffix="Without Panic"

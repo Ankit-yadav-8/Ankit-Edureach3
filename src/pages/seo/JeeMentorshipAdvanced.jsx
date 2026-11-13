@@ -102,7 +102,6 @@ export default function JeeMentorshipAdvanced() {
       />
 
       <ClusterHero
-        badge="🏆 CRACK THE TOP 1% · IIT ADMISSION"
         titlePrefix="Elite"
         accentWord="JEE Advanced Mentorship"
         titleSuffix="by Top IITians"

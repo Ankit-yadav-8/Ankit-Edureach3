@@ -88,7 +88,6 @@ export default function JeePrepHub() {
       />
 
       <ClusterHero
-        badge="🌟 THE COMPREHENSIVE JEE PREPARATION HUB"
         titlePrefix="Master Your"
         accentWord="JEE Preparation"
         titleSuffix="with Proven Frameworks"

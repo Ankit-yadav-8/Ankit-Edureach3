@@ -135,7 +135,6 @@ export default function JeeMentorshipHub() {
       />
 
       <ClusterHero
-        badge="🔥 1-ON-1 IITIAN MENTORSHIP · LIMITED SEATS"
         titlePrefix="Personalized"
         accentWord="JEE Mentorship"
         titleSuffix="Program"

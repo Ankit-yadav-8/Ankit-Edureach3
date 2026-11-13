@@ -102,7 +102,6 @@ export default function JeeMentorshipClass11() {
       />
 
       <ClusterHero
-        badge="🚀 BUILD A ROCK-SOLID FOUNDATION · JEE 2028"
         titlePrefix="Personalized"
         accentWord="Class 11 JEE Mentorship"
         titleSuffix="& Foundation"

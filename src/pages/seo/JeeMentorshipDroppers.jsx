@@ -102,7 +102,6 @@ export default function JeeMentorshipDroppers() {
       />
 
       <ClusterHero
-        badge="🔥 DROP YEAR RECOVERY & 99%ILE ROADMAP"
         titlePrefix="Specialized"
         accentWord="JEE Droppers Mentorship"
         titleSuffix="& Repeaters Plan"
