@@ -157,7 +157,7 @@
 /* ── Modern Editorial Hero Section (Font-Style & Design as Previous, Theme Colors) ───────────── */
 .mj-hero-seo {
   position: relative;
-  padding: clamp(155px, 14vw, 190px) 0 clamp(48px, 5vw, 72px);
+  padding: clamp(195px, 18vw, 245px) 0 clamp(48px, 5vw, 72px);
   overflow: hidden;
   background: var(--mj-paper);
 }
@@ -778,6 +778,158 @@
   margin: 0 auto;
 }
 
+/* ── JEE Mentorship Hub: Clean, Spacious, Low-Text Cards (Interactive Features Style) ── */
+.jmh-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.jmh-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 22px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.035);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  position: relative;
+}
+
+.jmh-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -10px rgba(255, 105, 61, 0.12), 0 0 0 1px rgba(255, 105, 61, 0.2);
+  border-color: rgba(255, 105, 61, 0.35);
+}
+
+.jmh-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.jmh-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 105, 61, 0.08);
+  color: #FF693D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.jmh-card:hover .jmh-card-icon {
+  transform: scale(1.05);
+}
+
+.jmh-card-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  font-family: 'Space Grotesk', 'Sora', sans-serif;
+  text-transform: uppercase;
+}
+
+.jmh-card-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 10px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.jmh-card-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.90rem;
+  line-height: 1.58;
+  color: #64748B;
+  margin: 0 0 20px;
+  min-height: 42px;
+}
+
+.jmh-card-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jmh-card-bullet {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.86rem;
+  color: #475569;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.45;
+}
+
+.jmh-bullet-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 1.5px;
+  background: #FF7A3C;
+  flex-shrink: 0;
+}
+
+.jmh-card-action {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(226, 232, 240, 0.9);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  font-family: 'Sora', sans-serif;
+  color: #0F172A;
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.jmh-card-action:hover {
+  color: #FF5C35;
+  transform: translateX(3px);
+}
+
+@media (max-width: 960px) {
+  .jmh-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .jmh-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .jmh-card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+  .jmh-card-desc {
+    min-height: auto;
+  }
+}
+
 .scp-card {
   background: var(--mj-card);
   border: 1px solid var(--mj-line);
@@ -1021,7 +1173,7 @@
 
 @media (max-width: 640px) {
   .mj-hero-seo {
-    padding: 124px 0 36px;
+    padding: 155px 0 36px;
   }
   .mj-hero-h1 {
     font-size: clamp(1.85rem, 6.8vw, 2.4rem);

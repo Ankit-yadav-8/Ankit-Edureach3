@@ -147,98 +147,203 @@ export default function JeeMentorshipHub() {
 
       <main className="scp-container" id="details">
         {/* Core Pillars Section */}
-        <section className="scp-section">
+        <section className="scp-section jmh-pillars-section">
           <div className="scp-section-header">
             <span className="scp-kicker">Why 1-to-1 Guidance Outperforms Coaching Batches</span>
             <h2 className="scp-h2">6 Core Pillars of JEE Mentorship</h2>
-            <p className="scp-section-sub">
-              Large coaching institutes deliver lectures to 200+ students at once, but nobody checks if you understood the concepts, completed homework, or why your test score dropped. Here is how our personalized JEE mentorship program fixes the preparation gap.
-            </p>
           </div>
 
-          <div className="scp-grid-3">
-            <div className="scp-card">
-              <div className="scp-card-icon brand">
-                <UserCheck size={22} />
+          <div className="jmh-grid">
+            {/* Pillar 1 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <UserCheck size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">1. Dedicated Personal IITian Mentor</h3>
-              <p className="scp-card-p">
-                You are paired 1-on-1 with an IIT Roorkee or top IIT ranker who has successfully cracked JEE Advanced with an elite rank. They mentor you through weekly video calls and continuous daily WhatsApp check-ins.
+              <h3 className="jmh-card-title">1-on-1 IITian Mentor</h3>
+              <p className="jmh-card-desc">
+                Paired individually with verified IIT Roorkee rankers for continuous daily guidance, strategy, and accountability.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Individualized pace & subject focus</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Authentic strategies from proven toppers</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Weekly 1-on-1 strategy video reviews</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Daily WhatsApp study log check-ins</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Authentic tactics from recent toppers</span>
+                </li>
               </ul>
+              <Link to="/jee-mentorship/1-to-1" className="jmh-card-action">
+                <span>Explore mentor track</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon emerald">
-                <Calendar size={22} />
+            {/* Pillar 2 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Calendar size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">2. Customized Daily Study Timetables</h3>
-              <p className="scp-card-p">
-                No more wondering what chapter to study next. Your mentor creates realistic daily task lists balancing Physics, Chemistry, and Mathematics according to your current school or coaching hours.
+              <h3 className="jmh-card-title">Daily Study Timetables</h3>
+              <p className="jmh-card-desc">
+                Dynamic schedules balancing school, coaching hours, and high-yield chapter targets.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Daily chapter & question targets</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Live study streaks & accountability</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Subject-wise hourly study schedule</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Daily chapter & problem solving quotas</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Live study streaks & consistency audits</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/study-plan" className="jmh-card-action">
+                <span>View study timetables</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon violet">
-                <BarChart3 size={22} />
+            {/* Pillar 3 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <BarChart3 size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">3. Question-Level Test Analysis</h3>
-              <p className="scp-card-p">
-                Giving mock tests without in-depth post-exam review is useless. Our system evaluates time-spent-per-question, accuracy, negative-marking leakages, and converts mistakes into an actionable fix list.
+              <h3 className="jmh-card-title">Mock Error Autopsy</h3>
+              <p className="jmh-card-desc">
+                Question-by-question review identifying silly slips, time traps, and negative mark leakages.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Silly mistake vs conceptual gap detection</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Weekly remedial practice modules</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Silly mistakes vs concept gap tags</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Time spent per question breakdown</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Weekly 30-problem targeted fix deck</span>
+                </li>
               </ul>
+              <Link to="/jee-mentorship/test-analysis" className="jmh-card-action">
+                <span>See mock autopsy</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon amber">
-                <Flame size={22} />
+            {/* Pillar 4 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Flame size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">4. Backlog Eradication System</h3>
-              <p className="scp-card-p">
-                Backlogs cause panic and destroy motivation. We deploy our proven 70-30 backlog formula: 70% of study time protects ongoing syllabus, while 30% methodically clears high-weightage pending chapters.
+              <h3 className="jmh-card-title">70-30 Backlog Formula</h3>
+              <p className="jmh-card-desc">
+                Methodical ratio to clear pending high-weightage chapters without halting ongoing syllabus.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> High-yield chapter triage</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Weekend accelerated catch-up sprints</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>70% current syllabus protection</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>30% high-yield backlog recovery sprints</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Weekend catch-up milestone goals</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/backlog" className="jmh-card-action">
+                <span>Read backlog rule</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon brand">
-                <Sparkles size={22} />
+            {/* Pillar 5 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Sparkles size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">5. Exam Temperament & Strategy</h3>
-              <p className="scp-card-p">
-                Cracking JEE requires more than memorizing formulas. Your mentor teaches time management, question filtering, multi-pass paper solving, and stress control during high-pressure shifts.
+              <h3 className="jmh-card-title">Exam Temperament</h3>
+              <p className="jmh-card-desc">
+                Multi-pass paper solving, question filtering, and stress control during high-pressure shifts.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> 3-pass exam execution technique</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Avoiding trap questions & negative marks</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>3-pass paper execution technique</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Trap question filtering & avoidance</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Negative marking control system</span>
+                </li>
               </ul>
+              <Link to="/jee-mentorship/jee-main" className="jmh-card-action">
+                <span>Master exam strategy</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon emerald">
-                <Award size={22} />
+            {/* Pillar 6 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Award size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">6. Weekly Parent Progress Reports</h3>
-              <p className="scp-card-p">
-                Parents stay informed without micromanaging. We send automated weekly audit summaries detailing hours logged, mock scores, completed syllabus percentage, and mentor remarks.
+              <h3 className="jmh-card-title">Weekly Progress Audits</h3>
+              <p className="jmh-card-desc">
+                Objective weekly reports detailing logged study hours, mock trends, and mentor action points.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Complete transparency on study habits</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Objective score improvement trends</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Logged study hours & mock scores</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Syllabus completion percentages</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Mentor remarks & improvement goals</span>
+                </li>
               </ul>
+              <a href="#pricing" className="jmh-card-action">
+                <span>View mentorship plans</span>
+                <ArrowRight size={14} />
+              </a>
             </div>
           </div>
         </section>

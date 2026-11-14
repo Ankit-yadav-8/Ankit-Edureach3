@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
+  ClusterHero,
   ClusterPricing,
   ClusterFounders,
   ClusterCta,
@@ -101,11 +102,13 @@ export default function JeeMentorshipMain() {
         jsonLd={jsonLd}
       />
 
-      <InteractiveJourneyRoadmap
-        isHero={true}
-        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
+      <ClusterHero
+        line1="Precision 1-on-1 Guidance"
+        line1Squiggle="Guidance"
+        line2Lead="for your"
+        line2Box="JEE Main."
+        description="Daily personal guidance from verified IIT Roorkee rankers to master rapid recall, 3-pass paper strategy, and score 99+ percentile."
         planKey="mentor-jee-2027-6m"
-        targetExam="JEE Main 2027"
       />
 
       <ClusterNav currentPath={currentPath} />
@@ -121,50 +124,101 @@ export default function JeeMentorshipMain() {
             </p>
           </div>
 
-          <div className="scp-grid-3">
-            <div className="scp-card">
-              <div className="scp-card-icon brand">
-                <Target size={22} />
+          <div className="jmh-grid">
+            {/* Pillar 1 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Target size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">1. Subject-Wise Scoring Calibration</h3>
-              <p className="scp-card-p">
-                We engineer your score breakdown with statistical certainty:
+              <h3 className="jmh-card-title">Score Calibration</h3>
+              <p className="jmh-card-desc">
+                Engineered subject-wise score breakdown targeting 200+ marks with statistical certainty.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><strong>Chemistry (75–85):</strong> 40m target. NCERT Inorganic & Organic mastery.</li>
-                <li className="scp-card-list-item"><strong>Physics (70–80):</strong> Formula sheets, direct numericals & modern physics.</li>
-                <li className="scp-card-list-item"><strong>Maths (45–55):</strong> Cherry-picking 12–14 high-confidence problems.</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Chemistry: 75–85 marks via NCERT mastery</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Physics: 70–80 marks via formula sprints</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Maths: 45–55 marks via 14 high-confidence picks</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/strategy" className="jmh-card-action">
+                <span>Explore scoring strategy</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon emerald">
-                <Clock size={22} />
+            {/* Pillar 2 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <Clock size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">2. 3-Pass Exam Time Management</h3>
-              <p className="scp-card-p">
-                Your mentor coaches you to solve the paper in 3 distinct rounds:
+              <h3 className="jmh-card-title">3-Pass Time Pacing</h3>
+              <p className="jmh-card-desc">
+                Rigorous exam pacing technique to maximize easy marks early and avoid time traps.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><strong>Round 1 (0 to 60m):</strong> 30–35 easy, direct recall questions across all 3 subjects.</li>
-                <li className="scp-card-list-item"><strong>Round 2 (60 to 140m):</strong> Tackle moderate multi-step questions.</li>
-                <li className="scp-card-list-item"><strong>Round 3 (140 to 180m):</strong> Re-check calculations & attempt 4–5 harder questions.</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Round 1 (0–60m): 30–35 direct recall problems</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Round 2 (60–140m): Multi-step moderate questions</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Round 3 (140–180m): Re-checks & high-yield attempts</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/study-plan" className="jmh-card-action">
+                <span>View timing drill</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon violet">
-                <BarChart size={22} />
+            {/* Pillar 3 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon">
+                  <BarChart size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">3. Test Diagnostics & Rank Alignment</h3>
-              <p className="scp-card-p">
-                Weekly mistake autopsy paired with JoSAA college cutoffs:
+              <h3 className="jmh-card-title">Test Autopsy & Cutoffs</h3>
+              <p className="jmh-card-desc">
+                Weekly question-level diagnostic linking score improvements directly to JoSAA cutoffs.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item">Isolate unforced calculation errors vs genuine concept gaps.</li>
-                <li className="scp-card-list-item">Eliminate questions where &gt;3 mins were spent with 0 marks.</li>
-                <li className="scp-card-list-item">Align mock percentiles with top NIT (Trichy, Surathkal) cutoffs.</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Isolate calculation slips vs concept gaps</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Eliminate questions with &gt;3 mins & zero marks</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Align mock percentiles with top NIT branches</span>
+                </li>
               </ul>
+              <Link to="/jee-mentorship/test-analysis" className="jmh-card-action">
+                <span>See test analysis</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
         </section>
