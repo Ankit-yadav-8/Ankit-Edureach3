@@ -1770,32 +1770,41 @@ function TopMentors() {
   ];
 
   return (
-    <section id="mentors" className="mj-section" style={{ background: "#FFFFFF" }}>
+    <section id="mentors" className="mj-section mj-mentors-section" style={{ background: "#FFFFFF" }}>
       <div className="mj-wrap">
-        <div className="mj-sec-head">
-          <div className="mj-label">GUIDANCE FROM IITians & NITians</div>
+        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
+          <div className="mj-label">GUIDANCE FROM IITians &amp; NITians</div>
           <h2 className="mj-display mj-display-lg">Meet Your <em>IITian Mentors</em></h2>
           <p className="mj-sec-sub">Learn directly from top IITians and NITians who have walked the path and conquered the challenges.</p>
         </div>
         
-        <div className="mj-mentors-list">
-          {mentors.map((m, i) => (
-            <div key={i} className="mj-mentor-bx">
-              <div className="mj-mentor-bx-img">
-                <img src={m.img} alt={m.name} />
-              </div>
-              <div className="mj-mentor-bx-info">
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                  <h3 style={{ margin: 0 }}>{m.name}</h3>
-                  <span style={{ fontSize: 10, fontWeight: 700, background: "#ecfdf5", color: "#059669", padding: "2px 8px", borderRadius: 999, border: "1px solid #a7f3d0" }}>
-                    ✓ {m.badge}
-                  </span>
+        {/* Outer White-Canvas Card like Backlog Section Card */}
+        <div className="mj-mentors-canvas">
+          <div className="mj-mentors-list">
+            {mentors.map((m, i) => (
+              <div key={i} className="mj-mentor-bx">
+                <div className="mj-mentor-bx-img">
+                  <img src={m.img} alt={m.name} loading="lazy" />
                 </div>
-                <span>{m.college} • {m.branch} {m.specialty ? `· ${m.specialty}` : ""}</span>
-                <p>"{m.thought}"</p>
+                <div className="mj-mentor-bx-info">
+                  <div className="mj-mentor-header-row">
+                    <h3 className="mj-mentor-name">{m.name}</h3>
+                    <span className="mj-mentor-badge">
+                      ✓ {m.badge}
+                    </span>
+                  </div>
+                  <span className="mj-mentor-meta">{m.college} • {m.branch} {m.specialty ? `· ${m.specialty}` : ""}</span>
+                  <p className="mj-mentor-thought">"{m.thought}"</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* Footer line below the whole big card */}
+        <div className="mj-mentors-footer-note">
+          <span className="mj-mentor-pulse-dot" />
+          100+ Verified Mentors Active on Platform — Zero Wait Time: Enroll Today, Match with Your Dedicated Mentor &amp; Start Your Journey with CampusPoint
         </div>
       </div>
     </section>
@@ -1968,10 +1977,10 @@ export default function Mentorship() {
       <Qualifier cfg={cfg} />
       <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
-      <TopMentors />
       <LiveTracking cfg={cfg} />
       <BacklogAndStudyPlan year={year} exam={exam} />
       <MockTestAnalysisGuide cfg={cfg} />
+      <TopMentors />
       <ForParents cfg={cfg} />
       <WhatsApp />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
@@ -2716,16 +2725,6 @@ const CSS = `
 .mj-faq-a { overflow:hidden; }
 .mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
 
-/* mentors */
-.mj-mentors-list { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-.mj-mentor-bx { background:${T.card}; border:1px solid ${T.line}; border-radius:20px; padding:24px; text-align:center; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .2s; }
-.mj-mentor-bx:hover { transform:translateY(-4px); border-color:#FFB59A; }
-.mj-mentor-bx-img { width:100px; height:100px; margin:0 auto 16px; border-radius:50%; overflow:hidden; border:2px solid ${T.coralSoft}; }
-.mj-mentor-bx-img img { width:100%; height:100%; object-fit:cover; }
-.mj-mentor-bx-info h3 { font:800 1.2rem/1.2 'Sora',sans-serif; color:${T.ink}; margin:0; }
-.mj-mentor-bx-info span { display:block; font:700 .74rem/1.3 'Space Grotesk',sans-serif; color:${T.coral}; margin-top:4px; }
-.mj-mentor-bx-info p { font:500 .9rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:16px 0 0; font-style:italic; }
-
 /* talk */
 .mj-talk-booklet { display:flex; flex-direction:column; padding:44px 44px 44px 54px; color:#fff; background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
 .mj-talk-booklet::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px),repeating-linear-gradient(90deg, transparent 0 33px, rgba(255,255,255,.07) 33px 34px); pointer-events:none; }
@@ -2742,6 +2741,180 @@ const CSS = `
 .mj-field input, .mj-field textarea { border:none; border-bottom:1.5px solid ${T.line}; background:none; padding:8px 2px; font:500 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; outline:none; resize:vertical; transition:border-color .16s; }
 .mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
 
+
+/* ═══════════════ MENTORS SECTION (Backlog Card Architecture) ═══════════════ */
+.mj-mentors-section {
+  padding: clamp(56px, 7vw, 92px) 0;
+  background: #FFFFFF;
+}
+
+.mj-mentors-canvas {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 24px;
+  padding: clamp(24px, 3.5vw, 40px);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.04);
+  position: relative;
+}
+
+.mj-mentors-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.mj-mentor-bx {
+  background: #FAFAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 20px;
+  padding: clamp(20px, 2.5vw, 26px);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.02);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mj-mentor-bx:hover {
+  transform: translateY(-4px);
+  border-color: #FED7AA;
+  box-shadow: 0 16px 32px rgba(255, 105, 61, 0.08);
+  background: #FFFFFF;
+}
+
+.mj-mentor-bx-img {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #FFF7ED;
+  box-shadow: 0 4px 14px rgba(255, 105, 61, 0.15);
+  flex-shrink: 0;
+}
+
+.mj-mentor-bx-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mj-mentor-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.mj-mentor-name {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.22rem;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mj-mentor-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #ECFDF5;
+  color: #059669;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid #A7F3D0;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  letter-spacing: 0.01em;
+}
+
+.mj-mentor-meta {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #EA580C;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.mj-mentor-thought {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #475569;
+  margin: 16px 0 0;
+  font-style: italic;
+  flex-grow: 1;
+}
+
+.mj-mentors-footer-note {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(0.74rem, 1vw, 0.84rem);
+  font-weight: 700;
+  color: #64748B;
+  text-align: center;
+  margin-top: 14px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 0 12px;
+}
+
+.mj-mentor-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: mjPulseDot 2s infinite ease-in-out;
+}
+
+@keyframes mjPulseDot {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.35);
+  }
+}
+
+@media (max-width: 960px) {
+  .mj-mentors-list {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .mj-mentors-canvas {
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mj-mentors-section {
+    padding: clamp(40px, 6vw, 60px) 0;
+  }
+  .mj-mentors-canvas {
+    padding: 16px 12px;
+    border-radius: 18px;
+  }
+  .mj-mentors-footer-note {
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+}
 
 /* ═══════════════ HEAD-TO-HEAD COMPARISON TABLE ═══════════════ */
 .mj-compare-section {
@@ -3560,16 +3733,6 @@ const CSS = `
 .mj-faq-open .mj-faq-ic { background:${T.coral}; color:#fff; }
 .mj-faq-a { overflow:hidden; }
 .mj-faq-a p { font:400 .96rem/1.7 'DM Sans',sans-serif; color:${T.body}; padding:0 22px 20px; margin:0; }
-
-/* mentors */
-.mj-mentors-list { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-.mj-mentor-bx { background:${T.card}; border:1px solid ${T.line}; border-radius:20px; padding:24px; text-align:center; box-shadow:0 12px 30px -16px rgba(0,0,0,.15); transition:transform .2s; }
-.mj-mentor-bx:hover { transform:translateY(-4px); border-color:#FFB59A; }
-.mj-mentor-bx-img { width:100px; height:100px; margin:0 auto 16px; border-radius:50%; overflow:hidden; border:2px solid ${T.coralSoft}; }
-.mj-mentor-bx-img img { width:100%; height:100%; object-fit:cover; }
-.mj-mentor-bx-info h3 { font:800 1.2rem/1.2 'Sora',sans-serif; color:${T.ink}; margin:0; }
-.mj-mentor-bx-info span { display:block; font:700 .74rem/1.3 'Space Grotesk',sans-serif; color:${T.coral}; margin-top:4px; }
-.mj-mentor-bx-info p { font:500 .9rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:16px 0 0; font-style:italic; }
 
 /* talk */
 .mj-talk-booklet { display:flex; flex-direction:column; padding:44px 44px 44px 54px; color:#fff; background:linear-gradient(160deg, #FF7A3C 0%, #F1531F 60%, #E0481B 100%); position:relative; overflow:hidden; }
