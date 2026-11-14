@@ -15,6 +15,9 @@ import {
   getArticleSchema
 } from "./ClusterShared.jsx";
 import {
+  Atom,
+  FlaskConical,
+  Sigma,
   Zap,
   Target,
   CheckCircle2,
@@ -223,58 +226,203 @@ export default function JeeMentorshipMain() {
           </div>
         </section>
 
-        {/* Study Timetable Blueprint */}
-        <section className="scp-section">
+        {/* 2-Month All-Subject Revision Strategy */}
+        <section className="scp-section" id="two-month-strategy">
           <div className="scp-section-header">
-            <span className="scp-kicker">Recommended Schedule</span>
-            <h2 className="scp-h2">Ideal Daily Study Plan for JEE Main Aspirants</h2>
-            <p className="scp-section-sub">
-              Your personal mentor personalizes this baseline timetable to fit your exact coaching hours and school commitments.
-            </p>
+            <span className="scp-kicker">60-Day Last-Lap Blueprint</span>
+            <h2 className="scp-h2">All-Subject 2-Month Revision Strategy for JEE Main</h2>
           </div>
 
-          <div className="scp-table-wrapper">
-            <table className="scp-table">
-              <thead>
-                <tr>
-                  <th>Time Slot</th>
-                  <th>Activity</th>
-                  <th>Focus Area</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>06:30 AM – 08:30 AM</td>
-                  <td>Active Recall & Chemistry NCERT</td>
-                  <td>Inorganic reactions, coordination compounds, organic mechanisms</td>
-                </tr>
-                <tr>
-                  <td>09:00 AM – 01:00 PM</td>
-                  <td>School / Coaching or Self-Study Slot 1</td>
-                  <td>Core theory understanding & classroom note assimilation</td>
-                </tr>
-                <tr>
-                  <td>02:30 PM – 05:00 PM</td>
-                  <td>Physics Problem Solving Sprint</td>
-                  <td>30-40 timed numericals, mechanics, electrodynamics PYQs</td>
-                </tr>
-                <tr>
-                  <td>05:30 PM – 07:30 PM</td>
-                  <td>Maths Problem Drilling</td>
-                  <td>15-20 challenging problems, calculus, coordinate geometry</td>
-                </tr>
-                <tr>
-                  <td>08:30 PM – 10:00 PM</td>
-                  <td>Backlog Recovery or Test Revision</td>
-                  <td>Clearing flagged mistakes and previous week error logs</td>
-                </tr>
-                <tr>
-                  <td>10:00 PM – 10:30 PM</td>
-                  <td>Mentor Daily Log Submission</td>
-                  <td>Submitting completed question count & receiving next day plan</td>
-                </tr>
-              </tbody>
-            </table>
+          {/* 3 Subject Strategy Cards */}
+          <div className="jmh-grid" style={{ marginBottom: 32 }}>
+            {/* Physics Card */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(99, 102, 241, 0.08)", color: "#6366F1" }}>
+                  <Atom size={22} />
+                </div>
+                <span className="jmh-card-badge" style={{ background: "rgba(99, 102, 241, 0.1)", color: "#4F46E5" }}>
+                  TARGET: 75–85
+                </span>
+              </div>
+              <h3 className="jmh-card-title">Physics 60-Day Sprint</h3>
+              <p className="jmh-card-desc">
+                High-yield formula recall, PYQ mastery in Modern Physics & Electrodynamics, and eliminating calculation slips.
+              </p>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span><strong>Month 1:</strong> Top 12 high-weightage chapters + 2019–2025 PYQs</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span><strong>Month 2:</strong> 2 timed sectional tests/week + formula error logs</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span><strong>Key Priority:</strong> Modern Physics, Current Electricity, Kinematics, Optics</span>
+                </li>
+              </ul>
+              <Link to="/jee-preparation/strategy" className="jmh-card-action">
+                <span>View physics roadmap</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Chemistry Card */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(255, 105, 61, 0.08)", color: "#FF693D" }}>
+                  <FlaskConical size={22} />
+                </div>
+                <span className="jmh-card-badge" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#059669" }}>
+                  TARGET: 80–90
+                </span>
+              </div>
+              <h3 className="jmh-card-title">Chemistry Score Engine</h3>
+              <p className="jmh-card-desc">
+                The highest scoring subject per minute. Master line-by-line NCERT Inorganic and Organic reaction roadmaps.
+              </p>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#FF7A3C" }} />
+                  <span><strong>Month 1:</strong> Daily 1-hr NCERT Inorganic reading + Organic reaction maps</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#FF7A3C" }} />
+                  <span><strong>Month 2:</strong> Past-shift CBT papers in 40-minute speed sprints</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#FF7A3C" }} />
+                  <span><strong>Key Priority:</strong> Coordination, GOC, Chemical Bonding, Carbonyls</span>
+                </li>
+              </ul>
+              <Link to="/jee-preparation/strategy" className="jmh-card-action">
+                <span>View chemistry roadmap</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Mathematics Card */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(16, 185, 129, 0.08)", color: "#10B981" }}>
+                  <Sigma size={22} />
+                </div>
+                <span className="jmh-card-badge" style={{ background: "rgba(245, 158, 11, 0.12)", color: "#D97706" }}>
+                  TARGET: 50–60
+                </span>
+              </div>
+              <h3 className="jmh-card-title">Maths Accuracy Playbook</h3>
+              <p className="jmh-card-desc">
+                JEE Maths tests time discipline. Secure 99%ile by cherry-picking 12–14 safe problems and avoiding ego traps.
+              </p>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span><strong>Month 1:</strong> Master 14 safe scoring chapters with 25 timed problems daily</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span><strong>Month 2:</strong> Question-filtering drills with strict 3-min skip rule</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span><strong>Key Priority:</strong> Vectors & 3D, Matrices, Sequences, Definite Integrals</span>
+                </li>
+              </ul>
+              <Link to="/jee-preparation/strategy" className="jmh-card-action">
+                <span>View maths selection guide</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+
+          {/* 2-Phase 60-Day Calendar Breakdown */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
+            gap: 22,
+            maxWidth: 1140,
+            margin: "0 auto"
+          }}>
+            <div style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(226, 232, 240, 0.9)",
+              borderRadius: 20,
+              padding: "26px 24px",
+              boxShadow: "0 4px 18px -3px rgba(15, 23, 42, 0.03)"
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <span style={{
+                  background: "rgba(255, 105, 61, 0.1)",
+                  color: "#FF5C35",
+                  fontWeight: 800,
+                  fontSize: "0.78rem",
+                  padding: "4px 10px",
+                  borderRadius: 6,
+                  fontFamily: "Space Grotesk, sans-serif"
+                }}>
+                  PHASE 1 · DAYS 1–30
+                </span>
+                <h4 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.06rem", margin: 0, color: "#0F172A" }}>
+                  High-Yield Consolidation & PYQs
+                </h4>
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 9 }}>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#FF7A3C", fontWeight: 700 }}>•</span>
+                  <span><strong>70% Daily Time:</strong> Finish remaining syllabus & drill 2019–2025 chapterwise PYQs.</span>
+                </li>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#FF7A3C", fontWeight: 700 }}>•</span>
+                  <span><strong>Daily Habit:</strong> 1-hour active formula sheet & NCERT Inorganic reaction revision.</span>
+                </li>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#FF7A3C", fontWeight: 700 }}>•</span>
+                  <span><strong>Weekly Review:</strong> 1 part-syllabus mock test every Sunday with question-by-question autopsy.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(226, 232, 240, 0.9)",
+              borderRadius: 20,
+              padding: "26px 24px",
+              boxShadow: "0 4px 18px -3px rgba(15, 23, 42, 0.03)"
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <span style={{
+                  background: "rgba(16, 185, 129, 0.1)",
+                  color: "#059669",
+                  fontWeight: 800,
+                  fontSize: "0.78rem",
+                  padding: "4px 10px",
+                  borderRadius: 6,
+                  fontFamily: "Space Grotesk, sans-serif"
+                }}>
+                  PHASE 2 · DAYS 31–60
+                </span>
+                <h4 style={{ fontFamily: "Sora", fontWeight: 700, fontSize: "1.06rem", margin: 0, color: "#0F172A" }}>
+                  Full-Length CBT Mocks & Mistake Autopsy
+                </h4>
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 9 }}>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#10B981", fontWeight: 700 }}>•</span>
+                  <span><strong>Alternate-Day Mocks:</strong> Full 3-hour tests strictly in exact NTA slot timings (09 AM or 03 PM).</span>
+                </li>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#10B981", fontWeight: 700 }}>•</span>
+                  <span><strong>Error Autopsy Diary:</strong> Classify every mark lost into silly slip vs conceptual trap.</span>
+                </li>
+                <li style={{ fontSize: "0.87rem", color: "#475569", lineHeight: 1.5, display: "flex", gap: 8 }}>
+                  <span style={{ color: "#10B981", fontWeight: 700 }}>•</span>
+                  <span><strong>Final 10 Days:</strong> Zero new concepts; 100% focused on confidence & formula flashcards.</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
