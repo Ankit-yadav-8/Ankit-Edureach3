@@ -67,8 +67,6 @@ const NEET_MEGA = [
 // isn't buried under an exam-specific menu.
 const RESOURCES_NAV = [
   { label: "Campus Point AI", to: "/ai", icon: Sparkles, tag: "Solve doubts, get notes & quizzes" },
-  { label: "JEE Mentorship Hub", to: "/jee-mentorship", icon: Sparkles, tag: "All Mentorship Tracks & Features" },
-  { label: "JEE Preparation Hub", to: "/jee-preparation", icon: Target, tag: "Study plans, backlogs & roadmaps" },
   { label: "Class 11 Syllabus & Mind Maps", to: "/class-11", icon: BookOpen, tag: "Chapter-wise notes + mind maps" },
   { label: "Class 12 Syllabus & Mind Maps", to: "/class-12", icon: Edit3, tag: "Boards + competitive prep" },
   { label: "Other Entrance Exams", to: "/other-exams", icon: Compass, tag: "BITSAT, VITEEE, state CETs & 30+ more" },
@@ -76,6 +74,7 @@ const RESOURCES_NAV = [
 
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
 const MENTORSHIP_NAV = [
+  { label: "JEE Mentorship Hub", to: "/jee-mentorship", icon: Sparkles, tag: "All Mentorship Tracks & Features" },
   { label: "JEE & NEET 2027", to: "/mentorship/jee-2027", icon: Trophy, tag: "₹3,499 · Till JEE Mains 2027" },
   { label: "JEE & NEET 2028", to: "/mentorship/jee-2028", icon: Award, tag: "₹3,499 · 6 Months" },
   { label: "Foundation (9–10)", to: "/mentorship/foundation", icon: BookOpen, tag: "₹3,499 · Class 9 & 10" },
@@ -207,9 +206,9 @@ export default function Navbar({ onSearch }) {
   const navItems = [
     { label: "JEE", icon: BookOpen, mega: JEE_MEGA, base: "/jee-main", match: (p) => p.startsWith("/jee") },
     { label: "NEET", icon: FlaskConical, mega: NEET_MEGA, base: "/neet", match: (p) => p.startsWith("/neet") },
-    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/ai", "/other-exams", "/jee-mentorship", "/jee-preparation"].some((x) => p.startsWith(x)) },
+    { label: "Resources", icon: BookOpen, drop: RESOURCES_NAV, base: "/class-11", match: (p) => ["/class-1", "/ai", "/other-exams"].some((x) => p.startsWith(x)) },
     { label: "Colleges", icon: Landmark, drop: COLLEGES, base: "/colleges", match: (p) => p.startsWith("/colleges") || p.startsWith("/college/") },
-    { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/mentorship/jee-2027", match: (p) => p.startsWith("/mentorship") },
+    { label: "Mentorship", icon: Heart, drop: MENTORSHIP_NAV, base: "/jee-mentorship", match: (p) => p.startsWith("/mentorship") || p.startsWith("/jee-mentorship") },
     { label: "Tools", icon: Crosshair, mega: TOOLS_MEGA, base: "/planner", align: "right", match: (p) => ["/planner", "/compare", "/cutoffs", "/scholarships", "/map", "/admin", "/josaa", "/campus-notes", "/community"].some((x) => p.startsWith(x)) },
     { label: "Blog", icon: FileText, to: "/blog", match: (p) => p.startsWith("/blog") },
   ];
