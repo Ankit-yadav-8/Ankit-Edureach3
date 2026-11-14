@@ -65,7 +65,7 @@ const ICON = { github: Github, linkedin: Linkedin, dribbble: Dribbble };
 /* ── Footer column ──────────────────────────────────────────────── */
 function Col({ title, links, unclickable }) {
   return (
-    <div>
+    <div className="footer-col">
       {/* h2, not h4: these are top-level site sections. Pages end on h2/h3, so
           an h4 here skipped a level and failed the heading-order audit. Size is
           set inline, so the rendered footer is unchanged. */}
@@ -256,11 +256,20 @@ export default function Footer() {
         @media (max-width: 960px) {
           .fteam-grid { grid-template-columns: 1fr; max-width: 460px; }
         }
+        .footer-grid {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr 1fr 1.1fr 1fr;
+          gap: 2rem;
+        }
         @media (max-width: 1100px) {
-          .footer-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem !important; }
+          .footer-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem 1.5rem !important; }
+          .footer-brand { grid-column: 1 / -1; margin-bottom: 0.5rem; }
         }
         @media (max-width: 640px) {
-          .footer-grid { grid-template-columns: 1fr !important; gap: 1.8rem !important; }
+          .footer-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 1.8rem 1rem !important; }
+          .footer-brand { grid-column: 1 / -1; margin-bottom: 0.5rem; }
+          .footer-col h2 { font-size: 0.88rem !important; }
+          .footer-col a, .footer-col span { font-size: 0.82rem !important; line-height: 1.35 !important; }
         }
         @keyframes cpFloatOrb1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px,80px) scale(1.15); } }
         @keyframes cpFloatOrb2 { 0% { transform: translate(0,0) scale(1.1); } 100% { transform: translate(-80px,-60px) scale(0.9); } }
@@ -272,19 +281,12 @@ export default function Footer() {
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
 
         {/* Main link grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.3fr 1fr 1fr 1.1fr 1fr",
-            gap: "2rem",
-          }}
-          className="footer-grid"
-        >
-          <div>
+        <div className="footer-grid">
+          <div className="footer-brand">
             <Link
               to="/"
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
                 gap: 10,
                 marginBottom: "1rem",
@@ -319,8 +321,9 @@ export default function Footer() {
               style={{
                 color: "rgba(255,255,255,.65)",
                 fontSize: ".9rem",
-                maxWidth: 280,
+                maxWidth: 420,
                 marginBottom: "1.4rem",
+                lineHeight: 1.6,
               }}
             >
               Founded by IIT Roorkee students{" "}
@@ -330,8 +333,8 @@ export default function Footer() {
               student-first JEE rank predictor &amp; college discovery platform,
               headquartered in Jaipur, Rajasthan.
             </p>
-            <Col title="Campus Point" links={COLLEGE_LINKS} />
           </div>
+          <Col title="Campus Point" links={COLLEGE_LINKS} />
           <Col title="Other Exams" links={EXAM_LINKS} />
           <Col title="Tools" links={TOOL_LINKS} />
           <Col title="JEE Mentorship" links={MENTORSHIP_LINKS} />

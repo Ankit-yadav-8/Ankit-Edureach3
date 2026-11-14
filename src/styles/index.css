@@ -1570,7 +1570,7 @@ table.data-table tbody tr:hover           { background: rgba(255, 105, 61,.07); 
 .site-footer { background: linear-gradient(135deg, #0f0a1e 0%, #1a1330 40%, #2a1e4a 70%, #1a1a2e 100%); color:rgba(255,255,255,.7); padding:4rem 0 0; position: relative; overflow: hidden; }
 .site-footer::before,
 .site-footer::after { content:none; display:none; }
-.footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:3rem; padding-bottom:3rem; }
+.footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.1fr 1fr; gap:2rem; padding-bottom:3rem; }
 .footer-brand .brand-logo { color:#fff; margin-bottom:.8rem; }
 .footer-brand p { font-size:.87rem; line-height:1.65; color:rgba(255,255,255,.5); max-width:280px; margin-bottom:1.6rem; }
 .footer-col h4 { font-size:.8rem; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:#fff; margin-bottom:1rem; position:relative; padding-bottom:.6rem; }
@@ -2421,7 +2421,8 @@ textarea.input { width:100%; }
   .college-grid   { grid-template-columns:1fr !important; }
   .grid-4         { grid-template-columns:1fr !important; }
   .grid-auto-3,.grid-auto-4 { grid-template-columns:1fr !important; }
-  .footer-grid    { grid-template-columns:1fr !important; gap:1.5rem; }
+  .footer-grid    { grid-template-columns:repeat(2, 1fr) !important; gap:1.6rem 1rem; }
+  .footer-brand   { grid-column:1 / -1; margin-bottom:.5rem; }
   .container      { padding-inline:.85rem; }
   .section-title  { font-size:1.55rem; letter-spacing:-.5px; }
   .section-sub    { font-size:.9rem; }
@@ -2596,7 +2597,8 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .btn               { font-size:.8rem; padding:.62rem .9rem; }
   /* Single column at 360-375px */
   .college-grid      { grid-template-columns:1fr !important; }
-  .footer-grid       { grid-template-columns:1fr !important; }
+  .footer-grid       { grid-template-columns:repeat(2, 1fr) !important; gap:1.4rem .8rem; }
+  .footer-brand      { grid-column:1 / -1; margin-bottom:.5rem; }
   .grid-4            { grid-template-columns:1fr !important; }
 }
 
@@ -2660,7 +2662,7 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   .section        { padding:5rem 0; }
   .grid-3         { grid-template-columns:repeat(3,1fr); }
   .features-grid  { grid-template-columns:repeat(3,1fr); }
-  .footer-grid    { grid-template-columns:1.4fr 1fr 1fr 1fr !important; gap:3rem; }
+  .footer-grid    { grid-template-columns:1.4fr 1fr 1fr 1fr 1.1fr 1fr !important; gap:2.5rem; }
 }
 
 /* ── MacBook Air 15" / MacBook Pro 14" (1440–1727px) ── */
