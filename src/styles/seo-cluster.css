@@ -201,13 +201,13 @@
   50% { transform: translate(38px, 28px); }
 }
 
-/* 2-Column Split Hero Layout */
+/* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
 .mj-hero-seo-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: clamp(32px, 5vw, 64px);
-  max-width: 1220px;
+  gap: clamp(28px, 4.5vw, 56px);
+  max-width: 1240px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
@@ -377,18 +377,19 @@
   color: #FF5C35;
 }
 
-/* Right Column Illustration Visual */
+/* Right Column Illustration Visual (Sized to match LHS height) */
 .mj-hero-illustration-col {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  width: 100%;
 }
 
 .mj-hero-illustration-wrapper {
   position: relative;
   width: 100%;
-  max-width: 490px;
+  max-width: 580px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -397,10 +398,10 @@
 .mj-hero-illustration-img {
   width: 100%;
   height: auto;
-  max-width: 490px;
+  max-width: 580px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.09));
   animation: mjFloatHeroIllustration 7s ease-in-out infinite;
 }
 

@@ -483,22 +483,7 @@ export default function JeeMentorshipHub() {
           <ClusterFaq items={faqs} />
         </section>
 
-        {/* Related Links */}
-        <section className="scp-section">
-          <div className="scp-section-header">
-            <span className="scp-kicker">Next Steps</span>
-            <h2 className="scp-h2">Recommended Reading for Serious Aspirants</h2>
-          </div>
-          <ClusterRelated
-            currentPath={currentPath}
-            selectedPaths={[
-              "/jee-mentorship/1-to-1",
-              "/jee-mentorship/test-analysis",
-              "/jee-preparation/study-plan",
-              "/jee-preparation/backlog"
-            ]}
-          />
-        </section>
+
       </main>
     </div>
   );

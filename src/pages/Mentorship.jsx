@@ -1539,55 +1539,6 @@ function MockTestAnalysisGuide({ cfg }) {
   );
 }
 
-/* ── Contextual Internal Links to Campus Point Discovery Tools ── */
-function ContextualInternalLinks() {
-  const tools = [
-    { title: "JEE Main Rank Predictor", url: "/jee-main", desc: "Convert your percentile into an expected All-India rank." },
-    { title: "JEE Advanced Predictor", url: "/jee-advanced", desc: "Predict your IIT seat eligibility from test marks." },
-    { title: "JoSAA College Predictor", url: "/for-you", desc: "Find eligible IITs, NITs & IIITs based on category rank." },
-    { title: "Official JoSAA Cutoffs", url: "/cutoffs", desc: "Round-wise opening & closing ranks for 100+ institutes." },
-  ];
-
-  return (
-    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", padding: "44px 0" }}>
-      <div className="mj-wrap">
-        <div style={{ maxWidth: 680, marginBottom: 24 }}>
-          <div className="mj-label">EXPLORE FREE ADMISSION TOOLS</div>
-          <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", margin: "8px 0 6px", fontFamily: "'Sora', sans-serif" }}>
-            Explore the Campus Point College &amp; Rank Ecosystem
-          </h3>
-          <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>
-            Along with personalized IITian mentorship, use our free data-driven tools to research cutoffs, predict ranks, and plan JoSAA counselling.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 14 }}>
-          {tools.map((t, i) => (
-            <Link key={i} to={t.url} style={{ textDecoration: "none" }}>
-              <div
-                style={{
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: 12,
-                  padding: "16px 18px",
-                  transition: "all 0.15s ease",
-                  cursor: "pointer",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                  <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: 0 }}>{t.title}</h4>
-                  <span style={{ color: "#FF693D", fontSize: 13 }}>→</span>
-                </div>
-                <p style={{ fontSize: 12, color: "#64748b", margin: 0, lineHeight: 1.5 }}>{t.desc}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ═══════════════ MENTORS ═══════════════ */
 function TopMentors() {
   const mentors = [
@@ -1825,7 +1776,6 @@ export default function Mentorship() {
       <BacklogAndStudyPlan year={year} />
       <MockTestAnalysisGuide cfg={cfg} />
       <ForParents cfg={cfg} />
-      <ContextualInternalLinks />
       <WhatsApp />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
