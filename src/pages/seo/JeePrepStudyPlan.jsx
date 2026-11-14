@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Seo from "../../components/Seo.jsx";
 import {
   ClusterNav,
+  ClusterHero,
 
   ClusterPricing,
   ClusterFounders,
@@ -102,14 +103,23 @@ export default function JeePrepStudyPlan() {
         jsonLd={jsonLd}
       />
 
+      <ClusterHero
+        line1="Strategic Daily Schedules"
+        line1Squiggle="Schedules"
+        line2Lead="for your"
+        line2Box="JEE Study Plan."
+        description="Master your JEE preparation with personalized hourly timetables, 1-7-21 spaced repetition, and 1-on-1 IITian mentor tracking."
+        planKey="mentor-jee-2027-6m"
+      />
+
+      <ClusterNav currentPath={currentPath} />
+
       <InteractiveJourneyRoadmap
-        isHero={true}
+        title="JEE Study Plan Roadmap"
         subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />
-
-      <ClusterNav currentPath={currentPath} />
 
       <main className="scp-container" id="details">
         {/* Daily Schedule Structure */}
@@ -177,47 +187,101 @@ export default function JeePrepStudyPlan() {
             </p>
           </div>
 
-          <div className="scp-grid-3">
-            <div className="scp-card">
-              <div className="scp-card-icon brand">
-                <Clock size={22} />
+          <div className="jmh-grid">
+            {/* Rule 1 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(255, 105, 61, 0.08)", color: "#FF693D" }}>
+                  <Clock size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">1. Measure Questions, Not Just Hours</h3>
-              <p className="scp-card-p">
-                Sitting with a book open for 10 hours while daydreaming produces zero marks. We track total questions solved with pen on paper. 60-80 questions daily guarantees success.
+              <h3 className="jmh-card-title">Output-Based Metrics</h3>
+              <p className="jmh-card-desc">
+                Track pen-on-paper problem quotas rather than passive study hours to ensure genuine test-readiness.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Output-based accountability</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Timed stopwatch solving</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Daily quota: 60–80 high-yield questions</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Timed stopwatch sprints per problem deck</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" />
+                  <span>Verified study streak submissions nightly</span>
+                </li>
               </ul>
+              <Link to="/jee-mentorship/1-to-1" className="jmh-card-action">
+                <span>View daily quota tracker</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon emerald">
-                <Layers size={22} />
+            {/* Rule 2 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(16, 185, 129, 0.08)", color: "#10B981" }}>
+                  <Layers size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">2. The 1-7-21 Spaced Repetition Engine</h3>
-              <p className="scp-card-p">
-                Human memory fades rapidly without deliberate reviews. By revising after 24 hours, 7 days, and 21 days, formulas and mechanisms move permanently into long-term memory.
+              <h3 className="jmh-card-title">1-7-21 Spaced Engine</h3>
+              <p className="jmh-card-desc">
+                Methodical revision at 24 hours, 7 days, and 21 days locks formulas permanently into long-term recall.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Zero last-minute exam panic</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Instant formula recall in tests</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span>Zero last-minute exam month panic</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span>Immediate formula recall during mock tests</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#10B981" }} />
+                  <span>Automated revision queue managed by mentor</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/strategy" className="jmh-card-action">
+                <span>See repetition methodology</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="scp-card">
-              <div className="scp-card-icon violet">
-                <Flame size={22} />
+            {/* Rule 3 */}
+            <div className="jmh-card">
+              <div className="jmh-card-top">
+                <div className="jmh-card-icon" style={{ background: "rgba(99, 102, 241, 0.08)", color: "#6366F1" }}>
+                  <Flame size={22} />
+                </div>
+                <span className="jmh-card-badge">LIVE</span>
               </div>
-              <h3 className="scp-card-h3">3. Dedicated Backlog Guardrails</h3>
-              <p className="scp-card-p">
-                Never stop ongoing syllabus to clear past chapters. We designate 90 minutes every evening strictly for backlog clearance without disturbing today's coaching topic.
+              <h3 className="jmh-card-title">Backlog Guardrails</h3>
+              <p className="jmh-card-desc">
+                Strict separation of ongoing coaching topics from backlogs to protect current academic momentum.
               </p>
-              <ul className="scp-card-list">
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Protect ongoing momentum</li>
-                <li className="scp-card-list-item"><CheckCircle2 size={16} /> Systematic backlog recovery</li>
+              <ul className="jmh-card-bullets">
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span>70% study time locked on ongoing coaching syllabus</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span>30% evening block dedicated to high-weightage backlogs</span>
+                </li>
+                <li className="jmh-card-bullet">
+                  <span className="jmh-bullet-dot" style={{ background: "#6366F1" }} />
+                  <span>Zero spillover into daily sleep schedule</span>
+                </li>
               </ul>
+              <Link to="/jee-preparation/backlog" className="jmh-card-action">
+                <span>Explore 70-30 formula</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
         </section>
