@@ -90,12 +90,40 @@ export function ClusterNav({ currentPath }) {
 }
 
 /**
- * Clean, modern editorial Hero tailored to CampusPoint brand theme.
- * Two refined lines (reduced letter boldness) + brand pill + theme buttons + illustration.
+ * Line 1 helper with stylish theme squiggly underline under the keyword.
+ */
+function RenderLine1({ text, squiggleWord }) {
+  if (!squiggleWord || !text.includes(squiggleWord)) {
+    return <span className="mj-hero-line1-text">{text}</span>;
+  }
+  const parts = text.split(squiggleWord);
+  return (
+    <span className="mj-hero-line1-text">
+      {parts[0]}
+      <span className="mj-hero-squiggle-wrap">
+        {squiggleWord}
+        <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+          <path
+            d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+            stroke="#FF693D"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      {parts.slice(1).join(squiggleWord)}
+    </span>
+  );
+}
+
+/**
+ * Editorial Hero: Bold font-style & rectangular design matching previous layout,
+ * with colors customized to CampusPoint brand theme.
  */
 export function ClusterHero({
   title,
   line1,
+  line1Squiggle,
   line2Lead,
   line2Box,
   // Legacy props fallback
@@ -117,6 +145,11 @@ export function ClusterHero({
   const resolvedLine1 =
     line1 ||
     (titlePrefix ? `${titlePrefix} 1-on-1` : "Personalized 1-on-1");
+  const resolvedLine1Squiggle =
+    line1Squiggle ||
+    (resolvedLine1.includes("1-on-1")
+      ? "1-on-1"
+      : resolvedLine1.split(" ").slice(-1)[0] || "");
   const resolvedLine2Lead =
     line2Lead !== undefined
       ? line2Lead
@@ -134,19 +167,21 @@ export function ClusterHero({
     <header className="mj-hero-seo">
       <div className="scp-container">
         <div className="mj-hero-seo-grid">
-          {/* Left Column: Two Refined Lines + Subtext + Brand Action Buttons */}
+          {/* Left Column: Two Strong Lines + Subtext + Action Buttons */}
           <div className="mj-hero-copy-col">
             <h1 className="mj-hero-h1">
               {title ? (
                 title
               ) : (
                 <>
-                  <span className="mj-hero-line1">{resolvedLine1}</span>
+                  <span className="mj-hero-line1">
+                    <RenderLine1 text={resolvedLine1} squiggleWord={resolvedLine1Squiggle} />
+                  </span>
                   <span className="mj-hero-line2">
                     {resolvedLine2Lead && (
                       <span className="mj-hero-line2-lead">{resolvedLine2Lead} </span>
                     )}
-                    <span className="mj-hero-brand-pill">
+                    <span className="mj-hero-box-pill">
                       {resolvedLine2Box}
                     </span>
                   </span>
@@ -160,17 +195,17 @@ export function ClusterHero({
               </p>
             )}
 
-            <div className="mj-hero-brand-actions">
+            <div className="mj-hero-editorial-actions">
               <button
                 type="button"
-                className="mj-btn-brand"
+                className="mj-hero-btn-primary"
                 onClick={() => setShowBatchModal(true)}
               >
                 Get Started · ₹{plan.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
               </button>
               <button
                 type="button"
-                className="mj-btn-outline"
+                className="mj-hero-btn-secondary"
                 onClick={() => {
                   const el = document.getElementById("pricing");
                   if (el) el.scrollIntoView({ behavior: "smooth" });

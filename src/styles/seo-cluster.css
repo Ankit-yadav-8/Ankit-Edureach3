@@ -154,7 +154,7 @@
   box-shadow: 0 6px 18px -4px rgba(27, 27, 36, 0.35);
 }
 
-/* ── Modern Editorial Hero Section (CampusPoint Signature Theme) ───────────── */
+/* ── Modern Editorial Hero Section (Font-Style & Design as Previous, Theme Colors) ───────────── */
 .mj-hero-seo {
   position: relative;
   padding: clamp(155px, 14vw, 190px) 0 clamp(48px, 5vw, 72px);
@@ -206,7 +206,7 @@
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  gap: clamp(32px, 5vw, 60px);
+  gap: clamp(32px, 5vw, 64px);
   max-width: 1220px;
   margin: 0 auto;
   position: relative;
@@ -217,22 +217,43 @@
   text-align: left;
 }
 
-/* Reduced Boldness & Refined Typography */
+/* Bold Editorial Typography (Exact same font-style as previous) */
 .mj-hero-h1 {
   font-family: 'Sora', sans-serif;
-  font-weight: 650;
-  font-size: clamp(2.1rem, 3.8vw, 3.35rem);
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-  color: #0F172A;
+  font-weight: 800;
+  font-size: clamp(2.3rem, 4.4vw, 4.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #1B1B1B;
   margin: 0 0 16px;
 }
 
 .mj-hero-line1 {
   display: block;
-  font-weight: 650;
-  color: #0F172A;
-  margin-bottom: 6px;
+  font-weight: 800;
+  color: #1B1B1B;
+  margin-bottom: 8px;
+}
+
+.mj-hero-line1-text {
+  position: relative;
+  display: inline-block;
+}
+
+.mj-hero-squiggle-wrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.mj-hero-squiggle {
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 10px;
+  overflow: visible;
+  pointer-events: none;
 }
 
 .mj-hero-line2 {
@@ -240,43 +261,43 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 12px;
-  font-weight: 650;
-  color: #0F172A;
+  font-weight: 800;
+  color: #1B1B1B;
 }
 
 .mj-hero-line2-lead {
   display: inline;
-  font-weight: 550;
-  color: #334155;
+  font-weight: 800;
+  color: #1B1B1B;
 }
 
-/* Brand Theme Pill (CampusPoint Coral Gradient & Subtle Glow) */
-.mj-hero-brand-pill {
-  display: inline-flex;
-  align-items: center;
-  background: linear-gradient(135deg, rgba(255, 105, 61, 0.12) 0%, rgba(255, 122, 60, 0.05) 100%);
-  color: #D43812;
-  font-family: 'Space Grotesk', 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 0.88em;
-  padding: 3px 18px 4px 18px;
-  border-radius: 50px;
-  border: 1.5px solid rgba(255, 105, 61, 0.42);
-  box-shadow: 0 8px 22px -8px rgba(255, 105, 61, 0.35);
-  letter-spacing: -0.01em;
+/* Rectangular Box Badge (Exact same design, CampusPoint Theme Coral/Orange Color) */
+.mj-hero-box-pill {
+  display: inline-block;
   vertical-align: middle;
+  background: #FF7A3C;
+  color: #1B1B1B;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 0.94em;
+  padding: 2px 14px 4px 14px;
+  border-radius: 9px;
+  border: 2.5px solid #1B1B1B;
+  box-shadow: 3.5px 3.5px 0px #1B1B1B;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
 .mj-hero-sub {
-  font: 400 clamp(0.98rem, 1.25vw, 1.12rem)/1.62 'DM Sans', sans-serif;
-  color: #475569;
-  max-width: 530px;
-  margin: 18px 0 26px;
+  font: 400 clamp(1.02rem, 1.35vw, 1.18rem)/1.6 'DM Sans', sans-serif;
+  color: #4A4A4A;
+  max-width: 540px;
+  margin: 18px 0 24px;
 }
 
-/* Brand Theme Action Buttons */
-.mj-hero-brand-actions {
+/* Editorial Two Action Buttons (Exact same design as previous) */
+.mj-hero-editorial-actions {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -284,57 +305,60 @@
   margin-bottom: 12px;
 }
 
-.mj-btn-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 28px;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #FF7A3C 0%, #F1531F 100%);
-  color: #FFFFFF;
-  font-family: 'Space Grotesk', 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 0.96rem;
-  border: none;
-  box-shadow: 0 10px 26px -6px rgba(255, 105, 61, 0.5);
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.16s ease, box-shadow 0.16s ease;
-}
-.mj-btn-brand:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px -6px rgba(255, 105, 61, 0.65);
-}
-.mj-btn-brand:active {
-  transform: translateY(1px);
-}
-
-.mj-btn-outline {
+.mj-hero-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 13px 26px;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #0F172A;
-  font-family: 'Space Grotesk', 'Sora', sans-serif;
-  font-weight: 650;
-  font-size: 0.96rem;
-  border: 1.5px solid rgba(15, 23, 42, 0.14);
+  background: #1B1B1B;
+  color: #FFFFFF;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  border-radius: 12px;
+  border: 2px solid #1B1B1B;
+  box-shadow: 3px 3px 0px #FF7A3C;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   text-decoration: none;
-  transition: all 0.16s ease;
 }
-.mj-btn-outline:hover {
-  transform: translateY(-2px);
-  border-color: #FF7A3C;
-  color: #D43812;
+.mj-hero-btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #FF7A3C;
+  background: #2B2B2B;
+  color: #FFFFFF;
+}
+.mj-hero-btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #FF7A3C;
+}
+
+.mj-hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
   background: #FFFFFF;
+  color: #1B1B1B;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  border-radius: 12px;
+  border: 2px solid #1B1B1B;
+  box-shadow: 3px 3px 0px #1B1B1B;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  text-decoration: none;
 }
-.mj-btn-outline:active {
-  transform: translateY(1px);
+.mj-hero-btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #1B1B1B;
+  background: #FAF7F2;
+  color: #1B1B1B;
+}
+.mj-hero-btn-secondary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #1B1B1B;
 }
 
 .mj-hero-wa-hint {
@@ -345,12 +369,12 @@
   align-items: center;
   gap: 7px;
   font: 600 0.88rem/1.4 'DM Sans', sans-serif;
-  color: #64748B;
+  color: #555555;
   text-decoration: none;
   transition: color 0.15s ease;
 }
 .mj-hero-wa-hint a:hover {
-  color: #FF7A3C;
+  color: #FF5C35;
 }
 
 /* Right Column Illustration Visual */
@@ -364,7 +388,7 @@
 .mj-hero-illustration-wrapper {
   position: relative;
   width: 100%;
-  max-width: 470px;
+  max-width: 490px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,10 +397,10 @@
 .mj-hero-illustration-img {
   width: 100%;
   height: auto;
-  max-width: 470px;
+  max-width: 490px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.07));
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.08));
   animation: mjFloatHeroIllustration 7s ease-in-out infinite;
 }
 
@@ -1009,9 +1033,12 @@
     width: 100%;
   }
   .mj-hero-btn-primary,
+  .mj-hero-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
   
   .mj-hero-illustration-wrapper {
     max-width: 310px;
   }
-  
 }
