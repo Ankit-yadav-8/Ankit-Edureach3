@@ -1,12 +1,9 @@
 import {
   ShieldCheck, Mail, Phone, GraduationCap, Heart, Lightbulb,
-  Linkedin, Quote, Trophy, Code2, Zap, Users, BookOpen, Target, TrendingUp,
+  Linkedin, Quote, Trophy, Code2, Zap, Users,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Seo from "../components/Seo.jsx";
-import { COLLEGES } from "../data/colleges.js";
-import { EXAMS } from "../data/exams.js";
-import useCountUp from "../utils/useCountUp.js";
 import Reveal from "../components/Reveal.jsx";
 import imgMayank from "../images/team/mayank.jpg";
 import imgSaket from "../images/team/saket.jpg";
@@ -117,19 +114,6 @@ const TIMELINE = [
     content: "Expanding to NEET, BITSAT and every major state counselling, with AI-powered choice-filling strategy, personalised college recommendations and an alumni-connect network. The goal: the single go-to platform for every Indian student navigating admissions.",
   },
 ];
-
-/* ── Animated count-up stat (no glow) ──────────────────────── */
-function Stat({ target, suffix, label, color = "#FF693D" }) {
-  const [ref, val] = useCountUp(target);
-  return (
-    <div ref={ref} style={{ textAlign: "center" }}>
-      <div style={{ fontFamily: "Sora", fontWeight: 900, fontSize: "clamp(2.4rem,5vw,3.4rem)", color, lineHeight: 1, marginBottom: 8 }}>
-        {val.toLocaleString("en-IN")}{suffix}
-      </div>
-      <div style={{ fontSize: 14, color: "var(--muted)", fontWeight: 500 }}>{label}</div>
-    </div>
-  );
-}
 
 /* ── Role pills (Founder / CTO / COO …) ────────────────────── */
 function RoleTags({ role, accent }) {
@@ -486,68 +470,6 @@ export default function About() {
                     <h4 style={{ fontFamily: "Sora", fontWeight: 700, marginBottom: 8, color: "var(--navy)", fontSize: 15 }}>{item.title}</h4>
                     <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.72, margin: 0 }}>{item.content}</p>
                   </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STATS ── */}
-      <section style={{ background: "var(--page-bg)", padding: "76px 0", borderTop: "1px solid rgba(0,0,0,.06)" }}>
-        <div className="container">
-          <SectionHead eyebrow="By the numbers" title="What we've built so far" />
-
-          {/* Headline impact metrics (moved here from the home hero) */}
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))",
-            gap: 16, maxWidth: 880, margin: "0 auto 44px",
-          }}>
-            {[
-              { icon: Users,       val: "3,200+", lbl: "Students helped",    bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
-              { icon: BookOpen,    val: "850+",   lbl: "Colleges listed",    bg: "rgba(14,165,164,.12)", color: "#0ea5a4" },
-              { icon: Target,      val: "98% acc",lbl: "Rank predictions",   bg: "rgba(34,197,94,.12)",  color: "#22c55e" },
-              { icon: TrendingUp,  val: "1.2M+",  lbl: "Cutoff data points", bg: "rgba(255, 105, 61,.12)", color: "#FF693D" },
-            ].map(({ icon: Icon, val, lbl, bg, color }) => (
-              <div key={lbl} style={{
-                display: "flex", alignItems: "center", gap: 12,
-                background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)",
-                borderRadius: 16, padding: "16px 18px", boxShadow: "0 2px 14px rgba(13,27,62,.05)",
-              }}>
-                <span style={{ width: 44, height: 44, borderRadius: 12, background: bg, color, display: "grid", placeItems: "center", flexShrink: 0 }}>
-                  <Icon size={22} />
-                </span>
-                <div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.15rem", color: "var(--navy)", lineHeight: 1.1 }}>{val}</div>
-                  <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 3 }}>{lbl}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="grid-4">
-            <Stat target={COLLEGES.length} suffix="+" label="Colleges profiled"     color="#FF693D" />
-            <Stat target={EXAMS.length}   suffix=""  label="Entrance exams tracked" color="#a855f7" />
-            <Stat target={3200}           suffix="+" label="Students guided"        color="#2EC4B6" />
-            <Stat target={5}              suffix="-yr" label="Cutoff history"       color="#EC4899" />
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginTop: 44 }} className="about-highlight-grid">
-            {[
-              { icon: "🏆", title: "AIR 3846", sub: "Founder's JEE Advanced rank - built this from lived experience", color: "#FF693D" },
-              { icon: "📊", title: "7 Years of Data", sub: "JoSAA cutoffs from 2019–2025 across 800+ colleges structured & verified", color: "#a855f7" },
-              { icon: "🎓", title: "IIT Roorkee", sub: "Built by B.Tech students - the same IIT grind that shaped the platform", color: "#2EC4B6" },
-            ].map(({ icon, title, sub, color }, i) => (
-              <Reveal key={title} delay={i * 0.08}>
-                <div style={{
-                  background: "var(--page-bg)", border: "1px solid rgba(0,0,0,.08)",
-                  borderTop: `3px solid ${color}`, borderRadius: 16,
-                  padding: "20px 22px", textAlign: "center", height: "100%",
-                  boxShadow: "0 2px 14px rgba(13,27,62,.05)",
-                }}>
-                  <div style={{ fontSize: 32, marginBottom: 10 }}>{icon}</div>
-                  <div style={{ fontFamily: "Sora", fontWeight: 800, fontSize: 18, marginBottom: 6, color }}>{title}</div>
-                  <div style={{ fontSize: 12.5, color: "var(--muted)", lineHeight: 1.6 }}>{sub}</div>
                 </div>
               </Reveal>
             ))}
