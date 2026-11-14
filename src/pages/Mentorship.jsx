@@ -1274,69 +1274,83 @@ function TalkToUs({ exam }) {
   );
 }
 
-/* ── Difference Between Coaching and 1-on-1 Mentorship ── */
+/* ── Head-to-Head Comparison: 1-on-1 Mentorship vs Coaching ── */
 function CoachingVsMentorship({ exam }) {
   const points = [
     {
-      feature: "Student Attention & Cohort Size",
-      coaching: "1 teacher for 150–300 students. Doubts get lost in crowded lecture halls.",
-      mentorship: "1-on-1 personal dedicated IITian mentor. Every doubt, test score, and weak topic is tracked personally.",
+      feature: "Student-to-Teacher Ratio",
+      coaching: "1 teacher for 150 – 300 students",
+      mentorship: "1 dedicated mentor for 1 student",
+      isHighlight: true,
     },
     {
-      feature: "Study Schedule & Timetable",
-      coaching: "Rigid one-size-fits-all syllabus schedule regardless of whether you understood the chapter.",
-      mentorship: "Custom daily study timetable tailored to your strengths, weak chapters, school timings, and speed.",
+      feature: "Daily Study Plan",
+      coaching: "Generic batch syllabus schedule",
+      mentorship: "Personalized daily timetable tailored to student strengths & school timings",
+      isHighlight: false,
     },
     {
-      feature: "Backlog Management",
-      coaching: "Zero backlog support. If you miss a week or fall sick, the batch moves on and backlog piles up.",
-      mentorship: "Dedicated 3-phase backlog clearance sprints designed to clear old chapters without hurting current classes.",
+      feature: "Test Mistake Analysis",
+      coaching: "Only ranks & marks published",
+      mentorship: "Question-level analysis with time spent, weak topic tags & mentor remediation",
+      isHighlight: false,
     },
     {
-      feature: "Mock Test Analysis",
-      coaching: "Only rank and total marks on a leaderboard. No personalized guidance on how to fix mistakes.",
-      mentorship: "Question-by-question analysis: silly errors, time-spent audit, negative mark elimination, and accuracy optimization.",
+      feature: "Backlog Recovery",
+      coaching: "Student left on their own",
+      mentorship: "Structured 70–30 backlog formula integrated into daily schedule",
+      isHighlight: false,
     },
     {
-      feature: "Daily Accountability & Follow-up",
-      coaching: "No one checks if you completed your daily DPPs or revisions.",
-      mentorship: "Daily WhatsApp check-ins, study streaks tracking, and weekly 1-on-1 video reviews by your mentor.",
+      feature: "Mentor Credibility",
+      coaching: "Often junior faculty or automated chatbots",
+      mentorship: "Verified IIT Roorkee and top IIT rankers who cleared the exam",
+      isHighlight: false,
+    },
+    {
+      feature: "Pricing",
+      coaching: "₹1.5 Lakh – ₹3 Lakh per year",
+      mentorship: "₹3,499 total till JEE Mains",
+      isHighlight: true,
     },
   ];
 
   return (
-    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
+    <section className="mj-section mj-compare-section" style={{ background: "#FFFFFF", borderBottom: "1px solid #E2E8F0" }}>
       <div className="mj-wrap">
-        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
-          <div className="mj-label">COACHING VS 1-ON-1 MENTORSHIP</div>
+        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
+          <div className="mj-label">HEAD-TO-HEAD COMPARISON</div>
           <h2 className="mj-display mj-display-lg">
-            Coaching Teaches Concepts. <br />
-            <em>Mentorship Ensures You Crack the Exam.</em>
+            1-on-1 Mentorship vs <em>Coaching</em>
           </h2>
-          
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", minWidth: 640, borderCollapse: "separate", borderSpacing: "0 10px" }}>
+        <div className="mj-compare-card">
+          <table className="mj-compare-table">
             <thead>
-              <tr style={{ background: "#f8fafc" }}>
-                <th style={{ padding: "14px 20px", textAlign: "left", borderRadius: "10px 0 0 10px", fontSize: 13, fontWeight: 800, color: "#475569", textTransform: "uppercase" }}>Preparation Aspect</th>
-                <th style={{ padding: "14px 20px", textAlign: "left", fontSize: 13, fontWeight: 800, color: "#64748b", textTransform: "uppercase" }}>Traditional Coaching Institute</th>
-                <th style={{ padding: "14px 20px", textAlign: "left", borderRadius: "0 10px 10px 0", fontSize: 13, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", background: "#fff7ed" }}>Campus Point 1-on-1 IITian Mentorship</th>
+              <tr>
+                <th className="mj-th-feat">Feature</th>
+                <th className="mj-th-coach">Traditional Coaching Classes</th>
+                <th className="mj-th-mentor">CampusPoint 1-on-1 Mentorship</th>
               </tr>
             </thead>
             <tbody>
               {points.map((p, idx) => (
-                <tr key={idx} style={{ background: idx % 2 === 0 ? "#ffffff" : "#fafaf9", boxShadow: "0 1px 4px rgba(0,0,0,0.03)" }}>
-                  <td style={{ padding: "16px 20px", fontWeight: 700, color: "#0f172a", fontSize: 13.5, borderLeft: "3px solid #cbd5e1" }}>
+                <tr key={idx} className="mj-compare-row">
+                  <td className="mj-td-feat">
                     {p.feature}
                   </td>
-                  <td style={{ padding: "16px 20px", color: "#64748b", fontSize: 13, lineHeight: 1.55 }}>
-                    {p.coaching}
+                  <td className="mj-td-coach">
+                    <span className="mj-coach-cross">✕</span>
+                    <span>{p.coaching}</span>
                   </td>
-                  <td style={{ padding: "16px 20px", color: "#0f172a", fontWeight: 600, fontSize: 13, lineHeight: 1.55, background: "#fffaf5", borderLeft: "2px solid #fed7aa" }}>
-                    <span style={{ color: "#16a34a", marginRight: 6 }}>✓</span>
-                    {p.mentorship}
+                  <td className={`mj-td-mentor ${p.isHighlight ? "mj-mentor-highlight" : ""}`}>
+                    <span className="mj-mentor-check">✓</span>
+                    {p.isHighlight ? (
+                      <strong>{p.mentorship}</strong>
+                    ) : (
+                      <span>{p.mentorship}</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -2727,6 +2741,165 @@ const CSS = `
 .mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }
 .mj-field input, .mj-field textarea { border:none; border-bottom:1.5px solid ${T.line}; background:none; padding:8px 2px; font:500 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; outline:none; resize:vertical; transition:border-color .16s; }
 .mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
+
+
+/* ═══════════════ HEAD-TO-HEAD COMPARISON TABLE ═══════════════ */
+.mj-compare-section {
+  background: #FFFFFF;
+  padding: clamp(54px, 7vw, 84px) 0;
+}
+
+.mj-compare-card {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 18px;
+  background: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.mj-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
+}
+
+.mj-th-feat {
+  width: 28%;
+  background: #F8FAFC;
+  color: #334155;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.74rem, 1.1vw, 0.88rem);
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  border-bottom: 2px solid #E2E8F0;
+  letter-spacing: 0.02em;
+}
+
+.mj-th-coach {
+  width: 35%;
+  background: #F1F5F9;
+  color: #475569;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.74rem, 1.1vw, 0.88rem);
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  border-bottom: 2px solid #E2E8F0;
+}
+
+.mj-th-mentor {
+  width: 37%;
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+  color: #C2410C;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.74rem, 1.1vw, 0.88rem);
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  border-bottom: 2px solid #FDBA74;
+  border-left: 2px solid #FED7AA;
+}
+
+.mj-compare-row {
+  border-bottom: 1px solid #F1F5F9;
+  transition: background 0.15s ease;
+}
+
+.mj-compare-row:last-child {
+  border-bottom: none;
+}
+
+.mj-compare-row:hover {
+  background: rgba(255, 105, 61, 0.02);
+}
+
+.mj-td-feat {
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.72rem, 1vw, 0.86rem);
+  color: #0F172A;
+  line-height: 1.35;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.mj-td-coach {
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.84rem);
+  color: #64748B;
+  line-height: 1.45;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.mj-coach-cross {
+  color: #94A3B8;
+  font-weight: 700;
+  font-size: 0.72rem;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.mj-td-mentor {
+  padding: clamp(10px, 1.4vw, 16px) clamp(8px, 1.6vw, 20px);
+  background: linear-gradient(90deg, rgba(255, 247, 237, 0.45) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-left: 2px solid #FED7AA;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.84rem);
+  color: #0F172A;
+  line-height: 1.45;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.mj-mentor-check {
+  color: #16A34A;
+  font-weight: 800;
+  font-size: 0.78rem;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.mj-mentor-highlight strong {
+  color: #EA580C;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .mj-compare-card {
+    border-radius: 14px;
+  }
+  .mj-compare-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  .mj-th-feat, .mj-td-feat {
+    width: 27%;
+    padding: 8px 6px;
+    font-size: 0.71rem;
+    line-height: 1.25;
+  }
+  .mj-th-coach, .mj-td-coach {
+    width: 35%;
+    padding: 8px 6px;
+    font-size: 0.71rem;
+    line-height: 1.3;
+  }
+  .mj-th-mentor, .mj-td-mentor {
+    width: 38%;
+    padding: 8px 6px;
+    font-size: 0.71rem;
+    line-height: 1.3;
+  }
+  .mj-coach-cross, .mj-mentor-check {
+    margin-right: 3px;
+    font-size: 0.68rem;
+  }
+}
 
 /* ═══════════════ THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ═══════════════ */
 .mj-eco-section { background: #FFFFFF;
