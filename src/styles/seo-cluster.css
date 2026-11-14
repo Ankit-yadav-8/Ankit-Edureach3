@@ -36,19 +36,83 @@
 .scp-cluster-nav {
   position: relative;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--mj-line);
   border-bottom: 1px solid var(--mj-line);
   box-shadow: 0 4px 16px -8px rgba(27, 27, 36, 0.05);
-  padding: 22px 0;
+  padding: 16px 0;
+  overflow: hidden;
+}
+
+.scp-cluster-nav-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 80px, black calc(100% - 80px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 80px, black calc(100% - 80px), transparent 100%);
+}
+
+.scp-cluster-nav-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  animation: scpMarqueeScroll 38s linear infinite;
+  will-change: transform;
+  padding: 4px 0;
+}
+
+.scp-cluster-nav:hover .scp-cluster-nav-track,
+.scp-cluster-nav:active .scp-cluster-nav-track {
+  animation-play-state: paused;
+}
+
+@keyframes scpMarqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* White shadow gradient overlays on both sides for smooth disappearing / entering effect */
+.scp-cluster-nav-fade-left,
+.scp-cluster-nav-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scp-cluster-nav-fade-left {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0) 100%);
+}
+
+.scp-cluster-nav-fade-right {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scp-cluster-nav-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .scp-cluster-nav-track {
+    animation: none;
+  }
 }
 
 .scp-cluster-nav-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   overflow-x: auto;
   padding: 4px 12px;

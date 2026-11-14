@@ -54,21 +54,26 @@ const INCLUDED_FEATURES = [
 ];
 
 /**
- * Cluster horizontal navigation bar.
+ * Cluster horizontal navigation bar with seamless infinite auto-scroll
+ * and edge white shadow fade effects.
  */
 export function ClusterNav({ currentPath }) {
+  const pages = [...CLUSTER_PAGES, ...CLUSTER_PAGES];
+
   return (
     <nav className="scp-cluster-nav" aria-label="JEE Mentorship & Prep Cluster">
-      <div className="scp-container">
-        <div className="scp-cluster-nav-inner">
-          {CLUSTER_PAGES.map((item) => {
+      <div className="scp-cluster-nav-fade-left" aria-hidden="true" />
+      <div className="scp-cluster-nav-fade-right" aria-hidden="true" />
+      <div className="scp-cluster-nav-viewport">
+        <div className="scp-cluster-nav-track">
+          {pages.map((item, index) => {
             const isActive = currentPath === item.path;
             return (
               <Link
-                key={item.path}
+                key={`${item.path}-${index}`}
                 to={item.path}
                 className={`scp-nav-chip ${isActive ? "active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive && index < CLUSTER_PAGES.length ? "page" : undefined}
               >
                 {item.short}
               </Link>
