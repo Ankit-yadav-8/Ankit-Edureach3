@@ -115,12 +115,14 @@ export default function JeePrepStrategy() {
 
       <ClusterNav currentPath={currentPath} />
 
+      <div id="roadmap">
       <InteractiveJourneyRoadmap
         title="JEE Preparation Strategy Roadmap"
         subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
         planKey="mentor-jee-2027-6m"
         targetExam="JEE Main 2027"
       />
+      </div>
 
       <main className="scp-container" id="details">
         {/* Subject Tactical Playbooks */}

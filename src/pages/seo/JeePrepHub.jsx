@@ -10,7 +10,6 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
-  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -98,13 +97,6 @@ export default function JeePrepHub() {
 
       <ClusterNav currentPath={currentPath} />
 
-      <InteractiveJourneyRoadmap
-        title="Master JEE Preparation Roadmap"
-        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
-        planKey="mentor-jee-2027-6m"
-        targetExam="JEE Main 2027"
-      />
-
       <main className="scp-container" id="details">
         {/* Core Preparation Pillars */}
         <section className="scp-section" id="guides">
@@ -147,12 +139,12 @@ export default function JeePrepHub() {
               <div className="scp-card-icon violet">
                 <Compass size={22} />
               </div>
-              <h3 className="scp-card-h3">3. Master Preparation Strategy</h3>
+              <h3 className="scp-card-h3">3. Master Preparation Strategy & Roadmap</h3>
               <p className="scp-card-p">
-                Subject-wise tactical playbooks for Physics, Chemistry, and Mathematics, book recommendations, and 3-pass exam tactics.
+                Interactive 6-milestone topper roadmap, subject-wise tactical playbooks for Physics, Chemistry & Mathematics, and 3-pass exam tactics.
               </p>
-              <Link to="/jee-preparation/strategy" className="scp-btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
-                Read Strategy Guide <ArrowRight size={16} />
+              <Link to="/jee-preparation/strategy#interactive-roadmap" className="scp-btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
+                Explore Strategy & Roadmap <ArrowRight size={16} />
               </Link>
             </div>
           </div>

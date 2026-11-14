@@ -39,11 +39,47 @@
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--mj-line);
-  border-bottom: 1px solid var(--mj-line);
-  box-shadow: 0 4px 16px -8px rgba(27, 27, 36, 0.05);
-  padding: 16px 0;
+  border-top: none;
+  border-bottom: none;
+  box-shadow: none;
+  padding: 14px 0;
   overflow: hidden;
+}
+
+.scp-cluster-nav-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+/* Subtle top and bottom borders that only span up to the shadow effect and fade out gracefully */
+.scp-cluster-nav-wrapper::before,
+.scp-cluster-nav-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(226, 232, 240, 0.2) 25px,
+    var(--mj-line) 85px,
+    var(--mj-line) calc(100% - 85px),
+    rgba(226, 232, 240, 0.2) calc(100% - 25px),
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.scp-cluster-nav-wrapper::before {
+  top: 0;
+}
+
+.scp-cluster-nav-wrapper::after {
+  bottom: 0;
 }
 
 .scp-cluster-nav-viewport {
@@ -414,114 +450,7 @@
   }
 }
 
-/* ── Sticky Sub-navigation across cluster ─────────────────────── */
-.scp-cluster-nav {
-  position: relative;
-  z-index: 20;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--mj-line);
-  border-bottom: 1px solid var(--mj-line);
-  box-shadow: 0 4px 16px -8px rgba(27, 27, 36, 0.05);
-  padding: 14px 0;
-}
 
-.scp-cluster-nav-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 50px;
-}
-
-.scp-cluster-nav-fade-left,
-.scp-cluster-nav-fade-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 80px;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.scp-cluster-nav-fade-left {
-  left: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0) 100%);
-}
-
-.scp-cluster-nav-fade-right {
-  right: 0;
-  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0) 100%);
-}
-
-.scp-cluster-nav-viewport {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 60px, black calc(100% - 60px), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 60px, black calc(100% - 60px), transparent 100%);
-}
-
-.scp-cluster-nav-track {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: max-content;
-  animation: scpMarqueeScroll 38s linear infinite;
-  will-change: transform;
-  padding: 4px 0;
-}
-
-.scp-cluster-nav:hover .scp-cluster-nav-track,
-.scp-cluster-nav:active .scp-cluster-nav-track {
-  animation-play-state: paused;
-}
-
-@keyframes scpMarqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scp-cluster-nav-viewport {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .scp-cluster-nav-track {
-    animation: none;
-  }
-}
-
-.scp-nav-chip {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: 'Space Grotesk', 'Sora', sans-serif;
-  color: #475569;
-  background: #FFFFFF;
-  text-decoration: none;
-  border: 1px solid var(--mj-line);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s cubic-bezier(0.16, 0.84, 0.32, 1);
-  white-space: nowrap;
-}
-.scp-nav-chip:hover {
-  border-color: var(--mj-coral);
-  color: var(--mj-coral-dk);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px -4px rgba(255, 105, 61, 0.25);
-}
-.scp-nav-chip.active {
-  background: #0F172A;
-  color: #FFFFFF;
-  border-color: #0F172A;
-  box-shadow: 0 6px 18px -4px rgba(27, 27, 36, 0.35);
-}
 
 
 /* ── Glassmorphic Feature Preview Cards (Matches Mentorship.jsx) ── */

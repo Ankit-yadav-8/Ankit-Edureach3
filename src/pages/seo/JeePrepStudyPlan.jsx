@@ -11,7 +11,6 @@ import {
   ClusterCta,
   ClusterFaq,
   ClusterRelated,
-  InteractiveJourneyRoadmap,
   getOrganizationSchema,
   getArticleSchema
 } from "./ClusterShared.jsx";
@@ -113,15 +112,40 @@ export default function JeePrepStudyPlan() {
       />
 
       <ClusterNav currentPath={currentPath} />
-
-      <InteractiveJourneyRoadmap
-        title="JEE Study Plan Roadmap"
-        subtitle="6 strategic milestones built by IITians to prepare smart and track progress."
-        planKey="mentor-jee-2027-6m"
-        targetExam="JEE Main 2027"
-      />
-
       <main className="scp-container" id="details">
+        {/* Contextual Banner Link to Master Roadmap on Strategy Page */}
+        <section className="scp-section" style={{ paddingBottom: 0, paddingTop: 28 }}>
+          <div style={{
+            background: "linear-gradient(135deg, rgba(255, 105, 61, 0.06) 0%, rgba(99, 102, 241, 0.06) 100%)",
+            border: "1px solid rgba(255, 105, 61, 0.2)",
+            borderRadius: 16,
+            padding: "20px 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16
+          }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <Sparkles size={18} color="#FF693D" />
+                <strong style={{ color: "#1B1B24", fontSize: "1.02rem", fontFamily: "'Space Grotesk', sans-serif" }}>
+                  Looking for the 6-Milestone JEE Roadmap?
+                </strong>
+              </div>
+              <p style={{ color: "#5F6368", fontSize: "0.92rem", margin: 0 }}>
+                Explore the complete interactive preparation roadmap from foundational basics to CBT exam readiness.
+              </p>
+            </div>
+            <Link
+              to="/jee-preparation/strategy#interactive-roadmap"
+              className="scp-btn-primary"
+              style={{ padding: "10px 20px", fontSize: "0.9rem", textDecoration: "none" }}
+            >
+              Explore Milestone Roadmap <ArrowRight size={15} />
+            </Link>
+          </div>
+        </section>
         {/* Daily Schedule Structure */}
         <section className="scp-section" id="daily-schedule">
           <div className="scp-section-header">
