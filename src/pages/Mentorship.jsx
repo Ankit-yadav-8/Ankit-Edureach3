@@ -1342,7 +1342,7 @@ function CoachingVsMentorship({ exam }) {
 }
 
 /* ── THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ── */
-function BacklogAndStudyPlan({ year }) {
+function BacklogAndStudyPlan({ year, exam }) {
   const scheduleRows = [
     {
       time: "06:00 AM – 08:30 AM",
@@ -1398,15 +1398,16 @@ function BacklogAndStudyPlan({ year }) {
   return (
     <section id="backlog-ecosystem" className="mj-section mj-eco-section">
       <div className="mj-wrap">
-        {/* Outer Light-Canvas Ecosystem Card */}
-        <div className="mj-eco-canvas">
-          {/* Main Top Header */}
-          <div className="mj-eco-top-header">
-            <h2 className="mj-eco-main-h2">
-              THE COMPLETE <span className="mj-eco-year-pill">JEE {year || "2027"}</span> STUDY &amp; BACKLOG MANAGEMENT ECOSYSTEM
-            </h2>
-          </div>
+        {/* Section Header above the card - clean 3-word title */}
+        <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
+          <div className="mj-label">{exam || `JEE ${year || "2027"}`} STRATEGY</div>
+          <h2 className="mj-display mj-display-lg">
+            Backlog Clearing <em>Technique</em>
+          </h2>
+        </div>
 
+        {/* Outer White-Canvas Ecosystem Card */}
+        <div className="mj-eco-canvas">
           {/* 2-Column Main Flow Grid */}
           <div className="mj-eco-grid">
             {/* Left Card: Strategic Planning & Backlog Management */}
@@ -1948,7 +1949,7 @@ export default function Mentorship() {
       <Method cfg={cfg} />
       {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
       <LiveTracking cfg={cfg} />
-      <BacklogAndStudyPlan year={year} />
+      <BacklogAndStudyPlan year={year} exam={exam} />
       <MockTestAnalysisGuide cfg={cfg} />
       <ForParents cfg={cfg} />
       <WhatsApp />
@@ -2702,7 +2703,7 @@ const CSS = `
 
 /* ═══════════════ THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ═══════════════ */
 .mj-eco-section {
-  background: #FFFFFF;
+  background: #FAF8F5;
   padding: clamp(56px, 7vw, 92px) 0;
   border-bottom: 1px solid #E2E8F0;
   position: relative;
@@ -2710,11 +2711,11 @@ const CSS = `
 }
 
 .mj-eco-canvas {
-  background: #F1F6FA;
-  border: 1.5px solid #DCE6EF;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
   border-radius: 24px;
   padding: clamp(20px, 3.2vw, 36px);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.04);
   position: relative;
 }
 
@@ -2754,6 +2755,16 @@ const CSS = `
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
   display: flex;
   flex-direction: column;
+}
+
+.mj-eco-card-left {
+  background: #FAFCFF;
+  border: 1.5px solid #E2E8F0;
+}
+
+.mj-eco-card-right {
+  background: #F0F6FC;
+  border: 1.5px solid #D6E4F0;
 }
 
 .mj-eco-card-title {
