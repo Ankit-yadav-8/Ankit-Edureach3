@@ -75,9 +75,10 @@ const RESOURCES_NAV = [
 // ── Mentorship dropdown: 1-on-1 JEE & NEET mentorship pages ───────────────────
 const MENTORSHIP_NAV = [
   { label: "JEE Mentorship Hub", to: "/jee-mentorship", icon: Sparkles, tag: "All Mentorship Tracks & Features" },
-  { label: "JEE & NEET 2027", to: "/mentorship/jee-2027", icon: Trophy, tag: "₹3,499 · Till JEE Mains 2027" },
-  { label: "JEE & NEET 2028", to: "/mentorship/jee-2028", icon: Award, tag: "₹3,499 · 6 Months" },
-  { label: "Foundation (9–10)", to: "/mentorship/foundation", icon: BookOpen, tag: "₹3,499 · Class 9 & 10" },
+  { label: "JEE 2027 Mentorship", to: "/mentorship/jee-2027", icon: Trophy, tag: "Class 12 / Droppers · Till Mains 2027" },
+  { label: "JEE 2028 Mentorship", to: "/mentorship/jee-2028", icon: Award, tag: "Class 11 · 2-Year Plan · 6 Months" },
+  { label: "NEET 2027 Mentorship", to: "/mentorship/neet", icon: Activity, tag: "Medical Aspirants · Top MBBS Mentors" },
+  { label: "Foundation Mentorship", to: "/mentorship/foundation", icon: BookOpen, tag: "Class 9 & 10 · Early Edge" },
 ];
 
 const COLLEGES = [

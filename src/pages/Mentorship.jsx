@@ -13,7 +13,7 @@ import {
   BookOpen, CircleDot, Zap, Target, Clock,
   Brain, PlayCircle, Activity, LineChart, ShieldCheck,
 } from "lucide-react";
-import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT, MENTOR_LINKS } from "../data/mentorship.js";
+import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT } from "../data/mentorship.js";
 import { useEnrol } from "../components/EnrolModal.jsx";
 import Seo from "../components/Seo.jsx";
 import imgSaneh from "../images/team/saneh.jpg";
@@ -44,23 +44,6 @@ function Reveal({ children, delay = 0, className, style }) {
 }
 function Label({ children, dark }) {
   return <span className={dark ? "mj-label mj-label-dark" : "mj-label"}>{children}</span>;
-}
-
-/* ═══════════════ VARIANT TABS ═══════════════ */
-function VariantTabs({ variant }) {
-  return (
-    <div className="mj-tabs">
-      {MENTOR_LINKS.map((l) => (
-        <Link
-          key={l.slug}
-          to={l.to}
-          className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}
-        >
-          {l.label}
-        </Link>
-      ))}
-    </div>
-  );
 }
 
 /**
@@ -158,7 +141,6 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
         <div className="mj-hero-seo-grid">
           {/* Left Column: Variant Tabs + Two Strong Lines + Subtitle + Actions */}
           <div className="mj-hero-copy-col">
-            <VariantTabs variant={variant} />
 
             <h1 className="mj-hero-h1">
               <span className="mj-hero-line1">
@@ -2041,49 +2023,6 @@ const CSS = `
 .mj-label-dark { background:transparent; border-color:${T.navyLine}; color:${T.onNavyMute}; }
 .mj-body { font:400 1.05rem/1.7 'DM Sans',sans-serif; color:${T.body}; margin:20px 0 0; max-width:460px; }
 .mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
-
-/* variant tabs */
-.mj-tabs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
-  position: relative;
-  z-index: 2;
-}
-.mj-tab {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1.5px solid #1B1B1B;
-  background: #FFFFFF;
-  color: #1B1B1B;
-  font-family: 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 0.82rem;
-  line-height: 1.2;
-  box-shadow: 2px 2px 0px #1B1B1B;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-.mj-tab:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px #FF7A3C;
-  border-color: #1B1B1B;
-  color: #1B1B1B;
-}
-.mj-tab-on {
-  background: #1B1B1B;
-  color: #FFFFFF;
-  border-color: #1B1B1B;
-  box-shadow: 2.5px 2.5px 0px #FF7A3C;
-}
-.mj-tab-on:hover {
-  color: #FFFFFF;
-  background: #252525;
-}
 
 /* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
 .mj-hero-seo {
