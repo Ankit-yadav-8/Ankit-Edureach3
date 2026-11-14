@@ -278,7 +278,7 @@ function Qualifier({ cfg }) {
           background: var(--card);
           box-shadow: 0 20px 60px -30px rgba(0,0,0,.15);
           overflow: hidden;
-          margin-top: 44px;
+          margin-top: 0;
         }
         .mj-qual-left {
           padding: 40px;
@@ -316,9 +316,12 @@ function Qualifier({ cfg }) {
       `}</style>
       <div className="mj-wrap">
         <Reveal>
-          <p className="mj-lead" style={{ textAlign: "center", margin: "0 auto 44px", fontStyle: "normal", maxWidth: "680px", fontWeight: 700, fontFamily: "'Sora', sans-serif", fontSize: "1.75rem", lineHeight: 1.4, color: "var(--ink)", letterSpacing: "-0.02em" }}>
-            Built for the aspirant who wants a <span style={{ color: "#FF693D", fontWeight: 800 }}>real system</span>, not unopened books.
-          </p>
+          <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
+            <div className="mj-label">SYSTEM-DRIVEN PREPARATION</div>
+            <h2 className="mj-display mj-display-lg">
+              A Real System, Not <em>Unopened Books</em>
+            </h2>
+          </div>
         </Reveal>
         
         <div className="mj-qualifier-split">
