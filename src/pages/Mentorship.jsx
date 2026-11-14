@@ -46,61 +46,183 @@ function Label({ children, dark }) {
   return <span className={dark ? "mj-label mj-label-dark" : "mj-label"}>{children}</span>;
 }
 
-/* ═══════════════ HERO - glassmorphic performance engine ═══════════════ */
+/* ═══════════════ VARIANT TABS ═══════════════ */
+function VariantTabs({ variant }) {
+  return (
+    <div className="mj-tabs">
+      {MENTOR_LINKS.map((l) => (
+        <Link
+          key={l.slug}
+          to={l.to}
+          className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}
+        >
+          {l.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Line 1 helper with stylish theme squiggly underline under the keyword.
+ */
+function RenderLine1({ text, squiggleWord }) {
+  if (!squiggleWord || !text.includes(squiggleWord)) {
+    return <span className="mj-hero-line1-text">{text}</span>;
+  }
+  const parts = text.split(squiggleWord);
+  return (
+    <span className="mj-hero-line1-text">
+      {parts[0]}
+      <span className="mj-hero-squiggle-wrap">
+        {squiggleWord}
+        <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+          <path
+            d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+            stroke="#FF693D"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      {parts.slice(1).join(squiggleWord)}
+    </span>
+  );
+}
+
+const HERO_VARIANTS_CONTENT = {
+  "jee-2027": {
+    line1: "Personalized 1-on-1",
+    line1Squiggle: "1-on-1",
+    line2Lead: "for your",
+    line2Box: "JEE 2027.",
+    subtitle: "Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.",
+    waQuery: "Hi CampusPoint, I want to know more about JEE 2027 mentorship",
+    waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
+  },
+  "jee-2028": {
+    line1: "Class 11 Mastery",
+    line1Squiggle: "Mastery",
+    line2Lead: "for your",
+    line2Box: "JEE 2028.",
+    subtitle: "Build a rock-solid Class 11 foundation, eliminate backlogs early, and learn 1-on-1 with IIT Roorkee rankers.",
+    waQuery: "Hi CampusPoint, I want to know more about JEE 2028 mentorship",
+    waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
+  },
+  "neet": {
+    line1: "Dedicated 1-on-1",
+    line1Squiggle: "1-on-1",
+    line2Lead: "for your",
+    line2Box: "NEET 2027.",
+    subtitle: "Daily NCERT targets, question-level error autopsy, and personal mentorship by top medical college MBBS toppers.",
+    waQuery: "Hi CampusPoint, I want to know more about NEET mentorship",
+    waLabel: "Have questions? Chat with a Doctor / Topper on WhatsApp",
+  },
+  "foundation": {
+    line1: "Early IIT Foundation",
+    line1Squiggle: "Foundation",
+    line2Lead: "for",
+    line2Box: "Class 9 & 10.",
+    subtitle: "Build early conceptual clarity for Olympiads, NTSE, and strong fundamentals guided 1-on-1 by IITians.",
+    waQuery: "Hi CampusPoint, I want to know more about Foundation mentorship",
+    waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
+  },
+};
+
+/* ═══════════════ HERO - 2-Column Editorial Hub Hero ═══════════════ */
 function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const p = MENTOR_PLANS[plan] || { amount: 3499, exam: "JEE" };
-  const isNeet = p.exam === "NEET";
-  const mentorType = isNeet ? "top Doctors and medical specialists" : "IIT/NIT students";
-  const ifaceLabel = isNeet ? "NEET" : p.exam === "JEE" ? "JEE Main" : "exam";
-  const dream = isNeet ? "medical-college" : "IIT / NIT";
-  const bullets = [`Real ${ifaceLabel} interface`, "One-time payment"];
+  const isNeet = variant === "neet" || p.exam === "NEET";
+  const content = HERO_VARIANTS_CONTENT[variant] || {
+    line1: "Personalized 1-on-1",
+    line1Squiggle: "1-on-1",
+    line2Lead: "for your",
+    line2Box: `${exam || "JEE Mentorship"}.`,
+    subtitle: cfg?.subtitle || "Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.",
+    waQuery: `Hi CampusPoint, I want to know more about ${exam || "JEE"} mentorship`,
+    waLabel: isNeet
+      ? "Have questions? Chat with a Doctor / Topper on WhatsApp"
+      : "Have questions? Chat with an IITian Mentor on WhatsApp",
+  };
+
+  const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(content.waQuery)}`;
+
   return (
-    <section className="mj-hero">
+    <section className="mj-hero-seo">
       <div className="mj-hero-bg" aria-hidden="true">
         <span className="mj-orb mj-orb-a" />
         <span className="mj-orb mj-orb-b" />
       </div>
 
-      <div className="mj-wrap mj-hero-inner">
-        <div className="mj-hero-center">
-          <VariantTabs variant={variant} />
-          
-          <Reveal delay={0.08}>
+      <div className="mj-wrap">
+        <div className="mj-hero-seo-grid">
+          {/* Left Column: Variant Tabs + Two Strong Lines + Subtitle + Actions */}
+          <div className="mj-hero-copy-col">
+            <VariantTabs variant={variant} />
+
             <h1 className="mj-hero-h1">
-              The mentorship built<br />for{" "}
-              <span className="mj-hero-accent">
-                {exam}.
-                <svg className="mj-hero-uline" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true">
-                  <path d="M5 9 C 78 3, 244 3, 315 8" />
-                </svg>
+              <span className="mj-hero-line1">
+                <RenderLine1 text={content.line1} squiggleWord={content.line1Squiggle} />
+              </span>
+              <span className="mj-hero-line2">
+                {content.line2Lead && (
+                  <span className="mj-hero-line2-lead">{content.line2Lead} </span>
+                )}
+                <span className="mj-hero-box-pill">
+                  {content.line2Box}
+                </span>
               </span>
             </h1>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <p className="mj-hero-sub">
-              Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from {mentorType} to turn your {dream} dream into a real rank.
-            </p>
-          </Reveal>
-          <Reveal delay={0.24} className="mj-hero-cta">
-            <button className="mj-btn-glow" onClick={() => openEnrol(plan)}>
-              Get Started <ArrowRight size={18} />
-            </button>
-            <button className="mj-btn-glass" onClick={() => scrollTo("enrol")}>
-              View Plans
-            </button>
-            <button className="mj-btn-glass" onClick={() => scrollTo("talk")} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-              Know About Plans <Phone size={16} />
-            </button>
-            {/* <Link to="/ai-tutor" className="mj-btn-glass" style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
-              <Mic size={18} /> Try AI Tutor
-            </Link> */}
-          </Reveal>
 
-          <Reveal delay={0.32} className="mj-hero-bullets">
-            {bullets.map((b, i) => (
-              <span key={i} className="mj-hero-bullet"><i /> {b}</span>
-            ))}
-          </Reveal>
+            <p className="mj-hero-sub">
+              {content.subtitle}
+            </p>
+
+            <div className="mj-hero-editorial-actions">
+              <button
+                type="button"
+                className="mj-hero-btn-primary"
+                onClick={() => openEnrol(plan)}
+              >
+                Get Started · ₹{p.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
+              </button>
+              <button
+                type="button"
+                className="mj-hero-btn-secondary"
+                onClick={() => scrollTo("enrol")}
+              >
+                Explore Plans <ArrowRight size={17} />
+              </button>
+            </div>
+
+            <div className="mj-hero-wa-hint">
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Phone size={14} /> {content.waLabel}
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Hero Illustration Desk Visual */}
+          <div className="mj-hero-illustration-col">
+            <div className="mj-hero-illustration-wrapper">
+              <picture>
+                <source srcSet="/images/mentorship_hero_desk_transparent.webp" type="image/webp" />
+                <img
+                  src="/images/mentorship_hero_desk.jpg"
+                  alt="1-on-1 IITian Mentorship Desk Setup with Daily Targets and Test Autopsy"
+                  className="mj-hero-illustration-img"
+                  width="580"
+                  height="450"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1180,74 +1302,6 @@ function TalkToUs({ exam }) {
   );
 }
 
-/* ═══════════════ variant tabs + floating enrol ═══════════════ */
-function VariantTabs({ variant }) {
-  return (
-    <div className="mj-tabs">
-      {MENTOR_LINKS.map((l) => (
-        <Link key={l.slug} to={l.to} className={l.slug === variant ? "mj-tab mj-tab-on" : "mj-tab"}>{l.label}</Link>
-      ))}
-    </div>
-  );
-}
-/* ── AEO / GEO Definition & E-E-A-T Section ── */
-function AeoDirectAnswer({ variant, exam }) {
-  const isNeet = variant === "neet";
-  const yearText = isNeet ? "NEET 2027" : variant === "jee-2028" ? "JEE 2028" : "JEE 2027";
-  const mentorRole = isNeet ? "top medical college MBBS doctors and toppers" : "IIT Roorkee, IIT Bombay & top IITian students";
-
-  return (
-    <section style={{ background: "#ffffff", padding: "32px 20px 24px", borderBottom: "1px solid #f1f5f9" }}>
-      <div className="mj-wrap" style={{ maxWidth: 1040, margin: "0 auto" }}>
-        <div style={{
-          background: "linear-gradient(135deg, #fffaf5 0%, #ffffff 100%)",
-          border: "1px solid #fed7aa",
-          borderRadius: 18,
-          padding: "24px 28px",
-          boxShadow: "0 4px 20px rgba(255,105,61,0.06)"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
-            <span style={{ background: "#FF693D", color: "#fff", fontSize: 11, fontWeight: 800, padding: "3px 10px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-              Program Overview · AEO Verified
-            </span>
-            <span style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>
-              Updated for {yearText} Session · Guided by IIT Roorkee Students
-            </span>
-          </div>
-
-          <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#0f172a", margin: "0 0 10px", fontFamily: "'Sora', sans-serif" }}>
-            How Does One-to-One IITian Mentorship Help {yearText} Aspirants?
-          </h2>
-
-          <p style={{ fontSize: "0.95rem", color: "#334155", lineHeight: 1.68, margin: "0 0 14px" }}>
-            <strong>{yearText} Mentorship</strong> at Campus Point is a personalized 1-on-1 preparation system where students receive academic guidance, daily study targets, doubt-solving support, and regular performance analysis directly from {mentorRole}. Mentors design personalized backlog-clearing roadmaps, conduct weekly 1-on-1 video reviews, evaluate CBT test accuracy, and provide 24×7 accountability to ensure consistent percentile growth.
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 14, paddingTop: 14, borderTop: "1px solid #ffedd5" }}>
-            <div>
-              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Mentorship Model</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Dedicated 1-on-1 Personal Mentor</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Mentors</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Verified IIT Roorkee & Top Rankers</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Cadence</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>Daily Targets + Weekly Video Calls</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: "#9a3412", fontWeight: 700, textTransform: "uppercase" }}>Support</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 2 }}>24×7 WhatsApp Doubt Resolution</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
 /* ── Difference Between Coaching and 1-on-1 Mentorship ── */
 function CoachingVsMentorship({ exam }) {
   const points = [
@@ -1767,7 +1821,6 @@ export default function Mentorship() {
         jsonLd={combinedSchemas}
       />
       <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
-      <AeoDirectAnswer variant={variant} exam={exam} />
       <Qualifier cfg={cfg} />
       <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
@@ -1850,70 +1903,318 @@ const CSS = `
 .mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
 
 /* variant tabs */
-.mj-tabs { display:flex; justify-content:center; gap:8px; padding-top:48px; padding-bottom:2px; flex-wrap:wrap; position:relative; z-index:2; }
-.mj-tab { text-decoration:none; padding:8px 16px; border-radius:50px; border:1px solid ${T.line}; background:${T.card}; color:${T.body}; font:700 .82rem/1 'Space Grotesk',sans-serif; transition:.16s; }
-.mj-tab:hover { border-color:${T.coral}; color:${T.coralDk}; }
-.mj-tab-on { background:${T.ink}; border-color:${T.ink}; color:#fff; }
+.mj-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 2;
+}
+.mj-tab {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #1B1B1B;
+  background: #FFFFFF;
+  color: #1B1B1B;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  box-shadow: 2px 2px 0px #1B1B1B;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.mj-tab:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #FF7A3C;
+  border-color: #1B1B1B;
+  color: #1B1B1B;
+}
+.mj-tab-on {
+  background: #1B1B1B;
+  color: #FFFFFF;
+  border-color: #1B1B1B;
+  box-shadow: 2.5px 2.5px 0px #FF7A3C;
+}
+.mj-tab-on:hover {
+  color: #FFFFFF;
+  background: #252525;
+}
 
-/* hero - glassmorphic performance engine (coral + cream) */
-.mj-hero { position:relative; padding:clamp(110px,12vw,130px) 0 clamp(70px,8vw,104px); overflow:hidden; border-bottom:1px solid ${T.line}; background:var(--page-bg); }
+/* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
+.mj-hero-seo {
+  position: relative;
+  padding: clamp(140px, 13vw, 175px) 0 clamp(48px, 5vw, 68px);
+  overflow: hidden;
+  background: var(--page-bg, #FAF7F2);
+  border-bottom: 1px solid var(--mj-line, #E4DED2);
+}
+.mj-hero-seo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(28px, 4.5vw, 56px);
+  max-width: 1240px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.mj-hero-copy-col {
+  text-align: left;
+}
+
+/* Bold Editorial Typography */
+.mj-hero-h1 {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.3rem, 4.4vw, 4.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #1B1B1B;
+  margin: 0 0 16px;
+}
+.mj-hero-line1 {
+  display: block;
+  font-weight: 800;
+  color: #1B1B1B;
+  margin-bottom: 8px;
+}
+.mj-hero-line1-text {
+  position: relative;
+  display: inline-block;
+}
+.mj-hero-squiggle-wrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.mj-hero-squiggle {
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 10px;
+  overflow: visible;
+  pointer-events: none;
+}
+.mj-hero-line2 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-weight: 800;
+  color: #1B1B1B;
+}
+.mj-hero-line2-lead {
+  display: inline;
+  font-weight: 800;
+  color: #1B1B1B;
+}
+.mj-hero-box-pill {
+  display: inline-block;
+  vertical-align: middle;
+  background: #FF7A3C;
+  color: #1B1B1B;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 0.94em;
+  padding: 2px 14px 4px 14px;
+  border-radius: 9px;
+  border: 2.5px solid #1B1B1B;
+  box-shadow: 3.5px 3.5px 0px #1B1B1B;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.mj-hero-sub {
+  font: 400 clamp(1.02rem, 1.35vw, 1.18rem)/1.6 'DM Sans', sans-serif;
+  color: #4A4A4A;
+  max-width: 540px;
+  margin: 18px 0 24px;
+}
+
+/* Editorial Action Buttons */
+.mj-hero-editorial-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.mj-hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  background: #1B1B1B;
+  color: #FFFFFF;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  border-radius: 12px;
+  border: 2px solid #1B1B1B;
+  box-shadow: 3px 3px 0px #FF7A3C;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  text-decoration: none;
+}
+.mj-hero-btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #FF7A3C;
+  background: #2B2B2B;
+  color: #FFFFFF;
+}
+.mj-hero-btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #FF7A3C;
+}
+.mj-hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  background: #FFFFFF;
+  color: #1B1B1B;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  border-radius: 12px;
+  border: 2px solid #1B1B1B;
+  box-shadow: 3px 3px 0px #1B1B1B;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  text-decoration: none;
+}
+.mj-hero-btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #1B1B1B;
+  background: #FAF7F2;
+  color: #1B1B1B;
+}
+.mj-hero-btn-secondary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #1B1B1B;
+}
+
+.mj-hero-wa-hint {
+  margin-top: 4px;
+}
+.mj-hero-wa-hint a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 600 0.88rem/1.4 'DM Sans', sans-serif;
+  color: #555555;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.mj-hero-wa-hint a:hover {
+  color: #FF5C35;
+}
+
+/* Right Column Illustration Visual */
+.mj-hero-illustration-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+.mj-hero-illustration-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mj-hero-illustration-img {
+  width: 100%;
+  height: auto;
+  max-width: 580px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.09));
+  animation: mjFloatHeroIllustration 7s ease-in-out infinite;
+}
+@keyframes mjFloatHeroIllustration {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Background elements */
 .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
 .mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
 .mj-orb-b { width:460px; height:460px; bottom:-240px; right:-140px; background:radial-gradient(circle, rgba(255,178,130,.22), transparent 70%); opacity:.5; animation:mjfloat 21s ease-in-out infinite reverse; }
 @keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
-.mj-gem { position:absolute; top:34%; left:50%; width:360px; height:360px; transform:translate(-50%,-50%); animation:mjspin 30s linear infinite; }
-.mj-gem-core { position:absolute; inset:0; clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%); background:conic-gradient(from 0deg, rgba(255,105,61,.5), rgba(255,196,158,.22), rgba(216,81,42,.5), rgba(255,105,61,.5)); filter:blur(7px); opacity:.38; }
-@keyframes mjspin { to{transform:rotate(360deg);} }
-.mj-grid { position:absolute; inset:0; background-image:linear-gradient(${T.lineDk} 1px,transparent 1px),linear-gradient(90deg,${T.lineDk} 1px,transparent 1px); background-size:46px 46px; opacity:.05; -webkit-mask-image:radial-gradient(72% 62% at 50% 40%, #000, transparent 76%); mask-image:radial-gradient(72% 62% at 50% 40%, #000, transparent 76%); }
-.mj-watermark { position:absolute; top:-2%; left:50%; transform:translateX(-50%); font-family:'Sora',sans-serif;  font-weight:900; font-size:min(42vw,600px); line-height:1; color:transparent; -webkit-text-stroke:1.5px ${T.lineDk}; opacity:.16; pointer-events:none; user-select:none; z-index:1; }
 
-.mj-hero-inner { position:relative; z-index:2; }
-.mj-hero-center { display:flex; flex-direction:column; align-items:center; text-align:center; max-width:940px; margin:0 auto; }
-.mj-hero-pill { display:inline-flex; align-items:center; gap:9px; padding:8px 18px; border-radius:50px; background:${T.coralSoft}; border:1px solid #F6CDBE; color:${T.coralDk}; font:700 .84rem/1 'Sora',sans-serif; box-shadow:0 10px 26px -16px rgba(255,105,61,.6); }
-.mj-hero-pill .mj-dot { width:7px; height:7px; background:${T.coral}; box-shadow:0 0 0 4px rgba(255,105,61,.14); }
-.mj-glass-tag { display:inline-flex; align-items:center; gap:8px; padding:8px 17px; border-radius:50px; background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(12px) saturate(160%); backdrop-filter:blur(12px) saturate(160%); border:1px solid rgba(255,105,61,.3); color:${T.coralDk}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; text-transform:uppercase; box-shadow:0 10px 26px -14px rgba(255,105,61,.55); }
-.mj-hero-h1 { position:relative; font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(2.5rem,6.6vw,5.1rem); line-height:1.05; letter-spacing:-.03em; color:${T.ink}; margin:30px 0 0; }
-.mj-hero-accent { position:relative; display:inline-block; background:linear-gradient(96deg, #E5401A 0%, #FF7A45 52%, #FF9E6B 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; white-space:nowrap; }
-.mj-hero-uline { position:absolute; left:2%; bottom:-.14em; width:96%; height:.26em; overflow:visible; }
-.mj-hero-uline path { fill:none; stroke:${T.coral}; stroke-width:5; stroke-linecap:round; vector-effect:non-scaling-stroke; }
-.mj-hero-sub { font:400 clamp(1.04rem,1.6vw,1.3rem)/1.62 'DM Sans',sans-serif; color:${T.body}; max-width:660px; margin:26px 0 0; }
-.mj-hero-cta { display:flex; align-items:center; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:38px; }
-.mj-hero-cta .mj-btn-glow, .mj-hero-cta .mj-btn-glass { border-radius:50px; padding:16px 32px; }
-.mj-hero-bullets { display:flex; align-items:center; justify-content:center; gap:14px 28px; flex-wrap:wrap; margin-top:34px; }
-.mj-hero-bullet { display:inline-flex; align-items:center; gap:9px; font:600 .92rem/1 'DM Sans',sans-serif; color:${T.body}; }
-.mj-hero-bullet i { width:7px; height:7px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
-.mj-btn-glow { display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border:none; border-radius:14px; background:linear-gradient(135deg, ${T.coral}, ${T.coralDk}); color:#fff; font:700 1rem/1 'Space Grotesk',sans-serif; cursor:pointer; box-shadow:0 12px 32px -8px rgba(255,105,61,.55); animation:mjglow 3.6s ease-in-out infinite; transition:transform .16s; }
-.mj-btn-glow:hover { transform:translateY(-2px) scale(1.02); }
-@keyframes mjglow { 0%,100%{box-shadow:0 12px 32px -12px rgba(255,105,61,.45);} 50%{box-shadow:0 16px 46px -8px rgba(255,105,61,.78);} }
-.mj-btn-glass { display:inline-flex; align-items:center; gap:10px; padding:16px 28px; border-radius:14px; background:rgba(255,255,255,.55); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid ${T.lineDk}; color:${T.ink}; font:700 1rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.16s; }
-.mj-btn-glass:hover { border-color:${T.coral}; color:${T.coralDk}; transform:translateY(-2px); }
-
-.mj-dot { width:8px; height:8px; border-radius:50%; background:${T.coral}; flex-shrink:0; }
-.mj-dot-live { background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:mjpulse 1.8s infinite; }
-@keyframes mjpulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
-.mj-pill { display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid ${T.lineDk}; border-radius:50px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.body}; }
-.mj-pill-warn { color:${T.coralDk}; border-color:${T.coralSoft}; background:${T.coralSoft}; }
-
-.mj-btn-dark { display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border:none; border-radius:12px; background:${T.ink}; color:#fff; font:700 .98rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .16s, background .16s; }
-.mj-btn-dark:hover { background:#000; transform:translateY(-2px); }
-.mj-btn-outline { display:inline-flex; align-items:center; gap:8px; margin-top:26px; padding:13px 24px; border:1px solid ${T.lineDk}; border-radius:12px; background:${T.card}; color:${T.ink}; font:700 .9rem/1 'Space Grotesk',sans-serif; cursor:pointer; transition:.16s; }
-.mj-btn-outline:hover { border-color:${T.coral}; color:${T.coralDk}; }
-.mj-btn-block { width:100%; justify-content:center; margin-top:22px; }
-
-.mj-hero-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; width:100%; margin-top:56px; }
-.mj-gcard { text-align:center; padding:26px 18px; border-radius:20px; background:rgba(255,255,255,.5); -webkit-backdrop-filter:blur(16px) saturate(170%); backdrop-filter:blur(16px) saturate(170%); border:1px solid rgba(255,255,255,.72); box-shadow:0 22px 52px -34px rgba(27,27,36,.42), inset 0 1px 0 rgba(255,255,255,.6); transition:transform .2s, box-shadow .2s; }
-.mj-gcard:hover { transform:translateY(-4px); box-shadow:0 28px 62px -30px rgba(255,105,61,.5); }
-.mj-gcard-ic { display:inline-grid; place-items:center; width:46px; height:46px; border-radius:14px; background:${T.coralSoft}; color:${T.coralDk}; margin-bottom:14px; }
-.mj-gcard h3 { font:700 1.05rem/1.2 'Space Grotesk',sans-serif; color:${T.ink}; margin:0 0 8px; }
-.mj-gcard p { font:400 .85rem/1.55 'DM Sans',sans-serif; color:${T.body}; margin:0; }
-
-.mj-hero-live { position:absolute; bottom:44px; right:34px; z-index:3; width:232px; padding:18px; border-radius:18px; background:rgba(255,255,255,.62); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.72); box-shadow:0 26px 62px -30px rgba(27,27,36,.5); }
-.mj-hl-top { display:flex; align-items:center; gap:8px; font:800 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.coralDk}; }
-.mj-hl-row { display:flex; justify-content:space-between; align-items:baseline; margin-top:14px; font:700 .6rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; color:${T.muted}; }
-.mj-hl-row b { font:800 1.2rem/1 'Sora',sans-serif; color:${T.ink}; }
-.mj-hl-bar { margin-top:10px; height:6px; border-radius:50px; background:${T.line}; overflow:hidden; }
-.mj-hl-bar span { display:block; height:100%; border-radius:50px; background:linear-gradient(90deg,${T.coral},${T.coralDk}); }
+/* Responsive Hero Layout (Single-column stack with image below buttons) */
+@media (max-width: 960px) {
+  .mj-hero-seo {
+    padding: 135px 0 40px;
+  }
+  .mj-hero-seo-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 32px;
+  }
+  .mj-hero-copy-col {
+    text-align: center;
+  }
+  .mj-tabs {
+    justify-content: center;
+  }
+  .mj-hero-line2 {
+    justify-content: center;
+  }
+  .mj-hero-sub {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .mj-hero-editorial-actions {
+    justify-content: center;
+  }
+  .mj-hero-wa-hint {
+    text-align: center;
+  }
+  .mj-hero-illustration-col {
+    order: 2;
+  }
+  .mj-hero-illustration-wrapper {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 640px) {
+  .mj-hero-seo {
+    padding: 120px 0 32px;
+  }
+  .mj-hero-h1 {
+    font-size: clamp(1.85rem, 6.8vw, 2.4rem);
+    line-height: 1.18;
+  }
+  .mj-hero-editorial-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .mj-hero-btn-primary,
+  .mj-hero-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .mj-hero-illustration-wrapper {
+    max-width: 320px;
+  }
+}
 
 /* stat band */
 .mj-statband { border-bottom:1px solid ${T.line}; }
