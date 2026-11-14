@@ -375,7 +375,7 @@ function ChartLegend({ series }) {
     </div>
   );
 }
-function TestAnalysis({ cfg }) {
+function TestAnalysis({ cfg, isEmbedded = false }) {
   const m = cfg.metrics || {};
   const isNeet = /neet/i.test(cfg.slug || "");
   const base = m.growth?.you || m.test?.trend || [84, 98, 92, 126, 150, 178, 196, 214];
@@ -446,16 +446,9 @@ function TestAnalysis({ cfg }) {
     return { name: s.name, pct: Math.min(Math.round((s.After / cap) * 100), 100) };
   });
 
-  return (
-    <section className="mj-section mj-ta">
-      <div className="mj-wrap">
-        <Reveal className="mj-sec-head">
-          <span className="mj-ta-pill"><span className="mj-dot mj-dot-live" /> LIVE PRODUCT PREVIEW</span>
-          <div><h2 className="mj-display mj-display-lg">See how your test turns<br />into a <em>game plan.</em></h2></div>
-          <p className="mj-sec-sub">Enter your marks and the analyser spots the trend, predicts your rank, and hands you the next steps - automatically.</p>
-        </Reveal>
-
-        <div className="mj-ta-topbar">
+  const content = (
+    <>
+      <div className="mj-ta-topbar">
           <div className="mj-ta-topbar-l">
             <span className="mj-ta-topbar-badge" style={{ padding: 0, overflow: "hidden" }}>
               <img src="/cplogo.svg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -553,6 +546,21 @@ function TestAnalysis({ cfg }) {
             </div>
           </div>
         </div>
+    </>
+  );
+
+  if (isEmbedded) {
+    return (
+      <div className="mj-ta-embedded">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <section className="mj-section mj-ta">
+      <div className="mj-wrap">
+        {content}
       </div>
     </section>
   );
@@ -1452,12 +1460,12 @@ function BacklogAndStudyPlan({ year }) {
 }
 
 /* ── Mock Test Analysis & How to Choose a Mentor ── */
-function MockTestAnalysisGuide() {
+function MockTestAnalysisGuide({ cfg }) {
   const testPillars = [
-    { title: "Silly Mistake Elimination", desc: "Categorize wrong answers: was it a misread question, arithmetic mistake, or formula confusion? We maintain an active Error Logbook." },
-    { title: "Time-per-Question Audit", desc: "Identify time sinks. Spending 7 minutes on a tough Maths question costs you 3 easy Chemistry questions. We train dynamic paper-skipping strategy." },
-    { title: "Negative Marking Control", desc: "Blind guessing drops ranks drastically. Your mentor calculates your risk-reward ratio and trains you to avoid unverified guesses." },
-    { title: "Exam Temperament & Anxiety", desc: "Simulate exact CBT interface pressure. Build stamina for the 3-hour stretch so you peak during the real examination day." },
+    { title: "Silly Mistake Elimination", desc: "Isolate calculation slips, misread questions, and formula mix-ups into an active Error Diary." },
+    { title: "Time-per-Question Audit", desc: "Stop over-spending 7+ mins on stuck questions. Master aggressive first-pass question skipping." },
+    { title: "Negative Marking Control", desc: "Eradicate uncalculated blind guessing. Calibrate your risk-reward ratio for maximum net marks." },
+    { title: "Exam Temperament & CBT", desc: "Build 3-hour uninterrupted CBT stamina to eliminate test fatigue and exam hall panic." },
   ];
 
   const selectionCriteria = [
@@ -1468,10 +1476,10 @@ function MockTestAnalysisGuide() {
   ];
 
   return (
-    <section className="mj-section" style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+    <section className="mj-section" style={{ background: "#FAF8F5", borderBottom: "1px solid #e2e8f0" }}>
       <div className="mj-wrap">
         {/* Section 1: Mock Test Analysis */}
-        <div style={{ marginBottom: 54 }}>
+        <div style={{ marginBottom: 56 }}>
           <div className="mj-sec-head" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
             <div className="mj-label">DATA-DRIVEN TEST ANALYSIS</div>
             <h2 className="mj-display mj-display-lg">
@@ -1482,22 +1490,26 @@ function MockTestAnalysisGuide() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 18 }}>
+          {/* Four Redesigned Cards: Better Spacing, Low Text, & Clean Contour Border */}
+          <div className="mj-test-pillars-grid">
             {testPillars.map((p, idx) => (
-              <div key={idx} style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "20px 18px" }}>
-                <h4 style={{ fontSize: 14.5, fontWeight: 800, color: "#0f172a", marginBottom: 6, fontFamily: "'Sora', sans-serif" }}>
-                  {p.title}
-                </h4>
-                <p style={{ fontSize: 12.5, color: "#64748b", lineHeight: 1.6, margin: 0 }}>
-                  {p.desc}
-                </p>
+              <div key={idx} className="mj-pillar-card">
+                <h4>{p.title}</h4>
+                <p>{p.desc}</p>
               </div>
             ))}
           </div>
+
+          {/* Complete Interactive Test Analysis & Tracker (Moved directly below the 4 cards) */}
+          {cfg && (
+            <div style={{ marginTop: 42 }}>
+              <TestAnalysis cfg={cfg} isEmbedded={true} />
+            </div>
+          )}
         </div>
 
         {/* Section 2: How to Select the Right Mentor */}
-        <div style={{ background: "#ffffff", border: "1px solid #fed7aa", borderRadius: 20, padding: "32px 28px", boxShadow: "0 8px 30px rgba(255,105,61,0.06)" }}>
+        <div style={{ background: "#ffffff", border: "2px solid #1B1B1B", borderRadius: 20, padding: "34px 30px", boxShadow: "4px 4px 0px #1B1B1B" }}>
           <div style={{ maxWidth: 720, marginBottom: 24 }}>
             <span style={{ fontSize: 11, fontWeight: 800, color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px" }}>
               Student Checklist
@@ -1810,9 +1822,8 @@ export default function Mentorship() {
       <Method cfg={cfg} />
       {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
       <LiveTracking cfg={cfg} />
-      <TestAnalysis cfg={cfg} />
       <BacklogAndStudyPlan year={year} />
-      <MockTestAnalysisGuide />
+      <MockTestAnalysisGuide cfg={cfg} />
       <ForParents cfg={cfg} />
       <ContextualInternalLinks />
       <WhatsApp />
@@ -1825,6 +1836,55 @@ export default function Mentorship() {
 }
 
 const CSS = `
+.mj-test-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.mj-pillar-card {
+  background: #FFFFFF;
+  border: 2px solid #1B1B1B;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 3px 3px 0px #1B1B1B;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.mj-pillar-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #FF7A3C;
+}
+.mj-pillar-card h4 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #1B1B1B;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+}
+.mj-pillar-card p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: #555555;
+  line-height: 1.55;
+  margin: 0;
+}
+.mj-ta-embedded {
+  width: 100%;
+}
+@media (max-width: 960px) {
+  .mj-test-pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .mj-test-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .mj { background:${T.paper}; color:${T.ink}; font-family:'DM Sans',sans-serif; overflow-x:hidden; }
 .mj * { box-sizing:border-box; }
 .mj-wrap { max-width:1200px; margin:0 auto; padding:0 24px; }
