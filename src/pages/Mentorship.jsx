@@ -1378,133 +1378,292 @@ function CoachingVsMentorship({ exam }) {
   );
 }
 
-/* ── Personalised JEE Study Planning & Backlog Management ── */
+/* ── THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ── */
 function BacklogAndStudyPlan({ year }) {
-  const backlogPhases = [
+  const scheduleRows = [
     {
-      phase: "Phase 1: High-Weightage Filtering (80/20 Rule)",
-      detail: "Not all chapters carry equal marks. Your mentor prioritizes scoring chapters first: Modern Physics, Thermodynamics, Coordination Compounds, Vectors & 3D Geometry, and Definite Integration.",
+      time: "06:00 AM – 08:30 AM",
+      desc: "Peak Focus: Physics Mechanics & Problem Solving",
+      tag: "Peak Focus",
+      tagClass: "mj-eco-tag-green",
+      isHighlight: false,
     },
     {
-      phase: "Phase 2: The Parallel 90-Minute Daily Slot",
-      detail: "The biggest mistake students make is stopping current coaching lectures to clear backlogs. We allocate an isolated 90-minute daily window exclusively for backlog PYQs, keeping current topics intact.",
+      time: "09:00 AM – 02:00 PM",
+      desc: "Core Theory: School Hours / Coaching Classroom Lectures",
+      tag: "Core Theory",
+      tagClass: "mj-eco-tag-amber",
+      isHighlight: false,
     },
     {
-      phase: "Phase 3: Active Problem Solving over Passive Videos",
-      detail: "Watching 10 hours of video lectures creates an illusion of competence. We replace passive watching with short formula review followed immediately by 30 timed previous-year questions.",
+      time: "02:30 PM – 04:00 PM",
+      desc: "Backlog Slot: Dedicated Backlog Clearance Sprint (High-Yield PYQs)",
+      tag: "Backlog Slot",
+      tagClass: "mj-eco-tag-rose",
+      isHighlight: true,
+    },
+    {
+      time: "04:30 PM – 07:00 PM",
+      desc: "Daily DPPs: Current Coaching Homework, Modules & DPPs",
+      tag: "Daily DPPs",
+      tagClass: "mj-eco-tag-orange",
+      isHighlight: false,
+    },
+    {
+      time: "07:30 PM – 09:00 PM",
+      desc: "Revision: Inorganic / Organic Chemistry Active NCERT Recall",
+      tag: "Revision",
+      tagClass: "mj-eco-tag-green",
+      isHighlight: false,
+    },
+    {
+      time: "09:00 PM – 09:45 PM",
+      desc: "Analysis: Error Log Review & Weak-Topic Formula Drills",
+      tag: "Analysis",
+      tagClass: "mj-eco-tag-purple",
+      isHighlight: false,
+    },
+    {
+      time: "09:45 PM – 10:15 PM",
+      desc: "Mentor Call: Daily Study Streak Log & 1-on-1 Mentor WhatsApp Check-in",
+      tag: "Mentor Call",
+      tagClass: "mj-eco-tag-teal",
+      isHighlight: false,
     },
   ];
 
   return (
-    <section className="mj-section" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
+    <section id="backlog-ecosystem" className="mj-section mj-eco-section">
       <div className="mj-wrap">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32, alignItems: "stretch" }}>
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-            <div>
-              <div className="mj-label">BACKLOG RECOVERY & PLANNING</div>
-              <h2 className="mj-display mj-display-lg" style={{ marginTop: 12 }}>
-                Personalised <em>Study Planning & Backlog Management</em>
-              </h2>
-              <p style={{ fontSize: "1rem", color: "#475569", lineHeight: 1.7, marginTop: 14 }}>
+        {/* Outer Light-Canvas Ecosystem Card */}
+        <div className="mj-eco-canvas">
+          {/* Main Top Header */}
+          <div className="mj-eco-top-header">
+            <h2 className="mj-eco-main-h2">
+              THE COMPLETE <span className="mj-eco-year-pill">JEE {year || "2027"}</span> STUDY &amp; BACKLOG MANAGEMENT ECOSYSTEM
+            </h2>
+          </div>
+
+          {/* 2-Column Main Flow Grid */}
+          <div className="mj-eco-grid">
+            {/* Left Card: Strategic Planning & Backlog Management */}
+            <div className="mj-eco-card mj-eco-card-left">
+              <div className="mj-eco-card-title">
+                STRATEGIC STUDY PLANNING &amp; BACKLOG MANAGEMENT
+              </div>
+              <p className="mj-eco-card-sub">
                 A massive backlog is the #1 cause of anxiety and burnout among JEE aspirants. When you try to cover everything at once, panic sets in. Your IITian mentor builds a structured backlog-clearing formula that restores confidence in 3 to 4 weeks.
               </p>
 
-              <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 14 }}>
-                {backlogPhases.map((b, i) => (
-                  <div key={i} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "15px 18px" }}>
-                    <h4 style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", margin: "0 0 5px" }}>{b.phase}</h4>
-                    <p style={{ fontSize: 12.5, color: "#64748b", margin: 0, lineHeight: 1.55 }}>{b.detail}</p>
+              {/* 3 Phase Cards */}
+              <div className="mj-eco-phases-row">
+                {/* Phase 1 */}
+                <div className="mj-eco-phase-box">
+                  <div className="mj-eco-phase-head">
+                    Phase 1: High-Weightage Filtering (80/20 Rule)
                   </div>
-                ))}
+                  <p className="mj-eco-phase-desc">
+                    Scoring chapters are prioritized and massive chapters broken down.
+                  </p>
+                  <div className="mj-eco-phase-list-label">List of Chapters:</div>
+                  <ul className="mj-eco-phase-list">
+                    <li>Modern Physics</li>
+                    <li>Thermodynamics</li>
+                    <li>Coordination Compounds</li>
+                    <li>Vectors &amp; 3D Geometry</li>
+                    <li>Definite Integration</li>
+                  </ul>
+                </div>
+
+                {/* Phase 2: Active slot with vertical electron drop */}
+                <div className="mj-eco-phase-box mj-eco-phase-box-active">
+                  <div className="mj-eco-phase-head">
+                    Phase 2: The Parallel 90-Minute Daily Slot
+                  </div>
+                  <p className="mj-eco-phase-desc">
+                    The isolated window for backlog command execution, keeping current topics intact.
+                  </p>
+
+                  {/* Vertical Electron Line to Backlog Slot badge */}
+                  <div className="mj-eco-slot-connector">
+                    <svg className="mj-eco-vert-svg" viewBox="0 0 24 44" fill="none">
+                      <defs>
+                        <filter id="glow-vert-p2" x="-50%" y="-50%" width="200%" height="200%">
+                          <feGaussianBlur stdDeviation="2.5" result="blur" />
+                          <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                          </feMerge>
+                        </filter>
+                      </defs>
+                      <path d="M 12 0 L 12 44" stroke="#CBD5E1" strokeWidth="2" strokeDasharray="3 3" />
+                      <path d="M 12 0 L 12 44" stroke="#FF7A3C" strokeWidth="2.5" strokeDasharray="14 80" className="mj-beam-flow" />
+                      <circle r="4" fill="#FF5C35" filter="url(#glow-vert-p2)">
+                        <animateMotion path="M 12 0 L 12 44" dur="1.6s" repeatCount="indefinite" />
+                      </circle>
+                      <circle r="1.8" fill="#FFFFFF">
+                        <animateMotion path="M 12 0 L 12 44" dur="1.6s" repeatCount="indefinite" />
+                      </circle>
+                    </svg>
+
+                    <div className="mj-eco-backlog-badge">
+                      <span className="mj-eco-badge-dot" /> Backlog Slot
+                    </div>
+                  </div>
+                </div>
+
+                {/* Phase 3 */}
+                <div className="mj-eco-phase-box">
+                  <div className="mj-eco-phase-head">
+                    Phase 3: Active Problem Solving over Passive Videos
+                  </div>
+                  <p className="mj-eco-phase-desc">
+                    Replacing passive video watching with short formula review + 30 timed PYQs.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Inter-card Desktop Circuit Bridge with Electron Flow */}
+            <div className="mj-eco-bridge" aria-hidden="true">
+              <svg className="mj-eco-bridge-svg" viewBox="0 0 60 480" fill="none" preserveAspectRatio="none">
+                <defs>
+                  <filter id="glow-bridge-desk" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="beam-bridge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#CBD5E1" stopOpacity="0.2" />
+                    <stop offset="50%" stopColor="#FF7A3C" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#FFD166" stopOpacity="0.2" />
+                  </linearGradient>
+                </defs>
+
+                {/* Top arrow connecting card headers */}
+                <path d="M 0 28 L 52 28" stroke="#94A3B8" strokeWidth="1.75" strokeDasharray="3 3" />
+                <path d="M 44 23 L 54 28 L 44 33" stroke="#94A3B8" strokeWidth="1.75" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M 0 28 L 52 28" stroke="#FF7A3C" strokeWidth="2.5" strokeDasharray="14 100" className="mj-beam-flow" />
+                <circle r="3.5" fill="#FF5C35" filter="url(#glow-bridge-desk)">
+                  <animateMotion path="M 0 28 L 52 28" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <circle r="1.5" fill="#FFFFFF">
+                  <animateMotion path="M 0 28 L 52 28" dur="2s" repeatCount="indefinite" />
+                </circle>
+
+                {/* Mid arrow flowing from Backlog Slot badge directly into Row 3 */}
+                <path d="M 0 310 C 26 310, 30 216, 52 216" stroke="#FB923C" strokeWidth="2" strokeDasharray="4 3" />
+                <path d="M 44 211 L 54 216 L 44 221" stroke="#FB923C" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M 0 310 C 26 310, 30 216, 52 216" stroke="url(#beam-bridge-grad)" strokeWidth="3" strokeDasharray="18 120" className="mj-beam-flow-fast" />
+                <circle r="4.5" fill="#FF5C35" filter="url(#glow-bridge-desk)">
+                  <animateMotion path="M 0 310 C 26 310, 30 216, 52 216" dur="2.2s" repeatCount="indefinite" />
+                </circle>
+                <circle r="2" fill="#FFFFFF">
+                  <animateMotion path="M 0 310 C 26 310, 30 216, 52 216" dur="2.2s" repeatCount="indefinite" />
+                </circle>
+              </svg>
+            </div>
+
+            {/* Right Card: Balanced 8-Hour Routine Architecture */}
+            <div className="mj-eco-card mj-eco-card-right">
+              <div className="mj-eco-card-title">
+                BALANCED 8-HOUR DAILY ROUTINE ARCHITECTURE FOR JEE {year || "2027"}
+              </div>
+
+              <div className="mj-eco-routine-bar">
+                <div className="mj-eco-dropdown-chip">
+                  Customized Daily <span style={{ fontSize: 9, marginLeft: 4 }}>▼</span>
+                </div>
+                <div className="mj-eco-dotted-spacer" />
+                <span className="mj-eco-bar-label">Sample daily timetable architecture</span>
+              </div>
+
+              {/* Schedule Table */}
+              <div className="mj-eco-table-wrap">
+                <table className="mj-eco-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: "26%" }}>Time Slot</th>
+                      <th style={{ width: "54%" }}>Description</th>
+                      <th style={{ width: "20%", textAlign: "right" }}>Tags</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scheduleRows.map((row, idx) => (
+                      <tr
+                        key={idx}
+                        className={row.isHighlight ? "mj-eco-row mj-eco-row-highlight" : "mj-eco-row"}
+                      >
+                        <td className="mj-eco-td-time">{row.time}</td>
+                        <td className="mj-eco-td-desc">
+                          {row.isHighlight ? (
+                            <>
+                              <span className="mj-eco-highlight-spark">⚡</span>
+                              <strong>Backlog Slot:</strong> Dedicated Backlog Clearance Sprint (High-Yield PYQs)
+                            </>
+                          ) : (
+                            row.desc
+                          )}
+                        </td>
+                        <td className="mj-eco-td-tag">
+                          <span className={`mj-eco-tag ${row.tagClass}`}>
+                            {row.tag}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-          {/* Right Side Card: Light mode, matched height, rich information */}
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              borderRadius: 20,
-              padding: "26px 24px",
-              boxShadow: "0 8px 30px rgba(0,0,0,0.04)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              height: "100%",
-            }}
-          >
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: "#FF693D", textTransform: "uppercase", letterSpacing: "1px" }}>
-                  Sample Daily Timetable Architecture
-                </span>
-                <span style={{ fontSize: 11, fontWeight: 700, background: "#fff7ed", color: "#c2410c", padding: "3px 10px", borderRadius: 20 }}>
-                  Customized Daily
-                </span>
-              </div>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "4px 0 16px", color: "#0f172a" }}>
-                Balanced 8-Hour Daily Routine for JEE {year || "2027"}
-              </h3>
+          {/* Bottom Connectors Flowing into Mentor Framework */}
+          <div className="mj-eco-bottom-flow">
+            <svg className="mj-eco-bottom-svg" viewBox="0 0 640 50" fill="none" preserveAspectRatio="none">
+              <defs>
+                <filter id="glow-bottom-drop" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Left dropping path */}
+              <path d="M 120 0 L 120 22 Q 120 40, 180 40 L 260 40" stroke="#CBD5E1" strokeWidth="1.75" strokeDasharray="3 3" />
+              <path d="M 120 0 L 120 22 Q 120 40, 180 40 L 260 40" stroke="#FF7A3C" strokeWidth="2.5" strokeDasharray="16 120" className="mj-beam-flow" />
+              <circle r="3.5" fill="#FF5C35" filter="url(#glow-bottom-drop)">
+                <animateMotion path="M 120 0 L 120 22 Q 120 40, 180 40 L 260 40" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.5" fill="#FFFFFF">
+                <animateMotion path="M 120 0 L 120 22 Q 120 40, 180 40 L 260 40" dur="2.5s" repeatCount="indefinite" />
+              </circle>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {[
-                  { time: "06:00 AM – 08:30 AM", title: "Slot 1: High-Focus Physics Mechanics & Problem Solving", tag: "Peak Focus", color: "#6366f1", bg: "#f8fafc" },
-                  { time: "09:00 AM – 02:00 PM", title: "School Hours / Coaching Classroom Lectures", tag: "Core Theory", color: "#64748b", bg: "#f8fafc" },
-                  { time: "02:30 PM – 04:00 PM", title: "Slot 2: Dedicated Backlog Clearance Sprint (High-Yield PYQs)", tag: "Backlog Slot", color: "#d97706", bg: "#fef3c7", highlight: true },
-                  { time: "04:30 PM – 07:00 PM", title: "Slot 3: Current Coaching Homework, Modules & DPPs", tag: "Daily DPPs", color: "#2563eb", bg: "#f8fafc" },
-                  { time: "07:30 PM – 09:00 PM", title: "Slot 4: Inorganic / Organic Chemistry Active NCERT Recall", tag: "Revision", color: "#059669", bg: "#f8fafc" },
-                  { time: "09:00 PM – 09:45 PM", title: "Slot 5: Error Log Review & Weak-Topic Formula Drills", tag: "Analysis", color: "#7c3aed", bg: "#f8fafc" },
-                  { time: "09:45 PM – 10:15 PM", title: "Daily Study Streak Log & 1-on-1 Mentor WhatsApp Check-in", tag: "Mentor Call", color: "#ea580c", bg: "#fff7ed", final: true },
-                ].map((s, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 12,
-                      padding: "8px 12px",
-                      borderRadius: 9,
-                      background: s.bg,
-                      border: s.final ? "1px solid #fed7aa" : s.highlight ? "1px solid #fde68a" : "1px solid #e2e8f0",
-                    }}
-                  >
-                    <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                      <span style={{ fontSize: 11, fontWeight: 800, color: s.color }}>{s.time}</span>
-                      <span style={{ fontSize: 12.5, fontWeight: s.final ? 700 : 600, color: "#0f172a" }}>{s.title}</span>
-                    </div>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        padding: "3px 8px",
-                        borderRadius: 6,
-                        whiteSpace: "nowrap",
-                        background: s.final ? "#ea580c" : s.highlight ? "#d97706" : "#e2e8f0",
-                        color: s.final || s.highlight ? "#ffffff" : "#475569",
-                      }}
-                    >
-                      {s.tag}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              {/* Right dropping path */}
+              <path d="M 520 0 L 520 22 Q 520 40, 460 40 L 380 40" stroke="#CBD5E1" strokeWidth="1.75" strokeDasharray="3 3" />
+              <path d="M 520 0 L 520 22 Q 520 40, 460 40 L 380 40" stroke="#FF7A3C" strokeWidth="2.5" strokeDasharray="16 120" className="mj-beam-flow" />
+              <circle r="3.5" fill="#FF5C35" filter="url(#glow-bottom-drop)">
+                <animateMotion path="M 520 0 L 520 22 Q 520 40, 460 40 L 380 40" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.5" fill="#FFFFFF">
+                <animateMotion path="M 520 0 L 520 22 Q 520 40, 460 40 L 380 40" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+
+            {/* Centered Mentor Framework Box */}
+            <div className="mj-eco-framework-card">
+              <div className="mj-eco-framework-title">Mentor Framework</div>
+              <p className="mj-eco-framework-text">
+                Backlog clearance never steals your time from current coaching topics. When you try to cover everything at once, panic sets in. Your IITian mentor builds a structured backlog-clearing formula, then clears a chapter in 4 days.
+              </p>
             </div>
 
-            <div
-              style={{
-                marginTop: 16,
-                padding: "12px 14px",
-                background: "#f8fafc",
-                border: "1px dashed #cbd5e1",
-                borderRadius: 10,
-                fontSize: 12,
-                color: "#475569",
-                lineHeight: 1.5,
-              }}
-            >
-              <strong style={{ color: "#0f172a" }}>💡 Mentor Framework:</strong> Backlog clearance never steals time from current coaching topics. An isolated 90-minute daily sprint clears a chapter in 4 days without creating new backlogs.
+            <div className="mj-eco-framework-footer">
+              Powered by the IITian Mentor Framework @ Campus Point
             </div>
           </div>
         </div>
@@ -2620,6 +2779,488 @@ const CSS = `
 .mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }
 .mj-field input, .mj-field textarea { border:none; border-bottom:1.5px solid ${T.line}; background:none; padding:8px 2px; font:500 1rem/1.4 'DM Sans',sans-serif; color:${T.ink}; outline:none; resize:vertical; transition:border-color .16s; }
 .mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
+
+/* ═══════════════ THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ═══════════════ */
+.mj-eco-section {
+  background: #FFFFFF;
+  padding: clamp(56px, 7vw, 92px) 0;
+  border-bottom: 1px solid #E2E8F0;
+  position: relative;
+  overflow: hidden;
+}
+
+.mj-eco-canvas {
+  background: #F1F6FA;
+  border: 1.5px solid #DCE6EF;
+  border-radius: 24px;
+  padding: clamp(20px, 3.2vw, 36px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+  position: relative;
+}
+
+.mj-eco-top-header {
+  text-align: center;
+  margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.mj-eco-main-h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.25rem, 2.3vw, 1.85rem);
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.mj-eco-year-pill {
+  color: #FF7A3C;
+}
+
+/* 2-Column Split Grid */
+.mj-eco-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: stretch;
+  position: relative;
+}
+
+.mj-eco-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 18px;
+  padding: clamp(18px, 2.2vw, 26px);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.mj-eco-card-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.92rem, 1.25vw, 1.08rem);
+  color: #EA580C;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.mj-eco-card-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0 0 18px;
+}
+
+/* 3 Phase Cards Row */
+.mj-eco-phases-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: auto;
+  align-items: stretch;
+}
+
+.mj-eco-phase-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mj-eco-phase-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.mj-eco-phase-box-active {
+  background: #FFFDF9;
+  border: 1.5px solid #FED7AA;
+  box-shadow: 0 4px 16px rgba(255, 122, 60, 0.08);
+}
+
+.mj-eco-phase-head {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.mj-eco-phase-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.74rem;
+  color: #64748B;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.mj-eco-phase-list-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 8px 0 4px;
+}
+
+.mj-eco-phase-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mj-eco-phase-list li {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  color: #475569;
+  line-height: 1.45;
+  position: relative;
+  padding-left: 10px;
+}
+
+.mj-eco-phase-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #EA580C;
+  font-weight: bold;
+}
+
+/* Vertical Slot Connector inside Phase 2 */
+.mj-eco-slot-connector {
+  margin-top: auto;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mj-eco-vert-svg {
+  width: 20px;
+  height: 38px;
+  overflow: visible;
+}
+
+.mj-eco-backlog-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #EFF6FF;
+  border: 1.5px solid #93C5FD;
+  border-radius: 999px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 0.76rem;
+  color: #1D4ED8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  white-space: nowrap;
+}
+
+.mj-eco-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  animation: mjSlotPulse 1.8s infinite;
+}
+
+@keyframes mjSlotPulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+/* Inter-Card SVG Bridge on Desktop */
+.mj-eco-bridge {
+  position: relative;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mj-eco-bridge-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Right Card Routine Bar */
+.mj-eco-routine-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mj-eco-dropdown-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.74rem;
+  color: #1E40AF;
+  white-space: nowrap;
+}
+
+.mj-eco-dotted-spacer {
+  flex: 1;
+  height: 1px;
+  border-top: 1.5px dashed #CBD5E1;
+}
+
+.mj-eco-bar-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: #64748B;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Routine Table */
+.mj-eco-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mj-eco-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mj-eco-table thead tr th {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 0.76rem;
+  color: #0F172A;
+  padding: 8px 10px;
+  border-bottom: 1.5px solid #E2E8F0;
+  text-align: left;
+}
+
+.mj-eco-row {
+  border-bottom: 1px solid #F1F5F9;
+  transition: background 0.15s ease;
+}
+
+.mj-eco-row:hover {
+  background: #F8FAFC;
+}
+
+.mj-eco-td-time {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #334155;
+  padding: 9px 10px;
+  white-space: nowrap;
+}
+
+.mj-eco-td-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: #0F172A;
+  padding: 9px 10px;
+  line-height: 1.45;
+}
+
+.mj-eco-td-tag {
+  padding: 9px 10px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Highlighted Backlog Slot Row (Target of the Electron Beam) */
+.mj-eco-row-highlight {
+  background: #FFF1F2 !important;
+  border-left: 3px solid #F43F5E;
+  animation: mjBacklogSlotPulse 3s ease-in-out infinite;
+}
+
+@keyframes mjBacklogSlotPulse {
+  0%, 100% {
+    background-color: #FFF1F2;
+    box-shadow: inset 0 0 8px rgba(244, 63, 94, 0.08);
+  }
+  50% {
+    background-color: #FFE4E6;
+    box-shadow: inset 0 0 16px rgba(244, 63, 94, 0.2);
+  }
+}
+
+.mj-eco-highlight-spark {
+  margin-right: 4px;
+  color: #E11D48;
+}
+
+.mj-eco-bold-slot {
+  font-weight: 800;
+  color: #9F1239;
+}
+
+/* Category Tags */
+.mj-eco-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.mj-eco-tag-green {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+
+.mj-eco-tag-amber {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.mj-eco-tag-rose {
+  background: #FFE4E6;
+  color: #BE123C;
+  border: 1.5px solid #FECDD3;
+  font-weight: 800;
+}
+
+.mj-eco-tag-orange {
+  background: #FFEDD5;
+  color: #C2410C;
+  border: 1px solid #FED7AA;
+}
+
+.mj-eco-tag-purple {
+  background: #F3E8FF;
+  color: #7E22CE;
+  border: 1px solid #E9D5FF;
+}
+
+.mj-eco-tag-teal {
+  background: #CCFBF1;
+  color: #0F766E;
+  border: 1px solid #99F6E4;
+}
+
+/* Bottom Flow to Mentor Framework */
+.mj-eco-bottom-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-top: 8px;
+}
+
+.mj-eco-bottom-svg {
+  width: 100%;
+  max-width: 640px;
+  height: 48px;
+  overflow: visible;
+  display: block;
+}
+
+.mj-eco-framework-card {
+  background: #FFFBEB;
+  border: 1.5px solid #FED7AA;
+  border-radius: 16px;
+  padding: 18px 28px;
+  max-width: 740px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.08);
+}
+
+.mj-eco-framework-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #0F172A;
+  margin-bottom: 6px;
+}
+
+.mj-eco-framework-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.mj-eco-framework-footer {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748B;
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* Traveling Energy Beam Animation */
+@keyframes mjBeamTravel {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -160;
+  }
+}
+
+.mj-beam-flow {
+  animation: mjBeamTravel 2s linear infinite;
+}
+
+.mj-beam-flow-fast {
+  animation: mjBeamTravel 1.6s linear infinite;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .mj-eco-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .mj-eco-bridge {
+    display: none;
+  }
+  .mj-eco-phases-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .mj-eco-canvas {
+    padding: 16px 12px;
+    border-radius: 18px;
+  }
+  .mj-eco-main-h2 {
+    font-size: 1.15rem;
+  }
+  .mj-eco-card {
+    padding: 16px 12px;
+  }
+  .mj-eco-framework-card {
+    padding: 14px 16px;
+  }
+}
 
 /* responsive */
 @media (max-width:940px) {
