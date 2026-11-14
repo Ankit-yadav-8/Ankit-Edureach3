@@ -570,23 +570,6 @@ function TestAnalysis({ cfg, isEmbedded = false }) {
 
   const content = (
     <>
-      <div className="mj-ta-topbar">
-          <div className="mj-ta-topbar-l">
-            <span className="mj-ta-topbar-badge" style={{ padding: 0, overflow: "hidden" }}>
-              <img src="/cplogo.svg" alt="CP" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </span>
-            <div>
-              <strong>{exam} · Test Tracker</strong>
-              <span>ADMIT CODE {isNeet ? "NEET" : "JEE"}-TRK-0419 · Target session: {session}</span>
-            </div>
-          </div>
-          <div className="mj-ta-topbar-r">
-            <div><strong>{daysToGo}</strong><span>days to go</span></div>
-            <div><strong>{testsLogged}</strong><span>tests logged</span></div>
-            <div><strong>{accN}%</strong><span>avg accuracy</span></div>
-          </div>
-        </div>
-
         <div className="mj-ta-grid">
           <div className="mj-ta-form">
             <div className="mj-ta-formtop">
@@ -1341,9 +1324,7 @@ function CoachingVsMentorship({ exam }) {
             Coaching Teaches Concepts. <br />
             <em>Mentorship Ensures You Crack the Exam.</em>
           </h2>
-          <p className="mj-sec-sub" style={{ fontSize: "1.05rem", color: "#64748b", marginTop: 12 }}>
-            Most JEE aspirants don't fail because of lack of lectures—they struggle with consistency, backlogs, and test strategy. Here is why personal guidance from an IIT student changes everything.
-          </p>
+          
         </div>
 
         <div style={{ overflowX: "auto" }}>
