@@ -286,10 +286,7 @@ export function ClusterPricing({
                 >
                   Claim Your Seat · ₹{indianPlan.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
                 </button>
-                <div className="mj-price-foot">
-                  <span>◈ RAZORPAY GATEWAY</span>
-                  <span>🔒 SECURE 256-BIT ENCRYPTION</span>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -339,10 +336,7 @@ export function ClusterPricing({
                 >
                   Claim International Seat · ₹{intlPlan.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
                 </button>
-                <div className="mj-price-foot">
-                  <span>◈ RAZORPAY GATEWAY</span>
-                  <span>🔒 SECURE 256-BIT ENCRYPTION</span>
-                </div>
+                
               </div>
             </div>
           </div>

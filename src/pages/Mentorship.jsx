@@ -1098,7 +1098,7 @@ function Pricing({ plan, exam, openEnrol }) {
                   ))}
                 </div>
                 <button className="mj-btn-dark mj-btn-block" onClick={() => openEnrol(c.key)}>Claim your seat <ArrowRight size={17} /></button>
-                <div className="mj-price-foot"><span>◈ RAZORPAY</span><span>🔒 SECURE PAYMENT</span></div>
+                
               </div>
             </Reveal>
           ))}
