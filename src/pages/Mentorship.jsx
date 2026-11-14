@@ -24,9 +24,9 @@ const WA_NUMBER = "918118826194";
 
 /* ── warm paper / coral / navy theme ── */
 const T = {
-  paper: "var(--page-bg)", paper2: "#F1EBE0", card: "#FFFFFF",
+  paper: "#FFFFFF", paper2: "#FFFFFF", card: "#FFFFFF",
   ink: "#1B1B24", body: "#54525C", muted: "#8C877E",
-  line: "#E4DED2", lineDk: "#D6CFC0",
+  line: "#E2E8F0", lineDk: "#CBD5E1",
   coral: "#FF693D", coralDk: "#D8512A", coralSoft: "#FFE7DE",
   navy: "#12141C", navy2: "#191C26", navyLine: "rgba(255,255,255,.10)",
   onNavy: "#EDEBE6", onNavyMute: "#8E93A3",
@@ -75,8 +75,8 @@ function RenderLine1({ text, squiggleWord }) {
 
 const HERO_VARIANTS_CONTENT = {
   "jee-2027": {
-    line1: "Personalized 1-on-1",
-    line1Squiggle: "1-on-1",
+    word1: "Personalized",
+    word2: "1-on-1",
     line2Lead: "for your",
     line2Box: "JEE 2027.",
     subtitle: "Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.",
@@ -84,8 +84,8 @@ const HERO_VARIANTS_CONTENT = {
     waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
   },
   "jee-2028": {
-    line1: "Class 11 Mastery",
-    line1Squiggle: "Mastery",
+    word1: "Personalized",
+    word2: "1-on-1",
     line2Lead: "for your",
     line2Box: "JEE 2028.",
     subtitle: "Build a rock-solid Class 11 foundation, eliminate backlogs early, and learn 1-on-1 with IIT Roorkee rankers.",
@@ -93,8 +93,8 @@ const HERO_VARIANTS_CONTENT = {
     waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
   },
   "neet": {
-    line1: "Dedicated 1-on-1",
-    line1Squiggle: "1-on-1",
+    word1: "Personalized",
+    word2: "1-on-1",
     line2Lead: "for your",
     line2Box: "NEET 2027.",
     subtitle: "Daily NCERT targets, question-level error autopsy, and personal mentorship by top medical college MBBS toppers.",
@@ -102,10 +102,10 @@ const HERO_VARIANTS_CONTENT = {
     waLabel: "Have questions? Chat with a Doctor / Topper on WhatsApp",
   },
   "foundation": {
-    line1: "Early IIT Foundation",
-    line1Squiggle: "Foundation",
-    line2Lead: "for",
-    line2Box: "Class 9 & 10.",
+    word1: "Personalized",
+    word2: "1-on-1",
+    line2Lead: "for your",
+    line2Box: "Foundation.",
     subtitle: "Build early conceptual clarity for Olympiads, NTSE, and strong fundamentals guided 1-on-1 by IITians.",
     waQuery: "Hi CampusPoint, I want to know more about Foundation mentorship",
     waLabel: "Have questions? Chat with an IITian Mentor on WhatsApp",
@@ -144,15 +144,22 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
 
             <h1 className="mj-hero-h1">
               <span className="mj-hero-line1">
-                <RenderLine1 text={content.line1} squiggleWord={content.line1Squiggle} />
+                <span className="mj-hero-word-break">{content.word1 || "Personalized"}</span>
+                <span className="mj-hero-squiggle-wrap">
+                  {content.word2 || "1-on-1"}
+                  <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+                      stroke="#FF693D"
+                      strokeWidth="3.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
               </span>
               <span className="mj-hero-line2">
-                {content.line2Lead && (
-                  <span className="mj-hero-line2-lead">{content.line2Lead} </span>
-                )}
-                <span className="mj-hero-box-pill">
-                  {content.line2Box}
-                </span>
+                <span className="mj-hero-line2-lead">{content.line2Lead || "for your"}</span>
+                <span className="mj-hero-box-pill">{content.line2Box}</span>
               </span>
             </h1>
 
@@ -164,9 +171,9 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
               <button
                 type="button"
                 className="mj-hero-btn-primary"
-                onClick={() => openEnrol(plan)}
+                onClick={() => scrollTo("mentors")}
               >
-                Get Started · ₹{p.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
+                Meet Your Mentors <ArrowRight size={17} />
               </button>
               <button
                 type="button"
@@ -1653,7 +1660,7 @@ function MockTestAnalysisGuide({ cfg }) {
   ];
 
   return (
-    <section className="mj-section" style={{ background: "#FAF8F5", borderBottom: "1px solid #e2e8f0" }}>
+    <section className="mj-section" style={{ background: "#FFFFFF", borderBottom: "1px solid #e2e8f0" }}>
       <div className="mj-wrap">
         {/* Section 1: Mock Test Analysis */}
         <div style={{ marginBottom: 56 }}>
@@ -1749,7 +1756,7 @@ function TopMentors() {
   ];
 
   return (
-    <section className="mj-section">
+    <section id="mentors" className="mj-section" style={{ background: "#FFFFFF" }}>
       <div className="mj-wrap">
         <div className="mj-sec-head">
           <div className="mj-label">GUIDANCE FROM IITians & NITians</div>
@@ -1947,7 +1954,7 @@ export default function Mentorship() {
       <Qualifier cfg={cfg} />
       <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
-      {(variant === "jee-2027" || variant === "jee-2028") && <TopMentors />}
+      <TopMentors />
       <LiveTracking cfg={cfg} />
       <BacklogAndStudyPlan year={year} exam={exam} />
       <MockTestAnalysisGuide cfg={cfg} />
@@ -2011,7 +2018,7 @@ const CSS = `
   }
 }
 
-.mj { background:${T.paper}; color:${T.ink}; font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+.mj { background:#FFFFFF; color:${T.ink}; font-family:'DM Sans',sans-serif; overflow-x:hidden; }
 .mj * { box-sizing:border-box; }
 .mj-wrap { max-width:1200px; margin:0 auto; padding:0 24px; }
 .mj em { font-family:'Sora',sans-serif;  color:${T.coral}; font-weight:800; }
@@ -2023,15 +2030,15 @@ const CSS = `
 .mj-label { display:inline-flex; align-items:center; gap:8px; padding:5px 13px; border:1px solid ${T.lineDk}; border-radius:6px; background:${T.card}; font:800 .68rem/1 'Space Grotesk',sans-serif; letter-spacing:.14em; color:${T.body}; }
 .mj-label-dark { background:transparent; border-color:${T.navyLine}; color:${T.onNavyMute}; }
 .mj-body { font:400 1.05rem/1.7 'DM Sans',sans-serif; color:${T.body}; margin:20px 0 0; max-width:460px; }
-.mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; }
+.mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; background:#FFFFFF; }
 
 /* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
 .mj-hero-seo {
   position: relative;
-  padding: clamp(140px, 13vw, 175px) 0 clamp(48px, 5vw, 68px);
+  padding: clamp(195px, 18vw, 245px) 0 clamp(48px, 5vw, 72px);
   overflow: hidden;
-  background: var(--page-bg, #FAF7F2);
-  border-bottom: 1px solid var(--mj-line, #E4DED2);
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--mj-line, #E2E8F0);
 }
 .mj-hero-seo-grid {
   display: grid;
@@ -2061,7 +2068,11 @@ const CSS = `
   display: block;
   font-weight: 800;
   color: #1B1B1B;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+}
+.mj-hero-word-break {
+  display: block;
+  margin-bottom: 2px;
 }
 .mj-hero-line1-text {
   position: relative;
@@ -2083,14 +2094,14 @@ const CSS = `
 }
 .mj-hero-line2 {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   font-weight: 800;
   color: #1B1B1B;
 }
 .mj-hero-line2-lead {
-  display: inline;
+  display: block;
   font-weight: 800;
   color: #1B1B1B;
 }
@@ -2212,13 +2223,29 @@ const CSS = `
   align-items: center;
   justify-content: center;
 }
+.mj-hero-illustration-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 105, 61, 0.16) 0%, rgba(255, 122, 60, 0.06) 52%, transparent 72%);
+  filter: blur(32px);
+  z-index: 0;
+  pointer-events: none;
+}
 .mj-hero-illustration-img {
   width: 100%;
   height: auto;
   max-width: 580px;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.09));
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08));
   animation: mjFloatHeroIllustration 7s ease-in-out infinite;
 }
 @keyframes mjFloatHeroIllustration {
@@ -2240,7 +2267,7 @@ const CSS = `
 /* Responsive Hero Layout (Single-column stack with image below buttons) */
 @media (max-width: 960px) {
   .mj-hero-seo {
-    padding: 135px 0 40px;
+    padding: 175px 0 48px;
   }
   .mj-hero-seo-grid {
     grid-template-columns: 1fr;
@@ -2276,7 +2303,7 @@ const CSS = `
 }
 @media (max-width: 640px) {
   .mj-hero-seo {
-    padding: 120px 0 32px;
+    padding: 155px 0 36px;
   }
   .mj-hero-h1 {
     font-size: clamp(1.85rem, 6.8vw, 2.4rem);
@@ -2541,7 +2568,7 @@ const CSS = `
 .mj-weekly-nextlist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
 .mj-weekly-nextlist li { display:flex; align-items:flex-start; gap:9px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-weekly-nextlist svg { flex-shrink:0; margin-top:2px; color:${T.coral}; }
-.mj-weekly { position:relative; display:flex; flex-direction:column; background:#FBF8F2; padding:34px 36px; }
+.mj-weekly { position:relative; display:flex; flex-direction:column; background:#FFFFFF; padding:34px 36px; }
 .mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:1.5px solid ${T.ink}; padding-bottom:14px; }
 .mj-weekly-name { font:600 1.9rem/1 'Sora',sans-serif;  color:${T.ink}; letter-spacing:-.5px; }
 .mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.body}; text-align:right; white-space:nowrap; }
@@ -2694,7 +2721,7 @@ const CSS = `
 .mj-talk-booklet .mj-body { color:rgba(255,255,255,.9); margin-bottom:44px; max-width: 420px; font-size:1.05rem; line-height:1.6; }
 .mj-talk-booklet .mj-reach { margin-top:auto; display:flex; flex-direction:column; gap:10px; font:700 .74rem/1.4 'Space Grotesk',sans-serif; letter-spacing:.08em; color:rgba(255,255,255,.75); }
 
-.mj-talk-form-wrap { background:#FBF8F2; padding:44px 54px; display:flex; flex-direction:column; justify-content:center; }
+.mj-talk-form-wrap { background:#FFFFFF; padding:44px 54px; display:flex; flex-direction:column; justify-content:center; }
 .mj-form-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
 .mj-field { display:flex; flex-direction:column; gap:6px; margin-bottom:24px; }
 .mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }
@@ -2702,8 +2729,7 @@ const CSS = `
 .mj-field input:focus, .mj-field textarea:focus { border-color:${T.coral}; }
 
 /* ═══════════════ THE COMPLETE STUDY & BACKLOG MANAGEMENT ECOSYSTEM ═══════════════ */
-.mj-eco-section {
-  background: #FAF8F5;
+.mj-eco-section { background: #FFFFFF;
   padding: clamp(56px, 7vw, 92px) 0;
   border-bottom: 1px solid #E2E8F0;
   position: relative;
@@ -3228,7 +3254,7 @@ const CSS = `
 .mj-weekly-nextlist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
 .mj-weekly-nextlist li { display:flex; align-items:flex-start; gap:9px; font:500 .84rem/1.4 'DM Sans',sans-serif; color:${T.body}; }
 .mj-weekly-nextlist svg { flex-shrink:0; margin-top:2px; color:${T.coral}; }
-.mj-weekly { position:relative; display:flex; flex-direction:column; background:#FBF8F2; padding:34px 36px; }
+.mj-weekly { position:relative; display:flex; flex-direction:column; background:#FFFFFF; padding:34px 36px; }
 .mj-weekly-top { display:flex; align-items:baseline; justify-content:space-between; gap:14px; border-bottom:1.5px solid ${T.ink}; padding-bottom:14px; }
 .mj-weekly-name { font:600 1.9rem/1 'Sora',sans-serif;  color:${T.ink}; letter-spacing:-.5px; }
 .mj-weekly-vol { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.18em; color:${T.body}; text-align:right; white-space:nowrap; }
@@ -3381,7 +3407,7 @@ const CSS = `
 .mj-talk-booklet .mj-body { color:rgba(255,255,255,.9); margin-bottom:44px; max-width: 420px; font-size:1.05rem; line-height:1.6; }
 .mj-talk-booklet .mj-reach { margin-top:auto; display:flex; flex-direction:column; gap:10px; font:700 .74rem/1.4 'Space Grotesk',sans-serif; letter-spacing:.08em; color:rgba(255,255,255,.75); }
 
-.mj-talk-form-wrap { background:#FBF8F2; padding:44px 54px; display:flex; flex-direction:column; justify-content:center; }
+.mj-talk-form-wrap { background:#FFFFFF; padding:44px 54px; display:flex; flex-direction:column; justify-content:center; }
 .mj-form-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
 .mj-field { display:flex; flex-direction:column; gap:6px; margin-bottom:24px; }
 .mj-field span { font:700 .64rem/1 'Space Grotesk',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:${T.muted}; }

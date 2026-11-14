@@ -141,6 +141,10 @@ export default function JeeMentorshipHub() {
         line2Box="JEE Mentorship."
         description="Direct daily guidance from IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks."
         planKey="mentor-jee-2027-6m"
+        ctaText="Contact Us"
+        ctaHref={`https://wa.me/918118826194?text=${encodeURIComponent(`Hello CampusPoint Team,
+I want to know about the JEE Mentorship Plans and pricing.
+Could you please share the program details and connect me with an IITian mentor?`)}`}
       />
 
       <ClusterNav currentPath={currentPath} />

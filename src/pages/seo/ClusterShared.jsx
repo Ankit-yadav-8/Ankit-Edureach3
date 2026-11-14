@@ -135,7 +135,10 @@ export function ClusterHero({
   planKey = "mentor-jee-2027-6m",
   bullets = [],
   heroImage = "/images/jee_mentor_kit_hero_transparent.webp",
-  heroImageFallback = "/images/jee_mentor_kit_hero.jpg"
+  heroImageFallback = "/images/jee_mentor_kit_hero.jpg",
+  ctaText,
+  ctaHref,
+  onCtaClick
 }) {
   const { open: openEnrol } = useEnrol();
   const [showBatchModal, setShowBatchModal] = useState(false);
@@ -175,11 +178,14 @@ export function ClusterHero({
               ) : (
                 <>
                   <span className="mj-hero-line1">
-                    <RenderLine1 text={resolvedLine1} squiggleWord={resolvedLine1Squiggle} />
+                    <span className="mj-hero-word-break">{resolvedLine1.split(" ")[0] || "Personalized"}</span>
+                    <span className="mj-hero-squiggle-wrap">
+                      <RenderLine1 text={resolvedLine1Squiggle} squiggleWord={resolvedLine1Squiggle} />
+                    </span>
                   </span>
                   <span className="mj-hero-line2">
                     {resolvedLine2Lead && (
-                      <span className="mj-hero-line2-lead">{resolvedLine2Lead} </span>
+                      <span className="mj-hero-line2-lead">{resolvedLine2Lead}</span>
                     )}
                     <span className="mj-hero-box-pill">
                       {resolvedLine2Box}
@@ -196,13 +202,25 @@ export function ClusterHero({
             )}
 
             <div className="mj-hero-editorial-actions">
-              <button
-                type="button"
-                className="mj-hero-btn-primary"
-                onClick={() => setShowBatchModal(true)}
-              >
-                Get Started · ₹{plan.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
-              </button>
+              {ctaHref ? (
+                <a
+                  href={ctaHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mj-hero-btn-primary"
+                  style={{ textDecoration: "none" }}
+                >
+                  {ctaText || "Contact Us"} <ArrowRight size={17} />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="mj-hero-btn-primary"
+                  onClick={onCtaClick || (() => setShowBatchModal(true))}
+                >
+                  {ctaText || `Get Started · ₹${plan.amount.toLocaleString("en-IN")}`} <ArrowRight size={17} />
+                </button>
+              )}
               <button
                 type="button"
                 className="mj-hero-btn-secondary"
