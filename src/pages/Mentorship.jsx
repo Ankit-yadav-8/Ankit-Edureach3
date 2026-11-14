@@ -131,89 +131,87 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
   const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(content.waQuery)}`;
 
   return (
-    <section id="mentorship-hero" className="mj-section mj-hero-card-section" style={{ background: "#FFFFFF" }}>
+    <section className="mj-hero-seo">
+      <div className="mj-hero-bg" aria-hidden="true">
+        <span className="mj-orb mj-orb-a" />
+        <span className="mj-orb mj-orb-b" />
+      </div>
+
       <div className="mj-wrap">
-        {/* Outer White-Canvas Card like Backlog Section Card */}
-        <div className="mj-hero-card-canvas">
-          <div className="mj-hero-seo-grid">
-            {/* Left Column: Variant Tabs + Two Strong Lines + Subtitle + Actions */}
-            <div className="mj-hero-copy-col">
+        <div className="mj-hero-seo-grid">
+          {/* Left Column: Variant Tabs + Two Strong Lines + Subtitle + Actions */}
+          <div className="mj-hero-copy-col">
 
-              <h2 className="mj-hero-h1">
-                <span className="mj-hero-line1">
-                  <span className="mj-hero-word-break">{content.word1 || "Personalized"}</span>
-                  <span className="mj-hero-squiggle-wrap">
-                    {content.word2 || "1-on-1"}
-                    <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
-                      <path
-                        d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
-                        stroke="#FF693D"
-                        strokeWidth="3.4"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
+            <h1 className="mj-hero-h1">
+              <span className="mj-hero-line1">
+                <span className="mj-hero-word-break">{content.word1 || "Personalized"}</span>
+                <span className="mj-hero-squiggle-wrap">
+                  {content.word2 || "1-on-1"}
+                  <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+                    <path
+                      d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+                      stroke="#FF693D"
+                      strokeWidth="3.4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </span>
-                <span className="mj-hero-line2">
-                  <span className="mj-hero-line2-lead">{content.line2Lead || "for your"}</span>
-                  <span className="mj-hero-box-pill">{content.line2Box}</span>
-                </span>
-              </h2>
+              </span>
+              <span className="mj-hero-line2">
+                <span className="mj-hero-line2-lead">{content.line2Lead || "for your"}</span>
+                <span className="mj-hero-box-pill">{content.line2Box}</span>
+              </span>
+            </h1>
 
-              <p className="mj-hero-sub">
-                {content.subtitle}
-              </p>
+            <p className="mj-hero-sub">
+              {content.subtitle}
+            </p>
 
-              <div className="mj-hero-editorial-actions">
-                <button
-                  type="button"
-                  className="mj-hero-btn-primary"
-                  onClick={() => scrollTo("mentors")}
-                >
-                  Meet Your Mentors <ArrowRight size={17} />
-                </button>
-                <button
-                  type="button"
-                  className="mj-hero-btn-secondary"
-                  onClick={() => scrollTo("enrol")}
-                >
-                  Explore Plans <ArrowRight size={17} />
-                </button>
-              </div>
-
-              <div className="mj-hero-wa-hint">
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Phone size={14} /> {content.waLabel}
-                </a>
-              </div>
+            <div className="mj-hero-editorial-actions">
+              <button
+                type="button"
+                className="mj-hero-btn-primary"
+                onClick={() => scrollTo("mentors")}
+              >
+                Meet Your Mentors <ArrowRight size={17} />
+              </button>
+              <button
+                type="button"
+                className="mj-hero-btn-secondary"
+                onClick={() => scrollTo("enrol")}
+              >
+                Explore Plans <ArrowRight size={17} />
+              </button>
             </div>
 
-            {/* Right Column: Hero Illustration Desk Visual */}
-            <div className="mj-hero-illustration-col">
-              <div className="mj-hero-illustration-wrapper">
-                <picture>
-                  <source srcSet="/images/mentorship_hero_desk_transparent.webp" type="image/webp" />
-                  <img
-                    src="/images/mentorship_hero_desk.jpg"
-                    alt="1-on-1 IITian Mentorship Desk Setup with Daily Targets and Test Autopsy"
-                    className="mj-hero-illustration-img"
-                    width="580"
-                    height="450"
-                    loading="lazy"
-                  />
-                </picture>
-              </div>
+            <div className="mj-hero-wa-hint">
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Phone size={14} /> {content.waLabel}
+              </a>
             </div>
           </div>
-        </div>
 
-        {/* Footer line below the whole big card */}
-        <div className="mj-hero-card-footer">
-          100+ mentors are present on the platform, so no wait enroll fast and continue study with CampusPoint
+          {/* Right Column: Hero Illustration Desk Visual */}
+          <div className="mj-hero-illustration-col">
+            <div className="mj-hero-illustration-wrapper">
+              <picture>
+                <source srcSet="/images/mentorship_hero_desk_transparent.webp" type="image/webp" />
+                <img
+                  src="/images/mentorship_hero_desk.jpg"
+                  alt="1-on-1 IITian Mentorship Desk Setup with Daily Targets and Test Autopsy"
+                  className="mj-hero-illustration-img"
+                  width="580"
+                  height="450"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -270,7 +268,7 @@ function Qualifier({ cfg }) {
   const hurdles = cfg?.qualifierHurdles || ASPIRANT_POINTS;
   const mentors = cfg?.qualifierMentors || QUALIFIER_MENTORS;
   return (
-    <section className="mj-section mj-qualifier-section" style={{ background: "#FFFFFF" }}>
+    <section className="mj-section">
       <style>{`
         .mj-qualifier-split {
           display: grid;
@@ -1966,6 +1964,7 @@ export default function Mentorship() {
         path={`/mentorship/${variant}`}
         jsonLd={combinedSchemas}
       />
+      <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <Qualifier cfg={cfg} />
       <CoachingVsMentorship exam={exam} />
       <Method cfg={cfg} />
@@ -1974,7 +1973,6 @@ export default function Mentorship() {
       <BacklogAndStudyPlan year={year} exam={exam} />
       <MockTestAnalysisGuide cfg={cfg} />
       <ForParents cfg={cfg} />
-      <Hero variant={variant} cfg={cfg} plan={plan} year={year} exam={exam} openEnrol={openEnrol} scrollTo={scrollTo} />
       <WhatsApp />
       <Pricing plan={plan} exam={exam} openEnrol={openEnrol} />
       <Faqs cfg={cfg} />
@@ -2048,43 +2046,10 @@ const CSS = `
 .mj-body { font:400 1.05rem/1.7 'DM Sans',sans-serif; color:${T.body}; margin:20px 0 0; max-width:460px; }
 .mj-section { padding:clamp(64px,9vw,110px) 0; position:relative; background:#FFFFFF; }
 
-/* Qualifier section as top-of-page with comfortable clearance below fixed navbar */
-.mj-qualifier-section {
-  padding-top: clamp(120px, 12vw, 155px) !important;
-  background: #FFFFFF;
-}
-
-/* ═══════════════ HERO CARD (Below Weekly Report) ═══════════════ */
-.mj-hero-card-section {
-  position: relative;
-  padding: clamp(48px, 6vw, 76px) 0;
-  background: #FFFFFF;
-}
-
-.mj-hero-card-canvas {
-  background: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 24px;
-  padding: clamp(28px, 4.5vw, 48px);
-  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.04);
-  position: relative;
-  overflow: hidden;
-}
-
-.mj-hero-card-footer {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(0.74rem, 1vw, 0.84rem);
-  font-weight: 700;
-  color: #64748B;
-  text-align: center;
-  margin-top: 14px;
-  letter-spacing: 0.03em;
-}
-
 /* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
 .mj-hero-seo {
   position: relative;
-  padding: clamp(48px, 6vw, 76px) 0;
+  padding: clamp(195px, 18vw, 245px) 0 clamp(48px, 5vw, 72px);
   overflow: hidden;
   background: #FFFFFF;
   border-bottom: 1px solid var(--mj-line, #E2E8F0);
@@ -2315,15 +2280,8 @@ const CSS = `
 
 /* Responsive Hero Layout (Single-column stack with image below buttons) */
 @media (max-width: 960px) {
-  .mj-hero-card-section {
-    padding: clamp(36px, 5vw, 56px) 0;
-  }
-  .mj-hero-card-canvas {
-    padding: clamp(22px, 4vw, 36px);
-    border-radius: 20px;
-  }
   .mj-hero-seo {
-    padding: 36px 0;
+    padding: 175px 0 48px;
   }
   .mj-hero-seo-grid {
     grid-template-columns: 1fr;
@@ -2358,20 +2316,8 @@ const CSS = `
   }
 }
 @media (max-width: 640px) {
-  .mj-hero-card-section {
-    padding: 28px 0;
-  }
-  .mj-hero-card-canvas {
-    padding: 18px 14px;
-    border-radius: 18px;
-  }
-  .mj-hero-card-footer {
-    font-size: 0.72rem;
-    line-height: 1.45;
-    padding: 0 8px;
-  }
   .mj-hero-seo {
-    padding: 28px 0;
+    padding: 155px 0 36px;
   }
   .mj-hero-h1 {
     font-size: clamp(1.85rem, 6.8vw, 2.4rem);
