@@ -104,11 +104,12 @@ export default function JeePrepStrategy() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Comprehensive"
-        accentWord="JEE Preparation Strategy"
-        titleSuffix="& Master Roadmap"
-        description="Master both JEE Main and JEE Advanced with systematic subject-wise playbooks, proven PYQ roadmaps, book recommendations, and exam temperament tactics formulated by IIT Roorkee rankers."
+            <ClusterHero
+        line1="Subject-Wise Roadmaps"
+        line1Squiggle="Roadmaps"
+        line2Lead="for your"
+        line2Box="JEE Strategy."
+        description="Master both JEE Main & Advanced with systematic subject playbooks, proven PYQ roadmaps, and tactics from IIT Roorkee rankers."
         planKey="mentor-jee-2027-6m"
       />
 

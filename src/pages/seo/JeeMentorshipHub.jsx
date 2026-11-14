@@ -134,11 +134,12 @@ export default function JeeMentorshipHub() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Personalized"
-        accentWord="JEE Mentorship"
-        titleSuffix="by Verified IITians"
-        description="Stop getting lost in giant batches. Get paired 1-on-1 with an IIT Roorkee mentor who designs your daily study schedule, analyzes every mock test error, clears backlogs, and guides your step-by-step strategy for JEE Main & JEE Advanced."
+            <ClusterHero
+        line1="Personalized 1-on-1"
+        line1Squiggle="1-on-1"
+        line2Lead="for your"
+        line2Box="JEE Mentorship."
+        description="Direct daily guidance from IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks."
         planKey="mentor-jee-2027-6m"
       />
 

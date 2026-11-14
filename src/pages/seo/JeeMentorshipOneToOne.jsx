@@ -96,11 +96,12 @@ export default function JeeMentorshipOneToOne() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Private"
-        accentWord="1-on-1 JEE Mentorship"
-        titleSuffix="by Verified IITians"
-        description="No 200-student batches. No generic motivational speeches. Just you and your personal IITian mentor working together daily to engineer your rank in JEE Main and Advanced."
+            <ClusterHero
+        line1="Private 1-on-1 Daily"
+        line1Squiggle="1-on-1 Daily"
+        line2Lead="guidance for your"
+        line2Box="Dream IIT."
+        description="No 200-student batches. No generic motivational speeches. Just you and your personal IITian mentor engineering your rank daily."
         planKey="mentor-jee-2027-6m"
       />
 

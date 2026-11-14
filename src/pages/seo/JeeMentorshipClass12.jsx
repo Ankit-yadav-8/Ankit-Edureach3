@@ -101,11 +101,12 @@ export default function JeeMentorshipClass12() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Personalized"
-        accentWord="Class 12 JEE Mentorship"
-        titleSuffix="& Strategy"
-        description="Master Class 12 without getting overwhelmed by board exams and Class 11 backlogs. Work 1-on-1 with an IITian mentor to complete your syllabus by October, revise Class 11, and secure 99%ile on your first attempt."
+            <ClusterHero
+        line1="Board & Rank Mastery"
+        line1Squiggle="Mastery"
+        line2Lead="for your"
+        line2Box="Class 12 JEE."
+        description="Complete syllabus by October, revise Class 11, and secure 99%ile on your first attempt with an IITian mentor."
         planKey="mentor-jee-2027-6m"
       />
 

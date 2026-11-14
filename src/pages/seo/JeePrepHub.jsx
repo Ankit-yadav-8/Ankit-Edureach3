@@ -87,11 +87,12 @@ export default function JeePrepHub() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Master Your"
-        accentWord="JEE Preparation"
-        titleSuffix="with Proven Frameworks"
-        description="Everything you need to conquer JEE Main and JEE Advanced: structured daily study plans, the 70-30 backlog recovery formula, subject playbooks, and 1-on-1 IITian mentorship."
+            <ClusterHero
+        line1="Structured Blueprints"
+        line1Squiggle="Blueprints"
+        line2Lead="for your"
+        line2Box="JEE Preparation."
+        description="Everything you need to conquer JEE Main & Advanced: daily study plans, backlog recovery formulas, and 1-on-1 IITian mentorship."
         planKey="mentor-jee-2027-6m"
       />
 

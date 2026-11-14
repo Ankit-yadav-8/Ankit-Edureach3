@@ -101,11 +101,12 @@ export default function JeeMentorshipClass11() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Personalized"
-        accentWord="Class 11 JEE Mentorship"
-        titleSuffix="& Foundation"
-        description="Don't let the Class 11 shock derail your IIT dreams. Work 1-on-1 with an IITian mentor to master Mechanics, Bonding, and Calculus, balance school with coaching, and keep your prep completely backlog-free."
+            <ClusterHero
+        line1="Strong Foundation"
+        line1Squiggle="Foundation"
+        line2Lead="for your"
+        line2Box="Class 11 JEE."
+        description="Work 1-on-1 with an IITian mentor to master Mechanics and Calculus, balance school, and stay 100% backlog-free."
         planKey="mentor-jee-2028-6m"
       />
 

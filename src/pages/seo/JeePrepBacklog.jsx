@@ -101,11 +101,12 @@ export default function JeePrepBacklog() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="How to Clear"
-        accentWord="JEE Backlogs"
-        titleSuffix="Without Panic"
-        description="Don't let backlogs kill your confidence. Learn the exact 70-30 recovery system used by top IITians to clear months of pending syllabus while staying 100% on track with ongoing coaching classes."
+            <ClusterHero
+        line1="Proven 70-30 System"
+        line1Squiggle="70-30 System"
+        line2Lead="to clear your"
+        line2Box="JEE Backlogs."
+        description="Learn the exact recovery system used by top IITians to clear months of pending syllabus while staying on track with classes."
         planKey="mentor-jee-2027-6m"
       />
 

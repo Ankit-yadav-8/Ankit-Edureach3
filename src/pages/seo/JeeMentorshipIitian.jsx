@@ -96,11 +96,12 @@ export default function JeeMentorshipIitian() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Genuine"
-        accentWord="JEE Mentorship by IITians"
-        titleSuffix="& Top Rankers"
-        description="Stop taking advice from people who never cleared the modern JEE. Get guided 1-on-1 by verified IITians from IIT Roorkee and top institutes who conquered the same exam you are preparing for."
+            <ClusterHero
+        line1="Guided by Top Rankers"
+        line1Squiggle="Rankers"
+        line2Lead="from"
+        line2Box="IIT Roorkee."
+        description="Stop taking advice from giant batch coaching. Get personal daily mentorship from verified IITians who cracked the modern JEE."
         planKey="mentor-jee-2027-6m"
       />
 

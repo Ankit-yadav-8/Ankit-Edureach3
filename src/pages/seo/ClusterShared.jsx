@@ -86,88 +86,209 @@ export function ClusterNav({ currentPath }) {
 }
 
 /**
- * Clean, bold, world-class Hero (Matches signature Mentorship Journal layout).
+ * Wavy divider with a cute star accent in the center (Signature editorial separator).
+ */
+export function WavyDivider({ className = "" }) {
+  return (
+    <div className={`mj-hero-wavy-divider ${className}`} aria-hidden="true">
+      <div className="mj-wavy-line-wrapper">
+        <svg viewBox="0 0 540 14" fill="none" className="mj-wavy-svg" preserveAspectRatio="none">
+          <path
+            d="M0 7 Q 15 1, 30 7 T 60 7 T 90 7 T 120 7 T 150 7 T 180 7 T 210 7 T 240 7 T 270 7 T 300 7 T 330 7 T 360 7 T 390 7 T 420 7 T 450 7 T 480 7 T 510 7 T 540 7"
+            stroke="#E7DFD3"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <div className="mj-wavy-star-symbol">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#FF4F6E">
+          <path d="M12 2L14.85 8.7L22 9.4L16.65 14.2L18.3 21.3L12 17.6L5.7 21.3L7.35 14.2L2 9.4L9.15 8.7L12 2Z" />
+        </svg>
+      </div>
+      <div className="mj-wavy-line-wrapper">
+        <svg viewBox="0 0 540 14" fill="none" className="mj-wavy-svg" preserveAspectRatio="none">
+          <path
+            d="M0 7 Q 15 1, 30 7 T 60 7 T 90 7 T 120 7 T 150 7 T 180 7 T 210 7 T 240 7 T 270 7 T 300 7 T 330 7 T 360 7 T 390 7 T 420 7 T 450 7 T 480 7 T 510 7 T 540 7"
+            stroke="#E7DFD3"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Line 1 helper with stylish squiggly underline under the keyword.
+ */
+function RenderLine1({ text, squiggleWord }) {
+  if (!squiggleWord || !text.includes(squiggleWord)) {
+    return <span className="mj-hero-line1-text">{text}</span>;
+  }
+  const parts = text.split(squiggleWord);
+  return (
+    <span className="mj-hero-line1-text">
+      {parts[0]}
+      <span className="mj-hero-squiggle-wrap">
+        {squiggleWord}
+        <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+          <path
+            d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+            stroke="#FF4F6E"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      {parts.slice(1).join(squiggleWord)}
+    </span>
+  );
+}
+
+/**
+ * Clean, modern editorial Hero (Matches signature 2-column illustration layout).
+ * Strictly two strong, impactful lines + crisp subtext + dual action buttons + illustration.
  */
 export function ClusterHero({
-  badge = "Built by IITians",
   title,
-  titlePrefix = "Personalized",
-  accentWord = "JEE Mentorship",
-  titleSuffix = "by Verified IITians",
+  line1,
+  line1Squiggle,
+  line2Lead,
+  line2Box,
+  // Legacy props fallback
+  titlePrefix,
+  accentWord,
+  titleSuffix,
   subtitle,
   description,
   planKey = "mentor-jee-2027-6m",
-  bullets = []
+  bullets = [],
+  heroImage = "/images/jee_mentor_kit_hero_transparent.webp",
+  heroImageFallback = "/images/jee_mentor_kit_hero.jpg",
+  showWavyDivider = true
 }) {
   const { open: openEnrol } = useEnrol();
   const [showBatchModal, setShowBatchModal] = useState(false);
   const plan = MENTOR_PLANS[planKey] || { amount: 3499 };
-  const subtext = subtitle || description || "Manage study schedules, clear backlogs, and get dedicated 1-on-1 guidance from IIT/NIT students to turn your IIT dream into a real rank.";
+
+  // Smart resolution for the 2 strong lines:
+  const resolvedLine1 =
+    line1 ||
+    (titlePrefix ? `${titlePrefix} 1-on-1` : "Personalized 1-on-1");
+  const resolvedLine1Squiggle =
+    line1Squiggle ||
+    (resolvedLine1.includes("1-on-1")
+      ? "1-on-1"
+      : resolvedLine1.split(" ").slice(-1)[0] || "");
+  const resolvedLine2Lead =
+    line2Lead !== undefined
+      ? line2Lead
+      : (titleSuffix && titleSuffix.toLowerCase().includes("iit") ? "by" : "for your");
+  const resolvedLine2Box =
+    line2Box ||
+    (accentWord ? `${accentWord}.` : "JEE Mentorship.");
+
+  const subtext =
+    subtitle ||
+    description ||
+    "Direct daily guidance from IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.";
 
   return (
     <header className="mj-hero-seo">
       <div className="scp-container">
-        <div className="mj-hero-inner">
-          <h1 className="mj-hero-h1">
-            {title ? (
-              title
-            ) : (
-              <>
-                {titlePrefix}<br />
-                <span className="mj-hero-accent">
-                  {accentWord}
-                </span><br />
-                {titleSuffix}
-              </>
+        <div className="mj-hero-seo-grid">
+          {/* Left Column: Two Strong Lines + Subtext + Action Buttons */}
+          <div className="mj-hero-copy-col">
+            <h1 className="mj-hero-h1">
+              {title ? (
+                title
+              ) : (
+                <>
+                  <span className="mj-hero-line1">
+                    <RenderLine1 text={resolvedLine1} squiggleWord={resolvedLine1Squiggle} />
+                  </span>
+                  <span className="mj-hero-line2">
+                    {resolvedLine2Lead && (
+                      <span className="mj-hero-line2-lead">{resolvedLine2Lead} </span>
+                    )}
+                    <span className="mj-hero-box-pill">
+                      {resolvedLine2Box}
+                    </span>
+                  </span>
+                </>
+              )}
+            </h1>
+
+            {subtext && (
+              <p className="mj-hero-sub">
+                {subtext}
+              </p>
             )}
-          </h1>
 
-          {subtext && (
-            <p className="mj-hero-sub">
-              {subtext}
-            </p>
-          )}
+            <div className="mj-hero-editorial-actions">
+              <button
+                type="button"
+                className="mj-hero-btn-primary"
+                onClick={() => setShowBatchModal(true)}
+              >
+                Get Started · ₹{plan.amount.toLocaleString("en-IN")} <ArrowRight size={17} />
+              </button>
+              <button
+                type="button"
+                className="mj-hero-btn-secondary"
+                onClick={() => {
+                  const el = document.getElementById("pricing");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Explore Plans <ArrowRight size={17} />
+              </button>
+            </div>
 
-          <div className="mj-hero-cta">
-            <button
-              type="button"
-              className="mj-btn-glow"
-              onClick={() => setShowBatchModal(true)}
-            >
-              Get Started · ₹{plan.amount.toLocaleString("en-IN")} <ArrowRight size={18} />
-            </button>
-            <button
-              type="button"
-              className="mj-btn-glass"
-              onClick={() => {
-                const el = document.getElementById("pricing");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              View Plans
-            </button>
-            <a
-              href={`https://wa.me/${WA_NUMBER}?text=Hi%20CampusPoint,%20I%20want%20to%20know%20more%20about%20JEE%20mentorship`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mj-btn-glass"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
-            >
-              Know About Plans <Phone size={16} />
-            </a>
+            <div className="mj-hero-wa-hint">
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=Hi%20CampusPoint,%20I%20want%20to%20know%20more%20about%20JEE%20mentorship`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Phone size={14} /> Have questions? Chat with an IITian Mentor on WhatsApp
+              </a>
+            </div>
+
+            {bullets && bullets.length > 0 && (
+              <div className="mj-hero-bullets">
+                {bullets.map((b, i) => (
+                  <span key={i} className="mj-hero-bullet">
+                    <i /> {b}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {bullets && bullets.length > 0 && (
-            <div className="mj-hero-bullets">
-              {bullets.map((b, i) => (
-                <span key={i} className="mj-hero-bullet">
-                  <i /> {b}
-                </span>
-              ))}
+          {/* Right Column: Hero Illustration Visual */}
+          <div className="mj-hero-illustration-col">
+            <div className="mj-hero-illustration-wrapper">
+              <picture>
+                <source srcSet={heroImage} type="image/webp" />
+                <img
+                  src={heroImageFallback}
+                  alt="JEE Preparation and IITian Mentorship Kit Illustration"
+                  className="mj-hero-illustration-img"
+                  width="520"
+                  height="520"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
             </div>
-          )}
+          </div>
         </div>
       </div>
+
+      {showWavyDivider && <WavyDivider />}
 
       {/* Target Batch Selection Modal (JEE 2027 vs JEE 2028) */}
       <JeeBatchSelectModal

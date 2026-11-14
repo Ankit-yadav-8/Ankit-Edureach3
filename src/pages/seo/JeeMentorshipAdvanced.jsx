@@ -101,11 +101,12 @@ export default function JeeMentorshipAdvanced() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Elite"
-        accentWord="JEE Advanced Mentorship"
-        titleSuffix="by Top IITians"
-        description="Master the depth, rigor, and multi-concept problem solving demanded by IIT JEE Advanced. Get guided 1-on-1 by mentors from IIT Roorkee and top IITs who scored top ranks."
+            <ClusterHero
+        line1="Elite 1-on-1 Guidance"
+        line1Squiggle="Guidance"
+        line2Lead="for your"
+        line2Box="JEE Advanced."
+        description="Master multi-concept problem solving and exam temperament guided 1-on-1 by IIT Roorkee top rankers."
         planKey="mentor-jee-2027-6m"
       />
 

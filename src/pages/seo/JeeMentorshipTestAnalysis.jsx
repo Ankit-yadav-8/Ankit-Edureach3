@@ -103,11 +103,12 @@ export default function JeeMentorshipTestAnalysis() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Precision"
-        accentWord="JEE Test Analysis"
-        titleSuffix="& Mistake Tracking"
-        description="Don't just look at your score and feel depressed. Break down your exam question-by-question: time spent per problem, silly slips vs concept gaps, and turn negative marks into guaranteed points with your IITian mentor."
+            <ClusterHero
+        line1="Mock Error Autopsy"
+        line1Squiggle="Autopsy"
+        line2Lead="to turn"
+        line2Box="Negatives into +20."
+        description="Break down your tests question-by-question: time spent per problem, silly slips vs concept gaps, with your IITian mentor."
         planKey="mentor-jee-2027-6m"
       />
 

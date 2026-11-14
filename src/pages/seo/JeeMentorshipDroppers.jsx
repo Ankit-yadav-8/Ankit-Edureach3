@@ -101,11 +101,12 @@ export default function JeeMentorshipDroppers() {
         jsonLd={jsonLd}
       />
 
-      <ClusterHero
-        titlePrefix="Specialized"
-        accentWord="JEE Droppers Mentorship"
-        titleSuffix="& Repeaters Plan"
-        description="Your drop year is your second and most focused chance. Don't repeat the mistakes of your previous attempt. Get a dedicated IITian mentor who creates your 8-month recovery roadmap, tracks daily study hours, and keeps your motivation unwavering."
+            <ClusterHero
+        line1="Focused Dropper Plan"
+        line1Squiggle="Dropper Plan"
+        line2Lead="for your"
+        line2Box="Second Chance."
+        description="Turn your drop year into a top IIT rank with daily study tracking, mock error autopsies, and an IITian mentor."
         planKey="mentor-jee-2027-6m"
       />
 
