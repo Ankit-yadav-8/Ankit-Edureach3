@@ -92,11 +92,7 @@ export function ClusterHero({
   subtitle,
   description,
   planKey = "mentor-jee-2027-6m",
-  bullets = [
-    "1-on-1 Verified IIT Roorkee Mentor",
-    "Daily WhatsApp Study Log & Check-ins",
-    "Question-Level Mock Error Autopsy"
-  ]
+  bullets = []
 }) {
   const { open: openEnrol } = useEnrol();
   const [showBatchModal, setShowBatchModal] = useState(false);
@@ -156,13 +152,15 @@ export function ClusterHero({
             </a>
           </div>
 
-          <div className="mj-hero-bullets">
-            {bullets.map((b, i) => (
-              <span key={i} className="mj-hero-bullet">
-                <i /> {b}
-              </span>
-            ))}
-          </div>
+          {bullets && bullets.length > 0 && (
+            <div className="mj-hero-bullets">
+              {bullets.map((b, i) => (
+                <span key={i} className="mj-hero-bullet">
+                  <i /> {b}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
