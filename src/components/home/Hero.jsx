@@ -126,12 +126,8 @@ export default function Hero({ onSearch }) {
                 </span>
               </h1>
 
-              <p className="mj-hero-sub">
-                Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.
-              </p>
-
               {/* Action Buttons: Primary "Explore Mentorship" & Secondary "About Us" */}
-              <div className="mj-hero-editorial-actions">
+              <div className="mj-hero-editorial-actions" style={{ marginTop: "28px" }}>
                 <Link
                   to="/mentorship"
                   className="mj-hero-btn-primary"
