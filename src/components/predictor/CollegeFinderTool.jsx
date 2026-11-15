@@ -452,10 +452,9 @@ const CF_STYLES = `
 .cf-ddmenu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40; background:#fff;
   border:1px solid var(--cf-line); border-radius:12px; box-shadow:0 14px 36px rgba(0,0,0,.14);
   padding:6px; max-height:288px; overflow-y:auto; animation:cfDD .14s ease;
-  scrollbar-width:thin; scrollbar-color:rgba(255, 105, 61,.45) transparent; }
+  scrollbar-width: none; -ms-overflow-style: none; }
 @keyframes cfDD { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
-.cf-ddmenu::-webkit-scrollbar { width:8px; }
-.cf-ddmenu::-webkit-scrollbar-thumb { background:rgba(255, 105, 61,.4); border-radius:50px; border:2px solid #fff; }
+.cf-ddmenu::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .cf-ddopt { display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
   padding:9px 12px; border-radius:8px; font-size:13.5px; color:#3a3a4a; transition:background .12s; }
 .cf-ddopt:hover { background:#faf7f3; }
@@ -533,11 +532,8 @@ const CF_STYLES = `
 .cf-scrollwrap::after { content:""; position:absolute; left:0; right:8px; bottom:0; height:34px; pointer-events:none;
   background:linear-gradient(to top, var(--cf-bg), transparent); border-radius:0 0 14px 14px; }
 .cf-cardlist { display:flex; flex-direction:column; gap:12px; max-height:74vh; overflow-y:auto; padding:2px 8px 30px 2px;
-  scroll-behavior:smooth; scrollbar-width:thin; scrollbar-color:rgba(255, 105, 61,.45) transparent; }
-.cf-cardlist::-webkit-scrollbar { width:9px; }
-.cf-cardlist::-webkit-scrollbar-track { background:transparent; }
-.cf-cardlist::-webkit-scrollbar-thumb { background:rgba(255, 105, 61,.4); border-radius:50px; border:2px solid var(--cf-bg); }
-.cf-cardlist::-webkit-scrollbar-thumb:hover { background:rgba(255, 105, 61,.65); }
+  scroll-behavior:smooth; scrollbar-width: none; -ms-overflow-style: none; }
+.cf-cardlist::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .cf-cardanim { animation:cfIn .42s cubic-bezier(.4,0,.2,1) both; }
 @keyframes cfIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 

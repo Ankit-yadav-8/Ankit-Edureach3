@@ -852,13 +852,10 @@ input:focus,select:focus,textarea:focus { outline:2px solid rgba(255, 105, 61,.4
 .table-scroll {
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
-  scrollbar-color:var(--coral) #f3f0ec;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.table-scroll::-webkit-scrollbar { height:9px; }
-.table-scroll::-webkit-scrollbar-track { background:#f3f0ec; border-radius:8px; }
-.table-scroll::-webkit-scrollbar-thumb { background:var(--coral); border-radius:8px; }
-.table-scroll::-webkit-scrollbar-thumb:hover { background:#d9641a; }
+.table-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* Small "swipe sideways" hint — only shown on phones where columns overflow. */
 .table-scroll-hint { display:none; }
@@ -1961,47 +1958,22 @@ a.section-link:hover { color:var(--coral); transform:translateX(2px); display:in
 ::selection { background:rgba(255, 105, 61,.45); color:#fff; }
 
 /* ════════════════════════════════════════════════
-   CUSTOM SCROLLBAR
+   INVISIBLE SCROLLBARS (Scroll Effect 100% Intact)
+   Smooth scrolling, swipe, wheel, and animations
+   work normally, but the visible orange scrollbar
+   indicator thumb/track is completely hidden.
 ════════════════════════════════════════════════ */
-::-webkit-scrollbar             { width:10px; height:10px; }
-::-webkit-scrollbar-track       { background:#f9f3ee; }
-::-webkit-scrollbar-thumb       { background:linear-gradient(var(--coral),var(--gold)); border-radius:10px; box-shadow: 0 0 8px rgba(255, 105, 61,.4); }
-
-/* ════════════════════════════════════════════════
-   ADMIN & MENTOR DASHBOARD: INVISIBLE SCROLLBARS
-   Scroll function works normally as an effect,
-   but the visible orange scrollbar is hidden.
-════════════════════════════════════════════════ */
-html.dashboard-invisible-scrollbar,
-html.dashboard-invisible-scrollbar body,
-html.dashboard-invisible-scrollbar *,
-.adm-suite-root,
-.adm-suite-root *,
-.mentor-console-root,
-.mentor-console-root *,
-body:has(.adm-suite-root),
-body:has(.adm-suite-root) *,
-body:has(.mentor-console-root),
-body:has(.mentor-console-root) *,
-html:has(.adm-suite-root),
-html:has(.mentor-console-root) {
+html,
+body,
+* {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
-html.dashboard-invisible-scrollbar::-webkit-scrollbar,
-html.dashboard-invisible-scrollbar body::-webkit-scrollbar,
-html.dashboard-invisible-scrollbar *::-webkit-scrollbar,
-.adm-suite-root::-webkit-scrollbar,
-.adm-suite-root *::-webkit-scrollbar,
-.mentor-console-root::-webkit-scrollbar,
-.mentor-console-root *::-webkit-scrollbar,
-body:has(.adm-suite-root)::-webkit-scrollbar,
-body:has(.adm-suite-root) *::-webkit-scrollbar,
-body:has(.mentor-console-root)::-webkit-scrollbar,
-body:has(.mentor-console-root) *::-webkit-scrollbar,
-html:has(.adm-suite-root)::-webkit-scrollbar,
-html:has(.mentor-console-root)::-webkit-scrollbar {
+::-webkit-scrollbar,
+*::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
@@ -3188,20 +3160,10 @@ h3          { font-size:clamp(17px,2vw,26px);  line-height:1.25; }
   overflow-y: auto;
   max-height: 620px;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--coral) #f3f0ec;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.cp-results-scroll::-webkit-scrollbar { height: 9px; width: 9px; }
-.cp-results-scroll::-webkit-scrollbar-track {
-  background: #f3f0ec;
-  border-radius: 8px;
-}
-.cp-results-scroll::-webkit-scrollbar-thumb {
-  background: var(--coral);
-  border-radius: 8px;
-}
-.cp-results-scroll::-webkit-scrollbar-thumb:hover { background: #d9641a; }
-.cp-results-scroll::-webkit-scrollbar-corner { background: #f3f0ec; }
+.cp-results-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ── Sticky header row — stays visible while scrolling vertically, on every
    screen size (the base data-table rule sets position:sticky; top:0, here we

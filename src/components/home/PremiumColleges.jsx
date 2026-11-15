@@ -132,11 +132,15 @@ export default function PremiumColleges() {
         .pc-scroll-area {
           max-height: 580px;
           overflow-y: auto;
-          scrollbar-width: thin;
-          scrollbar-color: rgba(255,105,61,0.4) transparent;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
-        .pc-scroll-area::-webkit-scrollbar { width: 8px; }
-        .pc-scroll-area::-webkit-scrollbar-thumb { background: rgba(255,105,61,0.4); border-radius: 50px; }
+        .pc-scroll-area::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+          background: transparent;
+        }
         .pc-scroll-area .pc-row:last-child { border-bottom: none !important; }
         @media (max-width: 760px) {
           .pc-head { display: none; }
