@@ -96,9 +96,6 @@ function WorkingLaptopScreen() {
                 <span className="mj-os-dot mj-dot-yellow" />
                 <span className="mj-os-dot mj-dot-green" />
               </div>
-              <div className="mj-os-window-title">
-                meet.google.com/cp-iitian-mentorship
-              </div>
               <div className="mj-os-mentor-status">
                 <span className="mj-pulse-dot" />
                 <span>IIT Roorkee Mentor Online</span>
@@ -795,46 +792,51 @@ export default function Hero({ onSearch }) {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 7px 11px;
+          padding: 8px 12px;
           background: #1A1D24;
           border-bottom: 1px solid #2A2F3D;
         }
         .mj-os-traffic-lights {
           display: flex;
-          gap: 5px;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
         }
         .mj-os-dot {
-          width: 8px;
-          height: 8px;
+          width: 9px;
+          height: 9px;
           border-radius: 50%;
+          display: inline-block;
+          flex-shrink: 0;
         }
         .mj-dot-red    { background: #FF5F56; }
         .mj-dot-yellow { background: #FFBD2E; }
         .mj-dot-green  { background: #27C93F; }
 
-        .mj-os-window-title {
-          font: 600 11px/1 'Sora', sans-serif;
-          color: #94A3B8;
-          letter-spacing: -0.01em;
-        }
         .mj-os-mentor-status {
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 5px;
-          font: 600 10.5px/1 'DM Sans', sans-serif;
+          gap: 6px;
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 600;
+          font-size: 11px;
+          line-height: 1;
           color: #4ADE80;
           background: rgba(34, 197, 94, 0.15);
-          padding: 2.5px 8px;
+          padding: 3.5px 10px;
           border-radius: 999px;
           border: 1px solid rgba(74, 222, 128, 0.3);
+          white-space: nowrap;
+          flex-shrink: 0;
         }
         .mj-pulse-dot {
-          width: 5px;
-          height: 5px;
+          width: 6px;
+          height: 6px;
           border-radius: 50%;
           background: #4ADE80;
           box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
           animation: mjPulse 2s infinite;
+          flex-shrink: 0;
         }
         @keyframes mjPulse {
           0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
@@ -1238,6 +1240,14 @@ export default function Hero({ onSearch }) {
             max-width: 100%;
             padding: 14px 4px 6px;
           }
+          .mj-os-titlebar {
+            padding: 6px 10px;
+          }
+          .mj-os-mentor-status {
+            font-size: 10px;
+            padding: 3px 8px;
+            gap: 5px;
+          }
           /* Keep mobile neat and clean */
           .mj-note-tl,
           .mj-note-bl,
@@ -1250,6 +1260,10 @@ export default function Hero({ onSearch }) {
           .mj-hero-wa-link {
             font-size: 0.78rem;
             gap: 6px;
+          }
+          .mj-os-mentor-status {
+            font-size: 9.5px;
+            padding: 2.5px 7px;
           }
         }
       `}</style>
