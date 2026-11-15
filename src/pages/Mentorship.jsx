@@ -2673,27 +2673,27 @@ const CSS = `
   align-items: center;
   gap: 8px;
   padding: 13px 26px;
-  background: #1B1B1B;
+  background: #FF7A3C;
   color: #FFFFFF;
   font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 0.98rem;
   border-radius: 12px;
-  border: 2px solid #1B1B1B;
-  box-shadow: 3px 3px 0px #FF7A3C;
+  border: 2.5px solid #1B1B1B;
+  box-shadow: 3.5px 3.5px 0px #1B1B1B;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   text-decoration: none;
 }
 .mj-hero-btn-primary:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px #FF7A3C;
-  background: #2B2B2B;
+  box-shadow: 5px 5px 0px #1B1B1B;
+  background: #FF6622;
   color: #FFFFFF;
 }
 .mj-hero-btn-primary:active {
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #FF7A3C;
+  box-shadow: 1.5px 1.5px 0px #1B1B1B;
 }
 .mj-hero-btn-secondary {
   display: inline-flex;
@@ -2706,21 +2706,21 @@ const CSS = `
   font-weight: 700;
   font-size: 0.98rem;
   border-radius: 12px;
-  border: 2px solid #1B1B1B;
-  box-shadow: 3px 3px 0px #1B1B1B;
+  border: 2.5px solid #1B1B1B;
+  box-shadow: 3.5px 3.5px 0px #1B1B1B;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
   text-decoration: none;
 }
 .mj-hero-btn-secondary:hover {
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0px #1B1B1B;
-  background: #FAF7F2;
-  color: #1B1B1B;
+  background: #FFF5F0;
+  color: #FF5A36;
 }
 .mj-hero-btn-secondary:active {
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #1B1B1B;
+  box-shadow: 1.5px 1.5px 0px #1B1B1B;
 }
 
 /* Direct WhatsApp Mentor Reassurance (Call Sign) */
