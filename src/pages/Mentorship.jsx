@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Plus, Minus, HelpCircle, Check, Star, Send, Radio,
   Video, Phone, Paperclip, Camera, Mic, Smile, Sparkles,
-  BookOpen, CircleDot, Zap, Target, Clock,
+  BookOpen, CircleDot, Zap, Target, Clock, Layers,
   Brain, PlayCircle, Activity, LineChart, ShieldCheck,
 } from "lucide-react";
 import { MENTORSHIP, MENTOR_PLANS, SEATS_LIMIT } from "../data/mentorship.js";
@@ -235,11 +235,11 @@ function StatBand({ cfg }) {
 }
 
 const ASPIRANT_POINTS = [
-  { title: "You have backlogs and no idea where to start", desc: "The pile of untouched chapters is growing every week. We'll give you a structured recovery plan to catch up without burning out." },
-  { title: "You go to coaching but your retention is zero", desc: "You understand concepts in class, but blank out during tests. Our active recall strategies ensure knowledge actually sticks." },
-  { title: "You're consistent for 2 days then disappear for 10", desc: "Motivation comes in bursts, but discipline is missing. We build an accountability system that keeps you on track daily." },
-  { title: "You want IIT but fear you're not smart enough", desc: "Self-doubt creeps in when you see toppers solving questions faster. We show you how consistent smart work beats raw talent." },
-  { title: "You study hard but your test scores never move", desc: "You're putting in 10-hour days but still scoring the same. We analyze your test attempts to fix the hidden gaps in your strategy." }
+  { title: "Struggling with JEE Main Backlogs?", desc: "The pile of untouched chapters is growing. Get a personalized JEE study plan to clear backlogs without burning out." },
+  { title: "Zero Retention from Coaching?", desc: "You understand concepts in class but blank out during tests. Our IITian mentors teach active recall strategies to make knowledge stick." },
+  { title: "Inconsistent Study Routine?", desc: "Motivation comes in bursts. We build a daily tracking and accountability system that keeps you disciplined." },
+  { title: "Fear of Competition?", desc: "Self-doubt creeps in when facing lakhs of aspirants. We show you how structured 1-on-1 mentorship beats raw talent." },
+  { title: "Mock Scores Not Improving?", desc: "Studying 10 hours a day but stuck at the same marks? We analyze your test attempts to fix hidden gaps and boost your percentile." }
 ];
 
 const QUALIFIER_MENTORS = [
@@ -247,7 +247,7 @@ const QUALIFIER_MENTORS = [
     name: "Ankit Kumar",
     role: "Founder & CEO, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
     img: "/assets/team/ankit.webp",
-    thought: "Every aspirant hits a wall where effort stops working. Our goal is to break that wall by showing you the strategic blindspots you can't see yourself. Having navigated this journey to secure AIR 3846, I know exactly where students lose their confidence and how to rebuild it. I believe that JEE preparation is not just about the number of hours you put in, but how effectively you utilize that time. Through our personalized mentorship, we aim to transform your struggles into strengths, providing you with the very tools and mindsets that helped us conquer one of the toughest exams in the world. Your success is our mission, and we are here to guide you every step of the way."
+    thought: "Securing AIR 3846 CRL (938 OBC) taught me that raw study hours mean nothing without direction. Having navigated this journey to IIT Roorkee, I built Campus Point to eliminate student blindspots. We ensure every hour you invest converts directly into marks and your dream rank."
   },
   {
     name: "Saket Kumar",
@@ -259,59 +259,468 @@ const QUALIFIER_MENTORS = [
     name: "Mayank Singh",
     role: "Marketing Head, IIT Roorkee",
     img: imgMayank,
-    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We've built this system from our own experiences of cracking IIT, focusing purely on high-yield output rather than just mindless hard work."
+    thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We focus purely on high-yield output rather than mindless hard work."
   }
 ];
+
+const HURDLE_CARD_CONFIGS = [
+  {
+    num: "1",
+    theme: "blue",
+    Icon: Layers,
+    keyword: /personalized (?:JEE )?study plan|personalized recovery plan|step-by-step roadmap|perfect pace/i,
+  },
+  {
+    num: "2",
+    theme: "green",
+    Icon: Brain,
+    keyword: /active recall|concepts are built deep|340\+ in Biology|solid foundation/i,
+  },
+  {
+    num: "3",
+    theme: "yellow",
+    Icon: Clock,
+    keyword: /daily tracking and accountability|daily tracking|discipline early|650\+|manages both/i,
+  },
+  {
+    num: "4",
+    theme: "peach",
+    Icon: Target,
+    keyword: /structured 1-on-1 mentorship|1-on-1 IITian mentorship|GMC seats|1-on-1 NEET mentorship|informed decision/i,
+  },
+  {
+    num: "5",
+    theme: "purple",
+    Icon: LineChart,
+    keyword: /hidden gaps|boost your percentile|spaced-repetition|specific patterns/i,
+  },
+];
+
+function renderHighlightedDesc(text, theme, keywordRegex) {
+  if (!text) return null;
+  if (!keywordRegex) return text;
+  const match = text.match(keywordRegex);
+  if (!match) return text;
+  const matchIndex = text.indexOf(match[0]);
+  const before = text.slice(0, matchIndex);
+  const matchedText = match[0];
+  const after = text.slice(matchIndex + matchedText.length);
+  return (
+    <>
+      {before}
+      <mark className={`mj-nb-hl hl-${theme}`}>{matchedText}</mark>
+      {after}
+    </>
+  );
+}
 
 /* ═══════════════ QUALIFIER - "is this you?" ═══════════════ */
 function Qualifier({ cfg }) {
   const hurdles = cfg?.qualifierHurdles || ASPIRANT_POINTS;
   const mentors = cfg?.qualifierMentors || QUALIFIER_MENTORS;
+
   return (
-    <section className="mj-section">
+    <section className="mj-section mj-qualifier-section">
       <style>{`
-        .mj-qualifier-split {
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');
+
+        .mj-qualifier-section {
+          padding-top: 10px;
+          padding-bottom: 50px;
+        }
+
+        /* Outer warm leather notebook cover */
+        .mj-notebook-wrapper {
+          position: relative;
+          border-radius: 26px;
+          background: linear-gradient(135deg, #CF6B32 0%, #B8531D 100%);
+          padding: 16px;
+          box-shadow: 0 25px 60px -15px rgba(184, 83, 29, 0.35), 0 12px 30px -8px rgba(0,0,0,0.22);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          margin-top: 10px;
+        }
+
+        /* Inner notebook two-page open spread */
+        .mj-notebook-spread {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          border-radius: 24px;
-          border: 1px solid var(--line);
-          background: var(--card);
-          box-shadow: 0 20px 60px -30px rgba(0,0,0,.15);
-          overflow: hidden;
-          margin-top: 0;
+          background: #FFFDF9;
+          border-radius: 18px;
+          position: relative;
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+          background-image: repeating-linear-gradient(
+            transparent,
+            transparent 31px,
+            rgba(148, 163, 184, 0.12) 31px,
+            rgba(148, 163, 184, 0.12) 32px
+          );
         }
-        .mj-qual-left {
-          padding: 40px;
-          background: var(--card);
+
+        /* Notebook center binding / spine crease */
+        .mj-notebook-spine {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          bottom: 0;
+          width: 36px;
+          transform: translateX(-50%);
+          background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.08) 0%,
+            rgba(0, 0, 0, 0.02) 40%,
+            rgba(0, 0, 0, 0.01) 50%,
+            rgba(0, 0, 0, 0.02) 60%,
+            rgba(0, 0, 0, 0.08) 100%
+          );
+          pointer-events: none;
+          z-index: 4;
         }
-        .mj-qual-right {
-          padding: 40px;
-          background: linear-gradient(135deg, #FF7A3C, #F1531F);
-          color: #fff;
+
+        /* Left Page: Hurdles */
+        .mj-nb-page-left {
+          padding: 34px 28px 34px 36px;
+          border-right: 1px solid rgba(0, 0, 0, 0.06);
           position: relative;
         }
-        .mj-qual-right::before {
-          content: ""; position: absolute; inset: 0;
-          background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(255,255,255,.05) 10px 12px);
+
+        /* Right Page: Guidance from the Founders */
+        .mj-nb-page-right {
+          padding: 34px 36px 34px 28px;
+          position: relative;
+          background-color: #FFFDF9;
+          background-image: repeating-linear-gradient(
+            transparent,
+            transparent 31px,
+            rgba(148, 163, 184, 0.12) 31px,
+            rgba(148, 163, 184, 0.12) 32px
+          );
+          border-radius: 0 18px 18px 0;
+        }
+
+        /* Title with handwritten flair */
+        .mj-nb-title-box {
+          position: relative;
+          display: inline-block;
+          margin-bottom: 6px;
+        }
+
+        .mj-nb-title {
+          font-family: 'Caveat', 'Playfair Display', cursive, serif;
+          font-size: 2.15rem;
+          font-weight: 700;
+          color: #0F172A;
+          margin: 0;
+          line-height: 1.1;
+          letter-spacing: -0.01em;
+        }
+
+        .mj-nb-title-underline {
+          display: block;
+          margin-top: -2px;
+          margin-bottom: 12px;
+        }
+
+        .mj-nb-star-doodles {
+          position: absolute;
+          top: -6px;
+          right: -36px;
+          display: flex;
+          gap: 4px;
+          font-size: 0.9rem;
+          user-select: none;
+        }
+
+        .mj-nb-card-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 14px;
+        }
+
+        .mj-nb-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 13px 15px;
+          border-radius: 14px;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          position: relative;
+        }
+
+        .mj-nb-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.08);
+        }
+
+        .mj-nb-card.theme-blue {
+          background: #F0F8FF;
+          border: 1.5px solid #BAE6FD;
+        }
+        .mj-nb-card.theme-green {
+          background: #F0FDF4;
+          border: 1.5px solid #BBF7D0;
+        }
+        .mj-nb-card.theme-yellow {
+          background: #FEFCE8;
+          border: 1.5px solid #FEF08A;
+        }
+        .mj-nb-card.theme-peach {
+          background: #FFF7ED;
+          border: 1.5px solid #FED7AA;
+        }
+        .mj-nb-card.theme-purple {
+          background: #FAF5FF;
+          border: 1.5px solid #E9D5FF;
+        }
+
+        .mj-nb-num-badge {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .mj-nb-num-circle {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          font-family: 'Caveat', cursive, sans-serif;
+          font-size: 1.05rem;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+        .theme-blue .mj-nb-num-circle { background: #DBEAFE; color: #1D4ED8; border: 1.5px solid #60A5FA; }
+        .theme-green .mj-nb-num-circle { background: #DCFCE7; color: #15803D; border: 1.5px solid #4ADE80; }
+        .theme-yellow .mj-nb-num-circle { background: #FEF9C3; color: #A16207; border: 1.5px solid #FACC15; }
+        .theme-peach .mj-nb-num-circle { background: #FFEDD5; color: #C2410C; border: 1.5px solid #FB923C; }
+        .theme-purple .mj-nb-num-circle { background: #F3E8FF; color: #7E22CE; border: 1.5px solid #C084FC; }
+
+        .mj-nb-icon-box {
+          display: grid;
+          place-items: center;
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          background: #FFFFFF;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+          flex-shrink: 0;
+        }
+        .theme-blue .mj-nb-icon-box { color: #2563EB; }
+        .theme-green .mj-nb-icon-box { color: #16A34A; }
+        .theme-yellow .mj-nb-icon-box { color: #CA8A04; }
+        .theme-peach .mj-nb-icon-box { color: #EA580C; }
+        .theme-purple .mj-nb-icon-box { color: #9333EA; }
+
+        .mj-nb-card-title {
+          font-family: 'Sora', sans-serif;
+          font-size: 0.98rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          line-height: 1.35;
+        }
+
+        .mj-nb-card-desc {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.84rem;
+          color: #334155;
+          line-height: 1.5;
+          margin: 4px 0 0 0;
+        }
+
+        .mj-nb-hl {
+          background: transparent;
+          font-weight: 700;
+          color: #0F172A;
+          padding: 0 2px;
+        }
+        .mj-nb-hl.hl-blue {
+          text-decoration: underline wavy #2563EB;
+          text-underline-offset: 3px;
+          text-decoration-thickness: 1.5px;
+        }
+        .mj-nb-hl.hl-green {
+          text-decoration: underline wavy #16A34A;
+          text-underline-offset: 3px;
+          text-decoration-thickness: 1.5px;
+        }
+        .mj-nb-hl.hl-yellow {
+          background: rgba(254, 240, 138, 0.7);
+          border-radius: 4px;
+          padding: 1px 4px;
+        }
+        .mj-nb-hl.hl-peach {
+          text-decoration: underline wavy #EA580C;
+          text-underline-offset: 3px;
+          text-decoration-thickness: 1.5px;
+        }
+        .mj-nb-hl.hl-purple {
+          background: rgba(233, 213, 255, 0.7);
+          border-radius: 4px;
+          padding: 1px 4px;
+        }
+
+        /* Right page styles */
+        .mj-nb-right-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+
+        .mj-nb-badge-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          background: #D1FAE5;
+          border: 1.5px solid #059669;
+          color: #065F46;
+          padding: 6px 14px;
+          border-radius: 999px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 800;
+          font-size: 0.78rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 1px 4px rgba(5, 150, 105, 0.1);
+        }
+
+        .mj-nb-corner-doodles {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.95rem;
+          user-select: none;
+        }
+
+        .mj-nb-mentors-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .mj-nb-mentor-card {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .mj-nb-mentor-header {
+          display: flex;
+          align-items: center;
+          gap: 13px;
+        }
+
+        .mj-nb-avatar-ring {
+          width: 58px;
+          height: 58px;
+          border-radius: 50%;
+          padding: 2px;
+          background: #FFFFFF;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .mj-nb-avatar-ring.ring-0 {
+          border: 2.5px solid #2563EB;
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+        }
+        .mj-nb-avatar-ring.ring-1 {
+          border: 2.5px solid #0284C7;
+          box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+        }
+        .mj-nb-avatar-ring.ring-2 {
+          border: 2.5px solid #EA580C;
+          box-shadow: 0 4px 12px rgba(234, 88, 12, 0.22);
+        }
+
+        .mj-nb-avatar-img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .mj-nb-mentor-meta {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .mj-nb-mentor-name {
+          font-family: 'Sora', sans-serif;
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          letter-spacing: -0.01em;
+        }
+
+        .mj-nb-mentor-role {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          margin-top: 2px;
+        }
+        .mj-nb-mentor-role.role-0 { color: #2563EB; }
+        .mj-nb-mentor-role.role-1 { color: #0284C7; }
+        .mj-nb-mentor-role.role-2 { color: #EA580C; }
+
+        .mj-nb-mentor-quote {
+          background: #FFFFFF;
+          border: 1.5px solid #CBD5E1;
+          border-radius: 12px;
+          padding: 13px 18px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .mj-nb-mentor-quote p {
+          color: #1E293B;
+          font-size: 0.88rem;
+          line-height: 1.55;
+          margin: 0;
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 450;
+        }
+
+        /* Gel Pen illustration resting on bottom right */
+        .mj-nb-pen {
+          position: absolute;
+          right: 22px;
+          bottom: -16px;
           pointer-events: none;
+          z-index: 10;
         }
-        .mj-qual-pt {
-          display: flex; align-items: flex-start; gap: 14px;
-          padding: 16px; border-radius: 14px;
-          border: 1px solid var(--line); background: #F7F7F8;
-          transition: transform .2s, box-shadow .2s;
-        }
-        .mj-qual-pt:hover {
-          transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,.1);
-          border-color: rgba(249,115,22,0.3);
-        }
-        .mj-qual-pt-ic {
-          display: grid; place-items: center; width: 28px; height: 28px;
-          border-radius: 50%; background: #FCE7E0; color: #E0421F; flex-shrink: 0;
-        }
+
         @media (max-width: 860px) {
-          .mj-qualifier-split { grid-template-columns: 1fr; }
-          .mj-qual-left, .mj-qual-right { padding: 30px 24px; }
+          .mj-notebook-spread {
+            grid-template-columns: 1fr;
+          }
+          .mj-notebook-spine {
+            display: none;
+          }
+          .mj-nb-page-left {
+            padding: 26px 18px;
+            border-right: none;
+            border-bottom: 2px dashed rgba(148, 163, 184, 0.3);
+          }
+          .mj-nb-page-right {
+            padding: 26px 18px;
+            border-radius: 0 0 18px 18px;
+          }
+          .mj-nb-pen {
+            display: none;
+          }
+          .mj-notebook-wrapper {
+            padding: 10px;
+            border-radius: 20px;
+          }
         }
       `}</style>
       <div className="mj-wrap">
@@ -323,55 +732,159 @@ function Qualifier({ cfg }) {
             </h2>
           </div>
         </Reveal>
-        
-        <div className="mj-qualifier-split">
-          <div className="mj-qual-left">
-            <h3 style={{ fontSize: "1.4rem", fontFamily: "Playfair Display, serif", color: "var(--ink)", marginBottom: 24, fontStyle: "italic" }}>
-              Are you facing these hurdles?
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div className="mj-qual-l-list" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {hurdles.map((pt, i) => (
-                  <motion.div key={i} className="mj-qual-pt"
-                    initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.1 * i }}>
-                    <div className="mj-qual-icon"><Check size={16} strokeWidth={3} /></div>
-                    <div className="mj-qual-tx">
-                      <strong>{pt.title}</strong>
-                      <p style={{ marginTop: 6, color: "var(--body)", fontSize: "0.85rem", lineHeight: 1.5 }}>{pt.desc}</p>
+
+        <div className="mj-notebook-wrapper">
+          <div className="mj-notebook-spread">
+            <div className="mj-notebook-spine" aria-hidden="true" />
+
+            {/* Left Page: Hurdles */}
+            <div className="mj-nb-page-left">
+              <div className="mj-nb-title-box">
+                <h3 className="mj-nb-title">
+                  Are you facing these hurdles?
+                </h3>
+                <div className="mj-nb-star-doodles" aria-hidden="true">
+                  <span style={{ color: "#3B82F6" }}>✦</span>
+                  <span style={{ color: "#F59E0B" }}>★</span>
+                  <span style={{ color: "#8B5CF6" }}>✧</span>
+                </div>
+                <svg className="mj-nb-title-underline" width="160" height="12" viewBox="0 0 160 12" fill="none" aria-hidden="true">
+                  <path d="M3 8C42 3 112 3 157 7" stroke="#0F172A" strokeWidth="2.4" strokeLinecap="round" />
+                  <path d="M18 11C56 9 118 8 148 11" stroke="#0F172A" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              <div className="mj-nb-card-list">
+                {hurdles.map((pt, i) => {
+                  const cfgStyle = HURDLE_CARD_CONFIGS[i % HURDLE_CARD_CONFIGS.length];
+                  const Icon = cfgStyle.Icon;
+                  return (
+                    <motion.div
+                      key={i}
+                      className={`mj-nb-card theme-${cfgStyle.theme}`}
+                      initial={{ opacity: 0, x: -16 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.35, delay: 0.08 * i }}
+                    >
+                      <div className="mj-nb-num-badge">
+                        <span className="mj-nb-num-circle">{cfgStyle.num}</span>
+                        <div className="mj-nb-icon-box">
+                          <Icon size={15} strokeWidth={2.4} />
+                        </div>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h4 className="mj-nb-card-title">{pt.title}</h4>
+                        <p className="mj-nb-card-desc">
+                          {renderHighlightedDesc(pt.desc, cfgStyle.theme, cfgStyle.keyword)}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right Page: Guidance from the Founders */}
+            <div className="mj-nb-page-right">
+              <div className="mj-nb-right-head">
+                <span className="mj-nb-badge-tag">
+                  <Sparkles size={14} strokeWidth={2.4} />
+                  GUIDANCE FROM THE FOUNDERS
+                </span>
+                <div className="mj-nb-corner-doodles" aria-hidden="true">
+                  <span style={{ color: "#6366F1" }}>✦</span>
+                  <span style={{ color: "#EC4899" }}>★</span>
+                  <span style={{ color: "#059669" }}>✧</span>
+                </div>
+              </div>
+
+              <div className="mj-nb-mentors-list">
+                {mentors.map((m, i) => (
+                  <motion.div
+                    key={i}
+                    className="mj-nb-mentor-card"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
+                  >
+                    <div className="mj-nb-mentor-header">
+                      <div className={`mj-nb-avatar-ring ring-${i}`}>
+                        <img
+                          src={m.img}
+                          alt={m.name}
+                          className="mj-nb-avatar-img"
+                          style={{
+                            objectPosition: i === 0 ? "center 15%" : "center top",
+                          }}
+                        />
+                      </div>
+                      <div className="mj-nb-mentor-meta">
+                        <h4 className="mj-nb-mentor-name">{m.name}</h4>
+                        <span className={`mj-nb-mentor-role role-${i}`}>{m.role}</span>
+                      </div>
+                    </div>
+                    <div className="mj-nb-mentor-quote">
+                      <p>{m.thought}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
           </div>
-          
-          <div className="mj-qual-right">
-            <div style={{ position: "relative", zIndex: 2 }}>
-              <h3 style={{ fontSize: "1.1rem", fontFamily: "Space Grotesk, sans-serif", color: "#fff", marginBottom: 24, letterSpacing: "1px", textTransform: "uppercase" }}>
-                Guidance from the Founders
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                {mentors.map((m, i) => (
-                  <motion.div key={i} className="mj-qual-mentor"
-                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                      <img src={m.img} alt={m.name} style={{ width: 50, height: 50, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.2)" }} />
-                      <div>
-                        <strong style={{ display: "block", color: "#fff", fontFamily: "Playfair Display, serif", fontSize: "1.15rem", fontStyle: "normal" }}>{m.name}</strong>
-                        <span style={{ display: "block", color: "rgba(255,255,255,0.7)", fontFamily: "Space Grotesk", fontSize: "0.72rem", letterSpacing: "0.05em", textTransform: "uppercase", marginTop: 2 }}>
-                          {m.role}
-                        </span>
-                      </div>
-                    </div>
-                    <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: "16px 20px", color: "rgba(255,255,255,0.95)", fontSize: "0.88rem", lineHeight: 1.6, fontFamily: "DM Sans, sans-serif", fontStyle: "normal", position: "relative" }}>
-                      {m.thought}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+
+          {/* Gel Pen vector illustration resting on the notebook edge */}
+          <div className="mj-nb-pen" aria-hidden="true">
+            <svg width="240" height="42" viewBox="0 0 240 42" fill="none">
+              <defs>
+                <linearGradient id="penBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#2E3440" />
+                  <stop offset="35%" stopColor="#4C566A" />
+                  <stop offset="70%" stopColor="#1E222A" />
+                  <stop offset="100%" stopColor="#0F1115" />
+                </linearGradient>
+                <linearGradient id="penSilver" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#E5E9F0" />
+                  <stop offset="50%" stopColor="#FFFFFF" />
+                  <stop offset="100%" stopColor="#8892B0" />
+                </linearGradient>
+                <linearGradient id="penGrip" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#3B4252" />
+                  <stop offset="50%" stopColor="#2E3440" />
+                  <stop offset="100%" stopColor="#1A1D24" />
+                </linearGradient>
+                <filter id="penShadow" x="-10%" y="-10%" width="130%" height="150%">
+                  <feDropShadow dx="2" dy="5" stdDeviation="4" floodColor="rgba(0,0,0,0.3)" />
+                </filter>
+              </defs>
+              <g filter="url(#penShadow)" transform="rotate(-3.5 120 21)">
+                {/* Pen Barrel */}
+                <rect x="55" y="14" width="130" height="14" rx="3" fill="url(#penBody)" />
+                {/* End Plug */}
+                <path d="M185 15.5C188 15.5 194 17 194 21C194 25 188 26.5 185 26.5Z" fill="url(#penSilver)" />
+                {/* Grip Section */}
+                <rect x="24" y="14.5" width="31" height="13" rx="1.5" fill="url(#penGrip)" />
+                <line x1="28" y1="15" x2="28" y2="27" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                <line x1="33" y1="15" x2="33" y2="27" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                <line x1="38" y1="15" x2="38" y2="27" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                <line x1="43" y1="15" x2="43" y2="27" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                <line x1="48" y1="15" x2="48" y2="27" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                {/* Silver Rings */}
+                <rect x="53" y="13.5" width="3" height="15" rx="0.5" fill="url(#penSilver)" />
+                <rect x="22" y="14" width="2.5" height="14" rx="0.5" fill="url(#penSilver)" />
+                {/* Pen Cone / Tip */}
+                <path d="M22 15L8 19.5C6.5 20 6.5 22 8 22.5L22 27Z" fill="url(#penSilver)" />
+                {/* Metal Point */}
+                <path d="M8 20.2L2 20.8C1.2 20.9 1.2 21.1 2 21.2L8 21.8Z" fill="#2E3440" />
+                <circle cx="1.5" cy="21" r="0.8" fill="#FFFFFF" />
+                {/* Metallic Clip */}
+                <rect x="140" y="11" width="40" height="3.5" rx="1.5" fill="url(#penSilver)" />
+                <rect x="176" y="11" width="5" height="6" rx="1" fill="url(#penSilver)" />
+                {/* Barrel Shine */}
+                <line x1="58" y1="16.5" x2="180" y2="16.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeLinecap="round" />
+              </g>
+            </svg>
           </div>
         </div>
       </div>

@@ -505,9 +505,9 @@ export const MENTORSHIP = {
     qualifierMentors: [
       {
         name: "Ankit Kumar",
-        role: "Founder & CEO, IIT Roorkee",
+        role: "Founder & CEO, IIT Roorkee (AIR 3846 CRL, 938 OBC)",
         img: "/assets/team/ankit.webp",
-        thought: "We don't want Class 9 and 10 students to burn out. Our Foundation mentorship is designed to spark curiosity, build logical reasoning, and slowly ramp up the intensity without compromising their school life."
+        thought: "Securing AIR 3846 CRL (938 OBC) taught me that early conceptual foundations beat last-minute panic. At Campus Point, we ignite scientific curiosity and problem-solving without burning students out."
       },
       {
         name: "Saket Kumar",
@@ -519,7 +519,7 @@ export const MENTORSHIP = {
         name: "Mayank Singh",
         role: "Marketing Head, IIT Roorkee",
         img: "/assets/team/mayank.jpg",
-        thought: "Starting early is an advantage only if the direction is right. For Foundation students, we focus on building a resilient mindset and an unbreakable conceptual base that makes clearing future competitive exams a natural outcome."
+        thought: "Mentorship isn't about giving you more material; it's about giving you the exact right direction so your hard work actually translates into rank. We focus purely on high-yield output."
       }
     ],
     howWeGuide: [
