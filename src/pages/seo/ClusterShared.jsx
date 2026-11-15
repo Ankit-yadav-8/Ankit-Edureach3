@@ -573,8 +573,8 @@ export function getOrganizationSchema() {
       }
     ],
     "sameAs": [
-      "https://www.instagram.com/campuspoint",
-      "https://www.linkedin.com/company/campuspoint"
+      "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
+      "https://www.instagram.com/ankit_1_7_/"
     ]
   };
 }

@@ -229,7 +229,9 @@ export default function Developer() {
                   Connect
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                  {[...Object.entries(dev.socials), ...(dev.email ? [["email", `mailto:${dev.email}`]] : [])].map(([k, url]) => {
+                  {[...Object.entries(dev.socials || {}), ...(dev.email ? [["email", `mailto:${dev.email}`]] : [])]
+                    .filter(([_, url]) => url && url !== "#")
+                    .map(([k, url]) => {
                     const I = ICON[k] || Globe;
                     const label = SOCIAL_LABEL[k] || k.charAt(0).toUpperCase() + k.slice(1);
                     const external = !url.startsWith("mailto:");

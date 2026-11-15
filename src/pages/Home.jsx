@@ -48,7 +48,8 @@ export default function Home({ onSearch }) {
         "url": "https://campuspoint.in/",
         "logo": "https://campuspoint.in/cplogo.svg",
         "sameAs": [
-          "https://www.instagram.com/campuspoint.in",
+          "https://www.linkedin.com/in/ankit-kumar-1b9a64387",
+          "https://www.instagram.com/ankit_1_7_/",
           "https://youtube.com/@campuspoint"
         ],
         "aggregateRating": {

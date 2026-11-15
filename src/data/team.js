@@ -2,8 +2,8 @@
    team.js - CampusPoint developer profiles + portfolio data.
    ============================================================ */
 
-const LK = "https://www.linkedin.com/in/ankityadavpm/";
-const IG = "https://www.instagram.com/ankits_yadavv?igsh=aTF0NnU5bDJxN2F5&utm_source=qr";
+const LK = "https://www.linkedin.com/in/ankit-kumar-1b9a64387";
+const IG = "https://www.instagram.com/ankit_1_7_/";
 const WA = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t";
 
 export const TEAM = [
@@ -91,8 +91,6 @@ export const TEAM = [
       },
     ],
     socials: {
-      linkedin: "#",
-      instagram: "#",
       whatsapp: WA,
       website: "https://campuspoint.in",
     },
@@ -130,8 +128,6 @@ export const TEAM = [
       },
     ],
     socials: {
-      linkedin: "#",
-      instagram: "#",
       whatsapp: WA,
       website: "https://campuspoint.in",
     },

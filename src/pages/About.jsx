@@ -9,8 +9,8 @@ import imgMayank from "../images/team/mayank.jpg";
 import imgSaket from "../images/team/saket.jpg";
 
 /* ── Social constants ──────────────────────────────────────── */
-const LK = "https://www.linkedin.com/in/ankityadavpm/";
-const IG = "https://www.instagram.com/ankits_yadavv?igsh=aTF0NnU5bDJxN2F5&utm_source=qr";
+const LK = "https://www.linkedin.com/in/ankit-kumar-1b9a64387";
+const IG = "https://www.instagram.com/ankit_1_7_/";
 const WA = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t";
 
 /* ── Inline SVG brand icons ─────────────────────────────────── */
@@ -55,7 +55,7 @@ const FOUNDERS = [
     edu: "B.Tech Mechanical Engineering, IIT Roorkee",
     bio: "Hi, I am Mayank Singh. Started my own jee journey from middle of 11th, had backlogs, lost faith, lack of time management, so many ups and downs but it created such a man that could tackle anything. Now at Campus Point, I lead growth and marketing to ensure that every student gets the right guidance and resources.",
     skills: ["Marketing", "Growth Strategy", "Community Building"],
-    socials: { linkedin: "#", instagram: "#", whatsapp: WA },
+    socials: { whatsapp: WA },
   },
   {
     name: "Saket Kumar",
@@ -67,7 +67,7 @@ const FOUNDERS = [
     edu: "B.Tech, IIT Roorkee",
     bio: "Hi, I'm Saket Kumar, a B.Tech student at IIT Roorkee. Despite scoring a very low percentile in JEE Main, I stayed consistent, changed my strategy, and cracked JEE Advanced to earn my place here. As the Operations Head, I ensure the smooth execution of our platform and mentorship programs to help students overcome challenges.",
     skills: ["Operations", "Strategy", "Execution"],
-    socials: { linkedin: "#", instagram: "#", whatsapp: WA },
+    socials: { whatsapp: WA },
   },
 ];
 
@@ -270,8 +270,8 @@ function TeamCard({ f, idx, badgeIcon: BadgeIcon, badgeLabel }) {
           </div>
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {f.socials.linkedin && <SocialBtn href={f.socials.linkedin} icon={Linkedin} label="LinkedIn" accent={f.accent} />}
-            {f.socials.instagram && <SocialBtn href={f.socials.instagram} icon={IgIcon} label="Instagram" accent={f.accent} />}
+            {f.socials.linkedin && f.socials.linkedin !== "#" && <SocialBtn href={f.socials.linkedin} icon={Linkedin} label="LinkedIn" accent={f.accent} />}
+            {f.socials.instagram && f.socials.instagram !== "#" && <SocialBtn href={f.socials.instagram} icon={IgIcon} label="Instagram" accent={f.accent} />}
             {f.socials.whatsapp && <SocialBtn href={f.socials.whatsapp} icon={WaIcon} label="WhatsApp" accent={f.accent} />}
           </div>
         </div>

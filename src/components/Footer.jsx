@@ -451,8 +451,8 @@ export default function Footer() {
           </div>
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
             {[
-              { Icon: Linkedin, url: "https://www.linkedin.com/company/college-parichay/", label: "LinkedIn" },
-              { Icon: Instagram, url: "https://www.instagram.com/CampusPoint", label: "Instagram" },
+              { Icon: Linkedin, url: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", label: "LinkedIn" },
+              { Icon: Instagram, url: "https://www.instagram.com/ankit_1_7_/", label: "Instagram" },
               { Icon: Youtube, url: "https://www.youtube.com/@CampusPoint-2626", label: "YouTube" },
               { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
