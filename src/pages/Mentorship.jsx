@@ -476,43 +476,27 @@ function Qualifier({ cfg }) {
         .mj-nb-num-badge {
           display: flex;
           align-items: center;
-          gap: 6px;
           flex-shrink: 0;
-          margin-top: 2px;
+          margin-top: 1px;
         }
 
         .mj-nb-num-circle {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
           display: grid;
           place-items: center;
-          font-family: 'Caveat', cursive, sans-serif;
-          font-size: 1.05rem;
-          font-weight: 700;
+          font-family: 'Space Grotesk', 'Sora', sans-serif;
+          font-size: 0.92rem;
+          font-weight: 800;
           flex-shrink: 0;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
         .theme-blue .mj-nb-num-circle { background: #DBEAFE; color: #1D4ED8; border: 1.5px solid #60A5FA; }
         .theme-green .mj-nb-num-circle { background: #DCFCE7; color: #15803D; border: 1.5px solid #4ADE80; }
         .theme-yellow .mj-nb-num-circle { background: #FEF9C3; color: #A16207; border: 1.5px solid #FACC15; }
         .theme-peach .mj-nb-num-circle { background: #FFEDD5; color: #C2410C; border: 1.5px solid #FB923C; }
         .theme-purple .mj-nb-num-circle { background: #F3E8FF; color: #7E22CE; border: 1.5px solid #C084FC; }
-
-        .mj-nb-icon-box {
-          display: grid;
-          place-items: center;
-          width: 28px;
-          height: 28px;
-          border-radius: 8px;
-          background: #FFFFFF;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-          flex-shrink: 0;
-        }
-        .theme-blue .mj-nb-icon-box { color: #2563EB; }
-        .theme-green .mj-nb-icon-box { color: #16A34A; }
-        .theme-yellow .mj-nb-icon-box { color: #CA8A04; }
-        .theme-peach .mj-nb-icon-box { color: #EA580C; }
-        .theme-purple .mj-nb-icon-box { color: #9333EA; }
 
         .mj-nb-card-title {
           font-family: 'Sora', sans-serif;
@@ -615,27 +599,28 @@ function Qualifier({ cfg }) {
         }
 
         .mj-nb-avatar-ring {
-          width: 58px;
-          height: 58px;
+          width: 68px;
+          height: 68px;
           border-radius: 50%;
-          padding: 2px;
+          padding: 2.5px;
           background: #FFFFFF;
           flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: center;
+          overflow: hidden;
         }
         .mj-nb-avatar-ring.ring-0 {
           border: 2.5px solid #2563EB;
-          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+          box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
         .mj-nb-avatar-ring.ring-1 {
           border: 2.5px solid #0284C7;
-          box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
         }
         .mj-nb-avatar-ring.ring-2 {
           border: 2.5px solid #EA580C;
-          box-shadow: 0 4px 12px rgba(234, 88, 12, 0.22);
+          box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
         }
 
         .mj-nb-avatar-img {
@@ -644,6 +629,22 @@ function Qualifier({ cfg }) {
           border-radius: 50%;
           object-fit: cover;
           display: block;
+        }
+
+        .ring-0 .mj-nb-avatar-img {
+          object-position: center 10%;
+          transform: scale(1.32);
+          transform-origin: center 20%;
+        }
+        .ring-1 .mj-nb-avatar-img {
+          object-position: center 15%;
+          transform: scale(1.22);
+          transform-origin: center 25%;
+        }
+        .ring-2 .mj-nb-avatar-img {
+          object-position: center 18%;
+          transform: scale(1.22);
+          transform-origin: center 25%;
         }
 
         .mj-nb-mentor-meta {
@@ -757,7 +758,6 @@ function Qualifier({ cfg }) {
               <div className="mj-nb-card-list">
                 {hurdles.map((pt, i) => {
                   const cfgStyle = HURDLE_CARD_CONFIGS[i % HURDLE_CARD_CONFIGS.length];
-                  const Icon = cfgStyle.Icon;
                   return (
                     <motion.div
                       key={i}
@@ -769,9 +769,6 @@ function Qualifier({ cfg }) {
                     >
                       <div className="mj-nb-num-badge">
                         <span className="mj-nb-num-circle">{cfgStyle.num}</span>
-                        <div className="mj-nb-icon-box">
-                          <Icon size={15} strokeWidth={2.4} />
-                        </div>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <h4 className="mj-nb-card-title">{pt.title}</h4>
@@ -815,9 +812,6 @@ function Qualifier({ cfg }) {
                           src={m.img}
                           alt={m.name}
                           className="mj-nb-avatar-img"
-                          style={{
-                            objectPosition: i === 0 ? "center 15%" : "center top",
-                          }}
                         />
                       </div>
                       <div className="mj-nb-mentor-meta">
