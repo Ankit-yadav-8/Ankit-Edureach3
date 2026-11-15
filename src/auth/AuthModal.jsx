@@ -276,7 +276,7 @@ function ShowcasePanel({ mode }) {
           <span style={{ color: "#fff", fontFamily: "Sora, sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px", lineHeight: 1 }}>CP</span>
         </span>
         <span style={{ fontFamily: "Sora", fontWeight: 800, fontSize: "1.05rem", color: "#1a1a2e" }}>
-          Campus <span style={{ color: OR }}>Path</span>
+          Campus <span style={{ color: OR }}>Point</span>
         </span>
       </div>
 
@@ -641,7 +641,7 @@ export default function AuthModal() {
             <div className="visual">
               <div className="brand">
                 <div className="brand-mark raised-sm">CP</div>
-                <div className="brand-name">Campus<b>Path</b></div>
+                <div className="brand-name">Campus<b>Point</b></div>
               </div>
 
               <div className="dial-wrap raised">
@@ -656,8 +656,8 @@ export default function AuthModal() {
               </div>
 
               <div className="visual-copy">
-                <h1>Know your rank.<br/>Find your <span>dream college.</span></h1>
-                <p>Built by IIT Roorkee students - rank prediction, college shortlists and mentorship in one place.</p>
+                <h1>1-on-1 IIT Mentorship.<br/>Crack your <span>dream rank.</span></h1>
+                <p>Daily personalized guidance by verified IIT Roorkee rankers — study schedules, backlog formula & 24/7 doubt solving.</p>
               </div>
             </div>
             )}
