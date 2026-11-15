@@ -238,8 +238,12 @@ export function ClusterHero({
                 href={`https://wa.me/${WA_NUMBER}?text=Hi%20CampusPoint,%20I%20want%20to%20know%20more%20about%20JEE%20mentorship`}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="mj-hero-wa-link"
               >
-                <Phone size={14} /> Have questions? Chat with an IITian Mentor on WhatsApp
+                <span className="mj-hero-wa-pill">
+                  <Phone size={12} className="mj-hero-wa-icon" />
+                </span>
+                <span className="mj-hero-wa-text">Have questions? Chat with an IITian Mentor on WhatsApp</span>
               </a>
             </div>
 

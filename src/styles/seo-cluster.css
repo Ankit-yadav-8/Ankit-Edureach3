@@ -367,20 +367,55 @@
   box-shadow: 1px 1px 0px #1B1B1B;
 }
 
+/* Direct WhatsApp Mentor Reassurance (Call Sign) */
 .mj-hero-wa-hint {
-  margin-top: 4px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
-.mj-hero-wa-hint a {
+.mj-hero-wa-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font: 600 0.88rem/1.4 'DM Sans', sans-serif;
-  color: #555555;
+  gap: 9px;
+  font: 500 0.88rem/1.45 'DM Sans', sans-serif;
+  color: #4A4A4A;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
+  border-radius: 999px;
+  padding: 4px 6px 4px 0;
 }
-.mj-hero-wa-hint a:hover {
-  color: #FF5C35;
+.mj-hero-wa-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FFF0EB;
+  border: 1.5px solid #FFD3C4;
+  color: #FF5A36;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.mj-hero-wa-icon {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.4;
+  flex-shrink: 0;
+}
+.mj-hero-wa-text {
+  font: 500 0.88rem/1.45 'DM Sans', sans-serif;
+  color: #4A4A4A;
+}
+.mj-hero-wa-link:hover .mj-hero-wa-pill {
+  background: #FF5A36;
+  color: #FFFFFF;
+  border-color: #FF5A36;
+  transform: scale(1.08);
+}
+.mj-hero-wa-link:hover .mj-hero-wa-text {
+  color: #FF5A36;
 }
 
 /* Right Column Illustration Visual (Sized to match LHS height) */
@@ -1133,7 +1168,13 @@
     justify-content: center;
   }
   .mj-hero-wa-hint {
+    justify-content: center;
     text-align: center;
+    margin: 14px auto 0;
+    width: 100%;
+  }
+  .mj-hero-wa-link {
+    justify-content: center;
   }
   .mj-hero-illustration-col {
     order: 2;

@@ -6,7 +6,6 @@ import {
   Phone,
   Video,
   CheckCircle2,
-  Sparkles,
   BarChart2,
   Target,
   ShieldCheck,
@@ -108,12 +107,6 @@ function PaperAirplaneSign() {
             strokeLinecap="round"
           />
         </svg>
-
-        {/* Floating Rank Pill attached to the paper plane */}
-        <div className="mj-plane-badge">
-          <Sparkles size={11} color="#FF5A36" />
-          <span>Target AIR &lt; 500</span>
-        </div>
       </div>
     </div>
   );
@@ -495,8 +488,14 @@ export default function Hero({ onSearch }) {
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="mj-hero-wa-link"
                 >
-                  <Phone size={14} /> Have questions? Chat with an IITian Mentor on WhatsApp
+                  <span className="mj-hero-wa-pill">
+                    <Phone size={12} className="mj-hero-wa-icon" />
+                  </span>
+                  <span className="mj-hero-wa-text">
+                    Have questions? <span className="mj-hero-wa-accent">Chat with an IITian Mentor on WhatsApp</span>
+                  </span>
                 </a>
               </div>
             </div>
@@ -672,20 +671,63 @@ export default function Hero({ onSearch }) {
           box-shadow: 1px 1px 0px #1B1B1B;
         }
 
+        /* Direct WhatsApp Mentor Reassurance (Call Sign) */
         .mj-hero-wa-hint {
-          margin-top: 4px;
+          margin-top: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
         }
-        .mj-hero-wa-hint a {
+        .mj-hero-wa-link {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          font: 600 0.88rem/1.4 'DM Sans', sans-serif;
-          color: #555555;
+          gap: 9px;
+          font: 500 0.88rem/1.45 'DM Sans', sans-serif;
+          color: #4A4A4A;
           text-decoration: none;
+          transition: all 0.15s ease;
+          border-radius: 999px;
+          padding: 4px 6px 4px 0;
+        }
+        .mj-hero-wa-pill {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #FFF0EB;
+          border: 1.5px solid #FFD3C4;
+          color: #FF5A36;
+          flex-shrink: 0;
+          transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+        .mj-hero-wa-icon {
+          width: 12px;
+          height: 12px;
+          stroke-width: 2.4;
+          flex-shrink: 0;
+        }
+        .mj-hero-wa-text {
+          font: 500 0.88rem/1.45 'DM Sans', sans-serif;
+          color: #4A4A4A;
+        }
+        .mj-hero-wa-accent {
+          font-weight: 700;
+          color: #1B1B1B;
+          text-decoration: underline;
+          text-decoration-color: #FF7A3C;
+          text-underline-offset: 3px;
           transition: color 0.15s ease;
         }
-        .mj-hero-wa-hint a:hover {
-          color: #FF5C35;
+        .mj-hero-wa-link:hover .mj-hero-wa-pill {
+          background: #FF5A36;
+          color: #FFFFFF;
+          border-color: #FF5A36;
+          transform: scale(1.08);
+        }
+        .mj-hero-wa-link:hover .mj-hero-wa-accent {
+          color: #FF5A36;
         }
 
         /* ════════════════════════════════════════════════
@@ -710,13 +752,14 @@ export default function Hero({ onSearch }) {
         /* ── Refined Paper Airplane Sign ── */
         .mj-plane-sign {
           position: absolute;
-          top: -24px;
-          right: -8px;
+          top: -26px;
+          right: -6px;
           z-index: 10;
           pointer-events: none;
           display: flex;
           flex-direction: column;
           align-items: flex-end;
+          transition: all 0.25s ease;
         }
         .mj-plane-trail-svg {
           width: 140px;
@@ -725,6 +768,7 @@ export default function Hero({ onSearch }) {
           bottom: 12px;
           right: 22px;
           overflow: visible;
+          transition: all 0.25s ease;
         }
         .mj-plane-body {
           position: relative;
@@ -738,20 +782,7 @@ export default function Hero({ onSearch }) {
           height: 52px;
           filter: drop-shadow(3px 4px 0px rgba(27,27,27,0.7));
           transform: rotate(-3deg);
-        }
-        .mj-plane-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          background: #FFFFFF;
-          border: 1.8px solid #1B1B1B;
-          box-shadow: 2.5px 2.5px 0px #1B1B1B;
-          border-radius: 999px;
-          padding: 2.5px 10px;
-          font: 800 10.5px/1 'Sora', sans-serif;
-          color: #1B1B1B;
-          margin-top: -6px;
-          white-space: nowrap;
+          transition: all 0.25s ease;
         }
 
         @keyframes mjFloatPlane {
@@ -1267,13 +1298,33 @@ export default function Hero({ onSearch }) {
             justify-content: center;
           }
           .mj-hero-wa-hint {
+            justify-content: center;
             text-align: center;
+            margin: 14px auto 0;
+            width: 100%;
+          }
+          .mj-hero-wa-link {
+            justify-content: center;
           }
           .mj-hero-illustration-col {
             order: 2;
           }
           .mj-device-showcase {
             max-width: 480px;
+          }
+          .mj-plane-sign {
+            top: -22px;
+            right: 4px;
+          }
+          .mj-plane-trail-svg {
+            width: 115px;
+            height: 75px;
+            bottom: 10px;
+            right: 18px;
+          }
+          .mj-plane-origami {
+            width: 52px;
+            height: 44px;
           }
           .mj-note-tl {
             left: -8px;
@@ -1306,6 +1357,26 @@ export default function Hero({ onSearch }) {
             width: 100%;
             justify-content: center;
           }
+          .mj-hero-wa-hint {
+            justify-content: center;
+            text-align: center;
+            margin: 14px auto 0;
+            width: 100%;
+          }
+          .mj-hero-wa-link {
+            justify-content: center;
+            text-align: center;
+            font-size: 0.84rem;
+            gap: 7px;
+          }
+          .mj-hero-wa-pill {
+            width: 22px;
+            height: 22px;
+          }
+          .mj-hero-wa-icon {
+            width: 11px;
+            height: 11px;
+          }
           .mj-device-showcase {
             max-width: 100%;
             padding: 14px 4px 6px;
@@ -1317,16 +1388,39 @@ export default function Hero({ onSearch }) {
             display: none;
           }
           .mj-plane-sign {
-            top: -20px;
-            right: 4px;
+            top: -16px;
+            right: 12px;
           }
           .mj-plane-origami {
-            width: 48px;
-            height: 40px;
+            width: 44px;
+            height: 36px;
           }
           .mj-plane-trail-svg {
-            width: 100px;
-            height: 70px;
+            width: 85px;
+            height: 55px;
+            bottom: 8px;
+            right: 14px;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .mj-hero-wa-link {
+            font-size: 0.78rem;
+            gap: 6px;
+          }
+          .mj-plane-sign {
+            top: -12px;
+            right: 8px;
+          }
+          .mj-plane-origami {
+            width: 38px;
+            height: 32px;
+          }
+          .mj-plane-trail-svg {
+            width: 65px;
+            height: 42px;
+            bottom: 6px;
+            right: 12px;
           }
         }
       `}</style>
