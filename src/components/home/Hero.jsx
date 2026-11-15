@@ -99,14 +99,8 @@ export default function Hero({ onSearch }) {
 
   return (
     <>
-      {/* ── 2-Column Split Hero (JEE 2027 Mentorship Layout) ── */}
+      {/* ── 2-Column Split Hero (JEE 2027 Mentorship Layout - Pure White Background) ── */}
       <section className="mj-hero-seo">
-        {/* Soft glowing background orbs */}
-        <div className="mj-hero-bg" aria-hidden="true">
-          <span className="mj-orb mj-orb-a" />
-          <span className="mj-orb mj-orb-b" />
-        </div>
-
         <div className="mj-wrap">
           <div className="mj-hero-seo-grid">
             {/* Left Column: Headline, Pill, Subtitle, Actions, Reassurance */}
@@ -387,41 +381,11 @@ export default function Hero({ onSearch }) {
           justify-content: center;
         }
         .mj-hero-illustration-wrapper::before {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 92%;
-          height: 92%;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255, 105, 61, 0.16) 0%, rgba(255, 122, 60, 0.06) 52%, transparent 72%);
-          filter: blur(32px);
-          z-index: 0;
-          pointer-events: none;
+          display: none;
         }
-        .mj-hero-illustration-img {
-          width: 100%;
-          height: auto;
-          max-width: 580px;
-          object-fit: contain;
-          display: block;
-          position: relative;
-          z-index: 1;
-          filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08));
-          animation: mjFloatHeroIllustration 7s ease-in-out infinite;
+        .mj-hero-bg, .mj-orb {
+          display: none;
         }
-        @keyframes mjFloatHeroIllustration {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-
-        /* Background elements */
-        .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-        .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
-        .mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
-        .mj-orb-b { width:460px; height:460px; bottom:-240px; right:-140px; background:radial-gradient(circle, rgba(255,178,130,.22), transparent 70%); opacity:.5; animation:mjfloat 21s ease-in-out infinite reverse; }
-        @keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
 
         /* Responsive Hero Layout */
         @media (max-width: 960px) {

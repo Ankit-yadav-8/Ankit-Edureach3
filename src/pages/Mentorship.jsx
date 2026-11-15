@@ -132,11 +132,6 @@ function Hero({ variant, cfg, plan, year, exam, openEnrol, scrollTo }) {
 
   return (
     <section className="mj-hero-seo">
-      <div className="mj-hero-bg" aria-hidden="true">
-        <span className="mj-orb mj-orb-a" />
-        <span className="mj-orb mj-orb-b" />
-      </div>
-
       <div className="mj-wrap">
         <div className="mj-hero-seo-grid">
           {/* Left Column: Variant Tabs + Two Strong Lines + Subtitle + Actions */}
@@ -329,14 +324,14 @@ function Qualifier({ cfg }) {
           padding-bottom: 50px;
         }
 
-        /* Outer warm leather notebook cover */
+        /* Outer coral notebook cover */
         .mj-notebook-wrapper {
           position: relative;
           border-radius: 26px;
-          background: linear-gradient(135deg, #CF6B32 0%, #B8531D 100%);
+          background: linear-gradient(135deg, #FF693D 0%, #FF5A36 100%);
           padding: 16px;
-          box-shadow: 0 25px 60px -15px rgba(184, 83, 29, 0.35), 0 12px 30px -8px rgba(0,0,0,0.22);
-          border: 1px solid rgba(255, 255, 255, 0.25);
+          box-shadow: 0 25px 60px -15px rgba(255, 90, 54, 0.32), 0 12px 30px -8px rgba(0,0,0,0.16);
+          border: 1px solid rgba(255, 255, 255, 0.3);
           margin-top: 10px;
         }
 
@@ -344,7 +339,7 @@ function Qualifier({ cfg }) {
         .mj-notebook-spread {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          background: #FFFDF9;
+          background: #FFFFFF;
           border-radius: 18px;
           position: relative;
           box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
@@ -387,7 +382,7 @@ function Qualifier({ cfg }) {
         .mj-nb-page-right {
           padding: 34px 36px 34px 28px;
           position: relative;
-          background-color: #FFFDF9;
+          background-color: #FFFFFF;
           background-image: repeating-linear-gradient(
             transparent,
             transparent 31px,
@@ -2757,18 +2752,10 @@ const CSS = `
   justify-content: center;
 }
 .mj-hero-illustration-wrapper::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 92%;
-  height: 92%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 105, 61, 0.16) 0%, rgba(255, 122, 60, 0.06) 52%, transparent 72%);
-  filter: blur(32px);
-  z-index: 0;
-  pointer-events: none;
+  display: none;
+}
+.mj-hero-bg, .mj-orb {
+  display: none;
 }
 .mj-hero-illustration-img {
   width: 100%;
@@ -2790,12 +2777,8 @@ const CSS = `
   }
 }
 
-/* Background elements */
-.mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-.mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
-.mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
-.mj-orb-b { width:460px; height:460px; bottom:-240px; right:-140px; background:radial-gradient(circle, rgba(255,178,130,.22), transparent 70%); opacity:.5; animation:mjfloat 21s ease-in-out infinite reverse; }
-@keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
+/* Background elements - turned off for pure white background */
+.mj-hero-bg, .mj-orb, .mj-orb-a, .mj-orb-b { display: none !important; }
 
 /* Responsive Hero Layout (Single-column stack with image below buttons) */
 @media (max-width: 960px) {

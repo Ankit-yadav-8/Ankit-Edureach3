@@ -199,43 +199,8 @@
   border-bottom: 1px solid var(--mj-line);
 }
 
-.mj-hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.mj-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-}
-
-.mj-orb-a {
-  width: 520px;
-  height: 520px;
-  top: -180px;
-  left: -140px;
-  background: radial-gradient(circle, rgba(255,105,61,.22), transparent 70%);
-  opacity: .6;
-  animation: mjfloat 16s ease-in-out infinite;
-}
-
-.mj-orb-b {
-  width: 480px;
-  height: 480px;
-  bottom: -220px;
-  right: -130px;
-  background: radial-gradient(circle, rgba(255,178,130,.22), transparent 70%);
-  opacity: .55;
-  animation: mjfloat 21s ease-in-out infinite reverse;
-}
-
-@keyframes mjfloat {
-  0%, 100% { transform: translate(0,0); }
-  50% { transform: translate(38px, 28px); }
+.mj-hero-bg, .mj-orb, .mj-orb-a, .mj-orb-b {
+  display: none !important;
 }
 
 /* 2-Column Split Hero Layout (Equal LHS == RHS Balance) */
@@ -436,18 +401,7 @@
   justify-content: center;
 }
 .mj-hero-illustration-wrapper::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 92%;
-  height: 92%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 105, 61, 0.16) 0%, rgba(255, 122, 60, 0.06) 52%, transparent 72%);
-  filter: blur(32px);
-  z-index: 0;
-  pointer-events: none;
+  display: none !important;
 }
 
 .mj-hero-illustration-img {
