@@ -31,87 +31,6 @@ const SHADOW_LT = "#FFFFFF";
 
 const pressed = `inset 4px 4px 8px ${SHADOW_DK}, inset -4px -4px 8px ${SHADOW_LT}`;
 
-/* ── Refined Paper Airplane Sign with Curved Dotted Flight Trail ── */
-function PaperAirplaneSign() {
-  return (
-    <div className="mj-plane-sign" aria-label="Target Top 1% AIR">
-      {/* Dynamic Curved Dotted Flight Trail */}
-      <svg
-        className="mj-plane-trail-svg"
-        viewBox="0 0 170 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path
-          d="M 12 112 C 40 118, 72 96, 82 68 C 92 40, 122 30, 150 14"
-          stroke="#FF7A3C"
-          strokeWidth="2.4"
-          strokeDasharray="5 5"
-          strokeLinecap="round"
-        />
-        {/* Tiny energy particles along the flight path */}
-        <circle cx="82" cy="68" r="2.2" fill="#FF7A3C" opacity="0.75" />
-        <circle cx="48" cy="110" r="2" fill="#FF7A3C" opacity="0.5" />
-        <circle cx="120" cy="38" r="2" fill="#FF7A3C" opacity="0.6" />
-      </svg>
-
-      {/* Modern 3D Folded Origami Airplane with Coral Accents */}
-      <div className="mj-plane-body">
-        <svg
-          className="mj-plane-origami"
-          viewBox="0 0 74 62"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Bottom Keel Fold (Depth Shadow) */}
-          <polygon
-            points="8,48 70,8 36,54"
-            fill="#FF5A36"
-            stroke="#1B1B1B"
-            strokeWidth="2.2"
-            strokeLinejoin="round"
-          />
-          {/* Inner Underbody Shadow */}
-          <polygon
-            points="36,54 70,8 44,34"
-            fill="#E04820"
-            stroke="#1B1B1B"
-            strokeWidth="2"
-            strokeLinejoin="round"
-          />
-          {/* Main Top Wing (Crisp White with High-Contrast Border) */}
-          <polygon
-            points="8,48 70,8 26,18"
-            fill="#FFFFFF"
-            stroke="#1B1B1B"
-            strokeWidth="2.2"
-            strokeLinejoin="round"
-          />
-          {/* Starboard Wing Fold */}
-          <polygon
-            points="26,18 70,8 44,34"
-            fill="#F6F1EC"
-            stroke="#1B1B1B"
-            strokeWidth="2.2"
-            strokeLinejoin="round"
-          />
-          {/* Crease Line */}
-          <line
-            x1="26"
-            y1="18"
-            x2="70"
-            y2="8"
-            stroke="#1B1B1B"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
 /* ── Interactive Working Laptop Screen with Live Google Meet Call ── */
 function WorkingLaptopScreen() {
   const [activeTab, setActiveTab] = useState("meet"); // "meet" | "daily" | "autopsy"
@@ -132,10 +51,7 @@ function WorkingLaptopScreen() {
 
   return (
     <div className="mj-device-showcase">
-      {/* 1. Refined Paper Airplane Sign (Top Right) */}
-      <PaperAirplaneSign />
-
-      {/* 2. Floating Top-Left Note: 1-on-1 IITian Mentor */}
+      {/* 1. Floating Top-Left Note: 1-on-1 IITian Mentor */}
       <div className="mj-sticky-note mj-note-tl">
         <div className="mj-note-header">
           <span className="mj-note-pin" aria-hidden="true">📌</span>
@@ -749,51 +665,6 @@ export default function Hero({ onSearch }) {
           padding: 20px 10px 10px;
         }
 
-        /* ── Refined Paper Airplane Sign ── */
-        .mj-plane-sign {
-          position: absolute;
-          top: -26px;
-          right: -6px;
-          z-index: 10;
-          pointer-events: none;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          transition: all 0.25s ease;
-        }
-        .mj-plane-trail-svg {
-          width: 140px;
-          height: 95px;
-          position: absolute;
-          bottom: 12px;
-          right: 22px;
-          overflow: visible;
-          transition: all 0.25s ease;
-        }
-        .mj-plane-body {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          animation: mjFloatPlane 3.4s ease-in-out infinite;
-        }
-        .mj-plane-origami {
-          width: 62px;
-          height: 52px;
-          filter: drop-shadow(3px 4px 0px rgba(27,27,27,0.7));
-          transform: rotate(-3deg);
-          transition: all 0.25s ease;
-        }
-
-        @keyframes mjFloatPlane {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-9px) rotate(-3deg);
-          }
-        }
-
         /* ── Floating Sticky Notes ── */
         .mj-sticky-note {
           position: absolute;
@@ -1312,20 +1183,6 @@ export default function Hero({ onSearch }) {
           .mj-device-showcase {
             max-width: 480px;
           }
-          .mj-plane-sign {
-            top: -22px;
-            right: 4px;
-          }
-          .mj-plane-trail-svg {
-            width: 115px;
-            height: 75px;
-            bottom: 10px;
-            right: 18px;
-          }
-          .mj-plane-origami {
-            width: 52px;
-            height: 44px;
-          }
           .mj-note-tl {
             left: -8px;
             top: -4px;
@@ -1387,40 +1244,12 @@ export default function Hero({ onSearch }) {
           .mj-note-br {
             display: none;
           }
-          .mj-plane-sign {
-            top: -16px;
-            right: 12px;
-          }
-          .mj-plane-origami {
-            width: 44px;
-            height: 36px;
-          }
-          .mj-plane-trail-svg {
-            width: 85px;
-            height: 55px;
-            bottom: 8px;
-            right: 14px;
-          }
         }
 
         @media (max-width: 420px) {
           .mj-hero-wa-link {
             font-size: 0.78rem;
             gap: 6px;
-          }
-          .mj-plane-sign {
-            top: -12px;
-            right: 8px;
-          }
-          .mj-plane-origami {
-            width: 38px;
-            height: 32px;
-          }
-          .mj-plane-trail-svg {
-            width: 65px;
-            height: 42px;
-            bottom: 6px;
-            right: 12px;
           }
         }
       `}</style>
