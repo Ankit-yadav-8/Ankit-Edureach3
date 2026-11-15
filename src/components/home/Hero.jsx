@@ -95,11 +95,11 @@ function HeroSteps({ isMobile }) {
 
 export default function Hero({ onSearch }) {
   const { isMobile } = useBreakpoint();
-  const waUrl = "https://wa.me/918290066127?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20JEE%20mentorship";
+  const waUrl = "https://wa.me/918290066127?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20mentorship%20plans";
 
   return (
     <>
-      {/* ── 2-Column Split Hero (JEE 2027 Mentorship Layout - Pure White Background) ── */}
+      {/* ── 2-Column Split Hero (Editorial Hub Layout - Pure White Background) ── */}
       <section className="mj-hero-seo">
         <div className="mj-wrap">
           <div className="mj-hero-seo-grid">
@@ -107,9 +107,9 @@ export default function Hero({ onSearch }) {
             <div className="mj-hero-copy-col">
               <h1 className="mj-hero-h1">
                 <span className="mj-hero-line1">
-                  <span className="mj-hero-word-break">Personalized</span>
+                  <span className="mj-hero-word-break">Predict your rank.</span>
                   <span className="mj-hero-squiggle-wrap">
-                    1-on-1
+                    Meet your mentor
                     <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
                       <path
                         d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
@@ -121,19 +121,19 @@ export default function Hero({ onSearch }) {
                   </span>
                 </span>
                 <span className="mj-hero-line2">
-                  <span className="mj-hero-line2-lead">for your</span>
-                  <span className="mj-hero-box-pill">JEE 2027.</span>
+                  <span className="mj-hero-line2-lead">built for</span>
+                  <span className="mj-hero-box-pill">JEE &amp; NEET.</span>
                 </span>
               </h1>
 
               <p className="mj-hero-sub">
-                Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.
+                An IIT Roorkee startup — 1-on-1 personal mentorship, precision rank predictors, and JoSAA cutoffs trusted by 3,200+ aspirants across JEE &amp; NEET.
               </p>
 
               {/* Action Buttons: Primary "Explore Mentorship" & Secondary "About Us" */}
               <div className="mj-hero-editorial-actions">
                 <Link
-                  to="/mentorship/jee-2027"
+                  to="/mentorship"
                   className="mj-hero-btn-primary"
                 >
                   Explore Mentorship <ArrowRight size={17} />
@@ -158,17 +158,17 @@ export default function Hero({ onSearch }) {
               </div>
             </div>
 
-            {/* Right Column: Hero Illustration Desk Visual */}
+            {/* Right Column: Hero Illustration Visual - All Plans & Thoughts */}
             <div className="mj-hero-illustration-col">
               <div className="mj-hero-illustration-wrapper">
                 <picture>
-                  <source srcSet="/images/mentorship_hero_desk_transparent.webp" type="image/webp" />
+                  <source srcSet="/images/home_hero_all_plans.webp" type="image/webp" />
                   <img
-                    src="/images/mentorship_hero_desk.jpg"
-                    alt="1-on-1 IITian Mentorship Desk Setup with Daily Targets and Test Autopsy"
+                    src="/images/home_hero_all_plans.jpg"
+                    alt="CampusPoint 1-on-1 Mentorship and Rank Prediction for JEE & NEET Aspirants"
                     className="mj-hero-illustration-img"
-                    width="580"
-                    height="450"
+                    width="680"
+                    height="400"
                     loading="eager"
                     fetchPriority="high"
                   />
