@@ -2135,7 +2135,7 @@ const CSS = `
   display: inline-block;
   vertical-align: middle;
   background: #FF7A3C;
-  color: #1B1B1B;
+  color: #FFFFFF;
   font-family: 'Sora', sans-serif;
   font-weight: 800;
   font-size: 0.94em;
