@@ -348,7 +348,7 @@ function HeroSteps({ isMobile }) {
 
 export default function Hero({ onSearch }) {
   const { isMobile } = useBreakpoint();
-  const waUrl = "https://wa.me/918290066127?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20mentorship%20plans";
+  const waUrl = "https://wa.me/918118826194?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20mentorship%20plans";
 
   return (
     <>

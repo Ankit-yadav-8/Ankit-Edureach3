@@ -11,7 +11,7 @@ import imgSaket from "../images/team/saket.jpg";
 /* ── Social constants ──────────────────────────────────────── */
 const LK = "https://www.linkedin.com/in/ankit-kumar-1b9a64387";
 const IG = "https://www.instagram.com/ankit_1_7_/";
-const WA = "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t";
+const WA = "https://wa.me/918118826194?text=" + encodeURIComponent("Hi Ankit! I want to connect with Campus Point.");
 
 /* ── Inline SVG brand icons ─────────────────────────────────── */
 function IgIcon({ size = 14 }) {

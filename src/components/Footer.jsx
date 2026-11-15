@@ -454,7 +454,7 @@ export default function Footer() {
               { Icon: Linkedin, url: "https://www.linkedin.com/in/ankit-kumar-1b9a64387", label: "LinkedIn" },
               { Icon: Instagram, url: "https://www.instagram.com/ankit_1_7_/", label: "Instagram" },
               { Icon: Youtube, url: "https://www.youtube.com/@CampusPoint-2626", label: "YouTube" },
-              { Icon: MessageCircle, url: "https://chat.whatsapp.com/EKezcNXEw9iKRdo7Wrjzzx?mode=gi_t", label: "WhatsApp" },
+              { Icon: MessageCircle, url: "https://wa.me/918118826194?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20mentorship%20plans", label: "WhatsApp" },
             ].map(({ Icon, url, label }) => (
               <a
                 key={label}
