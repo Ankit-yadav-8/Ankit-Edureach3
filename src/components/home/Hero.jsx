@@ -135,15 +135,17 @@ function WorkingLaptopScreen() {
               <div className="mj-os-meet-stage mj-fade-in">
                 <div className="mj-os-meet-frame">
                   <picture>
+                    <source media="(max-width: 640px)" srcSet="/images/google_meet_mentorship-mobile.webp" type="image/webp" />
                     <source srcSet="/images/google_meet_mentorship.webp" type="image/webp" />
                     <img
-                      src="/images/google_meet_mentorship.jpg"
+                      src="/images/google_meet_mentorship-mobile.webp"
                       alt="Real CampusPoint 1-on-1 and Group Mentorship Google Meet Session"
                       className="mj-os-meet-img"
-                      width="1376"
-                      height="768"
+                      width="640"
+                      height="360"
                       loading="eager"
                       fetchPriority="high"
+                      decoding="async"
                     />
                   </picture>
 
