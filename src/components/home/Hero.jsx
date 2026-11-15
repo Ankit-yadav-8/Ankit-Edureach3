@@ -158,17 +158,17 @@ export default function Hero({ onSearch }) {
               </div>
             </div>
 
-            {/* Right Column: Hero Illustration Visual - All Plans & Thoughts */}
+            {/* Right Column: Hero Illustration Visual - 1-on-1 JEE Mentorship & IITian Guidance */}
             <div className="mj-hero-illustration-col">
               <div className="mj-hero-illustration-wrapper">
                 <picture>
-                  <source srcSet="/images/home_hero_all_plans.webp" type="image/webp" />
+                  <source srcSet="/images/home_hero_jee_mentorship.webp" type="image/webp" />
                   <img
-                    src="/images/home_hero_all_plans.jpg"
-                    alt="CampusPoint 1-on-1 Mentorship and Rank Prediction for JEE & NEET Aspirants"
+                    src="/images/home_hero_jee_mentorship.jpg"
+                    alt="CampusPoint 1-on-1 IITian Mentorship and JEE Rank Prediction"
                     className="mj-hero-illustration-img"
                     width="680"
-                    height="400"
+                    height="450"
                     loading="eager"
                     fetchPriority="high"
                   />
