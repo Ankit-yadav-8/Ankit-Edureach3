@@ -107,9 +107,9 @@ export default function Hero({ onSearch }) {
             <div className="mj-hero-copy-col">
               <h1 className="mj-hero-h1">
                 <span className="mj-hero-line1">
-                  <span className="mj-hero-word-break">Predict your rank.</span>
+                  <span className="mj-hero-word-break">Personalized</span>
                   <span className="mj-hero-squiggle-wrap">
-                    Meet your mentor
+                    1-on-1 JEE Mentorship
                     <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
                       <path
                         d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
@@ -121,13 +121,13 @@ export default function Hero({ onSearch }) {
                   </span>
                 </span>
                 <span className="mj-hero-line2">
-                  <span className="mj-hero-line2-lead">built for</span>
-                  <span className="mj-hero-box-pill">JEE &amp; NEET.</span>
+                  <span className="mj-hero-line2-lead">guided daily by</span>
+                  <span className="mj-hero-box-pill">Verified IITians.</span>
                 </span>
               </h1>
 
               <p className="mj-hero-sub">
-                An IIT Roorkee startup — 1-on-1 personal mentorship, precision rank predictors, and JoSAA cutoffs trusted by 3,200+ aspirants across JEE &amp; NEET.
+                An IIT Roorkee startup — direct daily study roadmaps, 24/7 WhatsApp doubt solving, and question-level test autopsies to secure your top IIT rank.
               </p>
 
               {/* Action Buttons: Primary "Explore Mentorship" & Secondary "About Us" */}
@@ -136,7 +136,7 @@ export default function Hero({ onSearch }) {
                   to="/mentorship"
                   className="mj-hero-btn-primary"
                 >
-                  Explore Mentorship <ArrowRight size={17} />
+                  Explore JEE Mentorship <ArrowRight size={17} />
                 </Link>
                 <Link
                   to="/about"
