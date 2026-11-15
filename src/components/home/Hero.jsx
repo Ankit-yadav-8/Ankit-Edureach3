@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Target, Users } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 
 /* ════════════════════════════════════════════════
-   HERO - simple, editorial. Warm cream canvas with a
-   dotted grid, faint dashed orbits and a giant faint
-   "Campus Point" watermark. Word-by-word headline
-   reveal ending in a coral script word. No cards / images.
+   HERO - 2-Column Split Editorial Hub Layout
+   Matches JEE 2027 Mentorship design:
+   - Bold neo-brutalist typography with squiggly underline
+   - Neo-brutalist orange box pill badge
+   - High-contrast primary CTA ("Explore Mentorship")
+   - High-contrast secondary CTA ("About Us")
+   - Direct WhatsApp mentor contact hint
+   - Floating 1-on-1 desk illustration visual on RHS
 ════════════════════════════════════════════════ */
 
-const CORAL    = "#FF5A36";
-const CORAL_DK = "#E0421F";
-const INK      = "#4A4438";
-const TEXT_SOFT= "#8A8272";
-const BASE     = "#FFFFFF";
+const CORAL     = "#FF5A36";
+const INK       = "#1B1B1B";
+const TEXT_SOFT = "#8A8272";
+const BASE      = "#FFFFFF";
 const SHADOW_DK = "rgba(0,0,0,0.08)";
 const SHADOW_LT = "#FFFFFF";
 
-const raised = `8px 8px 16px ${SHADOW_DK}, -8px -8px 16px ${SHADOW_LT}`;
-const raisedSm = `4px 4px 8px ${SHADOW_DK}, -4px -4px 8px ${SHADOW_LT}`;
 const pressed = `inset 4px 4px 8px ${SHADOW_DK}, inset -4px -4px 8px ${SHADOW_LT}`;
-const searchShadow = `inset 6px 6px 14px ${SHADOW_DK}, inset -6px -6px 14px ${SHADOW_LT}`;
 
 /* ── breakpoints ── */
 function useBreakpoint() {
@@ -47,41 +47,15 @@ function useBreakpoint() {
   return { isXs: bp === "xs", isMobile: bp === "mobile" || bp === "xs", isTablet: bp === "tablet" };
 }
 
-/* ── word reveal - black words blur-up, coral keywords spring-pop with a drawn underline ── */
-const headVariants = {};
-const blackWord = {};
-const coralWord = {};
-const HEAD_LINES = [
-  [{ t: "Predict", c: false }, { t: "your", c: false }, { t: "rank.", c: true }],
-  [{ t: "Meet", c: false }, { t: "your", c: false }, { t: "mentor.", c: true }],
-];
-
-function HeadWord({ w, order }) {
-  return (
-    <motion.span variants={w.c ? coralWord : blackWord}
-      style={{ display: "inline-block", marginRight: "0.26em", color: w.c ? CORAL : INK, position: w.c ? "relative" : undefined, whiteSpace: "nowrap" }}>
-      {w.t}
-      {w.c && (
-        <svg width="100%" height="12" viewBox="0 0 200 12" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-0.1em", width: "100%" }}>
-          <motion.path d="M3 8C40 3 70 3 100 6C130 9 160 9 197 4" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none"
-            initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.55, delay: 0.9 + order * 0.28, ease: "easeInOut" }} />
-        </svg>
-      )}
-    </motion.span>
-  );
-}
-
-
 /* ── 3-step journey: Mentorship → Rank → Dream College ── */
 const STEPS = [
-  { n: "01", title: "Mentorship", to: "/mentorship", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
+  { n: "01", title: "Mentorship", to: "/mentorship/jee-2027", desc: "A 1-on-1 IITian / doctor mentor with daily targets and weekly test analysis." },
   { n: "02", title: "Rank", to: "/jee-main", desc: "Your mentor lifts your rank with 1-on-1 doubt solving and a plan to clear every backlog." },
   { n: "03", title: "Dream College", to: "/for-you", desc: "Guided by your mentor every step, you'll reach your dream college." },
 ];
 const stepsContainer = { hidden: {}, show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
 const stepVariant = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
-/* simple straight line connecting the three nodes, faded at the ends */
 function JourneyLine() {
   return (
     <div aria-hidden style={{ position: "absolute", top: 27, left: "16%", right: "16%", height: 3, zIndex: 0,
@@ -95,9 +69,7 @@ function HeroSteps({ isMobile }) {
       variants={stepsContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.35 }}
       style={{ maxWidth: 980, margin: isMobile ? "2.4rem auto 0" : "3rem auto 0", position: "relative" }}
     >
-      {/* animated journey line behind the circles (desktop/tablet) */}
       {!isMobile && <JourneyLine />}
-      {/* desktop: 3 across · mobile: triangle (01 on top, 02 & 03 below) */}
       <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3,1fr)", columnGap: isMobile ? 16 : 24, rowGap: isMobile ? 34 : 0 }}>
         {STEPS.map((s, i) => (
           <motion.div
@@ -122,161 +94,391 @@ function HeroSteps({ isMobile }) {
 }
 
 export default function Hero({ onSearch }) {
-  const nav = useNavigate();
-  const { isXs, isMobile, isTablet } = useBreakpoint();
-  const openSearch = () => { if (onSearch) onSearch(); else nav("/search"); };
-  const headingSize = isXs ? "2.4rem" : isMobile ? "3rem" : isTablet ? "3.8rem" : "clamp(3.4rem, 5vw, 5rem)";
+  const { isMobile } = useBreakpoint();
+  const waUrl = "https://wa.me/918290066127?text=Hi%20CampusPoint%2C%20I%20want%20to%20know%20more%20about%20JEE%20mentorship";
 
   return (
     <>
-    <section style={{ position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box", background: BASE }}>
-      {/* ── content ── */}
-      <div className="container" style={{
-        position: "relative", zIndex: 2, width: "100%", boxSizing: "border-box",
-        paddingInline: "1.5rem", textAlign: "center",
-        paddingTop: isXs ? 116 : isMobile ? 124 : 128,
-        paddingBottom: isMobile ? 72 : 72,
-      }}>
-        {/* badge */}
-        <div
-          style={{ display: "inline-flex", alignItems: "center", gap: 8, background: BASE, color: CORAL, borderRadius: 9999, padding: "6px 16px", fontSize: 11.5, fontWeight: 700, letterSpacing: "0.5px", fontFamily: "'Inter',system-ui,sans-serif", marginBottom: 28, boxShadow: raisedSm }}
-        >
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: CORAL, boxShadow: `inset 2px 2px 4px rgba(0,0,0,0.2)`, animation: "heroPulse 1.8s infinite" }} />
-          Built for JEE &amp; NEET aspirants
+      {/* ── 2-Column Split Hero (JEE 2027 Mentorship Layout) ── */}
+      <section className="mj-hero-seo">
+        {/* Soft glowing background orbs */}
+        <div className="mj-hero-bg" aria-hidden="true">
+          <span className="mj-orb mj-orb-a" />
+          <span className="mj-orb mj-orb-b" />
         </div>
 
-        {/* headline */}
-        <h1
-          style={{ fontFamily: "'Space Grotesk','Sora',system-ui,sans-serif", fontWeight: 800, color: INK, fontSize: headingSize, lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0 }}
-        >
-          {(() => {
-            let o = 0;
-            return HEAD_LINES.map((line, li) => (
-              <span key={li} style={{ display: "block" }}>
-                {line.map((w, wi) => <HeadWord key={wi} w={w} order={w.c ? o++ : 0} />)}
-              </span>
-            ));
-          })()}
-        </h1>
+        <div className="mj-wrap">
+          <div className="mj-hero-seo-grid">
+            {/* Left Column: Headline, Pill, Subtitle, Actions, Reassurance */}
+            <div className="mj-hero-copy-col">
+              <h1 className="mj-hero-h1">
+                <span className="mj-hero-line1">
+                  <span className="mj-hero-word-break">Personalized</span>
+                  <span className="mj-hero-squiggle-wrap">
+                    1-on-1
+                    <svg className="mj-hero-squiggle" viewBox="0 0 160 14" fill="none" aria-hidden="true">
+                      <path
+                        d="M3 9C20 2 36 14 54 8C72 2 88 14 106 8C124 2 140 14 157 8"
+                        stroke="#FF693D"
+                        strokeWidth="3.4"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                </span>
+                <span className="mj-hero-line2">
+                  <span className="mj-hero-line2-lead">for your</span>
+                  <span className="mj-hero-box-pill">JEE 2027.</span>
+                </span>
+              </h1>
 
-        {/* subtext */}
-        <p
-          style={{ margin: `${isMobile ? "1.6rem" : "2rem"} auto 0`, maxWidth: 560, fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 500, fontSize: isXs ? "1rem" : "1.1rem", color: TEXT_SOFT, lineHeight: 1.65 }}
-        >
-          An <span style={{ position: "relative", color: CORAL, fontWeight: 700, whiteSpace: "nowrap" }}>
-            IIT Roorkee
-            <svg width="100%" height="8" viewBox="0 0 120 8" preserveAspectRatio="none" style={{ position: "absolute", left: 0, bottom: "-3px", width: "100%" }}>
-              <motion.path d="M2 5 C 30 2, 90 2, 118 4" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" fill="none"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 1.5, ease: "easeInOut" }} />
-            </svg>
-          </span> startup - built by IITians, trusted by aspirants
-        </p>
+              <p className="mj-hero-sub">
+                Direct daily guidance from verified IIT Roorkee rankers to manage study schedules, clear backlogs, and secure top ranks.
+              </p>
 
-        {/* CTAs - wide search bar + two action buttons */}
-        <div
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24, marginTop: isMobile ? "2.4rem" : "2.8rem" }}
-        >
-          {/* wide search bar */}
-          <div
-            onClick={openSearch}
-            style={{
-              display: "flex", alignItems: "center", gap: 10, cursor: "text", boxSizing: "border-box",
-              width: "100%", maxWidth: 540, padding: isXs ? "7px 7px 7px 16px" : "8px 8px 8px 20px",
-              background: BASE, borderRadius: 9999,
-              boxShadow: searchShadow,
-            }}
-          >
-            <Search size={18} style={{ color: TEXT_SOFT, flexShrink: 0 }} />
-            <span style={{ flex: 1, textAlign: "left", color: TEXT_SOFT, fontFamily: "'Inter',system-ui,sans-serif",
-              fontSize: isXs ? 13 : 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              Search colleges, entrance exams, or rankings…
-            </span>
-            <button
-              onClick={openSearch}
-              style={{
-                flexShrink: 0, cursor: "pointer", border: "none", background: CORAL, color: "#fff",
-                padding: isXs ? "9px 16px" : "11px 26px", borderRadius: 9999,
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 13 : 14.5,
-                boxShadow: `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}`, transition: "all .2s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `6px 6px 14px rgba(255,90,54,0.3), -6px -6px 14px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = `4px 4px 10px rgba(255,90,54,0.3), -4px -4px 10px ${SHADOW_LT}`; }}
-            >
-              Search
-            </button>
-          </div>
+              {/* Action Buttons: Primary "Explore Mentorship" & Secondary "About Us" */}
+              <div className="mj-hero-editorial-actions">
+                <Link
+                  to="/mentorship/jee-2027"
+                  className="mj-hero-btn-primary"
+                >
+                  Explore Mentorship <ArrowRight size={17} />
+                </Link>
+                <Link
+                  to="/about"
+                  className="mj-hero-btn-secondary"
+                >
+                  About Us <ArrowRight size={17} />
+                </Link>
+              </div>
 
-          {/* action buttons */}
-          <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "center", gap: isMobile ? 16 : 24, marginTop: isMobile ? "2.5rem" : "3rem", width: "100%" }}>
-            <Link
-              to="/mentorship/jee-2027"
-              style={{
-                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                width: isMobile ? "100%" : undefined, maxWidth: isMobile ? 360 : undefined, minWidth: !isMobile ? 200 : undefined, 
-                padding: isMobile ? "16px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
-                background: CORAL, border: "none", color: "#fff", textDecoration: "none",
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 15 : 16,
-                boxShadow: `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`, transition: "all .2s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 14px rgba(0,0,0,0.25), inset -6px -6px 14px rgba(255,255,255,0.35)`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.3)`; }}
-            >
-              Explore Mentorship <Target size={16} />
-            </Link>
-            <button
-              onClick={() => nav("/community")}
-              style={{
-                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 9, cursor: "pointer",
-                width: isMobile ? "100%" : undefined, maxWidth: isMobile ? 360 : undefined, minWidth: !isMobile ? 200 : undefined, 
-                padding: isMobile ? "16px 24px" : "12px 24px", borderRadius: 9999, whiteSpace: "nowrap",
-                background: BASE, border: "none", color: INK,
-                fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: isXs ? 15 : 16,
-                boxShadow: pressed, transition: "all .2s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `inset 6px 6px 12px ${SHADOW_DK}, inset -6px -6px 12px ${SHADOW_LT}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = pressed; }}
-            >
-              Join community <Users size={16} />
-            </button>
+              {/* Direct WhatsApp Mentor Reassurance */}
+              <div className="mj-hero-wa-hint">
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Phone size={14} /> Have questions? Chat with an IITian Mentor on WhatsApp
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Hero Illustration Desk Visual */}
+            <div className="mj-hero-illustration-col">
+              <div className="mj-hero-illustration-wrapper">
+                <picture>
+                  <source srcSet="/images/mentorship_hero_desk_transparent.webp" type="image/webp" />
+                  <img
+                    src="/images/mentorship_hero_desk.jpg"
+                    alt="1-on-1 IITian Mentorship Desk Setup with Daily Targets and Test Autopsy"
+                    className="mj-hero-illustration-img"
+                    width="580"
+                    height="450"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </picture>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* social proof - avatar cluster + count, framed by hairlines */}
-        <div
-          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: isMobile ? 8 : 18, marginTop: isMobile ? "4.5rem" : "5.5rem", width: "100%" }}
-        >
-          <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, transparent, rgba(0,0,0,0.15))` }} />
-          <div style={{ display: "flex" }}>
-            {[["#FF7A59", "A"], ["#FF5A36", "P"], ["#7C5CFF", "R"], [BASE, "+"]].map(([c, ltr], i) => (
-              <span key={i} style={{
-                width: 32, height: 32, borderRadius: "50%", background: c,
-                border: `2px solid ${BASE}`, marginLeft: i === 0 ? 0 : -10,
-                boxShadow: c === BASE ? pressed : `2px 2px 5px rgba(0,0,0,0.1)`,
-                display: "grid", placeItems: "center",
-                color: c === BASE ? TEXT_SOFT : "#fff", fontFamily: "'Inter',system-ui,sans-serif", fontWeight: 700, fontSize: 13,
-              }}>{ltr}</span>
-            ))}
-          </div>
-          <span style={{ fontFamily: "'Inter',system-ui,sans-serif", fontSize: isXs ? 13 : 14, color: TEXT_SOFT, whiteSpace: "normal", textAlign: "center" }}>
-            Trusted by <strong style={{ color: CORAL, fontWeight: 800 }}>3200+</strong> JEE &amp; NEET aspirants
-          </span>
-          <span style={{ width: isMobile ? 16 : 56, flexShrink: 0, height: 1, borderRadius: 1, background: `linear-gradient(90deg, rgba(0,0,0,0.15), transparent)` }} />
+      {/* ── 3-Step Journey (Mentorship → Rank → Dream College) ── */}
+      <section style={{ width: "100%", background: BASE, paddingBottom: isMobile ? 64 : 84, paddingTop: 20 }}>
+        <div className="container" style={{ paddingInline: "1.5rem" }}>
+          <HeroSteps isMobile={isMobile} />
         </div>
-      </div>
-    </section>
-    
-    <section style={{ width: "100%", background: BASE, paddingBottom: isMobile ? 72 : 92 }}>
-      <div className="container" style={{ paddingInline: "1.5rem" }}>
-        {/* ══ 3-step journey ══ */}
-        <HeroSteps isMobile={isMobile} />
-      </div>
+      </section>
+
+      {/* ── Scoped Styling for Hero ── */}
       <style>{`
-        @keyframes heroPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.35; }
+        .mj-hero-seo {
+          position: relative;
+          padding: clamp(165px, 15vw, 215px) 0 clamp(48px, 5vw, 72px);
+          overflow: hidden;
+          background: #FFFFFF;
+          border-bottom: 1px solid #E2E8F0;
+        }
+        .mj-wrap {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+        .mj-hero-seo-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          gap: clamp(28px, 4.5vw, 56px);
+          max-width: 1240px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 2;
+        }
+        .mj-hero-copy-col {
+          text-align: left;
+        }
+
+        /* Bold Editorial Typography */
+        .mj-hero-h1 {
+          font-family: 'Sora', sans-serif;
+          font-weight: 800;
+          font-size: clamp(2.3rem, 4.4vw, 4.1rem);
+          line-height: 1.12;
+          letter-spacing: -0.03em;
+          color: #1B1B1B;
+          margin: 0 0 16px;
+        }
+        .mj-hero-line1 {
+          display: block;
+          font-weight: 800;
+          color: #1B1B1B;
+          margin-bottom: 6px;
+        }
+        .mj-hero-word-break {
+          display: block;
+          margin-bottom: 2px;
+        }
+        .mj-hero-squiggle-wrap {
+          position: relative;
+          display: inline-block;
+          white-space: nowrap;
+        }
+        .mj-hero-squiggle {
+          position: absolute;
+          left: 0;
+          bottom: -6px;
+          width: 100%;
+          height: 10px;
+          overflow: visible;
+          pointer-events: none;
+        }
+        .mj-hero-line2 {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+          font-weight: 800;
+          color: #1B1B1B;
+        }
+        .mj-hero-line2-lead {
+          display: block;
+          font-weight: 800;
+          color: #1B1B1B;
+        }
+        .mj-hero-box-pill {
+          display: inline-block;
+          vertical-align: middle;
+          background: #FF7A3C;
+          color: #FFFFFF;
+          font-family: 'Sora', sans-serif;
+          font-weight: 800;
+          font-size: 0.94em;
+          padding: 2px 14px 4px 14px;
+          border-radius: 9px;
+          border: 2.5px solid #1B1B1B;
+          box-shadow: 3.5px 3.5px 0px #1B1B1B;
+          letter-spacing: -0.02em;
+          line-height: 1.15;
+          white-space: nowrap;
+        }
+        .mj-hero-sub {
+          font: 400 clamp(1.02rem, 1.35vw, 1.18rem)/1.6 'DM Sans', sans-serif;
+          color: #4A4A4A;
+          max-width: 540px;
+          margin: 18px 0 24px;
+        }
+
+        /* Editorial Action Buttons */
+        .mj-hero-editorial-actions {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-bottom: 14px;
+        }
+        .mj-hero-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 13px 26px;
+          background: #1B1B1B;
+          color: #FFFFFF;
+          font-family: 'Sora', sans-serif;
+          font-weight: 700;
+          font-size: 0.98rem;
+          border-radius: 12px;
+          border: 2px solid #1B1B1B;
+          box-shadow: 3px 3px 0px #FF7A3C;
+          cursor: pointer;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+          text-decoration: none;
+        }
+        .mj-hero-btn-primary:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 5px 5px 0px #FF7A3C;
+          background: #2B2B2B;
+          color: #FFFFFF;
+        }
+        .mj-hero-btn-primary:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px #FF7A3C;
+        }
+
+        .mj-hero-btn-secondary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 13px 24px;
+          background: #FFFFFF;
+          color: #1B1B1B;
+          font-family: 'Sora', sans-serif;
+          font-weight: 700;
+          font-size: 0.98rem;
+          border-radius: 12px;
+          border: 2px solid #1B1B1B;
+          box-shadow: 3px 3px 0px #1B1B1B;
+          cursor: pointer;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+          text-decoration: none;
+        }
+        .mj-hero-btn-secondary:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 5px 5px 0px #1B1B1B;
+          background: #FAF7F2;
+          color: #1B1B1B;
+        }
+        .mj-hero-btn-secondary:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px #1B1B1B;
+        }
+
+        .mj-hero-wa-hint {
+          margin-top: 4px;
+        }
+        .mj-hero-wa-hint a {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          font: 600 0.88rem/1.4 'DM Sans', sans-serif;
+          color: #555555;
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+        .mj-hero-wa-hint a:hover {
+          color: #FF5C35;
+        }
+
+        /* Right Column Illustration Visual */
+        .mj-hero-illustration-col {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          width: 100%;
+        }
+        .mj-hero-illustration-wrapper {
+          position: relative;
+          width: 100%;
+          max-width: 580px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .mj-hero-illustration-wrapper::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 92%;
+          height: 92%;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 105, 61, 0.16) 0%, rgba(255, 122, 60, 0.06) 52%, transparent 72%);
+          filter: blur(32px);
+          z-index: 0;
+          pointer-events: none;
+        }
+        .mj-hero-illustration-img {
+          width: 100%;
+          height: auto;
+          max-width: 580px;
+          object-fit: contain;
+          display: block;
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08));
+          animation: mjFloatHeroIllustration 7s ease-in-out infinite;
+        }
+        @keyframes mjFloatHeroIllustration {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+
+        /* Background elements */
+        .mj-hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+        .mj-orb { position:absolute; border-radius:50%; filter:blur(90px); }
+        .mj-orb-a { width:520px; height:520px; top:-210px; left:-150px; background:radial-gradient(circle, rgba(255,105,61,.24), transparent 70%); opacity:.5; animation:mjfloat 16s ease-in-out infinite; }
+        .mj-orb-b { width:460px; height:460px; bottom:-240px; right:-140px; background:radial-gradient(circle, rgba(255,178,130,.22), transparent 70%); opacity:.5; animation:mjfloat 21s ease-in-out infinite reverse; }
+        @keyframes mjfloat { 0%,100%{transform:translate(0,0);} 50%{transform:translate(42px,32px);} }
+
+        /* Responsive Hero Layout */
+        @media (max-width: 960px) {
+          .mj-hero-seo {
+            padding: 160px 0 44px;
+          }
+          .mj-hero-seo-grid {
+            grid-template-columns: 1fr;
+            text-align: center;
+            gap: 32px;
+          }
+          .mj-hero-copy-col {
+            text-align: center;
+          }
+          .mj-hero-line2 {
+            align-items: center;
+          }
+          .mj-hero-sub {
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .mj-hero-editorial-actions {
+            justify-content: center;
+          }
+          .mj-hero-wa-hint {
+            text-align: center;
+          }
+          .mj-hero-illustration-col {
+            order: 2;
+          }
+          .mj-hero-illustration-wrapper {
+            max-width: 380px;
+            margin: 0 auto;
+          }
+        }
+        @media (max-width: 640px) {
+          .mj-hero-seo {
+            padding: 145px 0 36px;
+          }
+          .mj-hero-h1 {
+            font-size: clamp(1.85rem, 6.8vw, 2.4rem);
+            line-height: 1.18;
+          }
+          .mj-hero-editorial-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+          .mj-hero-btn-primary,
+          .mj-hero-btn-secondary {
+            width: 100%;
+            justify-content: center;
+          }
+          .mj-hero-illustration-wrapper {
+            max-width: 320px;
+          }
         }
       `}</style>
-    </section>
     </>
   );
 }
