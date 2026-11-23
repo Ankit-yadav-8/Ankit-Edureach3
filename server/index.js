@@ -117,16 +117,16 @@ function isOriginAllowed(origin) {
   try {
     const parsed = new URL(origin);
     const host = parsed.hostname.toLowerCase();
-    // Allow CampusPoint domains, Vercel deployments, Render hosts, and local dev
+    // In production, allow CampusPoint domains and localhost; only allow generic Vercel/Render preview domains in non-production
     if (
       host === "campuspoint.in" ||
       host.endsWith(".campuspoint.in") ||
-      host === "vercel.app" ||
-      host.endsWith(".vercel.app") ||
       host === "localhost" ||
-      host === "127.0.0.1" ||
-      host.endsWith(".onrender.com")
+      host === "127.0.0.1"
     ) {
+      return true;
+    }
+    if (!IS_PROD && (host.endsWith(".vercel.app") || host.endsWith(".onrender.com"))) {
       return true;
     }
   } catch {

@@ -77,7 +77,7 @@ export default function Admin() {
   const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_STORAGE) || "");
   const [authed, setAuthed] = useState(false);
   // two-step admin login: enter key → OTP emailed to the admin inbox → verify
-  const [step, setStep] = useState("key");          // "key" | "otp"
+  const [step, setStep] = useState("key");          // "key" | "otp" | "secondary" | "otp2"
   // Which admin inbox gets the code. Chosen by INDEX - the real addresses never
   // leave the server, the picker only ever shows masked labels.
   const [inboxes, setInboxes] = useState([]);
@@ -88,6 +88,11 @@ export default function Admin() {
   const [enteringOtp, setEnteringOtp] = useState("");
   const [otpSentTo, setOtpSentTo] = useState("");
   const [devCode, setDevCode] = useState("");
+  const [challengeToken, setChallengeToken] = useState("");   // phase1 or phase2 challenge
+  const [enteringSecondary, setEnteringSecondary] = useState("");
+  const [showSecondary, setShowSecondary] = useState(false);
+  const [enteringOtp2, setEnteringOtp2] = useState("");
+  const [devCode2, setDevCode2] = useState("");
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -211,8 +216,7 @@ export default function Admin() {
     } finally { setBusy(false); }
   }
 
-  // Step 2 - verify key + OTP; on success the server returns a short-lived
-  // admin session token that gates every data request.
+  // Step 2 - verify key + OTP₁ → get challengeToken (phase1), advance to secondary key
   async function verifyOtp(code) {
     setBusy(true); setErr("");
     try {
@@ -223,7 +227,49 @@ export default function Admin() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid code");
-      setDevCode(""); setEnteringOtp(""); setAdminKey("");
+      setDevCode(""); setEnteringOtp("");
+      setChallengeToken(data.challengeToken || "");
+      setStep("secondary"); setEnteringSecondary("");
+    } catch (e) {
+      const msg = e.message || "";
+      setErr(msg.includes("429") || /too many/i.test(msg) || /rate limit/i.test(msg) ? "Too many requests. Please wait a moment and try again." : msg);
+    } finally { setBusy(false); }
+  }
+
+  // Step 3 - verify secondary key → get OTP₂ sent + challengeToken (phase2)
+  async function verifySecondary(secKey) {
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/admin/verify-secondary", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challengeToken, secondaryKey: secKey }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
+      if (!res.ok) throw new Error(data.error || "Invalid secondary key");
+      setChallengeToken(data.challengeToken || "");
+      setOtpSentTo(data.sentTo || "the admin email");
+      if (data.devCode) setDevCode2(data.devCode);
+      setStep("otp2"); setEnteringOtp2("");
+    } catch (e) {
+      const msg = e.message || "";
+      setErr(msg.includes("429") || /too many/i.test(msg) || /rate limit/i.test(msg) ? "Too many requests. Please wait a moment and try again." : msg);
+    } finally { setBusy(false); }
+  }
+
+  // Step 4 - verify OTP₂ → get admin session token → login complete
+  async function completeLogin(code) {
+    setBusy(true); setErr("");
+    try {
+      const res = await fetch(API_BASE + "/api/admin/complete-login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challengeToken, code }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
+      if (!res.ok) throw new Error(data.error || "Invalid code");
+      setDevCode(""); setDevCode2(""); setEnteringOtp2(""); setAdminKey(""); setChallengeToken("");
+      setEnteringSecondary("");
       await fetchUsers(data.token);  // stores the token + flips authed on success
     } catch (e) {
       const msg = e.message || "";
@@ -287,6 +333,7 @@ export default function Admin() {
     sessionStorage.removeItem(TOKEN_STORAGE);
     setToken(""); setAuthed(false);
     setStep("key"); setAdminKey(""); setEnteringKey(""); setEnteringOtp(""); setOtpSentTo(""); setDevCode("");
+    setChallengeToken(""); setEnteringSecondary(""); setShowSecondary(false); setEnteringOtp2(""); setDevCode2("");
     setUsers([]); setTotal(0); setErr("");
     setPayments([]); setPayTotal(0); setPayLoaded(false); setTab("overview"); setSidebarOpen(false);
   }
@@ -309,11 +356,31 @@ export default function Admin() {
   );
   const revenue = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
-  // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
-  // ── TWO-STEP LOGIN GATE (key → OTP) ───────────────────────────
+  // ── 4-STEP FORTRESS LOGIN GATE ──────────────────────────────────
   if (!authed) {
-    const onKey = step === "key";
-    const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
+    const primaryAdminEmail = inboxes[0]?.label || "Admin Inbox";
+    const stepIndex = step === "key" ? 0 : step === "otp" ? 1 : step === "secondary" ? 2 : 3;
+    const STEPS = [
+      { key: "key", label: "Admin Key", icon: KeyRound, color: ORANGE },
+      { key: "otp", label: "OTP #1", icon: Mail, color: "#2563eb" },
+      { key: "secondary", label: "2nd Key", icon: Lock, color: "#8b5cf6" },
+      { key: "otp2", label: "OTP #2", icon: ShieldCheck, color: "#059669" },
+    ];
+
+    const stepTitles = {
+      key: "CampusPoint Admin",
+      otp: "Email Verification #1",
+      secondary: "Secondary Authorization",
+      otp2: "Final Verification",
+    };
+    const stepDescs = {
+      key: "Enter your primary secret authorization key to begin",
+      otp: <>6-digit code sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>,
+      secondary: "Enter your secondary authorization key to proceed",
+      otp2: <>Final 6-digit code sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>,
+    };
+    const ActiveIcon = STEPS[stepIndex].icon;
+    const activeColor = STEPS[stepIndex].color;
 
     return (
       <div className="adm-suite-root" style={{
@@ -350,7 +417,7 @@ export default function Admin() {
               textTransform: "uppercase",
             }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 6px #10b981" }} />
-              Active Defense · 256-Bit SSL
+              Fortress Defense · 4-Step Auth
             </span>
           </div>
 
@@ -360,53 +427,45 @@ export default function Admin() {
               width: 68,
               height: 68,
               borderRadius: 20,
-              background: onKey ? "linear-gradient(135deg, rgba(255,105,61,0.12), rgba(249,115,22,0.06))" : "linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.06))",
+              background: `linear-gradient(135deg, ${activeColor}1f, ${activeColor}0f)`,
               display: "grid",
               placeItems: "center",
               marginBottom: 16,
-              border: `1.5px solid ${onKey ? "rgba(255,105,61,0.2)" : "rgba(37,99,235,0.2)"}`,
+              border: `1.5px solid ${activeColor}33`,
               boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
             }}>
-              {onKey ? <ShieldCheck size={32} color={ORANGE} /> : <Mail size={32} color="#2563eb" />}
+              <ActiveIcon size={32} color={activeColor} />
             </div>
             <h2 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: "1.7rem", margin: 0, letterSpacing: -0.5 }}>
-              {onKey ? "CampusPoint Admin" : "Security Verification"}
+              {stepTitles[step]}
             </h2>
             <p style={{ color: "#64748b", fontSize: 13.5, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
-              {onKey
-                ? "Enter your secret authorization key to proceed"
-                : <>6-digit one-time passcode sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>}
+              {stepDescs[step]}
             </p>
           </div>
 
-          {/* Stepper Progress Indicator */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{
-                width: 20, height: 20, borderRadius: "50%",
-                background: onKey ? ORANGE : "#10b981",
-                color: "#fff", fontSize: 11, fontWeight: 800,
-                display: "grid", placeItems: "center",
-              }}>
-                {onKey ? "1" : "✓"}
-              </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: onKey ? "#0f172a" : "#10b981" }}>Key</span>
-            </div>
-            <div style={{ width: 36, height: 2, background: onKey ? "#e2e8f0" : "#10b981", borderRadius: 2 }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{
-                width: 20, height: 20, borderRadius: "50%",
-                background: !onKey ? ORANGE : "#e2e8f0",
-                color: !onKey ? "#fff" : "#94a3b8", fontSize: 11, fontWeight: 800,
-                display: "grid", placeItems: "center",
-              }}>
-                2
-              </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: !onKey ? "#0f172a" : "#94a3b8" }}>2FA OTP</span>
-            </div>
+          {/* 4-Step Progress Indicator */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginBottom: 24 }}>
+            {STEPS.map((s, i) => (
+              <Fragment key={s.key}>
+                {i > 0 && <div style={{ width: 20, height: 2, background: i <= stepIndex ? "#10b981" : "#e2e8f0", borderRadius: 2 }} />}
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{
+                    width: 20, height: 20, borderRadius: "50%",
+                    background: i < stepIndex ? "#10b981" : i === stepIndex ? s.color : "#e2e8f0",
+                    color: i <= stepIndex ? "#fff" : "#94a3b8", fontSize: 10, fontWeight: 800,
+                    display: "grid", placeItems: "center",
+                    transition: "all .3s ease",
+                  }}>
+                    {i < stepIndex ? "✓" : i + 1}
+                  </span>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, color: i <= stepIndex ? "#0f172a" : "#94a3b8" }}>{s.label}</span>
+                </div>
+              </Fragment>
+            ))}
           </div>
 
-          {/* Verified Admin 2FA Destination Badge */}
+          {/* 2FA Inbox Badge */}
           <div style={{
             display: "flex",
             alignItems: "center",
@@ -441,14 +500,14 @@ export default function Admin() {
             </span>
           </div>
 
-          {onKey ? (
+          {/* ═══ STEP 1: Primary Key ═══ */}
+          {step === "key" && (
             <>
-              {/* Step 1: Secret Key Input with Eye Toggle */}
               <div style={{ position: "relative", marginBottom: 18 }}>
                 <KeyRound size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
                 <input
                   type={showKey ? "text" : "password"}
-                  placeholder="Enter secret ADMIN_KEY"
+                  placeholder="Enter primary ADMIN_KEY"
                   value={enteringKey}
                   onChange={(e) => setEnteringKey(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && enteringKey && !busy) requestOtp(enteringKey); }}
@@ -478,8 +537,6 @@ export default function Admin() {
                   {showKey ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-
-              {/* Submit Button */}
               <button
                 disabled={busy || !enteringKey}
                 onClick={() => requestOtp(enteringKey)}
@@ -500,14 +557,16 @@ export default function Admin() {
                   </>
                 ) : (
                   <>
-                    Send Verification Code <ArrowRight size={17} />
+                    Step 1 of 4 — Send OTP <ArrowRight size={17} />
                   </>
                 )}
               </button>
             </>
-          ) : (
+          )}
+
+          {/* ═══ STEP 2: OTP #1 ═══ */}
+          {step === "otp" && (
             <>
-              {/* Step 2: 6-Digit OTP Input */}
               <div style={{ position: "relative", marginBottom: 18 }}>
                 <input
                   inputMode="numeric"
@@ -528,25 +587,22 @@ export default function Admin() {
                   onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
                 />
               </div>
-
               {devCode && (
                 <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
                   Dev mode code: <strong>{devCode}</strong>
                 </div>
               )}
-
-              {/* Verify Button */}
               <button
                 disabled={busy || enteringOtp.length !== 6}
                 onClick={() => verifyOtp(enteringOtp)}
                 style={{
-                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
                   color: "#fff", width: "100%", border: "none",
                   height: 52, borderRadius: 14, fontWeight: 700, fontSize: 15,
                   cursor: busy || enteringOtp.length !== 6 ? "not-allowed" : "pointer",
                   opacity: busy || enteringOtp.length !== 6 ? 0.6 : 1, transition: "all .2s ease",
                   display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: "0 6px 18px rgba(5,150,105,0.28)",
+                  boxShadow: "0 6px 18px rgba(37,99,235,0.28)",
                 }}
               >
                 {busy ? (
@@ -556,11 +612,10 @@ export default function Admin() {
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 size={18} /> Verify & Unlock Console
+                    Step 2 of 4 — Verify OTP <ArrowRight size={17} />
                   </>
                 )}
               </button>
-
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
                 <button
                   type="button"
@@ -579,6 +634,125 @@ export default function Admin() {
                   Resend Code
                 </button>
               </div>
+            </>
+          )}
+
+          {/* ═══ STEP 3: Secondary Key ═══ */}
+          {step === "secondary" && (
+            <>
+              <div style={{ position: "relative", marginBottom: 18 }}>
+                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
+                <input
+                  type={showSecondary ? "text" : "password"}
+                  placeholder="Enter secondary admin key"
+                  value={enteringSecondary}
+                  onChange={(e) => setEnteringSecondary(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter" && enteringSecondary && !busy) verifySecondary(enteringSecondary); }}
+                  autoFocus
+                  style={{
+                    width: "100%", paddingLeft: 46, paddingRight: 46, height: 52,
+                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 15,
+                    outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                    transition: "all .2s ease",
+                    background: "#ffffff",
+                    color: "#0f172a",
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = "#8b5cf6"; e.target.style.boxShadow = "0 0 0 3px rgba(139,92,246,0.15)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSecondary(!showSecondary)}
+                  tabIndex={-1}
+                  style={{
+                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                    background: "none", border: "none", color: "#94a3b8", cursor: "pointer",
+                    padding: 4, display: "flex", alignItems: "center", justifyContent: "center",
+                  }}
+                  title={showSecondary ? "Hide key" : "Show key"}
+                >
+                  {showSecondary ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              <button
+                disabled={busy || !enteringSecondary}
+                onClick={() => verifySecondary(enteringSecondary)}
+                style={{
+                  background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                  color: "#fff", width: "100%", border: "none",
+                  height: 52, borderRadius: 14, fontWeight: 700, fontSize: 15,
+                  cursor: busy || !enteringSecondary ? "not-allowed" : "pointer",
+                  opacity: busy || !enteringSecondary ? 0.6 : 1, transition: "all .2s ease",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 6px 18px rgba(139,92,246,0.28)",
+                }}
+              >
+                {busy ? (
+                  <>
+                    <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
+                    Verifying & Sending OTP #2...
+                  </>
+                ) : (
+                  <>
+                    Step 3 of 4 — Verify & Send OTP #2 <ArrowRight size={17} />
+                  </>
+                )}
+              </button>
+            </>
+          )}
+
+          {/* ═══ STEP 4: OTP #2 ═══ */}
+          {step === "otp2" && (
+            <>
+              <div style={{ position: "relative", marginBottom: 18 }}>
+                <input
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="••••••"
+                  value={enteringOtp2}
+                  onChange={(e) => setEnteringOtp2(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onKeyDown={(e) => { if (e.key === "Enter" && enteringOtp2.length === 6 && !busy) completeLogin(enteringOtp2); }}
+                  autoFocus
+                  style={{
+                    width: "100%", height: 56, textAlign: "center",
+                    borderRadius: 14, border: "1.5px solid #e2e8f0", fontSize: 26,
+                    letterSpacing: 10, fontWeight: 800, outline: "none", boxSizing: "border-box",
+                    fontFamily: "monospace", transition: "all .2s ease",
+                    background: "#ffffff", color: "#0f172a",
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = "#059669"; e.target.style.boxShadow = "0 0 0 3px rgba(5,150,105,0.15)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                />
+              </div>
+              {devCode2 && (
+                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "8px 12px", marginBottom: 14, color: "#92400e", fontSize: 13, textAlign: "center" }}>
+                  Dev mode code: <strong>{devCode2}</strong>
+                </div>
+              )}
+              <button
+                disabled={busy || enteringOtp2.length !== 6}
+                onClick={() => completeLogin(enteringOtp2)}
+                style={{
+                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  color: "#fff", width: "100%", border: "none",
+                  height: 52, borderRadius: 14, fontWeight: 700, fontSize: 15,
+                  cursor: busy || enteringOtp2.length !== 6 ? "not-allowed" : "pointer",
+                  opacity: busy || enteringOtp2.length !== 6 ? 0.6 : 1, transition: "all .2s ease",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 6px 18px rgba(5,150,105,0.28)",
+                }}
+              >
+                {busy ? (
+                  <>
+                    <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
+                    Completing Fortress Login...
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck size={18} /> Step 4 of 4 — Unlock Console
+                  </>
+                )}
+              </button>
             </>
           )}
 
@@ -618,13 +792,14 @@ export default function Admin() {
             fontSize: 11.5,
             color: "#64748b",
             fontWeight: 600,
+            flexWrap: "wrap",
           }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
               <ShieldAlert size={13} color="#f97316" /> 5-Strike Lockout
             </span>
             <span>•</span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <Lock size={13} color="#2563eb" /> 2FA Active
+              <Lock size={13} color="#8b5cf6" /> Dual-Key 4FA
             </span>
             <span>•</span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
@@ -637,7 +812,7 @@ export default function Admin() {
   }
 
   // ── DASHBOARD ─────────────────────────────────────────────────
-  const primaryAdminEmail = inboxes[0]?.email || "ankityadav08022008@gmail.com";
+  const primaryAdminEmail = inboxes[0]?.label || "Admin Inbox";
 
   const NAV_GROUPS = [
     {

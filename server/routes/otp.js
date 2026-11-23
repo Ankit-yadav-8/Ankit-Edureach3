@@ -53,7 +53,7 @@ router.post("/send", async (req, res) => {
       return res.status(502).json({ error: "We couldn't send the code right now. Please try again in a moment." });
     }
     console.log(`[OTP] Sent to ${email} | dev=${r.dev}`);
-    res.json({ sent: true, ...(r.dev ? { devCode: code } : {}) });
+    res.json({ sent: true, ...(process.env.NODE_ENV !== "production" && r.dev ? { devCode: code } : {}) });
   } catch (e) {
     console.error("[OTP SEND ERROR]", e.message);
     res.status(500).json({ error: "Could not send the code. Please try again." });
