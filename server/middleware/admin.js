@@ -14,33 +14,33 @@ function safeEqual(a, b) {
 // ── PRIMARY ADMIN KEY ────────────────────────────────────────────────────
 // Step 1 of admin 4FA — constant-time check of the primary admin key.
 export function verifyAdminKey(key) {
-  const adminKey = process.env.ADMIN_KEY;
+  const adminKey = (process.env.ADMIN_KEY || "").trim();
   if (!adminKey) {
     console.error("[auth/admin] ADMIN_KEY environment variable is not configured — access denied.");
     return false;
   }
-  return safeEqual(key, adminKey);
+  return safeEqual(String(key || "").trim(), adminKey);
 }
 
 // ── SECONDARY ADMIN KEY ─────────────────────────────────────────────────
 // Step 3 of admin 4FA — constant-time check of the secondary (previous) admin key.
 export function verifyAdminKeySecondary(key) {
-  const secondaryKey = process.env.ADMIN_KEY_SECONDARY;
+  const secondaryKey = (process.env.ADMIN_KEY_SECONDARY || "").trim();
   if (!secondaryKey) {
     console.error("[auth/admin] ADMIN_KEY_SECONDARY environment variable is not configured — access denied.");
     return false;
   }
-  return safeEqual(key, secondaryKey);
+  return safeEqual(String(key || "").trim(), secondaryKey);
 }
 
 // ── CHALLENGE TOKENS (inter-step proof) ─────────────────────────────────
 // Short-lived JWT that proves the holder completed a specific phase of login.
 // These are NOT admin session tokens — they only gate the NEXT step.
-export function signChallengeToken(phase) {
+export function signChallengeToken(phase, expiresIn = "5m") {
   return jwt.sign(
     { phase, admin: false, challenge: true },
     process.env.JWT_SECRET,
-    { expiresIn: "5m" }
+    { expiresIn }
   );
 }
 

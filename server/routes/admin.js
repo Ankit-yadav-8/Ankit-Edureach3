@@ -189,12 +189,16 @@ router.post("/request-otp", adminKeyLimiter, async (req, res) => {
     const code = String(Math.floor(100000 + Math.random() * 900000));
     const codeHash = await bcrypt.hash(code, 8);
 
+    // Clear any prior pending OTP for this email to guarantee a clean slate:
+    await Otp.deleteMany({ email: ADMIN_EMAIL, name: { $ne: "admin-2fa2" } });
     const sendP = sendOtpEmail(ADMIN_EMAIL, code);
-    const persistP = Otp.findOneAndUpdate(
-      { email: ADMIN_EMAIL, name: "admin" },
-      { codeHash, name: "admin", attempts: 0, expiresAt: new Date(Date.now() + 10 * 60 * 1000) },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    const persistP = Otp.create({
+      email: ADMIN_EMAIL,
+      name: "admin",
+      codeHash,
+      attempts: 0,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+    });
     const [r] = await Promise.all([sendP, persistP]);
     if (!r.ok) {
       await Otp.deleteMany({ email: ADMIN_EMAIL, name: "admin" });
@@ -203,8 +207,10 @@ router.post("/request-otp", adminKeyLimiter, async (req, res) => {
     }
     console.log(`[ADMIN OTP₁] sent to ${ADMIN_EMAIL} | dev=${r.dev}`);
 
+    const step1Proof = signChallengeToken("step1", "10m");
     res.json({
       sent: true,
+      step1Proof,
       ...(process.env.NODE_ENV !== "production" && r.dev ? { devCode: code } : {}),
     });
   } catch (e) {
@@ -220,27 +226,36 @@ router.post("/verify-otp", adminOtpLimiter, async (req, res) => {
   const { ip, ua } = clientInfo(req);
 
   try {
-    if (!verifyAdminKey(req.body?.key)) {
-      console.warn(`[SECURITY ALERT] 🚨 Failed PRIMARY key at Step 2 from IP: ${ip}`);
+    // Validate that either step1Proof is valid OR primary key matches
+    const hasValidProof = verifyChallengeToken(req.body?.step1Proof, "step1");
+    const hasValidKey = req.body?.key && verifyAdminKey(req.body.key);
+
+    if (!hasValidProof && !hasValidKey) {
+      console.warn(`[SECURITY ALERT] 🚨 Unauthorized step 2 attempt from IP: ${ip}`);
       sendSecurityAlertEmail({ ip, userAgent: ua, step: "primary-key" }).catch(() => {});
-      return res.status(403).json({ error: "Invalid admin key" });
+      return res.status(403).json({ error: "Access denied. Please restart login." });
     }
 
     const ADMIN_EMAIL = ADMIN_EMAILS[0];
-    const code = String(req.body?.code || "");
+    const code = String(req.body?.code || "").replace(/\D/g, "");
 
-    const otp = await Otp.findOne({ email: ADMIN_EMAIL, name: "admin" }).sort({ _id: -1 });
-    if (!otp) return res.status(400).json({ error: "Request a new code" });
+    if (!code || code.length !== 6) {
+      return res.status(400).json({ error: "Please enter a valid 6-digit verification code" });
+    }
+
+    const otp = await Otp.findOne({ email: ADMIN_EMAIL, name: { $ne: "admin-2fa2" } }).sort({ _id: -1 });
+    if (!otp) return res.status(400).json({ error: "Verification code not found or expired. Please request a new code." });
     if (otp.expiresAt < new Date()) {
       await otp.deleteOne();
-      return res.status(400).json({ error: "Code expired — request a new one" });
+      return res.status(400).json({ error: "Verification code expired. Please request a new code." });
     }
     if (otp.attempts >= 5) {
       await otp.deleteOne();
       console.warn(`[SECURITY ALERT] 🚨 OTP₁ brute-force for ${ADMIN_EMAIL} from IP: ${ip}. Code destroyed.`);
       sendSecurityAlertEmail({ ip, userAgent: ua, step: "otp-1" }).catch(() => {});
-      return res.status(429).json({ error: "Too many attempts — request a new code" });
+      return res.status(429).json({ error: "Too many failed attempts. Code destroyed. Please request a new code." });
     }
+
     const ok = await bcrypt.compare(code, otp.codeHash);
     if (!ok) {
       otp.attempts++;
@@ -249,14 +264,14 @@ router.post("/verify-otp", adminOtpLimiter, async (req, res) => {
       if (otp.attempts >= 3) {
         sendSecurityAlertEmail({ ip, userAgent: ua, step: "otp-1" }).catch(() => {});
       }
-      return res.status(400).json({ error: `Incorrect code (${5 - otp.attempts} attempts left)` });
+      return res.status(400).json({ error: `Incorrect verification code (${5 - otp.attempts} attempts left)` });
     }
 
     await otp.deleteOne();
     console.log(`[ADMIN STEP 2] ✅ OTP₁ verified from IP: ${ip} — issuing phase1 challenge`);
 
     // Issue a short-lived challenge token that proves Step 1+2 are done
-    res.json({ challengeToken: signChallengeToken("phase1"), nextStep: "secondary" });
+    res.json({ challengeToken: signChallengeToken("phase1", "5m"), nextStep: "secondary" });
   } catch (e) {
     console.error("[admin/verify-otp]", e.message);
     res.status(500).json({ error: "Could not verify the code. Please try again." });
@@ -290,7 +305,7 @@ router.post("/verify-secondary", adminSecondaryLimiter, async (req, res) => {
     const sendP = sendOtpEmail(ADMIN_EMAIL, code);
     const persistP = Otp.findOneAndUpdate(
       { email: ADMIN_EMAIL, name: "admin-2fa2" },
-      { codeHash, name: "admin-2fa2", attempts: 0, expiresAt: new Date(Date.now() + 10 * 60 * 1000) },
+      { codeHash, name: "admin-2fa2", attempts: 0, expiresAt: new Date(Date.now() + 30 * 1000) },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
     const [r] = await Promise.all([sendP, persistP]);
@@ -303,7 +318,8 @@ router.post("/verify-secondary", adminSecondaryLimiter, async (req, res) => {
 
     res.json({
       sent: true,
-      challengeToken: signChallengeToken("phase2"),
+      challengeToken: signChallengeToken("phase2", "30s"),
+      expiresInSeconds: 30,
       ...(process.env.NODE_ENV !== "production" && r.dev ? { devCode: code } : {}),
     });
   } catch (e) {
@@ -319,20 +335,20 @@ router.post("/complete-login", adminOtp2Limiter, async (req, res) => {
   const { ip, ua } = clientInfo(req);
 
   try {
-    // Must have completed Steps 1+2+3 (phase2 challenge token)
+    // Must have completed Steps 1+2+3 (phase2 challenge token — strict 30s TTL)
     if (!verifyChallengeToken(req.body?.challengeToken, "phase2")) {
-      console.warn(`[SECURITY ALERT] 🚨 Invalid/expired challenge token at Step 4 from IP: ${ip}`);
-      return res.status(403).json({ error: "Session expired — please restart login" });
+      console.warn(`[SECURITY ALERT] 🚨 Invalid/expired 30s challenge token at Step 4 from IP: ${ip}`);
+      return res.status(401).json({ error: "Unauthorized: 30-second window expired", restart: true });
     }
 
     const ADMIN_EMAIL = ADMIN_EMAILS[0];
     const code = String(req.body?.code || "");
 
     const otp = await Otp.findOne({ email: ADMIN_EMAIL, name: "admin-2fa2" }).sort({ _id: -1 });
-    if (!otp) return res.status(400).json({ error: "Request a new code" });
+    if (!otp) return res.status(400).json({ error: "Unauthorized: Request a new code", restart: true });
     if (otp.expiresAt < new Date()) {
       await otp.deleteOne();
-      return res.status(400).json({ error: "Code expired — please restart login" });
+      return res.status(401).json({ error: "Unauthorized: 30-second window expired", restart: true });
     }
     if (otp.attempts >= 5) {
       await otp.deleteOne();

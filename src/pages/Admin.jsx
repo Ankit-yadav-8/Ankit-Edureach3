@@ -79,6 +79,7 @@ export default function Admin() {
   // two-step admin login: enter key → OTP emailed to the admin inbox → verify
   const [step, setStep] = useState("key");          // "key" | "otp" | "secondary" | "otp2"
   const [adminKey, setAdminKey] = useState("");     // verified key, kept for step 2
+  const [step1Proof, setStep1Proof] = useState(""); // proof of step 1 for bulletproof step 2
   const [enteringKey, setEnteringKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [enteringOtp, setEnteringOtp] = useState("");
@@ -184,16 +185,19 @@ export default function Admin() {
   // Step 1 - verify the admin key on the server, which emails an OTP to the
   // admin inbox. We never advance to step 2 unless the key was correct.
   async function requestOtp(k) {
+    const cleanKey = String(k || "").trim();
+    if (!cleanKey) return;
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/admin/request-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: k }),
+        body: JSON.stringify({ key: cleanKey }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Could not send the code");
-      setAdminKey(k);
+      setAdminKey(cleanKey);
+      setStep1Proof(data.step1Proof || "");
       if (data.devCode) setDevCode(data.devCode);
       setStep("otp"); setEnteringOtp("");
     } catch (e) {
@@ -202,13 +206,18 @@ export default function Admin() {
     } finally { setBusy(false); }
   }
 
-  // Step 2 - verify key + OTP₁ → get challengeToken (phase1), advance to secondary key
+  // Step 2 - verify OTP₁ → get challengeToken (phase1), advance to secondary key
   async function verifyOtp(code) {
+    const cleanCode = String(code || "").replace(/\D/g, "");
+    if (!cleanCode || cleanCode.length !== 6) {
+      setErr("Please enter the 6-digit verification code");
+      return;
+    }
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/admin/verify-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: adminKey, code, inbox }),
+        body: JSON.stringify({ key: adminKey, step1Proof, code: cleanCode }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
@@ -222,15 +231,46 @@ export default function Admin() {
     } finally { setBusy(false); }
   }
 
-  // Step 3 - verify secondary key → get OTP₂ sent + challengeToken (phase2)
+  const resetToStep1 = useCallback((errMsg) => {
+    setStep("key");
+    setAdminKey("");
+    setStep1Proof("");
+    setChallengeToken("");
+    setEnteringKey("");
+    setEnteringSecondary("");
+    setShowKey(false);
+    setShowSecondary(false);
+    setEnteringOtp("");
+    setEnteringOtp2("");
+    setDevCode("");
+    setDevCode2("");
+    setErr(errMsg || "Unauthorized. Please start again.");
+  }, []);
+
+  // Strict 30-second window to enter second email verification code:
+  // If 30 seconds pass, automatically reset to step 1 with "Unauthorized"
+  useEffect(() => {
+    if (step === "otp2") {
+      const timer = setTimeout(() => {
+        resetToStep1("Unauthorized: 30-second verification window expired. Returned to step 1.");
+      }, 30000);
+      return () => clearTimeout(timer);
+    }
+  }, [step, resetToStep1]);
+
+  // Step 3 - verify secondary key → get OTP₂ sent + challengeToken (phase2, 30s TTL)
   async function verifySecondary(secKey) {
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/admin/verify-secondary", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ challengeToken, secondaryKey: secKey }),
+        body: JSON.stringify({ challengeToken, secondaryKey: String(secKey || "").trim() }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 401 || data.restart) {
+        resetToStep1(data.error || "Unauthorized. Session expired.");
+        return;
+      }
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid secondary key");
       setChallengeToken(data.challengeToken || "");
@@ -242,15 +282,20 @@ export default function Admin() {
     } finally { setBusy(false); }
   }
 
-  // Step 4 - verify OTP₂ → get admin session token → login complete
+  // Step 4 - verify OTP₂ (within strict 30s) → get admin session token → login complete
   async function completeLogin(code) {
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/admin/complete-login", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ challengeToken, code }),
+        body: JSON.stringify({ challengeToken, code: String(code || "").replace(/\D/g, "") }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 401 || data.restart) {
+        // Expired after 30 seconds or unauthorized -> kick back to Step 1 immediately!
+        resetToStep1(data.error || "Unauthorized: 30-second window expired. Returned to step 1.");
+        return;
+      }
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid code");
       setDevCode(""); setDevCode2(""); setEnteringOtp2(""); setAdminKey(""); setChallengeToken("");
