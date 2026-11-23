@@ -89,6 +89,8 @@ export default function Admin() {
   const [showSecondary, setShowSecondary] = useState(false);
   const [enteringOtp2, setEnteringOtp2] = useState("");
   const [devCode2, setDevCode2] = useState("");
+  const [countdown, setCountdown] = useState(30);
+  const [otp2Deadline, setOtp2Deadline] = useState(0);
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -244,19 +246,39 @@ export default function Admin() {
     setEnteringOtp2("");
     setDevCode("");
     setDevCode2("");
+    setOtp2Deadline(0);
+    setCountdown(30);
     setErr(errMsg || "Unauthorized. Please start again.");
   }, []);
 
   // Strict 30-second window to enter second email verification code:
-  // If 30 seconds pass, automatically reset to step 1 with "Unauthorized"
+  // Using Date.now() + visibilitychange so switching tabs to check email won't freeze the timer!
   useEffect(() => {
-    if (step === "otp2") {
-      const timer = setTimeout(() => {
+    if (step !== "otp2" || !otp2Deadline) return;
+
+    const checkExpiration = () => {
+      const remaining = Math.max(0, Math.ceil((otp2Deadline - Date.now()) / 1000));
+      setCountdown(remaining);
+      if (remaining <= 0) {
         resetToStep1("Unauthorized: 30-second verification window expired. Returned to step 1.");
-      }, 30000);
-      return () => clearTimeout(timer);
-    }
-  }, [step, resetToStep1]);
+      }
+    };
+
+    checkExpiration();
+    const interval = setInterval(checkExpiration, 250);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkExpiration();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [step, otp2Deadline, resetToStep1]);
 
   // Step 3 - verify secondary key → get OTP₂ sent + challengeToken (phase2, 30s TTL)
   async function verifySecondary(secKey) {
@@ -275,6 +297,9 @@ export default function Admin() {
       if (!res.ok) throw new Error(data.error || "Invalid secondary key");
       setChallengeToken(data.challengeToken || "");
       if (data.devCode) setDevCode2(data.devCode);
+      const deadline = Date.now() + 30 * 1000;
+      setOtp2Deadline(deadline);
+      setCountdown(30);
       setStep("otp2"); setEnteringOtp2("");
     } catch (e) {
       const msg = e.message || "";
@@ -284,6 +309,10 @@ export default function Admin() {
 
   // Step 4 - verify OTP₂ (within strict 30s) → get admin session token → login complete
   async function completeLogin(code) {
+    if (otp2Deadline && Date.now() > otp2Deadline) {
+      resetToStep1("Unauthorized: 30-second verification window expired. Returned to step 1.");
+      return;
+    }
     setBusy(true); setErr("");
     try {
       const res = await fetch(API_BASE + "/api/admin/complete-login", {
@@ -299,7 +328,7 @@ export default function Admin() {
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid code");
       setDevCode(""); setDevCode2(""); setEnteringOtp2(""); setAdminKey(""); setChallengeToken("");
-      setEnteringSecondary("");
+      setEnteringSecondary(""); setOtp2Deadline(0);
       await fetchUsers(data.token);  // stores the token + flips authed on success
     } catch (e) {
       const msg = e.message || "";
@@ -397,6 +426,10 @@ export default function Admin() {
         background: "radial-gradient(ellipse at 50% 15%, rgba(255, 105, 61, 0.05) 0%, transparent 60%), #f8fafc",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}>
+        <style>{`
+          @keyframes admSpin { to { transform: rotate(360deg); } }
+          @keyframes admPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.45; transform: scale(0.96); } }
+        `}</style>
         <div style={{
           maxWidth: 420,
           width: "100%",
@@ -634,9 +667,29 @@ export default function Admin() {
             </>
           )}
 
-          {/* ═══ STEP 4: OTP #2 ═══ */}
+          {/* ═══ STEP 4: OTP #2 (Strict 30-Second Window) ═══ */}
           {step === "otp2" && (
             <>
+              {/* Live countdown timer */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 7,
+                marginBottom: 16,
+                padding: "8px 14px",
+                borderRadius: 12,
+                background: countdown <= 10 ? "#fef2f2" : "#f0fdf4",
+                border: countdown <= 10 ? "1.5px solid #fecaca" : "1.5px solid #bbf7d0",
+                color: countdown <= 10 ? "#dc2626" : "#16a34a",
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: -0.2,
+                transition: "all .3s ease",
+              }}>
+                <Clock size={15} style={{ animation: countdown <= 10 ? "admPulse 1s ease-in-out infinite" : "none" }} />
+                <span>Security window: <strong style={{ fontVariantNumeric: "tabular-nums" }}>{countdown}s</strong> remaining</span>
+              </div>
               <div style={{ position: "relative", marginBottom: 18 }}>
                 <input
                   inputMode="numeric"

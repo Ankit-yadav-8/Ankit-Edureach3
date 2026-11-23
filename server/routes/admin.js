@@ -302,12 +302,15 @@ router.post("/verify-secondary", adminSecondaryLimiter, async (req, res) => {
     const code = String(Math.floor(100000 + Math.random() * 900000));
     const codeHash = await bcrypt.hash(code, 8);
 
+    await Otp.deleteMany({ email: ADMIN_EMAIL, name: "admin-2fa2" });
     const sendP = sendOtpEmail(ADMIN_EMAIL, code);
-    const persistP = Otp.findOneAndUpdate(
-      { email: ADMIN_EMAIL, name: "admin-2fa2" },
-      { codeHash, name: "admin-2fa2", attempts: 0, expiresAt: new Date(Date.now() + 30 * 1000) },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    const persistP = Otp.create({
+      email: ADMIN_EMAIL,
+      name: "admin-2fa2",
+      codeHash,
+      attempts: 0,
+      expiresAt: new Date(Date.now() + 30 * 1000),
+    });
     const [r] = await Promise.all([sendP, persistP]);
     if (!r.ok) {
       await Otp.deleteMany({ email: ADMIN_EMAIL, name: "admin-2fa2" });
@@ -335,26 +338,28 @@ router.post("/complete-login", adminOtp2Limiter, async (req, res) => {
   const { ip, ua } = clientInfo(req);
 
   try {
+    const ADMIN_EMAIL = ADMIN_EMAILS[0];
+
     // Must have completed Steps 1+2+3 (phase2 challenge token — strict 30s TTL)
     if (!verifyChallengeToken(req.body?.challengeToken, "phase2")) {
       console.warn(`[SECURITY ALERT] 🚨 Invalid/expired 30s challenge token at Step 4 from IP: ${ip}`);
-      return res.status(401).json({ error: "Unauthorized: 30-second window expired", restart: true });
+      await Otp.deleteMany({ email: ADMIN_EMAIL, name: "admin-2fa2" });
+      return res.status(401).json({ error: "Unauthorized: 30-second verification window expired", restart: true });
     }
 
-    const ADMIN_EMAIL = ADMIN_EMAILS[0];
     const code = String(req.body?.code || "");
 
     const otp = await Otp.findOne({ email: ADMIN_EMAIL, name: "admin-2fa2" }).sort({ _id: -1 });
-    if (!otp) return res.status(400).json({ error: "Unauthorized: Request a new code", restart: true });
+    if (!otp) return res.status(401).json({ error: "Unauthorized: Request a new code", restart: true });
     if (otp.expiresAt < new Date()) {
       await otp.deleteOne();
-      return res.status(401).json({ error: "Unauthorized: 30-second window expired", restart: true });
+      return res.status(401).json({ error: "Unauthorized: 30-second verification window expired", restart: true });
     }
     if (otp.attempts >= 5) {
       await otp.deleteOne();
       console.warn(`[SECURITY ALERT] 🚨 OTP₂ brute-force for ${ADMIN_EMAIL} from IP: ${ip}. Code destroyed.`);
       sendSecurityAlertEmail({ ip, userAgent: ua, step: "otp-2" }).catch(() => {});
-      return res.status(429).json({ error: "Too many attempts — please restart login" });
+      return res.status(429).json({ error: "Too many attempts — please restart login", restart: true });
     }
     const ok = await bcrypt.compare(code, otp.codeHash);
     if (!ok) {
