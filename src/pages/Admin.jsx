@@ -78,15 +78,10 @@ export default function Admin() {
   const [authed, setAuthed] = useState(false);
   // two-step admin login: enter key → OTP emailed to the admin inbox → verify
   const [step, setStep] = useState("key");          // "key" | "otp" | "secondary" | "otp2"
-  // Which admin inbox gets the code. Chosen by INDEX - the real addresses never
-  // leave the server, the picker only ever shows masked labels.
-  const [inboxes, setInboxes] = useState([]);
-  const [inbox, setInbox] = useState(0);
   const [adminKey, setAdminKey] = useState("");     // verified key, kept for step 2
   const [enteringKey, setEnteringKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [enteringOtp, setEnteringOtp] = useState("");
-  const [otpSentTo, setOtpSentTo] = useState("");
   const [devCode, setDevCode] = useState("");
   const [challengeToken, setChallengeToken] = useState("");   // phase1 or phase2 challenge
   const [enteringSecondary, setEnteringSecondary] = useState("");
@@ -186,14 +181,6 @@ export default function Admin() {
 
   useEffect(() => { if (token) fetchUsers(token); /* eslint-disable-next-line */ }, []);
 
-  // Masked list of inboxes a code may be sent to, so each owner can pick their own.
-  useEffect(() => {
-    fetch(API_BASE + "/api/admin/inboxes")
-      .then((r) => r.json())
-      .then((d) => setInboxes(d.inboxes || []))
-      .catch(() => setInboxes([]));  // picker just hides; the default inbox still works
-  }, []);
-
   // Step 1 - verify the admin key on the server, which emails an OTP to the
   // admin inbox. We never advance to step 2 unless the key was correct.
   async function requestOtp(k) {
@@ -201,13 +188,12 @@ export default function Admin() {
     try {
       const res = await fetch(API_BASE + "/api/admin/request-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: k, inbox }),
+        body: JSON.stringify({ key: k }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Could not send the code");
       setAdminKey(k);
-      setOtpSentTo(data.sentTo || "the admin email");
       if (data.devCode) setDevCode(data.devCode);
       setStep("otp"); setEnteringOtp("");
     } catch (e) {
@@ -248,7 +234,6 @@ export default function Admin() {
       if (res.status === 429) throw new Error("Too many requests. Please wait a moment and try again.");
       if (!res.ok) throw new Error(data.error || "Invalid secondary key");
       setChallengeToken(data.challengeToken || "");
-      setOtpSentTo(data.sentTo || "the admin email");
       if (data.devCode) setDevCode2(data.devCode);
       setStep("otp2"); setEnteringOtp2("");
     } catch (e) {
@@ -332,7 +317,7 @@ export default function Admin() {
   function logout() {
     sessionStorage.removeItem(TOKEN_STORAGE);
     setToken(""); setAuthed(false);
-    setStep("key"); setAdminKey(""); setEnteringKey(""); setEnteringOtp(""); setOtpSentTo(""); setDevCode("");
+    setStep("key"); setAdminKey(""); setEnteringKey(""); setEnteringOtp(""); setDevCode("");
     setChallengeToken(""); setEnteringSecondary(""); setShowSecondary(false); setEnteringOtp2(""); setDevCode2("");
     setUsers([]); setTotal(0); setErr("");
     setPayments([]); setPayTotal(0); setPayLoaded(false); setTab("overview"); setSidebarOpen(false);
@@ -356,148 +341,51 @@ export default function Admin() {
   );
   const revenue = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
-  // ── 4-STEP FORTRESS LOGIN GATE ──────────────────────────────────
+  // ── STEALTH LOGIN GATE (zero info leak) ──────────────────────────
   if (!authed) {
-    const primaryAdminEmail = inboxes[0]?.label || "Admin Inbox";
-    const stepIndex = step === "key" ? 0 : step === "otp" ? 1 : step === "secondary" ? 2 : 3;
-    const STEPS = [
-      { key: "key", label: "Admin Key", icon: KeyRound, color: ORANGE },
-      { key: "otp", label: "OTP #1", icon: Mail, color: "#2563eb" },
-      { key: "secondary", label: "2nd Key", icon: Lock, color: "#8b5cf6" },
-      { key: "otp2", label: "OTP #2", icon: ShieldCheck, color: "#059669" },
-    ];
-
-    const stepTitles = {
-      key: "CampusPoint Admin",
-      otp: "Email Verification #1",
-      secondary: "Secondary Authorization",
-      otp2: "Final Verification",
-    };
-    const stepDescs = {
-      key: "Enter your primary secret authorization key to begin",
-      otp: <>6-digit code sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>,
-      secondary: "Enter your secondary authorization key to proceed",
-      otp2: <>Final 6-digit code sent to <strong>{otpSentTo || primaryAdminEmail}</strong></>,
-    };
-    const ActiveIcon = STEPS[stepIndex].icon;
-    const activeColor = STEPS[stepIndex].color;
-
     return (
       <div className="adm-suite-root" style={{
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
         padding: "40px 16px",
-        background: "radial-gradient(ellipse at 50% 15%, rgba(255, 105, 61, 0.08) 0%, transparent 60%), #f8fafc",
+        background: "radial-gradient(ellipse at 50% 15%, rgba(255, 105, 61, 0.05) 0%, transparent 60%), #f8fafc",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}>
         <div style={{
-          maxWidth: 460,
+          maxWidth: 420,
           width: "100%",
           background: "#ffffff",
           borderRadius: 24,
-          padding: "40px 36px 32px",
-          boxShadow: "0 20px 50px -12px rgba(15, 23, 42, 0.09), 0 0 0 1px rgba(15, 23, 42, 0.06)",
+          padding: "44px 36px 36px",
+          boxShadow: "0 20px 50px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.05)",
           position: "relative",
           zIndex: 1,
         }}>
-          {/* Header Security Status Badge */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
-            <span style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              background: "#f1f5f9",
-              padding: "5px 12px",
-              borderRadius: 20,
-              fontSize: 11,
-              fontWeight: 800,
-              letterSpacing: 0.6,
-              color: "#334155",
-              textTransform: "uppercase",
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 6px #10b981" }} />
-              Fortress Defense · 4-Step Auth
-            </span>
-          </div>
-
-          {/* Icon and Title */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 22 }}>
+          {/* Minimal Icon and Title */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 28 }}>
             <div style={{
-              width: 68,
-              height: 68,
-              borderRadius: 20,
-              background: `linear-gradient(135deg, ${activeColor}1f, ${activeColor}0f)`,
+              width: 58,
+              height: 58,
+              borderRadius: 18,
+              background: "linear-gradient(135deg, rgba(255,105,61,0.1), rgba(249,115,22,0.04))",
               display: "grid",
               placeItems: "center",
               marginBottom: 16,
-              border: `1.5px solid ${activeColor}33`,
-              boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
+              border: "1.5px solid rgba(255,105,61,0.18)",
+              boxShadow: "0 6px 16px rgba(0,0,0,0.03)",
             }}>
-              <ActiveIcon size={32} color={activeColor} />
+              <Lock size={26} color={ORANGE} />
             </div>
-            <h2 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: "1.7rem", margin: 0, letterSpacing: -0.5 }}>
-              {stepTitles[step]}
+            <h2 style={{ fontFamily: "Sora, sans-serif", fontWeight: 800, color: "#0f172a", fontSize: "1.55rem", margin: 0, letterSpacing: -0.5 }}>
+              CampusPoint Admin
             </h2>
             <p style={{ color: "#64748b", fontSize: 13.5, marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
-              {stepDescs[step]}
+              {step === "key" && "Enter authorization key to continue"}
+              {step === "otp" && "Enter the 6-digit verification code"}
+              {step === "secondary" && "Security check: enter authorization key"}
+              {step === "otp2" && "Enter the 6-digit verification code"}
             </p>
-          </div>
-
-          {/* 4-Step Progress Indicator */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginBottom: 24 }}>
-            {STEPS.map((s, i) => (
-              <Fragment key={s.key}>
-                {i > 0 && <div style={{ width: 20, height: 2, background: i <= stepIndex ? "#10b981" : "#e2e8f0", borderRadius: 2 }} />}
-                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{
-                    width: 20, height: 20, borderRadius: "50%",
-                    background: i < stepIndex ? "#10b981" : i === stepIndex ? s.color : "#e2e8f0",
-                    color: i <= stepIndex ? "#fff" : "#94a3b8", fontSize: 10, fontWeight: 800,
-                    display: "grid", placeItems: "center",
-                    transition: "all .3s ease",
-                  }}>
-                    {i < stepIndex ? "✓" : i + 1}
-                  </span>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: i <= stepIndex ? "#0f172a" : "#94a3b8" }}>{s.label}</span>
-                </div>
-              </Fragment>
-            ))}
-          </div>
-
-          {/* 2FA Inbox Badge */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "10px 14px",
-            borderRadius: 12,
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            marginBottom: 20,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 8, background: "#eff6ff", display: "grid", placeItems: "center" }}>
-                <Mail size={14} color="#2563eb" />
-              </div>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>2FA Inbox</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{primaryAdminEmail}</div>
-              </div>
-            </div>
-            <span style={{
-              fontSize: 11,
-              fontWeight: 800,
-              padding: "3px 8px",
-              borderRadius: 6,
-              background: "#ecfdf5",
-              color: "#059669",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}>
-              <CheckCircle2 size={12} /> Verified
-            </span>
           </div>
 
           {/* ═══ STEP 1: Primary Key ═══ */}
@@ -507,7 +395,7 @@ export default function Admin() {
                 <KeyRound size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
                 <input
                   type={showKey ? "text" : "password"}
-                  placeholder="Enter primary ADMIN_KEY"
+                  placeholder="Enter security key"
                   value={enteringKey}
                   onChange={(e) => setEnteringKey(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && enteringKey && !busy) requestOtp(enteringKey); }}
@@ -553,11 +441,11 @@ export default function Admin() {
                 {busy ? (
                   <>
                     <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
-                    Verifying & Sending OTP...
+                    Verifying...
                   </>
                 ) : (
                   <>
-                    Step 1 of 4 — Send OTP <ArrowRight size={17} />
+                    Continue <ArrowRight size={17} />
                   </>
                 )}
               </button>
@@ -608,11 +496,11 @@ export default function Admin() {
                 {busy ? (
                   <>
                     <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
-                    Verifying Code...
+                    Verifying...
                   </>
                 ) : (
                   <>
-                    Step 2 of 4 — Verify OTP <ArrowRight size={17} />
+                    Verify Code <ArrowRight size={17} />
                   </>
                 )}
               </button>
@@ -623,7 +511,7 @@ export default function Admin() {
                   disabled={busy}
                   style={{ background: "none", border: "none", color: "#64748b", fontSize: 13, cursor: "pointer", fontWeight: 600 }}
                 >
-                  ← Back to Key
+                  ← Back
                 </button>
                 <button
                   type="button"
@@ -631,7 +519,7 @@ export default function Admin() {
                   disabled={busy}
                   style={{ background: "none", border: "none", color: ORANGE, fontSize: 13, cursor: "pointer", fontWeight: 700 }}
                 >
-                  Resend Code
+                  Resend code
                 </button>
               </div>
             </>
@@ -644,7 +532,7 @@ export default function Admin() {
                 <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} />
                 <input
                   type={showSecondary ? "text" : "password"}
-                  placeholder="Enter secondary admin key"
+                  placeholder="Enter confirmation key"
                   value={enteringSecondary}
                   onChange={(e) => setEnteringSecondary(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && enteringSecondary && !busy) verifySecondary(enteringSecondary); }}
@@ -690,11 +578,11 @@ export default function Admin() {
                 {busy ? (
                   <>
                     <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
-                    Verifying & Sending OTP #2...
+                    Verifying...
                   </>
                 ) : (
                   <>
-                    Step 3 of 4 — Verify & Send OTP #2 <ArrowRight size={17} />
+                    Continue <ArrowRight size={17} />
                   </>
                 )}
               </button>
@@ -745,11 +633,11 @@ export default function Admin() {
                 {busy ? (
                   <>
                     <RefreshCw size={17} style={{ animation: "admSpin 1s linear infinite" }} />
-                    Completing Fortress Login...
+                    Verifying...
                   </>
                 ) : (
                   <>
-                    <ShieldCheck size={18} /> Step 4 of 4 — Unlock Console
+                    <CheckCircle2 size={18} /> Sign In
                   </>
                 )}
               </button>
@@ -779,40 +667,13 @@ export default function Admin() {
               </div>
             </div>
           )}
-
-          {/* Footer Security Badges */}
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 12,
-            marginTop: 24,
-            paddingTop: 18,
-            borderTop: "1px solid #f1f5f9",
-            fontSize: 11.5,
-            color: "#64748b",
-            fontWeight: 600,
-            flexWrap: "wrap",
-          }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <ShieldAlert size={13} color="#f97316" /> 5-Strike Lockout
-            </span>
-            <span>•</span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <Lock size={13} color="#8b5cf6" /> Dual-Key 4FA
-            </span>
-            <span>•</span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <ShieldCheck size={13} color="#059669" /> Auto-Alerted
-            </span>
-          </div>
         </div>
       </div>
     );
   }
 
   // ── DASHBOARD ─────────────────────────────────────────────────
-  const primaryAdminEmail = inboxes[0]?.label || "Admin Inbox";
+  const primaryAdminEmail = "Super Admin";
 
   const NAV_GROUPS = [
     {

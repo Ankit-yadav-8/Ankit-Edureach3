@@ -37,9 +37,9 @@ function makeLimiter(windowMs, label) {
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
-      console.error(`[SECURITY LOCKOUT] 🚨 IP ${req.ip || "unknown"} exceeded 5 failed ${label} attempts. Locked for ${windowMs / 60000}m.`);
+      console.error(`[SECURITY LOCKOUT] 🚨 IP ${req.ip || "unknown"} exceeded failed ${label} attempts. Locked.`);
       res.status(429).json({
-        error: `Access Denied: Too many failed ${label} attempts. Your IP is locked for ${windowMs / 60000} minutes.`,
+        error: "Access Denied: Too many failed attempts. Access is temporarily locked.",
       });
     },
   });
@@ -205,7 +205,6 @@ router.post("/request-otp", adminKeyLimiter, async (req, res) => {
 
     res.json({
       sent: true,
-      sentTo: maskEmail(ADMIN_EMAIL),
       ...(process.env.NODE_ENV !== "production" && r.dev ? { devCode: code } : {}),
     });
   } catch (e) {
@@ -304,7 +303,6 @@ router.post("/verify-secondary", adminSecondaryLimiter, async (req, res) => {
 
     res.json({
       sent: true,
-      sentTo: maskEmail(ADMIN_EMAIL),
       challengeToken: signChallengeToken("phase2"),
       ...(process.env.NODE_ENV !== "production" && r.dev ? { devCode: code } : {}),
     });
@@ -368,9 +366,9 @@ router.post("/complete-login", adminOtp2Limiter, async (req, res) => {
   }
 });
 
-// ── Public: masked inbox list ───────────────────────────────────────────
+// ── Public: disguised empty inbox list to prevent reconnaissance ─────────
 router.get("/inboxes", (_req, res) => {
-  res.json({ inboxes: ADMIN_EMAILS.map((e, i) => ({ id: i, label: maskEmail(e) })) });
+  res.json({ inboxes: [] });
 });
 
 export default router;
